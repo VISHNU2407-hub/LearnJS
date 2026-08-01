@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../design-system.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Text Tools</title>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img id="logo" src="logo.png" alt=""> TextRepeater
+        </div>
+    </header>
+    <div class="app">
+        <aside class="sidebar">
+            <h3>TOOLS</h3>
+            <ul>
+                <li id="repeater-tab" class="active">Repeater</li>
+                <li id="reverser-tab">Reverser</li>
+                <li id="case-tab">Case Converter</li>
+                <li id="word-tab">Word Counter</li>
+            </ul>
+        </aside>
+        <main class="main-content">
+            <div class="hero">
+                <h1 id="tool-title">Text Repeater</h1>
+                <p id="tool-description">Repeat text, emojis and punctuation in one step.</p>
+            </div>
+            <div class="workspace">
+                <section class="input-card">
+                    <div class="card-header">
+                        <h2 id="input-title">Text to Repeat</h2>
+                        <button id="clear-btn">Clear</button>
+                    </div>
+                    <textarea id="text-input" placeholder="Type or paste your text here..."></textarea>
+                    <span id="char-count">0 / 75</span>
+                    <div class="row">
+                        <input type="number" id="repeat-count" value="10" min="1">
+                    </div>
+                    <button id="repeat-btn">Repeat Text</button>
+                    <button id="reverse-btn" style="display:none;">Reverse Text</button>
+                    <div id="case-buttons">
+                        <h3>Choose Conversion Type</h3>
+                        <div class="case-btn-group">
+                            <button id="upper-btn">UPPERCASE</button>
+                            <button id="lower-btn">lowercase</button>
+                            <button id="title-btn">Title Case</button>
+                        </div>
+                    </div>
+                </section>
+                <section class="output-card">
+                    <div class="card-header">
+                        <h2 id="output-title">Repeated Text</h2>
+                        <button id="copy-btn">Copy</button>
+                    </div>
+                    <textarea id="output" readonly></textarea>
+                    <div id="stats-box" style="display:none;">
+                        <div class="stat-item">Words: <span id="word-count">0</span></div>
+                        <div class="stat-item">Characters: <span id="character-count">0</span></div>
+                        <div class="stat-item">Lines: <span id="line-count">0</span></div>
+                    </div>
+                </section>
+            </div>
+            <div class="tip-box" id="tip-box">💡 Tip: Repeat up to 100 times</div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

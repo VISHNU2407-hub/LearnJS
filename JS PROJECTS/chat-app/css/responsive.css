@@ -1,0 +1,45 @@
+/* ----- Tablet (768px) ----- */
+@media(max-width:768px){
+  :root{--sidebar-width:100%;--profile-width:100%}
+  
+  .app-sidebar{position:fixed;left:0;top:0;z-index:100;transform:translateX(-100%);transition:transform var(--transition-base);width:85vw;max-width:360px}
+  .app-sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,0.15)}
+  
+  .app-main{width:100%}
+  
+  .app-profile{position:fixed;right:0;top:0;z-index:100;transform:translateX(100%);transition:transform var(--transition-base);width:85vw;max-width:360px}
+  .app-profile.open{transform:translateX(0);box-shadow:-4px 0 24px rgba(0,0,0,0.15)}
+  
+  .message-wrapper{max-width:85%}
+  
+  .message-image{max-width:220px}
+  
+}
+
+/* ----- Mobile (480px) ----- */
+@media(max-width:480px){
+  .chat-header-actions .btn-icon{display:none}
+  .chat-header-actions .btn-icon:last-child{display:flex}
+  
+  .message-wrapper{max-width:90%}
+  
+  .message-input-area{padding:10px 12px}
+  .message-input-wrapper{padding:6px 10px}
+  
+  .chat-header{padding:10px 12px}
+  .message-area{padding:12px}
+  
+  .sidebar-header{padding:12px 16px}
+  .sidebar-search{padding:10px 16px}
+  .conversation-item{padding:10px 16px}
+  
+  .not-found-code{font-size:4rem}
+}
+
+/* ----- Mobile Menu Button ----- */
+@media(max-width:768px){
+  .mobile-menu-btn{display:flex!important}
+}
+@media(min-width:769px){
+  .mobile-menu-btn{display:none!important}
+}

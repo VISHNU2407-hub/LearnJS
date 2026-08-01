@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A clean, responsive image slider built with HTML and CSS.">
+  <title>Image Slider</title>
+  <link rel="stylesheet" href="../design-system.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="main-wrapper">
+    <div class="slider-wrapper">
+    <section class="slider" aria-label="Image Carousel" role="region">
+
+      <!-- Image counter -->
+      <span class="slider__counter" id="counter" aria-live="polite">1 / 5</span>
+
+      <!-- Image display area -->
+      <div class="slider__viewport" id="viewport">
+        <figure class="slider__slide" id="slide">
+          <img
+            class="slider__image"
+            id="image"
+            src="https://picsum.photos/seed/mountain/800/450"
+            alt="Slide image"
+            loading="lazy"
+          >
+        </figure>
+
+        <!-- Previous button -->
+        <button
+          class="slider__btn slider__btn--prev"
+          id="prevBtn"
+          aria-label="Previous image"
+          type="button"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <!-- Next button -->
+        <button
+          class="slider__btn slider__btn--next"
+          id="nextBtn"
+          aria-label="Next image"
+          type="button"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Navigation dots -->
+      <nav class="slider__dots" id="dots" aria-label="Slide navigation">
+        <button class="slider__dot slider__dot--active" data-index="0" aria-label="Go to slide 1" type="button"></button>
+        <button class="slider__dot" data-index="1" aria-label="Go to slide 2" type="button"></button>
+        <button class="slider__dot" data-index="2" aria-label="Go to slide 3" type="button"></button>
+        <button class="slider__dot" data-index="3" aria-label="Go to slide 4" type="button"></button>
+        <button class="slider__dot" data-index="4" aria-label="Go to slide 5" type="button"></button>
+      </nav>
+
+      <!-- Caption -->
+      <div class="slider__caption" id="caption">
+        <h2 class="slider__title" id="title">Mountain Retreat</h2>
+        <p class="slider__description" id="description">A serene mountain landscape captured at golden hour, showcasing nature's breathtaking beauty.</p>
+      </div>
+
+    </section>
+    </div>
+  </main>
+
+  <script src="script.js" defer></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

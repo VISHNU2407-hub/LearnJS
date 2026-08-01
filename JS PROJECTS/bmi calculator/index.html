@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <link rel="stylesheet" href="../design-system.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+</head>
+<body>
+  <main class="main-wrapper">
+    <div class="container">
+        <div class="header">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <h1>BMI <span>Calculator</span></h1>
+            <p>Know your Body Mass Index instantly.</p>
+        </div>
+        <div class="input-section">
+            <div class="input-card">
+                <div class="icon">
+                    <i class="fa-solid fa-weight-scale"></i>
+                </div>
+                <label for="weight">Weight</label>
+                <div class="input-box">
+                    <input type="number" id="weight" placeholder="Enter weight">
+                    <span>kg</span>
+                </div>
+            </div>
+            <div class="input-card">
+                <div class="icon">
+                    <i class="fa-solid fa-ruler-vertical"></i>
+                </div>
+                <label for="height">Height</label>
+                <div class="input-box">
+                    <input type="number" id="height" placeholder="Enter height">
+                    <span>m</span>
+                </div>
+            </div>
+        </div>
+        <button id="calculateBtn"><i class="fa-solid fa-calculator"></i> Calculate BMI</button>
+        <div class="result-card">
+            <div class="result-box">
+                <h3>Your BMI</h3>
+                <h2 id="bmiValue">--</h2>
+            </div>
+            <div class="result-box">
+                <h3>Category</h3>
+                <h2 id="category">--</h2>
+                <p id="message">Enter your details</p>
+            </div>
+        </div>
+        <div class="bmi-guide">
+            <div class="guide"><h4>Underweight</h4><p>&lt; 18.5</p></div>
+            <div class="guide"><h4>Normal</h4><p>18.5 - 24.9</p></div>
+            <div class="guide"><h4>Overweight</h4><p>25 - 29.9</p></div>
+            <div class="guide"><h4>Obese</h4><p>&ge; 30</p></div>
+        </div>
+    </div>
+  </main>
+    <script src="script.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

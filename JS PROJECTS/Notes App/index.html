@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes App</title>
+    <link rel="stylesheet" href="../design-system.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Notes App</h1>
+        <p>Write. Organize. Remember.</p>
+    </header>
+    <main>
+        <aside>
+            <button>+ New Note</button>
+            <nav>
+                <ul>
+                    <li>All Notes</li>
+                    <li>Favorites</li>
+                    <li>Trash</li>
+                </ul>
+            </nav>
+            <div>
+                <label><input type="checkbox"> Dark Mode</label>
+            </div>
+        </aside>
+        <section>
+            <input type="text" placeholder="Search notes...">
+            <div id="notes-container"></div>
+        </section>
+        <section>
+            <div>
+                <button>⭐</button>
+                <button>🗑️</button>
+            </div>
+            <input type="text" placeholder="Note Title">
+            <textarea placeholder="Start writing..."></textarea>
+        </section>
+    </main>
+    <script src="script.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

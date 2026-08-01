@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tip Calculator</title>
+    <link rel="stylesheet" href="../design-system.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+</head>
+<body>
+  <main class="main-wrapper">
+    <div class="container">
+        <div class="header">
+            <div class="logo"><i class="fa-solid fa-calculator"></i></div>
+            <div>
+                <h1>Tip <span>Calculator</span></h1>
+                <p>Calculate tip amount and total bill easily.</p>
+            </div>
+        </div>
+        <div class="main">
+            <div class="left">
+                <label>Bill Amount</label>
+                <div class="input-box">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                    <input type="number" id="billInput" placeholder="Enter bill amount">
+                </div>
+                <label>Select Tip</label>
+                <div class="tip-buttons">
+                    <button class="tip-btn">5%</button>
+                    <button class="tip-btn">10%</button>
+                    <button class="tip-btn">15%</button>
+                    <button class="tip-btn">20%</button>
+                    <button class="tip-btn">25%</button>
+                </div>
+                <label>Custom Tip (%)</label>
+                <div class="input-box">
+                    <input type="number" id="customTip" placeholder="Custom percentage">
+                    <span>%</span>
+                </div>
+                <label>Number of People</label>
+                <div class="input-box">
+                    <i class="fa-solid fa-users"></i>
+                    <input type="number" id="peopleInput" value="1" min="1">
+                </div>
+                <button id="calculateBtn">Calculate</button>
+            </div>
+            <div class="right">
+                <h2>Your Results</h2>
+                <div class="result-card">
+                    <h3>Tip Amount</h3>
+                    <h1 id="tipAmount">₹0.00</h1>
+                </div>
+                <div class="result-card">
+                    <h3>Total Amount</h3>
+                    <h1 id="totalAmount">₹0.00</h1>
+                </div>
+                <div class="result-card">
+                    <h3>Per Person</h3>
+                    <h1 id="perPerson">₹0.00</h1>
+                </div>
+                <button id="resetBtn">Reset</button>
+            </div>
+        </div>
+    </div>
+  </main>
+    <script src="script.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+@import url('../design-system.css');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+}
+
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 24px;
+}
+
+.container {
+  width: min(700px, 100%);
+  padding: 40px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xl);
+}
+
+h1 {
+  color: var(--text-primary);
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+textarea {
+  width: 100%;
+  height: 220px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  outline: none;
+  resize: none;
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.counter-box {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+span { font-weight: bold; color: var(--text-primary); }

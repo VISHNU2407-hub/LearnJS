@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — ShopHub</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>">
+  <link rel="stylesheet" href="../design-system.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/cart.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <nav class="navbar" role="navigation">
+    <div class="container">
+      <a href="index.html" class="navbar-brand"><span class="brand-icon">S</span> ShopHub</a>
+      <div class="navbar-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="categories.html">Categories</a>
+        <a href="profile.html" class="active">Profile</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="wishlist.html" class="action-btn">♡ <span class="count wishlist-count" style="display:none">0</span></a>
+        <a href="cart.html" class="action-btn">🛒 <span class="count cart-count" style="display:none">0</span></a>
+        <div class="hamburger"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </nav>
+  <div class="mobile-drawer"><div class="mobile-drawer-panel"><div class="mobile-drawer-links">
+    <a href="index.html">🏠 Home</a>
+    <a href="products.html">🛍️ Products</a>
+    <a href="categories.html">📂 Categories</a>
+    <a href="cart.html">🛒 Cart</a>
+    <a href="wishlist.html">♡ Wishlist</a>
+    <a href="profile.html">👤 Profile</a>
+    <a href="checkout.html">💳 Checkout</a>
+  </div></div></div>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <nav class="breadcrumbs">
+          <a href="index.html">Home</a>
+          <span class="separator">›</span>
+          <span class="current">Profile</span>
+        </nav>
+        <h1>My Account</h1>
+      </div>
+
+      <div class="profile-layout">
+        <aside class="profile-sidebar">
+          <div class="profile-user">
+            <div class="profile-avatar">👤</div>
+            <div class="profile-name">John Doe</div>
+            <div class="profile-email">john@example.com</div>
+          </div>
+          <div class="profile-nav">
+            <a class="active" data-section="profile">👤 Profile</a>
+            <a data-section="orders">📦 Orders</a>
+            <a data-section="addresses">📍 Addresses</a>
+            <a data-section="wishlist">♡ Wishlist</a>
+            <a data-section="settings">⚙️ Settings</a>
+            <a data-section="logout" style="color:var(--danger)">🚪 Logout</a>
+          </div>
+        </aside>
+
+        <div class="profile-content" id="profile-content">
+          <!-- Profile Section -->
+          <div id="section-profile" class="profile-section">
+            <h2>Profile Information</h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" value="John" placeholder="First name">
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" value="Doe" placeholder="Last name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" value="john@example.com" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" value="+1 (555) 123-4567" placeholder="Phone">
+            </div>
+            <button class="btn btn-primary">Save Changes</button>
+          </div>
+
+          <!-- Orders Section -->
+          <div id="section-orders" class="profile-section" style="display:none">
+            <h2>Order History</h2>
+            <div class="orders-list" id="orders-list"></div>
+          </div>
+
+          <!-- Addresses Section -->
+          <div id="section-addresses" class="profile-section" style="display:none">
+            <h2>Saved Addresses</h2>
+            <div style="padding:20px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:16px">
+              <p style="font-weight:600;margin-bottom:4px">Home</p>
+              <p style="font-size:0.875rem;color:var(--text-secondary)">123 Main Street, Apt 4B<br>New York, NY 10001<br>United States</p>
+            </div>
+            <div style="padding:20px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:16px">
+              <p style="font-weight:600;margin-bottom:4px">Work</p>
+              <p style="font-size:0.875rem;color:var(--text-secondary)">456 Business Ave, Suite 200<br>New York, NY 10002<br>United States</p>
+            </div>
+            <button class="btn btn-secondary">+ Add New Address</button>
+          </div>
+
+          <!-- Settings Section -->
+          <div id="section-settings" class="profile-section" style="display:none">
+            <h2>Account Settings</h2>
+            <div class="form-group">
+              <label>Language</label>
+              <select>
+                <option>English</option>
+                <option>Spanish</option>
+                <option>French</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Currency</label>
+              <select>
+                <option>USD ($)</option>
+                <option>EUR (€)</option>
+                <option>GBP (£)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Email Notifications</label>
+              <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+                <label class="filter-checkbox"><input type="checkbox" checked> Order updates</label>
+                <label class="filter-checkbox"><input type="checkbox" checked> Promotions & deals</label>
+                <label class="filter-checkbox"><input type="checkbox"> Newsletter</label>
+              </div>
+            </div>
+            <button class="btn btn-primary">Save Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div>
+            <div class="footer-brand"><span class="brand-icon">S</span> ShopHub</div>
+            <p class="footer-description">Your premium destination for quality products.</p>
+            <div class="footer-social">
+              <a href="#">𝕏</a><a href="#">IG</a><a href="#">FB</a><a href="#">YT</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer-heading">Shop</h4>
+            <div class="footer-links">
+              <a href="products.html">All Products</a>
+              <a href="categories.html">Categories</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer-heading">Support</h4>
+            <div class="footer-links">
+              <a href="profile.html">My Account</a>
+              <a href="#">Help Center</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer-heading">Newsletter</h4>
+            <p class="footer-newsletter-text">Get 10% off your first order.</p>
+            <form class="footer-newsletter-form">
+              <input type="email" placeholder="Your email" aria-label="Email">
+              <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+            </form>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>&copy; 2026 ShopHub. All rights reserved.</span>
+          <div class="footer-bottom-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top">↑</button>
+
+  <script>
+    /* Profile tab switching */
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.profile-nav a').forEach(link => {
+        link.addEventListener('click', () => {
+          const section = link.dataset.section;
+          if (section === 'logout') {
+            UI.showToast({ title: 'Logged out', message: 'You have been logged out.', type: 'info' });
+            return;
+          }
+          document.querySelectorAll('.profile-nav a').forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+          document.querySelectorAll('.profile-section').forEach(s => s.style.display = 'none');
+          const target = document.getElementById(`section-${section}`);
+          if (target) target.style.display = 'block';
+
+          /* Load orders when switching to orders tab */
+          if (section === 'orders') {
+            loadOrderHistory();
+          }
+        });
+      });
+    });
+
+    /* Load order history dynamically */
+    function loadOrderHistory() {
+      const container = document.getElementById('orders-list');
+      if (!container) return;
+
+      const orders = Orders.getOrders();
+
+      if (orders.length === 0) {
+        container.innerHTML = '<div class="empty-cart" style="padding:40px 24px"><div class="empty-cart-icon">📦</div><h2>No orders yet</h2><p>Your completed orders will appear here.</p><a href="products.html" class="btn btn-primary">Start Shopping</a></div>';
+        return;
+      }
+
+      container.innerHTML = orders.map(order => `
+        <div class="order-card">
+          <div class="order-header">
+            <span class="order-id">${order.id}</span>
+            <span class="order-date">${Orders.formatDate(order.date)}</span>
+            <span class="order-status ${order.status.toLowerCase()}">${order.status}</span>
+          </div>
+          <div style="font-size:0.875rem;color:var(--text-secondary)">
+            ${order.itemCount} ${order.itemCount === 1 ? 'item' : 'items'} • ${order.items.slice(0, 3).map(i => i.title).join(', ')}${order.items.length > 3 ? '...' : ''}
+          </div>
+          <div class="order-total">$${order.total.toFixed(2)}</div>
+        </div>
+      `).join('');
+    }
+  </script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/wishlist.js"></script>
+  <script src="js/orders.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

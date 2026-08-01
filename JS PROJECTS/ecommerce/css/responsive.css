@@ -1,0 +1,99 @@
+/* ==============================================
+   RESPONSIVE.CSS — All Breakpoints
+   ==============================================
+   Mobile-first responsive design with
+   native-app feel on mobile.
+   ============================================== */
+
+/* ----- Tablet Landscape (1024px) ----- */
+@media(max-width:1024px){
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .hero-content{max-width:100%;text-align:center}
+  .hero-description{margin:0 auto 32px}
+  .hero-actions{justify-content:center}
+  .hero-stats{justify-content:center;flex-wrap:wrap;gap:24px}
+  .hero-floating-badge{left:50%;transform:translateX(-50%)}
+  .products-grid{grid-template-columns:repeat(3,1fr)}
+  .related-grid{grid-template-columns:repeat(3,1fr)}
+  .categories-grid{grid-template-columns:repeat(3,1fr)}
+  .brands-grid{grid-template-columns:repeat(4,1fr)}
+  .reviews-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .profile-layout{grid-template-columns:1fr}
+  .profile-sidebar{position:sticky;top:calc(var(--header-height) + 16px)}
+}
+
+/* ----- Tablet Portrait (768px) ----- */
+@media(max-width:768px){
+  :root{--container-padding:16px;--header-height:64px}
+  .section{padding:48px 0}
+  .footer-inner{padding:40px 0 0}
+  .navbar-links{display:none}
+  .hamburger{display:flex}
+  .hero{padding:48px 0}
+  .hero-title{font-size:clamp(1.75rem,6vw,2.5rem)}
+  .hero-description{font-size:1rem}
+  .hero-stats{flex-direction:column;align-items:center;gap:16px;padding-top:24px;margin-top:24px}
+  .hero-image-card{max-width:360px}
+  .products-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .related-grid{grid-template-columns:repeat(2,1fr)}
+  .categories-grid{grid-template-columns:repeat(2,1fr)}
+  .brands-grid{grid-template-columns:repeat(3,1fr)}
+  .reviews-grid{grid-template-columns:1fr}
+  .deals-grid{grid-template-columns:1fr}
+  .deal-card{grid-template-columns:1fr}
+  .deal-body{padding:20px}
+  .newsletter{padding:40px 24px}
+  .newsletter-form{flex-direction:column}
+  .section-header{flex-direction:column;align-items:flex-start}
+  .products-layout{grid-template-columns:1fr}
+  .mobile-filter-toggle{display:flex}
+  .products-sidebar{display:none;position:fixed;inset:0;z-index:9000;background:rgba(15,23,42,0.3);backdrop-filter:blur(4px)}
+  .products-sidebar.open{display:block}
+  .products-sidebar .filter-panel{position:fixed;top:0;left:0;bottom:0;width:320px;max-width:85vw;background:var(--bg-secondary);overflow-y:auto;border-radius:0;border:none;animation:slide-in-left 0.3s ease-out}
+  @keyframes slide-in-left{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+  .filter-close{display:flex!important;position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;align-items:center;justify-content:center;background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;border:none;font-size:1.125rem}
+  .product-detail{grid-template-columns:1fr;gap:24px}
+  .product-gallery{position:static}
+  .product-info h1{font-size:1.25rem}
+  .product-info-price .price-current{font-size:1.5rem}
+  .delivery-info{grid-template-columns:1fr}
+  .cart-layout{grid-template-columns:1fr}
+  .cart-header{display:none}
+  .cart-item{grid-template-columns:1fr;gap:12px;padding:16px}
+  .cart-item{position:relative}
+  .cart-item-image{width:64px;height:64px}
+  .cart-item-remove{position:absolute;top:12px;right:12px}
+  .cart-summary{position:static}
+  .checkout-layout{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .profile-layout{grid-template-columns:1fr}
+  .wishlist-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr;gap:32px}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center}
+  .footer-social{justify-content:center}
+  .not-found-code{font-size:5rem}
+  .back-to-top{bottom:20px;right:20px;width:44px;height:44px}
+}
+
+/* ----- Mobile (480px) ----- */
+@media(max-width:480px){
+  .products-grid{grid-template-columns:1fr;gap:16px}
+  .related-grid{grid-template-columns:1fr}
+  .categories-grid{grid-template-columns:1fr}
+  .brands-grid{grid-template-columns:repeat(2,1fr)}
+  .wishlist-grid{grid-template-columns:1fr}
+  .hero{padding:32px 0}
+  .hero-stats{flex-direction:column;align-items:center;gap:12px;padding-top:20px;margin-top:20px}
+  .hero-floating-badge{display:none}
+  .product-card-actions{opacity:1;transform:none}
+  .toast{min-width:unset;max-width:calc(100vw - 32px)}
+  .toast-container{top:16px;right:16px;left:16px}
+  .not-found-code{font-size:4rem}
+  .products-topbar{flex-direction:column;align-items:stretch}
+  .products-topbar-right{justify-content:space-between}
+  .sort-select{flex:1}
+}
+
+/* ----- Filter close button (hidden by default) ----- */
+.filter-close{display:none}

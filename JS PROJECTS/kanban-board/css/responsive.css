@@ -1,0 +1,198 @@
+/* ============================================
+   RESPONSIVE STYLES - All Breakpoints
+   ============================================ */
+
+/* Laptop: 1024px - 1279px */
+@media (max-width: 1279px) {
+  :root {
+    --column-width: 270px;
+    --column-gap: 16px;
+  }
+
+  .board-container {
+    padding: var(--space-md);
+  }
+
+  .search-bar {
+    max-width: 240px;
+  }
+}
+
+/* Tablet: 768px - 1023px */
+@media (max-width: 1023px) {
+  :root {
+    --column-width: 260px;
+    --column-gap: 14px;
+  }
+
+  .nav {
+    padding: 0 var(--space-md);
+  }
+
+  .nav__board-title {
+    display: none;
+  }
+
+  .search-bar {
+    max-width: 200px;
+  }
+
+  .board-container {
+    padding: var(--space-md);
+  }
+
+  .board-toolbar__row--top .dropdown__trigger span {
+    display: inline;
+  }
+
+  .filter-pills {
+    gap: 4px;
+  }
+
+  .filter-pill {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    max-width: 520px;
+  }
+}
+
+/* Mobile: 480px - 767px */
+@media (max-width: 767px) {
+  :root {
+    --nav-height: 56px;
+    --column-width: 280px;
+  }
+
+  .nav {
+    padding: 0 var(--space-sm);
+  }
+
+  .nav__logo-text {
+    display: none;
+  }
+
+  .nav__board-title {
+    display: none;
+  }
+
+  .search-bar {
+    max-width: 140px;
+  }
+
+  .board-toolbar__right .btn span {
+    display: none;
+  }
+
+  .board-toolbar__right .btn--ghost {
+    display: none;
+  }
+
+  .board {
+    gap: var(--space-sm);
+    padding-bottom: var(--space-md);
+  }
+
+  .board-container {
+    padding: var(--space-sm);
+  }
+
+  .board-toolbar {
+    gap: 6px;
+    margin-bottom: var(--space-md);
+  }
+
+  .column {
+    min-width: var(--column-width);
+    max-width: var(--column-width);
+  }
+
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    transform: translateY(100%);
+  }
+
+  .modal-overlay--open .modal {
+    transform: translateY(0);
+  }
+
+  .modal__header {
+    padding: var(--space-md);
+  }
+
+  .modal__body {
+    padding: var(--space-md);
+  }
+
+  .modal__footer {
+    padding: var(--space-md);
+  }
+
+  .card__drag-handle {
+    opacity: 1;
+  }
+
+  .priority-selector {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 12px;
+  }
+}
+
+/* Small Mobile: < 480px */
+@media (max-width: 479px) {
+  :root {
+    --column-width: 260px;
+    --column-gap: 12px;
+  }
+
+  .nav__actions .icon-btn:nth-child(-n+2) {
+    display: none;
+  }
+
+  .search-bar {
+    max-width: 100px;
+  }
+
+  .search-bar__input {
+    padding: 6px 8px 6px 30px;
+    font-size: 13px;
+  }
+
+  .search-bar__icon {
+    left: 8px;
+    width: 14px;
+    height: 14px;
+  }
+
+  .board {
+    padding-left: var(--space-xs);
+    padding-right: var(--space-xs);
+  }
+
+  .column {
+    min-width: var(--column-width);
+    max-width: var(--column-width);
+  }
+
+  .btn--sm {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+}

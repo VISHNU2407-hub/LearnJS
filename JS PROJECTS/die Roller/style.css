@@ -1,0 +1,135 @@
+@import url('../design-system.css');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  padding: 30px;
+}
+
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 550px;
+}
+
+.card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 40px;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+}
+
+h1 {
+  color: var(--text-primary);
+  font-size: 2.3rem;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 35px;
+}
+
+.dice-area {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 35px;
+}
+
+.dice {
+  width: 180px;
+  height: 180px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-2xl);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 5rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base);
+}
+
+.dice.rolling {
+  animation: rollDice 0.3s ease;
+}
+
+@keyframes rollDice {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  padding: 18px 40px;
+  border-radius: var(--radius-md);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background: var(--accent);
+  transition: all var(--transition-base);
+  width: 100%;
+  font-family: var(--font-body);
+}
+
+button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+button:active { transform: scale(0.97); }
+
+.history {
+  margin-top: 35px;
+}
+
+.history h3 {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.history-list {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.history-list span {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+
+@media(max-width:600px) {
+  .card { padding: 25px; }
+  .dice { width: 140px; height: 140px; font-size: 4rem; }
+  button { font-size: 1rem; }
+}

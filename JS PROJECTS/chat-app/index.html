@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convo — Modern Messaging</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
+  <link rel="stylesheet" href="../design-system.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<div id="toast-container" class="toast-container"></div>
+
+<!-- ======== LOGIN PAGE ======== -->
+<div id="page-login" class="page active">
+  <div class="login-page">
+    <div class="login-container">
+      <div class="login-header">
+        <div class="login-logo">
+          <span class="login-logo-icon">C</span>
+        </div>
+        <h1 class="login-title">Welcome to Convo</h1>
+        <p class="login-subtitle">Choose your profile to start messaging</p>
+      </div>
+      <div class="login-users" id="login-users-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== DASHBOARD ======== -->
+<div id="page-dashboard" class="page">
+  <div class="app">
+
+    <!-- Sidebar Backdrop (mobile) -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <!-- Sidebar -->
+    <aside class="app-sidebar" role="navigation">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <span class="logo-icon">C</span>
+          Convo
+        </div>
+        <div class="sidebar-header-actions">
+          <button class="btn-icon" id="nav-settings" title="Settings">⚙️</button>
+        </div>
+      </div>
+
+      <div class="sidebar-search">
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" class="search-input" placeholder="Search conversations...">
+        </div>
+      </div>
+
+      <div class="sidebar-filters">
+        <button class="filter-tab active" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="unread">Unread</button>
+        <button class="filter-tab" data-filter="pinned">Pinned</button>
+      </div>
+
+      <div class="conversations-list" id="conversations-list"></div>
+
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 20px;border-top:1px solid var(--border);flex-shrink:0">
+        <div id="sidebar-user-avatar"></div>
+        <div style="flex:1;min-width:0">
+          <div id="sidebar-user-name" style="font-size:0.875rem;font-weight:600"></div>
+          <div id="sidebar-user-status" style="font-size:0.75rem;color:var(--text-secondary)"></div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <main class="app-main">
+      <div id="chat-area"></div>
+    </main>
+
+    <!-- Profile Backdrop (mobile) -->
+    <div id="profile-backdrop" class="profile-backdrop"></div>
+
+    <!-- Right Profile Panel -->
+    <aside id="profile-panel" class="app-profile"></aside>
+
+  </div>
+</div>
+
+<!-- ======== SETTINGS PAGE ======== -->
+<div id="page-settings" class="page">
+  <div class="settings-page">
+    <div class="settings-header">
+      <button class="btn-icon" id="back-to-dashboard">←</button>
+      <h3>Settings</h3>
+    </div>
+    <div class="settings-body">
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:28px">
+        <div id="settings-avatar"></div>
+        <h3 id="settings-user-name" style="margin-top:12px;font-size:1.125rem;font-weight:600"></h3>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Preferences</div>
+        <div class="settings-item">
+          <div>
+            <div class="settings-item-label">Notifications</div>
+            <div class="settings-item-desc">Enable push notifications</div>
+          </div>
+          <div class="toggle active"></div>
+        </div>
+        <div class="settings-item">
+          <div>
+            <div class="settings-item-label">Sound</div>
+            <div class="settings-item-desc">Play sounds for incoming messages</div>
+          </div>
+          <div class="toggle active"></div>
+        </div>
+        <div class="settings-item">
+          <div>
+            <div class="settings-item-label">Read Receipts</div>
+            <div class="settings-item-desc">Show when you've read messages</div>
+          </div>
+          <div class="toggle active"></div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Appearance</div>
+        <div class="settings-item">
+          <div>
+            <div class="settings-item-label">Dark Mode</div>
+            <div class="settings-item-desc">Switch to dark theme</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!-- ======== 404 PAGE ======== -->
+<div id="page-404" class="page">
+  <div class="page-not-found">
+    <div class="not-found-code">404</div>
+    <h1 class="not-found-title">Page Not Found</h1>
+    <p class="not-found-text">The page you're looking for doesn't exist.</p>
+    <button class="btn btn-primary" onclick="App.showDashboard()">Back to Dashboard</button>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/users.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/app.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

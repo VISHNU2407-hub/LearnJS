@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Shop the latest products with premium quality and exceptional design.">
+  <title>ShopHub — Premium Online Store</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>">
+  <link rel="stylesheet" href="../design-system.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" role="navigation">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="brand-icon">S</span>
+        ShopHub
+      </a>
+      <div class="navbar-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="products.html">Products</a>
+        <a href="categories.html">Categories</a>
+        <a href="profile.html">Profile</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="wishlist.html" class="action-btn" aria-label="Wishlist">
+          ♡ <span class="count wishlist-count" style="display:none">0</span>
+        </a>
+        <a href="cart.html" class="action-btn" aria-label="Cart">
+          🛒 <span class="count cart-count" style="display:none">0</span>
+        </a>
+        <div class="hamburger" aria-label="Toggle menu" role="button" tabindex="0">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer">
+    <div class="mobile-drawer-panel">
+      <div class="mobile-drawer-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="products.html">🛍️ Products</a>
+        <a href="categories.html">📂 Categories</a>
+        <a href="cart.html">🛒 Cart</a>
+        <a href="wishlist.html">♡ Wishlist</a>
+        <a href="profile.html">👤 Profile</a>
+        <a href="checkout.html">💳 Checkout</a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content animate-fade-up">
+            <span class="hero-badge">⚡ New Collection Available</span>
+            <h1 class="hero-title">
+              Discover Premium<br>
+              <span class="highlight">Shopping Experience</span>
+            </h1>
+            <p class="hero-description">
+              Discover premium products curated for quality and style.
+            </p>
+            <div class="hero-actions">
+              <a href="products.html" class="btn btn-primary btn-lg">Shop Now</a>
+              <a href="categories.html" class="btn btn-secondary btn-lg">Browse Categories</a>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat"><strong>10K+</strong><span>Products</span></div>
+              <div class="hero-stat"><strong>50K+</strong><span>Happy Customers</span></div>
+              <div class="hero-stat"><strong>4.8</strong><span>Average Rating</span></div>
+            </div>
+          </div>
+          <div class="hero-image animate-fade-up" style="animation-delay:0.2s">
+            <div class="hero-image-card">
+              <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=800&fit=crop" alt="Shopping experience" loading="lazy">
+            </div>
+            <div class="hero-floating-badge">
+              <div class="badge-dot">✓</div>
+              <div class="badge-text">
+                <strong>Free Shipping</strong>
+                <span>On orders over $50</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header-content">
+            <span class="section-subtitle">Categories</span>
+            <h2 class="section-title">Shop by Category</h2>
+          </div>
+          <a href="categories.html" class="section-link">View All <span class="arrow">→</span></a>
+        </div>
+        <div class="categories-grid stagger-children">
+          <a href="products.html?category=smartphones" class="category-card hover-lift">
+            <div class="category-icon blue">📱</div>
+            <div class="category-name">Smartphones</div>
+            <div class="category-count">Latest tech</div>
+          </a>
+          <a href="products.html?category=laptops" class="category-card hover-lift">
+            <div class="category-icon green">💻</div>
+            <div class="category-name">Laptops</div>
+            <div class="category-count">Power & performance</div>
+          </a>
+          <a href="products.html?category=fragrances" class="category-card hover-lift">
+            <div class="category-icon orange">🧴</div>
+            <div class="category-name">Fragrances</div>
+            <div class="category-count">Premium scents</div>
+          </a>
+          <a href="products.html?category=skincare" class="category-card hover-lift">
+            <div class="category-icon purple">✨</div>
+            <div class="category-name">Skincare</div>
+            <div class="category-count">Beauty essentials</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header-content">
+            <span class="section-subtitle">Featured</span>
+            <h2 class="section-title">Featured Products</h2>
+          </div>
+          <a href="products.html" class="section-link">View All <span class="arrow">→</span></a>
+        </div>
+        <div id="featured-products" class="products-grid stagger-children"></div>
+      </div>
+    </section>
+
+    <!-- Today's Deals -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header-content">
+            <span class="section-subtitle">Limited Time</span>
+            <h2 class="section-title">Today's Deals</h2>
+          </div>
+        </div>
+        <div id="deals-products" class="deals-grid stagger-children"></div>
+      </div>
+    </section>
+
+    <!-- Best Sellers -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header-content">
+            <span class="section-subtitle">Popular</span>
+            <h2 class="section-title">Best Sellers</h2>
+          </div>
+          <a href="products.html?sort=rating" class="section-link">View All <span class="arrow">→</span></a>
+        </div>
+        <div id="best-sellers" class="products-grid stagger-children"></div>
+      </div>
+    </section>
+
+    <!-- New Arrivals -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header-content">
+            <span class="section-subtitle">New</span>
+            <h2 class="section-title">New Arrivals</h2>
+          </div>
+          <a href="products.html?sort=newest" class="section-link">View All <span class="arrow">→</span></a>
+        </div>
+        <div id="new-arrivals" class="products-grid stagger-children"></div>
+      </div>
+    </section>
+
+    <!-- Top Brands -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header-content">
+            <span class="section-subtitle">Brands</span>
+            <h2 class="section-title">Top Brands</h2>
+          </div>
+        </div>
+        <div class="brands-grid stagger-children">
+          <div class="brand-card hover-lift">Apple</div>
+          <div class="brand-card hover-lift">Samsung</div>
+          <div class="brand-card hover-lift">Sony</div>
+          <div class="brand-card hover-lift">Nike</div>
+          <div class="brand-card hover-lift">Adidas</div>
+          <div class="brand-card hover-lift">Puma</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Customer Reviews -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header-content">
+            <span class="section-subtitle">Testimonials</span>
+            <h2 class="section-title">What Our Customers Say</h2>
+          </div>
+        </div>
+        <div class="reviews-grid">
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"Absolutely love the quality and fast shipping. The products exceeded my expectations. Will definitely shop here again."</p>
+            <div class="review-author">
+              <div class="review-avatar">S</div>
+              <div>
+                <div class="review-name">Sarah Johnson</div>
+                <div class="review-role">Verified Buyer</div>
+              </div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"Best online shopping experience I've had. The website is beautiful and easy to use. Customer service was incredibly helpful."</p>
+            <div class="review-author">
+              <div class="review-avatar">M</div>
+              <div>
+                <div class="review-name">Michael Chen</div>
+                <div class="review-role">Verified Buyer</div>
+              </div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"Great selection of products at competitive prices. The checkout process was seamless and my order arrived earlier than expected."</p>
+            <div class="review-author">
+              <div class="review-avatar">E</div>
+              <div>
+                <div class="review-name">Emily Rodriguez</div>
+                <div class="review-role">Verified Buyer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="section">
+      <div class="container">
+        <div class="newsletter">
+          <div class="newsletter-content">
+            <div class="newsletter-icon">✉</div>
+            <h2>Stay in the Loop</h2>
+            <p>Subscribe for exclusive deals and offers.</p>
+            <form class="newsletter-form" id="newsletter-form">
+              <input type="email" placeholder="Enter your email" required aria-label="Email address">
+              <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div>
+            <div class="footer-brand">
+              <span class="brand-icon">S</span>
+              ShopHub
+            </div>
+            <p class="footer-description">
+              Your premium destination for quality products.
+            </p>
+            <div class="footer-social">
+              <a href="#" aria-label="Twitter">𝕏</a>
+              <a href="#" aria-label="Instagram">IG</a>
+              <a href="#" aria-label="Facebook">FB</a>
+              <a href="#" aria-label="YouTube">YT</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer-heading">Shop</h4>
+            <div class="footer-links">
+              <a href="products.html">All Products</a>
+              <a href="categories.html">Categories</a>
+              <a href="products.html">Best Sellers</a>
+              <a href="products.html">New Arrivals</a>
+              <a href="products.html">Deals</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer-heading">Support</h4>
+            <div class="footer-links">
+              <a href="profile.html">My Account</a>
+              <a href="#">Help Center</a>
+              <a href="#">Shipping Info</a>
+              <a href="#">Returns</a>
+              <a href="#">Contact Us</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer-heading">Newsletter</h4>
+            <p class="footer-newsletter-text">Get 10% off your first order.</p>
+            <form class="footer-newsletter-form">
+              <input type="email" placeholder="Enter your email" aria-label="Email for newsletter">
+              <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+            </form>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>&copy; 2026 ShopHub. All rights reserved.</span>
+          <div class="footer-bottom-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" aria-label="Back to top">↑</button>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/wishlist.js"></script>
+  <script src="js/orders.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+@import url('../design-system.css');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  transition: background var(--transition-base) ease;
+}
+
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 24px;
+}
+
+.card {
+  width: 400px;
+  padding: 40px;
+  text-align: center;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+}
+
+h1 {
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+p {
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+#color-name {
+  color: var(--text-primary);
+  font-size: 2rem;
+  margin-bottom: 30px;
+  font-family: var(--font-heading);
+}
+
+button {
+  border: none;
+  padding: 14px 24px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  transition: all var(--transition-base);
+  font-family: var(--font-body);
+}
+
+button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}

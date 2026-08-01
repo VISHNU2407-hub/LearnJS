@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PassGen — Strong Password Generator</title>
+
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Font Awesome 6 -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+  />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../design-system.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ==================== BACKGROUND DECORATIVE BLOBS ==================== -->
+  <div class="blob blob--1"></div>
+  <div class="blob blob--2"></div>
+  <div class="blob blob--3"></div>
+
+  <!-- ==================== HERO / MAIN ==================== -->
+  <main id="hero">
+
+    <!-- Ambient glow orbs (decorative) -->
+    <div class="orb orb--left"></div>
+    <div class="orb orb--right"></div>
+
+    <!-- ---------- LEFT PANEL : Controls ---------- -->
+    <section id="controls">
+
+      <h1 class="heading">
+        Strong Password<br />
+        <span class="gradient-text">Generator</span>
+      </h1>
+
+      <p class="subtitle">
+        Create secure, random passwords with custom options tailored to your needs.
+      </p>
+
+      <!-- Password Length -->
+      <div class="control-group">
+        <div class="control-header">
+          <h3><i class="fa-solid fa-ruler-combined"></i> Password Length</h3>
+          <span class="badge" id="lengthValue">16</span>
+        </div>
+        <div class="slider-wrapper">
+          <input
+            type="range"
+            id="lengthSlider"
+            class="premium-slider"
+            min="8"
+            max="32"
+            value="16"
+            aria-label="Password length"
+          />
+          <div class="slider-labels">
+            <span>8</span>
+            <span>16</span>
+            <span>24</span>
+            <span>32</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Character Options -->
+      <div class="control-group">
+        <h3 class="control-heading">
+          <i class="fa-solid fa-list-check"></i> Include Characters
+        </h3>
+
+        <div class="option-grid">
+
+          <!-- Uppercase -->
+          <label class="option-card">
+            <input type="checkbox" id="upper" class="option-check" checked />
+            <span class="option-icon purple">Aa</span>
+            <span class="option-title">Uppercase</span>
+            <span class="option-desc">A &ndash; Z</span>
+            <div class="option-glow"></div>
+          </label>
+
+          <!-- Lowercase -->
+          <label class="option-card">
+            <input type="checkbox" id="lower" class="option-check" checked />
+            <span class="option-icon blue">aa</span>
+            <span class="option-title">Lowercase</span>
+            <span class="option-desc">a &ndash; z</span>
+            <div class="option-glow"></div>
+          </label>
+
+          <!-- Numbers -->
+          <label class="option-card">
+            <input type="checkbox" id="number" class="option-check" checked />
+            <span class="option-icon cyan">09</span>
+            <span class="option-title">Numbers</span>
+            <span class="option-desc">0 &ndash; 9</span>
+            <div class="option-glow"></div>
+          </label>
+
+          <!-- Symbols -->
+          <label class="option-card">
+            <input type="checkbox" id="symbol" class="option-check" checked />
+            <span class="option-icon orange">!@#</span>
+            <span class="option-title">Symbols</span>
+            <span class="option-desc">! @ # $ &hellip;</span>
+            <div class="option-glow"></div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- Generate Button -->
+      <button class="btn-primary" id="generateBtn">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        Generate Password
+        <span class="btn-glow"></span>
+      </button>
+
+    </section>
+
+    <!-- ---------- RIGHT PANEL : Output ---------- -->
+    <section id="output">
+
+      <h2 class="section-label">Your Password</h2>
+
+      <!-- Password Display -->
+      <div class="password-display">
+        <p class="password-text" id="password">
+          K7!mQp$2zL@9nR#bT
+        </p>
+        <button class="icon-btn copy-btn" id="copyBtn" aria-label="Copy password">
+          <i class="fa-regular fa-copy"></i>
+        </button>
+      </div>
+
+      <p id="copyMsg"></p>
+
+      <!-- Strength Indicator -->
+      <div class="strength-section">
+        <div class="strength-header">
+          <h3>Strength</h3>
+          <span class="strength-label strong" id="strengthLabel">Strong</span>
+        </div>
+        <div class="strength-meter">
+          <div class="strength-fill strong" id="fill" style="width: 100%"></div>
+        </div>
+        <div class="meter-labels">
+          <span>Weak</span>
+          <span>Medium</span>
+          <span>Strong</span>
+        </div>
+      </div>
+
+      <!-- Tips Card -->
+      <div class="tips-card" id="tips">
+        <h3>
+          <i class="fa-solid fa-circle-check"></i>
+          Strong Password Tips
+        </h3>
+        <ul class="tips-list">
+          <li><i class="fa-solid fa-chevron-right"></i> Use at least 12 characters</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Mix uppercase, lowercase, numbers &amp; symbols</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Avoid personal information</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Use a unique password for every account</li>
+        </ul>
+      </div>
+
+      <!-- Generate Another Button -->
+      <button class="btn-secondary" id="againBtn">
+        <i class="fa-solid fa-rotate"></i>
+        Generate Another
+      </button>
+
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A modern, responsive weather application powered by the OpenWeatherMap API." />
+  <title>Weather App</title>
+  <link rel="stylesheet" href="../design-system.css">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+</head>
+<body>
+  <main class="main-wrapper">
+    <div class="container">
+    <header class="header">
+      <h1>⛅ Weather App</h1>
+      <p class="header__subtitle">Real-time weather at your fingertips</p>
+    </header>
+    <section class="search" aria-label="Search for a city">
+      <div class="search__wrapper">
+        <input type="text" id="searchInput" class="search__input" placeholder="Search for a city..." autocomplete="off" />
+        <button id="searchBtn" class="search__btn" aria-label="Search weather">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+        </button>
+      </div>
+    </section>
+    <div id="loadingSpinner" class="spinner" hidden>
+      <div class="spinner__ring"></div>
+      <p class="spinner__text">Fetching weather...</p>
+    </div>
+    <div id="errorMessage" class="error" role="alert" hidden>
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+      <span id="errorText"></span>
+    </div>
+    <section id="weatherCard" class="card" aria-label="Weather information" hidden>
+      <div class="card__main">
+        <img id="weatherIcon" class="card__icon" src="" alt="Weather icon" />
+        <div><span id="temperature" class="card__temp"></span></div>
+        <span id="description" class="card__desc" style="display:block;font-size:1.1rem;color:rgba(255,255,255,0.8);text-transform:capitalize"></span>
+        <div class="card__location" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px">
+          <span id="cityName" class="card__city"></span>
+          <span id="country" class="card__country"></span>
+        </div>
+      </div>
+      <div class="card__details">
+        <div class="detail-item">
+          <span class="detail-item__label">Humidity</span>
+          <span id="humidity" class="detail-item__value"></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-item__label">Wind</span>
+          <span id="windSpeed" class="detail-item__value"></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-item__label">Pressure</span>
+          <span id="pressure" class="detail-item__value"></span>
+        </div>
+      </div>
+    </section>
+    <footer class="footer">
+      <p class="footer__text">Powered by <a href="https://openweathermap.org/">OpenWeatherMap</a></p>
+    </footer>
+    </div>
+  </main>
+  <script src="script.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

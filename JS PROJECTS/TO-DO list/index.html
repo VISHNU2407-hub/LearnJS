@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="../design-system.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+</head>
+<body>
+  <main class="main-wrapper">
+    <div class="container">
+        <div class="header">
+            <div class="logo"><i class="fa-solid fa-clipboard-list"></i></div>
+            <div>
+                <h1>My <span>To-Do List</span></h1>
+                <p>Organize your tasks. Stay productive.</p>
+            </div>
+        </div>
+        <div class="input-section">
+            <input type="text" id="taskInput" placeholder="What do you need to do?">
+            <button id="addTaskBtn"><i class="fa-solid fa-plus"></i> Add Task</button>
+        </div>
+        <div class="progress-section">
+            <div class="progress-text"><span id="progressText">0 of 0 tasks completed</span></div>
+            <div class="progress-bar"><div id="progressFill"></div></div>
+        </div>
+        <div id="taskList"></div>
+        <div class="stats">
+            <div class="card">
+                <i class="fa-solid fa-list"></i>
+                <h2 id="totalTasks">0</h2>
+                <p>Total Tasks</p>
+            </div>
+            <div class="card">
+                <i class="fa-solid fa-circle-check"></i>
+                <h2 id="completedTasks">0</h2>
+                <p>Completed</p>
+            </div>
+            <div class="card">
+                <i class="fa-solid fa-clock"></i>
+                <h2 id="remainingTasks">0</h2>
+                <p>Remaining</p>
+            </div>
+        </div>
+    </div>
+  </main>
+    <script src="script.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

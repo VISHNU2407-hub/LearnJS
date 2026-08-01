@@ -1,0 +1,209 @@
+@import url('../design-system.css');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.navbar {
+  height: 75px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img { height: 40px; width: auto; }
+
+.app {
+  display: flex;
+  min-height: calc(100vh - 75px);
+}
+
+.sidebar {
+  width: 240px;
+  background: var(--bg-primary);
+  border-right: 1px solid var(--border);
+  padding: 30px;
+}
+
+.sidebar h3 {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sidebar ul { list-style: none; }
+
+.sidebar li {
+  padding: 14px;
+  margin-bottom: 10px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.sidebar li:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.sidebar .active { background: var(--accent-light); color: var(--accent); }
+
+.main-content { flex: 1; padding: 40px; }
+
+.hero h1 { font-size: 4rem; margin-bottom: 10px; }
+.hero p { color: var(--text-secondary); margin-bottom: 30px; }
+
+.workspace {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.input-card, .output-card {
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  padding: 25px;
+  border: 1px solid var(--border);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  height: 250px;
+  resize: none;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  outline: none;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+textarea:focus { border-color: var(--accent); }
+
+.row {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.row input {
+  flex: 1;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.row input:focus { outline: none; border-color: var(--accent); }
+
+#repeat-btn, #reverse-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 16px;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+#repeat-btn:hover, #reverse-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+#reverse-btn { display: none; }
+
+#case-buttons {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+#case-buttons button {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 1px solid var(--border);
+}
+
+#case-buttons button:hover {
+  background: var(--accent);
+  color: white;
+  transform: translateY(-2px);
+}
+
+#stats-box {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.stat-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.tip-box {
+  margin-top: 25px;
+  background: var(--accent-light);
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  color: var(--accent);
+}
+
+#clear-btn, #copy-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+#clear-btn:hover, #copy-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+#char-count { color: var(--text-tertiary); font-size: 0.9rem; display: block; margin-top: 10px; }

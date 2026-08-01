@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Movie Search App - Search for movies using the OMDb API" />
+  <meta name="author" content="Movie Search App" />
+  <title>Movie Search App</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../design-system.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-film logo-icon"></i>
+          <h1 class="logo-text">Movie<span class="logo-highlight">Search</span></h1>
+        </div>
+        <p class="tagline">Discover your next favorite film</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <!-- Search Section -->
+      <section class="search-section" aria-label="Movie Search">
+        <div class="search-wrapper">
+          <div class="search-container">
+            <div class="search-icon">
+              <i class="fas fa-search"></i>
+            </div>
+            <input
+              type="text"
+              id="searchInput"
+              class="search-input"
+              placeholder="Search for any movie..."
+              aria-label="Enter movie name"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button id="searchBtn" class="search-btn" aria-label="Search movies">
+              <i class="fas fa-search"></i>
+              <span>Search</span>
+            </button>
+          </div>
+          <p class="search-hint">Press <kbd>Enter</kbd> to search · e.g. Inception, The Matrix, Interstellar</p>
+        </div>
+      </section>
+
+      <!-- Loading Spinner -->
+      <div id="loadingSpinner" class="loading-spinner hidden" aria-hidden="true">
+        <div class="spinner"></div>
+        <p class="loading-text">Searching the galaxy of films...</p>
+      </div>
+
+      <!-- Search Results Grid -->
+      <section id="searchResultsSection" class="search-results-section hidden" aria-label="Search results">
+        <div class="search-results-header" id="searchResultsHeader">
+          <!-- Results count and query displayed by JS -->
+        </div>
+        <div class="search-results-grid" id="searchResultsGrid">
+          <!-- Result cards rendered by JavaScript -->
+        </div>
+      </section>
+
+      <!-- Movie Detail Section -->
+      <section id="movieDetailSection" class="movie-detail-section hidden" aria-label="Movie Details">
+        <button id="backToResultsBtn" class="back-btn" aria-label="Back to search results">
+          <i class="fas fa-arrow-left"></i>
+          <span>Back to results</span>
+        </button>
+        <div class="movie-container" id="movieContainer">
+          <!-- Full movie detail card rendered by JavaScript -->
+        </div>
+      </section>
+
+      <!-- Error Section -->
+      <section id="errorSection" class="error-section hidden" aria-label="Error Message">
+        <div class="error-card" id="errorCard">
+          <!-- Error content rendered by JavaScript -->
+        </div>
+      </section>
+
+      <!-- Empty State -->
+      <section id="emptyState" class="empty-state">
+        <div class="empty-state-content">
+          <div class="empty-state-icon">
+            <i class="fas fa-film"></i>
+          </div>
+          <h2 class="empty-state-title">Find Your Movie</h2>
+          <p class="empty-state-text">
+            Search for any movie to discover details, ratings, and more.
+          </p>
+          <div class="empty-state-suggestions">
+            <span class="suggestion-btn" data-movie="Inception">Inception</span>
+            <span class="suggestion-btn" data-movie="The Dark Knight">The Dark Knight</span>
+            <span class="suggestion-btn" data-movie="Interstellar">Interstellar</span>
+            <span class="suggestion-btn" data-movie="Parasite">Parasite</span>
+            <span class="suggestion-btn" data-movie="Spirited Away">Spirited Away</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+ 
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

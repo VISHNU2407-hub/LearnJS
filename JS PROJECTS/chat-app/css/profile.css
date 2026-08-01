@@ -1,0 +1,70 @@
+/* ==============================================
+   PROFILE.CSS — Right Sidebar Profile Panel
+   ============================================== */
+
+/* ----- Profile Panel ----- */
+.profile-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.profile-header h3{font-size:0.9375rem;font-weight:600}
+.profile-body{padding:24px 20px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.profile-body .avatar{margin-bottom:12px}
+.profile-body .profile-display-name{font-size:1.125rem;font-weight:600;color:var(--text-primary)}
+.profile-body .profile-status{font-size:0.8125rem;color:var(--text-secondary);margin-top:2px}
+.profile-body .profile-bio{font-size:0.8125rem;color:var(--text-secondary);margin-top:12px;max-width:280px;line-height:1.5}
+
+/* ----- Profile Details ----- */
+.profile-details{padding:0 20px 16px}
+.detail-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-light)}
+.detail-item:last-child{border-bottom:none}
+.detail-icon{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;font-size:0.875rem;flex-shrink:0}
+.detail-info{flex:1;min-width:0}
+.detail-label{font-size:0.6875rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
+.detail-value{font-size:0.8125rem;color:var(--text-primary);margin-top:1px}
+
+/* ----- Shared Media ----- */
+.media-section{padding:0 20px 20px}
+.media-section-title{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);margin-bottom:12px}
+.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.media-grid .media-item{aspect-ratio:1;border-radius:var(--radius-sm);overflow:hidden;background:var(--bg-tertiary);cursor:pointer}
+.media-grid .media-item img{width:100%;height:100%;object-fit:cover;transition:transform var(--transition-slow)}
+.media-grid .media-item:hover img{transform:scale(1.08)}
+
+/* ----- Settings Page ----- */
+.settings-page{display:flex;flex-direction:column;height:100%}
+.settings-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.settings-body{padding:24px 20px;overflow-y:auto;flex:1}
+.settings-group{margin-bottom:28px}
+.settings-group-title{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);margin-bottom:12px}
+.settings-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border-light)}
+.settings-item:last-child{border-bottom:none}
+.settings-item-label{font-size:0.875rem;color:var(--text-primary)}
+.settings-item-desc{font-size:0.75rem;color:var(--text-secondary);margin-top:2px}
+
+/* ----- 404 Page ----- */
+.page-not-found{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;width:100vw;text-align:center;padding:24px}
+.not-found-code{font-size:6rem;font-weight:800;color:var(--accent-light);font-family:var(--font-heading);line-height:1;letter-spacing:-0.05em}
+.not-found-title{font-size:1.25rem;font-weight:600;margin:12px 0 6px}
+.not-found-text{font-size:0.875rem;color:var(--text-secondary);margin-bottom:24px}
+
+/* ----- Login Page ----- */
+.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;width:100vw;background:var(--bg-primary);padding:24px}
+.login-container{width:100%;max-width:720px;background:var(--bg-secondary);border-radius:var(--radius-xl);padding:40px 32px;box-shadow:var(--shadow-xl);border:1px solid var(--border)}
+.login-header{text-align:center;margin-bottom:36px}
+.login-logo{margin-bottom:20px}
+.login-logo-icon{display:inline-flex;width:56px;height:56px;background:var(--accent);border-radius:var(--radius-lg);align-items:center;justify-content:center;color:#fff;font-size:1.5rem;font-weight:800;font-family:var(--font-heading);box-shadow:0 4px 12px rgba(37,99,235,0.3)}
+.login-title{font-size:1.5rem;font-weight:700;color:var(--text-primary);margin-bottom:6px}
+.login-subtitle{font-size:0.9375rem;color:var(--text-secondary)}
+.login-users{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.login-user-card{display:flex;flex-direction:column;align-items:center;padding:20px 14px;border-radius:var(--radius-lg);border:1px solid var(--border);cursor:pointer;transition:all var(--transition-base);background:var(--bg-primary)}
+.login-user-card:hover{border-color:var(--accent);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.login-user-card:active{transform:translateY(0)}
+.login-user-avatar{position:relative;margin-bottom:12px}
+.login-user-avatar .avatar{width:60px;height:60px}
+.login-user-name{font-size:0.875rem;font-weight:600;color:var(--text-primary);text-align:center;margin-bottom:2px}
+.login-user-role{font-size:0.75rem;color:var(--text-secondary);text-align:center;margin-bottom:4px}
+.login-user-status{font-size:0.6875rem;font-weight:500;color:var(--text-secondary);text-align:center}
+.login-user-status[data-status="online"]{color:var(--success)}
+.login-user-status[data-status="away"]{color:var(--warning)}
+.login-user-status[data-status="offline"]{color:var(--text-tertiary)}
+
+.dark-theme .login-container{background:var(--bg-secondary)}
+.dark-theme .login-user-card{background:var(--bg-tertiary)}

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse our complete collection of premium products.">
+  <title>All Products — ShopHub</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>">
+  <link rel="stylesheet" href="../design-system.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/products.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <nav class="navbar" role="navigation">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="brand-icon">S</span> ShopHub
+      </a>
+      <div class="navbar-links">
+        <a href="index.html">Home</a>
+        <a href="products.html" class="active">Products</a>
+        <a href="categories.html">Categories</a>
+        <a href="profile.html">Profile</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="wishlist.html" class="action-btn" aria-label="Wishlist">
+          ♡ <span class="count wishlist-count" style="display:none">0</span>
+        </a>
+        <a href="cart.html" class="action-btn" aria-label="Cart">
+          🛒 <span class="count cart-count" style="display:none">0</span>
+        </a>
+        <div class="hamburger" aria-label="Toggle menu" role="button" tabindex="0">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-drawer">
+    <div class="mobile-drawer-panel">
+      <div class="mobile-drawer-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="products.html">🛍️ Products</a>
+        <a href="categories.html">📂 Categories</a>
+        <a href="cart.html">🛒 Cart</a>
+        <a href="wishlist.html">♡ Wishlist</a>
+        <a href="profile.html">👤 Profile</a>
+        <a href="checkout.html">💳 Checkout</a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <nav class="breadcrumbs">
+          <a href="index.html">Home</a>
+          <span class="separator">›</span>
+          <span class="current">Products</span>
+        </nav>
+        <h1>All Products</h1>
+      </div>
+
+      <!-- Mobile Filter Toggle -->
+      <button class="mobile-filter-toggle">⚙️ Filters</button>
+
+      <div class="products-layout">
+        <!-- Sidebar Filters -->
+        <aside class="products-sidebar" aria-label="Product filters">
+          <div class="filter-panel">
+            <div class="filter-header">
+              <h3>Filters</h3>
+              <button class="clear-btn" id="clear-filters">Clear all</button>
+              <button class="filter-close" aria-label="Close filters">✕</button>
+            </div>
+
+            <!-- Search -->
+            <div class="filter-section">
+              <div class="filter-section-title">Search</div>
+              <input type="text" class="filter-search-input" placeholder="Search products..." aria-label="Search products">
+            </div>
+
+            <!-- Price Range -->
+            <div class="filter-section">
+              <div class="filter-section-title">Price Range</div>
+              <div class="price-range-inputs">
+                <input type="number" id="min-price" placeholder="$0" min="0" aria-label="Minimum price">
+                <span>—</span>
+                <input type="number" id="max-price" placeholder="$2000" min="0" aria-label="Maximum price">
+              </div>
+            </div>
+
+            <!-- Category -->
+            <div class="filter-section">
+              <div class="filter-section-title">Category</div>
+              <div class="filter-checkboxes" id="category-filters">
+                <p style="font-size:0.875rem;color:var(--text-tertiary)">Loading categories...</p>
+              </div>
+            </div>
+
+            <!-- Rating -->
+            <div class="filter-section">
+              <div class="filter-section-title">Minimum Rating</div>
+              <div class="rating-options">
+                <label class="rating-option"><input type="radio" name="rating" value="4"> ★★★★ &amp; up</label>
+                <label class="rating-option"><input type="radio" name="rating" value="3"> ★★★ &amp; up</label>
+                <label class="rating-option"><input type="radio" name="rating" value="2"> ★★ &amp; up</label>
+                <label class="rating-option"><input type="radio" name="rating" value="1"> ★ &amp; up</label>
+              </div>
+            </div>
+
+            <!-- Availability -->
+            <div class="filter-section">
+              <div class="filter-section-title">Availability</div>
+              <label class="filter-checkbox">
+                <input type="checkbox" id="filter-instock">
+                <span>In Stock Only</span>
+              </label>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Products Content -->
+        <div>
+          <!-- Top Bar -->
+          <div class="products-topbar">
+            <div class="products-count" id="products-count">Loading products...</div>
+            <div class="products-topbar-right">
+              <div class="view-toggle">
+                <button class="active" data-view="grid" aria-label="Grid view">⊞</button>
+                <button data-view="list" aria-label="List view">☰</button>
+              </div>
+              <select class="sort-select" id="sort-select" aria-label="Sort products">
+                <option value="default">Default</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+                <option value="name">Name</option>
+                <option value="newest">Newest</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Products Grid/List -->
+          <div id="products-grid" class="products-grid">
+            <div style="grid-column:1/-1;text-align:center;padding:40px">
+              <div class="loading-overlay">
+                <div class="spinner"></div>
+                <span class="loading-text">Loading products...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination" id="pagination"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div>            <div class="footer-brand"><span class="brand-icon">S</span> ShopHub</div>
+            <p class="footer-description">Your premium destination for quality products.</p>
+            <div class="footer-social">
+              <a href="#" aria-label="Twitter">𝕏</a>
+              <a href="#" aria-label="Instagram">IG</a>
+              <a href="#" aria-label="Facebook">FB</a>
+              <a href="#" aria-label="YouTube">YT</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer-heading">Shop</h4>
+            <div class="footer-links">
+              <a href="products.html">All Products</a>
+              <a href="categories.html">Categories</a>
+              <a href="products.html">Best Sellers</a>
+              <a href="products.html">New Arrivals</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer-heading">Support</h4>
+            <div class="footer-links">
+              <a href="profile.html">My Account</a>
+              <a href="#">Help Center</a>
+              <a href="#">Shipping Info</a>
+              <a href="#">Returns</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer-heading">Newsletter</h4>
+            <p class="footer-newsletter-text">Get 10% off your first order.</p>
+            <form class="footer-newsletter-form">
+              <input type="email" placeholder="Enter your email" aria-label="Email for newsletter">
+              <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+            </form>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>&copy; 2026 ShopHub. All rights reserved.</span>
+          <div class="footer-bottom-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" aria-label="Back to top">↑</button>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/wishlist.js"></script>
+  <script src="js/orders.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

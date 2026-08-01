@@ -1,0 +1,70 @@
+@import url('../design-system.css');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+}
+
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 24px;
+}
+
+.card {
+  width: 380px;
+  padding: 40px;
+  text-align: center;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+}
+
+.card h1 {
+  color: var(--text-primary);
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.count {
+  font-size: 5rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 30px;
+  font-family: var(--font-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+}
+
+button {
+  flex: 1;
+  border: none;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-body);
+}
+
+button:hover { transform: translateY(-2px); }
+button:active { transform: scale(0.97); }
+
+#increment { background: var(--success); color: white; }
+#increment:hover { filter: brightness(1.1); }
+#decrement { background: var(--danger); color: white; }
+#decrement:hover { filter: brightness(1.1); }
+#reset { background: var(--accent); color: white; }
+#reset:hover { filter: brightness(1.1); }

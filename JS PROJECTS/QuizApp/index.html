@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz App</title>
+  <link rel="stylesheet" href="../design-system.css">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+</head>
+<body>
+  <main class="main-wrapper">
+    <div class="container">
+    <section class="screen start-screen active" id="startScreen">
+      <div class="card">
+        <div class="app-icon" role="img" aria-label="Brain">🧠</div>
+        <h1 class="app-title">Quiz App</h1>
+        <p class="app-description">Test your knowledge with 10 fun questions. Pick an answer, see your score, and learn as you go!</p>
+        <button class="btn btn-primary btn-full" id="startBtn">Start Quiz</button>
+      </div>
+    </section>
+    <section class="screen quiz-screen" id="quizScreen">
+      <div class="progress-header">
+        <span class="progress-text" id="progressText">Question 1 of 10</span>
+        <div class="progress-right">
+          <span class="timer-display" id="timerDisplay">⏱ 15s</span>
+          <span class="progress-percent" id="progressPercent">10%</span>
+        </div>
+      </div>
+      <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="10">
+        <div class="progress-fill" id="progressFill" style="width: 10%"></div>
+      </div>
+      <div class="card question-card">
+        <h2 class="question-text" id="questionText">What does &quot;CSS&quot; stand for?</h2>
+        <div class="options" id="optionsContainer">
+          <button class="option-btn" data-index="0">Cascading Style Sheets</button>
+          <button class="option-btn" data-index="1">Creative Style System</button>
+          <button class="option-btn" data-index="2">Computer Style Sheets</button>
+          <button class="option-btn" data-index="3">Colorful Style Sheets</button>
+        </div>
+      </div>
+      <div class="quiz-footer">
+        <div class="score-display" id="scoreDisplay">Score: <span id="scoreValue">0</span></div>
+        <button class="btn btn-primary" id="nextBtn">Next</button>
+      </div>
+    </section>
+    <section class="screen result-screen" id="resultScreen">
+      <div class="card result-card">
+        <div class="result-icon" role="img" aria-label="Trophy">🏆</div>
+        <h1 class="result-title">Quiz Completed!</h1>
+        <div class="final-score" id="finalScore">
+          <span class="score-number" id="scoreNumber">8</span>
+          <span class="score-divider">/</span>
+          <span class="score-total" id="scoreTotal">10</span>
+        </div>
+        <div class="result-details">
+          <div class="result-stat correct-stat"><span class="stat-icon">✓</span> <span class="stat-label">Correct</span> <span class="stat-value" id="correctCount">8</span></div>
+          <div class="result-stat incorrect-stat"><span class="stat-icon">✗</span> <span class="stat-label">Incorrect</span> <span class="stat-value" id="incorrectCount">2</span></div>
+        </div>
+        <button class="btn btn-primary btn-full" id="restartBtn">Restart Quiz</button>
+      </div>
+    </section>
+    </div>
+  </main>
+  <noscript><p class="noscript-msg">JavaScript is required to run this quiz.</p></noscript>
+  <script src="script.js"></script>
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

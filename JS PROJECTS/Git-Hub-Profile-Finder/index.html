@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GitHub Profile Finder - Search and explore GitHub user profiles with a premium glassmorphism interface">
+  <meta name="theme-color" content="#667eea">
+
+  <title>GitHub Profile Finder</title>
+
+  <!-- Google Fonts for premium typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../design-system.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== ANIMATED BACKGROUND PARTICLES ===== -->
+  <div class="bg-particles" aria-hidden="true">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container header__inner">
+      <!-- Logo / Brand -->
+      <a href="#" class="logo" aria-label="GitHub Profile Finder Home">
+        <svg class="logo__icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+        <span class="logo__text">GitHub Profile Finder</span>
+      </a>
+
+      <!-- Tagline -->
+      <p class="header__tagline">Discover developer profiles</p>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main">
+    <div class="container">
+
+      <!-- ===== SEARCH SECTION ===== -->
+      <section class="search-section" aria-label="Search GitHub users">
+        <div class="search-card">
+          <div class="search-card__icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <h1 class="search-card__title">Explore GitHub Profiles</h1>
+          <p class="search-card__subtitle">Enter a GitHub username to discover their profile and repositories</p>
+
+          <!-- Search Form -->
+          <form class="search-form" id="searchForm" role="search" aria-label="Search GitHub profiles">
+            <div class="search-form__wrapper">
+              <div class="search-form__input-group">
+                <svg class="search-form__input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input
+                  type="text"
+                  id="searchInput"
+                  class="search-form__input"
+                  placeholder="e.g., octocat, torvalds, gaearon"
+                  autocomplete="off"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  aria-label="Enter GitHub username"
+                  autofocus
+                >
+                <!-- Clear button (hidden by default) -->
+                <button
+                  type="button"
+                  class="search-form__clear"
+                  id="clearBtn"
+                  aria-label="Clear search input"
+                  hidden
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+              <button type="submit" class="search-form__button" id="searchBtn">
+                <svg class="search-form__btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span class="search-form__btn-text">Search</span>
+                <!-- Spinner shown during loading -->
+                <span class="search-form__spinner" id="searchSpinner" hidden aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10" stroke-dasharray="31.4 31.4" stroke-linecap="round"></circle>
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </form>
+
+          <!-- ===== RECENT SEARCHES ===== -->
+          <div class="recent-searches" id="recentSearches" hidden>
+            <div class="recent-searches__header">
+              <span class="recent-searches__label">Recent Searches</span>
+              <button class="recent-searches__clear" id="clearHistoryBtn" type="button" aria-label="Clear search history">
+                Clear all
+              </button>
+            </div>
+            <div class="recent-searches__list" id="recentSearchesList" role="list" aria-label="Recent GitHub usernames searched">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== RESULTS SECTION ===== -->
+      <section class="results-section" id="resultsSection" aria-label="Profile results" hidden>
+        <!-- Loading Spinner -->
+        <div class="loading" id="loadingIndicator" hidden role="status" aria-live="polite">
+          <div class="loading__spinner"></div>
+          <p class="loading__text">Fetching profile data...</p>
+        </div>
+
+        <!-- Error Card (shown on failures) -->
+        <div class="error-card" id="errorCard" hidden role="alert">
+          <div class="error-card__icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <h3 class="error-card__title" id="errorTitle">Error</h3>
+          <p class="error-card__message" id="errorMessage">Something went wrong.</p>
+        </div>
+
+        <!-- ===== PROFILE CARD ===== -->
+        <div class="profile-card" id="profileCard" hidden>
+          <div class="profile-card__header">
+            <!-- Avatar -->
+            <div class="profile-card__avatar-wrapper">
+              <img
+                src=""
+                alt=""
+                class="profile-card__avatar"
+                id="profileAvatar"
+                loading="lazy"
+              >
+              <div class="profile-card__avatar-ring"></div>
+            </div>
+
+            <!-- Name & Username -->
+            <div class="profile-card__identity">
+              <h2 class="profile-card__name" id="profileName">—</h2>
+              <div class="profile-card__username-row">
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="profile-card__username"
+                  id="profileUsername"
+                >@—</a>
+                <button
+                  class="profile-card__copy-btn"
+                  id="copyUrlBtn"
+                  type="button"
+                  aria-label="Copy profile URL to clipboard"
+                  title="Copy profile URL"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Bio -->
+            <p class="profile-card__bio" id="profileBio">No bio available.</p>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="profile-card__stats">
+            <div class="stat" title="Public Repositories">
+              <svg class="stat__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span class="stat__value" id="profileRepos">0</span>
+              <span class="stat__label">Repositories</span>
+            </div>
+            <div class="stat" title="Followers">
+              <svg class="stat__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span class="stat__value" id="profileFollowers">0</span>
+              <span class="stat__label">Followers</span>
+            </div>
+            <div class="stat" title="Following">
+              <svg class="stat__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span class="stat__value" id="profileFollowing">0</span>
+              <span class="stat__label">Following</span>
+            </div>
+          </div>
+
+          <!-- Details Grid -->
+          <div class="profile-card__details" id="profileDetails">
+            <!-- Dynamically populated with company, location, etc. -->
+          </div>
+
+          <!-- Footer / Meta -->
+          <div class="profile-card__footer">
+            <span class="profile-card__joined" id="profileJoined">Joined —</span>
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="profile-card__view-btn"
+              id="viewProfileBtn"
+            >
+              View on GitHub
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ===== REPOSITORIES SECTION ===== -->
+        <div class="repos-section" id="reposSection" hidden>
+          <div class="repos-section__header">
+            <h3 class="repos-section__title">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              Latest Repositories
+            </h3>
+          </div>
+          <div class="repos-grid" id="reposGrid" role="list" aria-label="Latest public repositories">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script src="script.js"></script>
+
+  <footer class="vks-footer">
+    <div class="vks-footer-inner">
+      <p class="vks-footer-heart">Made with <span class="vks-heart">💜</span></p>
+      <p class="vks-footer-brand" aria-label="VKS"><span class="vks-typing"></span><span class="vks-cursor">|</span></p>
+      <p class="vks-footer-by">Visionary Kraft Studio</p>
+      <div class="vks-footer-divider"></div>
+      <p class="vks-footer-copy">&copy; 2026 Visionary Kraft Studio. All Rights Reserved.</p>
+    </div>
+  </footer>
+<script src="../footer.js"></script>
+</body>
+</html>

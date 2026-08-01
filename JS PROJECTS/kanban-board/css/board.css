@@ -1,0 +1,275 @@
+/* ============================================
+   BOARD STYLES - Columns & Board Layout
+   ============================================ */
+
+/* ----- Filter Pills Bar ----- */
+.filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-pills__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-right: 2px;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.filter-pill:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-tertiary);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.filter-pill:active {
+  transform: translateY(0);
+}
+
+.filter-pill--active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text-inverse);
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
+}
+
+.filter-pill--active:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--text-inverse);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Priority-colored dots for pills */
+.filter-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.filter-pill__dot--urgent { background: var(--priority-urgent); }
+.filter-pill__dot--high { background: var(--priority-high); }
+.filter-pill__dot--medium { background: var(--priority-medium); }
+.filter-pill__dot--low { background: var(--priority-low); }
+.filter-pill__dot--all { background: var(--text-tertiary); }
+
+/* ----- Board Layout ----- */
+.board {
+  display: flex;
+  gap: var(--column-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--space-sm) var(--space-xs) var(--space-lg);
+  min-height: calc(100vh - var(--nav-height) - 160px);
+  align-items: flex-start;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.board::-webkit-scrollbar {
+  height: 8px;
+}
+
+.board::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.board::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+  border: 2px solid var(--bg-primary);
+}
+
+.board::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Column */
+.column {
+  min-width: var(--column-width);
+  max-width: var(--column-width);
+  background: var(--bg-column);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--nav-height) - 180px);
+  transition: box-shadow var(--transition-base), background var(--transition-base), transform var(--transition-base);
+  border: 2px solid transparent;
+  flex-shrink: 0;
+}
+
+.column:first-child {
+  margin-left: 0;
+}
+
+.column:last-child {
+  margin-right: 0;
+}
+
+.column:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.column--drag-over {
+  border-color: var(--accent);
+  background: var(--accent-subtle);
+  box-shadow: 0 0 0 4px var(--accent-light);
+  transform: scale(1.01);
+}
+
+.column__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-md) var(--space-sm);
+  flex-shrink: 0;
+}
+
+.column__header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.column__title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.column__count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  background: var(--bg-active);
+  padding: 2px 8px;
+  border-radius: 20px;
+  min-width: 22px;
+  text-align: center;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.column__count--highlight {
+  background: var(--accent);
+  color: var(--text-inverse);
+}
+
+.column__add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.column__add-btn:hover {
+  background: var(--bg-active);
+  color: var(--accent);
+}
+
+.column__body {
+  padding: 0 var(--space-sm) var(--space-sm);
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 60px;
+}
+
+.column__cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-height: 40px;
+}
+
+.column__cards--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-md);
+  text-align: center;
+  color: var(--text-tertiary);
+}
+
+.empty-state__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--bg-active);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-sm);
+  color: var(--text-tertiary);
+}
+
+.empty-state__text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.empty-state__sub {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+/* Column Color Indicators */
+.column__indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.column__indicator--todo { background: var(--text-tertiary); }
+.column__indicator--in-progress { background: var(--accent); }
+.column__indicator--review { background: var(--warning); }
+.column__indicator--done { background: var(--success); }
