@@ -1,0 +1,14 @@
+{
+  "title": "Movie Search App",
+  "description": "Discover movies with live search, posters and detail views from an API.",
+  "difficulty": "Intermediate",
+  "estimatedTime": "5 hours",
+  "category": "APIs & Data",
+  "tags": [
+    "API",
+    "Fetch",
+    "Search"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}

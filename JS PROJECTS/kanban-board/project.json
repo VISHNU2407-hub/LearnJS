@@ -1,0 +1,14 @@
+{
+  "title": "Kanban Board",
+  "description": "A drag-and-drop kanban board with columns, tags and persistence.",
+  "difficulty": "Advanced",
+  "estimatedTime": "8 hours",
+  "category": "Advanced",
+  "tags": [
+    "Drag & Drop",
+    "State",
+    "LocalStorage"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}

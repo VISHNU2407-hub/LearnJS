@@ -1,0 +1,14 @@
+{
+  "title": "Notes App",
+  "description": "Markdown notes with live search, tags and a card layout.",
+  "difficulty": "Intermediate",
+  "estimatedTime": "4 hours",
+  "category": "Core JS",
+  "tags": [
+    "CRUD",
+    "Search",
+    "LocalStorage"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}

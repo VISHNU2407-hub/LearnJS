@@ -1,0 +1,14 @@
+{
+  "title": "Quiz App",
+  "description": "Timed quizzes with scoring, progress and a results screen.",
+  "difficulty": "Beginner",
+  "estimatedTime": "3 hours",
+  "category": "Core JS",
+  "tags": [
+    "State",
+    "Events",
+    "DOM"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}

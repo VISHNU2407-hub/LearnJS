@@ -1,0 +1,14 @@
+{
+  "title": "Blog Website",
+  "description": "A static blog website with article data, build scripts and generated pages.",
+  "difficulty": "Intermediate",
+  "estimatedTime": "4 hours",
+  "category": "Full-Stack",
+  "tags": [
+    "HTML",
+    "CSS",
+    "Generator"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}

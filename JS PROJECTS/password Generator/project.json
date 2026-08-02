@@ -1,0 +1,14 @@
+{
+  "title": "Password Generator",
+  "description": "Generate secure random passwords with options and one-click copy.",
+  "difficulty": "Beginner",
+  "estimatedTime": "2 hours",
+  "category": "Core JS",
+  "tags": [
+    "Crypto",
+    "DOM",
+    "Clipboard"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Pokédex App",
+  "description": "Browse Pokémon with search, stats and sprites from the PokéAPI.",
+  "difficulty": "Intermediate",
+  "estimatedTime": "4 hours",
+  "category": "APIs & Data",
+  "tags": [
+    "API",
+    "Fetch",
+    "UI"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "To-Do List",
+  "description": "A task manager with priorities, filters and localStorage persistence.",
+  "difficulty": "Beginner",
+  "estimatedTime": "2 hours",
+  "category": "Core JS",
+  "tags": [
+    "CRUD",
+    "LocalStorage",
+    "DOM"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Quote Generator",
+  "description": "Fetch random inspirational quotes with a share button.",
+  "difficulty": "Beginner",
+  "estimatedTime": "1 hour",
+  "category": "APIs & Data",
+  "tags": [
+    "API",
+    "Fetch",
+    "DOM"
+  ],
+  "cover": "cover.jpeg",
+  "entry": "index.html"
+}

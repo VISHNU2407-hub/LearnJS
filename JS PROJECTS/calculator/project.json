@@ -1,0 +1,14 @@
+{
+  "title": "Calculator",
+  "description": "A clean calculator with keyboard support and chained operations.",
+  "difficulty": "Beginner",
+  "estimatedTime": "2 hours",
+  "category": "Core JS",
+  "tags": [
+    "DOM",
+    "Events",
+    "Math"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}

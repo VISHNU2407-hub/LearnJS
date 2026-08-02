@@ -1,0 +1,14 @@
+{
+  "title": "Expense Tracker",
+  "description": "Track spending with budgets, category breakdowns and live charts.",
+  "difficulty": "Intermediate",
+  "estimatedTime": "5 hours",
+  "category": "Core JS",
+  "tags": [
+    "Charts",
+    "LocalStorage",
+    "CRUD"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}

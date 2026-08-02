@@ -1,0 +1,13 @@
+{
+  "title": "Character Counter",
+  "description": "Count characters, words and lines in real time as you type.",
+  "difficulty": "Beginner",
+  "estimatedTime": "1 hour",
+  "category": "Core JS",
+  "tags": [
+    "DOM",
+    "Text"
+  ],
+  "cover": "cover.png",
+  "entry": "index.html"
+}
