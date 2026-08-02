@@ -1,0 +1,94 @@
+/* ============================================================
+   LearnJS — animations.css
+   Keyframes, scroll-reveal system and micro-interactions.
+   ============================================================ */
+
+/* ---------- Keyframes ---------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.92) translateY(-6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes spin360 { to { transform: rotate(360deg); } }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes pulseSoft {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+
+/* ---------- Scroll reveal ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  will-change: opacity, transform;
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.reveal-scale.in-view { opacity: 1; transform: scale(1); }
+
+.reveal-left { opacity: 0; transform: translateX(-28px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+.reveal-right { opacity: 0; transform: translateX(28px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+.reveal-left.in-view, .reveal-right.in-view { opacity: 1; transform: translateX(0); }
+
+/* Stagger helpers */
+.rd-1 { transition-delay: 0.08s; }
+.rd-2 { transition-delay: 0.16s; }
+.rd-3 { transition-delay: 0.24s; }
+.rd-4 { transition-delay: 0.32s; }
+.rd-5 { transition-delay: 0.4s; }
+
+/* ---------- Floating ---------- */
+.float { animation: floatY 6s ease-in-out infinite; }
+.float-slow { animation: floatY 8s ease-in-out infinite; }
+
+/* ---------- Typewriter cursor ---------- */
+.typewriter-cursor {
+  display: inline-block;
+  width: 9px;
+  height: 1.05em;
+  background: #22c55e;
+  vertical-align: text-bottom;
+  margin-left: 3px;
+  border-radius: 2px;
+  animation: blink 1.05s step-end infinite;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal, .reveal-scale, .reveal-left, .reveal-right {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* end of animations.css */
