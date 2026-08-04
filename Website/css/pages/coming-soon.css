@@ -41,6 +41,7 @@
   padding: 0.45rem 1.05rem;
   border-radius: 999px;
 }
+.soon-badge svg { width: 14px; height: 14px; }
 
 .preview-grid {
   display: grid;

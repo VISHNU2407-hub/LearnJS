@@ -1,7 +1,7 @@
 /* ============================================================
    LearnJS — app.js
-   Page-level logic: toasts, newsletter, notify forms, footer
-   year, and shared helpers exposed on window.LearnJS.
+   Page-level logic: toasts, notify forms, footer year, and
+   shared helpers exposed on window.LearnJS.
    ============================================================ */
 
 (function () {
@@ -54,31 +54,6 @@
     }
   }
 
-  /* ---------- Newsletter (index page) ---------- */
-  function initNewsletter() {
-    var form = document.querySelector(".nl-form");
-    if (!form) return;
-
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      var input = form.querySelector('input[type="email"]');
-      var success = form.parentElement.querySelector(".nl-success");
-      var email = input.value;
-
-      if (!isValidEmail(email)) {
-        input.classList.add("is-error");
-        toast("Please enter a valid email address.", "error");
-        setTimeout(function () { input.classList.remove("is-error"); }, 2200);
-        return;
-      }
-
-      saveSubscriber(email);
-      form.style.display = "none";
-      if (success) success.classList.add("show");
-      toast("Welcome aboard! Check your inbox \u2709\ufe0f");
-    });
-  }
-
   /* ---------- "Notify me" forms (coming-soon pages) ---------- */
   function initNotifyForms() {
     document.querySelectorAll(".notify-form").forEach(function (form) {
@@ -119,7 +94,6 @@
   }
 
   ready(function () {
-    initNewsletter();
     initNotifyForms();
     initYear();
   });

@@ -40,6 +40,13 @@
       btn.setAttribute("aria-pressed", String(dark));
       btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
     }
+
+    // Sync the Settings segmented Light / Dark selector.
+    document.querySelectorAll(".theme-option[data-theme]").forEach(function (opt) {
+      var active = opt.getAttribute("data-theme") === theme;
+      opt.classList.toggle("active", active);
+      opt.setAttribute("aria-pressed", String(active));
+    });
   }
 
   function toggle() {
@@ -56,6 +63,12 @@
 
     var btn = document.getElementById("themeToggle");
     if (btn) btn.addEventListener("click", toggle);
+
+    document.querySelectorAll(".theme-option[data-theme]").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        apply(opt.getAttribute("data-theme"));
+      });
+    });
   }
 
   if (document.readyState === "loading") {

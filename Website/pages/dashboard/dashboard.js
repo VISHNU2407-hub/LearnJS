@@ -50,17 +50,40 @@ function parseHours(estimatedTime) {
   return m ? parseFloat(m[1]) : 0;
 }
 
-const CATEGORY_EMOJI = {
-  "Core JS": "\u26a1", "APIs & Data": "\ud83c\udf10", "Advanced": "\ud83d\ude80",
-  "Full-Stack": "\ud83e\udde9", "Games": "\ud83c\udfae"
+/* Lucide icon markup (https://lucide.dev) — stroke-based, matches the design system. */
+const ICONS = {
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  circleCheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
+  rocket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>',
+  arrowRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
+  external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+  sprout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/><path d="M5 21h14"/></svg>',
+  flame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg>',
+  trophy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/></svg>',
+  zap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.914 4a1.5 1.5 0 0 0-2.474-1.561l-9 9A1.5 1.5 0 0 0 5.5 14h4.002a.5.5 0 0 1 .471.666L8.086 20a1.5 1.5 0 0 0 2.475 1.56l9-9A1.5 1.5 0 0 0 18.5 10h-3.997a.5.5 0 0 1-.472-.667z"/></svg>',
+  graduation: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>',
+  inbox: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
+  folderOpen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>',
+  trending: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>',
+  globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>',
+  puzzle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"/></svg>',
+  gamepad: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></svg>'
+};
+
+const CATEGORY_ICON = {
+  "Core JS": ICONS.zap, "APIs & Data": ICONS.globe, "Advanced": ICONS.rocket,
+  "Full-Stack": ICONS.puzzle, "Games": ICONS.gamepad
 };
 const ACHIEVEMENTS = [
-  { id: "first", emoji: "\ud83c\udf31", name: "First Project", desc: "Complete your first project", test: (s) => s.completed >= 1 },
-  { id: "three", emoji: "\ud83d\udd25", name: "On Fire", desc: "Complete 3 projects", test: (s) => s.completed >= 3 },
-  { id: "five", emoji: "\ud83c\udfc6", name: "Project Pro", desc: "Complete 5 projects", test: (s) => s.completed >= 5 },
-  { id: "streak3", emoji: "\u26a1", name: "Streak 3", desc: "Reach a 3-day streak", test: (s) => s.streak >= 3 },
-  { id: "ten", emoji: "\ud83d\ude80", name: "Marathoner", desc: "Complete 10 projects", test: (s) => s.completed >= 10 },
-  { id: "beginner", emoji: "\ud83c\udf93", name: "Beginner Slayer", desc: "Finish every Beginner project", test: (s) => s.beginnerDone }
+  { id: "first", icon: ICONS.sprout, name: "First Project", desc: "Complete your first project", test: (s) => s.completed >= 1 },
+  { id: "three", icon: ICONS.flame, name: "On Fire", desc: "Complete 3 projects", test: (s) => s.completed >= 3 },
+  { id: "five", icon: ICONS.trophy, name: "Project Pro", desc: "Complete 5 projects", test: (s) => s.completed >= 5 },
+  { id: "streak3", icon: ICONS.zap, name: "Streak 3", desc: "Reach a 3-day streak", test: (s) => s.streak >= 3 },
+  { id: "ten", icon: ICONS.rocket, name: "Marathoner", desc: "Complete 10 projects", test: (s) => s.completed >= 10 },
+  { id: "beginner", icon: ICONS.graduation, name: "Beginner Slayer", desc: "Finish every Beginner project", test: (s) => s.beginnerDone }
 ];
 
 /* ------------------------------------------------------------
@@ -70,9 +93,63 @@ let currentUser = null;
 let allProjects = [];       // raw list from Website/data/projects.json
 let progressMap = {};       // slug -> { status, percent, updatedAt }
 let userDoc = null;         // Firestore users/{uid} document data
-let activePanel = "home";   // currently visible panel (used by topbar search jump)
+let activePanel = "home";   // currently visible panel
 let stats = { total: 0, completed: 0, started: 0, streak: 0, roadmaps: 0, hours: 0, overall: 0, beginnerDone: false };
 let lastSignature = "";     // project list signature, used by the auto-refresh poll
+
+/* ------------------------------------------------------------
+   Sidebar collapse (desktop) + icon-only tooltips
+   ------------------------------------------------------------ */
+const SIDEBAR_STORAGE_KEY = "learnjs-dash-sidebar";
+const dashShell = document.getElementById("dashShell");
+const dashSidebar = document.getElementById("dashSidebar");
+
+function applySidebarState(collapsed) {
+  dashShell.classList.toggle("sidebar-collapsed", collapsed);
+  dashSidebar.classList.toggle("collapsed", collapsed);
+  const btn = document.getElementById("dashCollapseToggle");
+  if (btn) {
+    btn.setAttribute("aria-pressed", String(collapsed));
+    btn.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+  }
+}
+
+function initSidebarState() {
+  let collapsed = false;
+  try { collapsed = localStorage.getItem(SIDEBAR_STORAGE_KEY) === "collapsed"; } catch (err) {}
+  applySidebarState(collapsed);
+}
+
+document.getElementById("dashCollapseToggle").addEventListener("click", () => {
+  const collapsed = !dashShell.classList.contains("sidebar-collapsed");
+  applySidebarState(collapsed);
+  try { localStorage.setItem(SIDEBAR_STORAGE_KEY, collapsed ? "collapsed" : "expanded"); } catch (err) {}
+});
+
+/* Floating tooltip for nav items when the sidebar is collapsed. */
+function initSidebarTooltips() {
+  const tip = document.createElement("div");
+  tip.className = "dash-tooltip";
+  tip.setAttribute("role", "tooltip");
+  document.body.appendChild(tip);
+
+  document.querySelectorAll(".dash-nav-item").forEach((item) => {
+    const label = item.getAttribute("data-label") || item.textContent.trim();
+    item.addEventListener("mouseenter", () => {
+      if (!dashSidebar.classList.contains("collapsed") || window.innerWidth <= 1024) return;
+      tip.textContent = label;
+      const r = item.getBoundingClientRect();
+      tip.style.top = r.top + r.height / 2 + "px";
+      tip.style.left = r.right + 12 + "px";
+      tip.classList.add("show");
+    });
+    item.addEventListener("mouseleave", () => tip.classList.remove("show"));
+    item.addEventListener("click", () => tip.classList.remove("show"));
+  });
+}
+
+initSidebarState();
+initSidebarTooltips();
 
 /* ------------------------------------------------------------
    Auth guard + boot
@@ -241,10 +318,21 @@ function renderStats() {
     stats.overall === 100 ? "Amazing \u2014 you completed everything! \ud83c\udf89" :
     "Keep going \u2014 every project counts.";
 
-  el("homeSummary").textContent =
-    stats.completed === 0
-      ? "You haven't finished a project yet \u2014 today is a great day to start."
-      : "You've completed " + stats.completed + " project" + (stats.completed === 1 ? "" : "s") + ". Keep the momentum going!";
+  // Static sub-line; the motivational pill below carries the dynamic copy.
+  el("homeSummary").textContent = "Here's what's happening with your learning today.";
+
+  // Motivational pill under the greeting — keeps the welcome engaging.
+  const motive = el("homeMotive");
+  if (motive) {
+    const icon = stats.started > 0 ? ICONS.zap : stats.completed > 0 ? ICONS.flame : ICONS.rocket;
+    const text =
+      stats.started > 0
+        ? stats.started + (stats.started === 1 ? " project" : " projects") + " in progress \u2014 keep it going"
+        : stats.completed > 0
+          ? "You're building consistently \u2014 " + stats.completed + " completed"
+          : "Today's goal: start your first project";
+    motive.innerHTML = icon + "<span>" + text + "</span>";
+  }
 }
 
 /* ---------- Projects grid with filters ---------- */
@@ -285,7 +373,7 @@ function renderProjects() {
     return;
   }
   if (!list.length) {
-    grid.innerHTML = '<div class="dash-empty">No projects match your filters.</div>';
+    grid.innerHTML = '<div class="dash-empty"><span class="empty-ico">' + ICONS.inbox + "</span>No projects match your filters.</div>";
     return;
   }
 
@@ -301,27 +389,36 @@ function renderProjects() {
   });
 }
 
+/* Shared difficulty + status badge data for a project card. Status is driven
+   by the user's live progress; difficulty by the project data field. */
+function badgeParts(p) {
+  const prog = progressMap[p.id] || { status: "none", percent: 0 };
+  const statusLabel = prog.status === "completed" ? "Completed" : prog.status === "started" ? "In Progress" : "Not Started";
+  const statusClass = prog.status === "completed" ? "done" : prog.status === "started" ? "started" : "none";
+  const diffClass = (p.difficulty || "").toLowerCase();
+  const diffBadge = p.difficulty ? '<span class="difficulty-badge ' + diffClass + '">' + escapeHtml(p.difficulty) + "</span>" : "";
+  return { statusLabel, statusClass, diffBadge };
+}
+
 function projectCardHTML(p) {
   const prog = progressMap[p.id] || { status: "none", percent: 0 };
-  const statusLabel = prog.status === "completed" ? "Done" : prog.status === "started" ? "In progress" : "";
-  const statusClass = prog.status === "completed" ? "done" : prog.status === "started" ? "started" : "";
-  const diffClass = (p.difficulty || "").toLowerCase();
-  const emoji = CATEGORY_EMOJI[p.category] || "\ud83d\udce6";
-  const timeIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
+  const { statusLabel, statusClass, diffBadge } = badgeParts(p);
+  const catIcon = CATEGORY_ICON[p.category] || ICONS.folderOpen;
+  const actionIcon = prog.status === "completed" ? ICONS.check : prog.status === "started" ? ICONS.arrowRight : ICONS.play;
+  const actionLabel = prog.status === "completed" ? "Completed" : prog.status === "started" ? "Continue" : "Start Learning";
 
   return (
     '<article class="project-card">' +
       '<div class="project-cover">' +
         '<img src="' + escapeHtml(p.coverImage) + '" alt="' + escapeHtml(p.title) + '" loading="lazy">' +
-        '<span class="difficulty-badge ' + diffClass + '">' + escapeHtml(p.difficulty) + "</span>" +
-        (statusLabel ? '<span class="project-status ' + statusClass + '">' + statusLabel + "</span>" : "") +
+        diffBadge +
       "</div>" +
       '<div class="project-body">' +
         '<h3>' + escapeHtml(p.title) + "</h3>" +
         '<p class="project-desc">' + escapeHtml(p.description) + "</p>" +
         '<div class="project-meta">' +
-          '<span class="project-time">' + timeIcon + escapeHtml(p.estimatedTime) + "</span>" +
-          '<span class="project-time">' + emoji + " " + escapeHtml(p.category) + "</span>" +
+          '<span class="project-time">' + ICONS.clock + escapeHtml(p.estimatedTime) + "</span>" +
+          '<span class="project-time">' + catIcon + " " + escapeHtml(p.category) + "</span>" +
         "</div>" +
         '<div class="project-tags">' +
           (p.tags || []).slice(0, 3).map((t) => '<span class="tag">' + escapeHtml(t) + "</span>").join("") +
@@ -330,11 +427,16 @@ function projectCardHTML(p) {
           '<div class="project-progress-head"><span>Progress</span><b>' + (prog.percent || 0) + "%</b></div>" +
           '<div class="bar"><div class="bar-fill" style="width:' + (prog.percent || 0) + '%"></div></div>' +
         "</div>" +
+        '<div class="project-status-row">' +
+          '<span class="project-status ' + statusClass + '">' + statusLabel + "</span>" +
+        "</div>" +
         '<div class="project-actions">' +
           '<button class="btn btn-primary btn-sm" data-action="start" data-slug="' + escapeHtml(p.id) + '" type="button">' +
-            (prog.status === "completed" ? "Completed \u2713" : prog.status === "started" ? "Continue" : "Start Learning") +
+            actionIcon + actionLabel +
           "</button>" +
-          '<button class="btn btn-outline btn-sm" data-action="details" data-slug="' + escapeHtml(p.id) + '" type="button">View Details</button>' +
+          '<button class="btn btn-outline btn-sm" data-action="details" data-slug="' + escapeHtml(p.id) + '" type="button">' +
+            ICONS.external + "View Details" +
+          "</button>" +
         "</div>" +
       "</div>" +
     "</article>"
@@ -347,15 +449,27 @@ function renderRecent() {
   if (!wrap) return;
   const recent = [...allProjects].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)).slice(0, 4);
   if (!recent.length) {
-    wrap.innerHTML = '<div class="dash-empty">Projects will appear here.</div>';
+    wrap.innerHTML = '<div class="dash-empty"><span class="empty-ico">' + ICONS.folderOpen + "</span>Projects will appear here.</div>";
     return;
   }
-  wrap.innerHTML = recent.map((p) =>
-    '<div class="recent-card">' +
-      '<img src="' + escapeHtml(p.coverImage) + '" alt="' + escapeHtml(p.title) + '" loading="lazy">' +
-      '<div class="recent-card-body"><h3>' + escapeHtml(p.title) + "</h3><span>" + escapeHtml(p.category) + "</span></div>" +
-    "</div>"
-  ).join("");
+  wrap.innerHTML = recent.map((p) => {
+    const { statusLabel, statusClass, diffBadge } = badgeParts(p);
+    return (
+      '<div class="recent-card">' +
+        '<div class="recent-cover">' +
+          '<img src="' + escapeHtml(p.coverImage) + '" alt="' + escapeHtml(p.title) + '" loading="lazy">' +
+          diffBadge +
+        "</div>" +
+        '<div class="recent-card-body">' +
+          "<h3>" + escapeHtml(p.title) + "</h3>" +
+          '<div class="recent-meta">' +
+            '<span class="recent-cat">' + escapeHtml(p.category) + "</span>" +
+            '<span class="project-status ' + statusClass + '">' + statusLabel + "</span>" +
+          "</div>" +
+        "</div>" +
+      "</div>"
+    );
+  }).join("");
 }
 
 /* ---------- Activity feed ---------- */
@@ -373,12 +487,13 @@ function renderActivity() {
     .slice(0, 5);
 
   if (!events.length) {
-    wrap.innerHTML = '<div class="dash-empty">No activity yet \u2014 start a project to begin tracking.</div>';
+    wrap.innerHTML = '<div class="dash-empty"><span class="empty-ico">' + ICONS.inbox + "</span>No activity yet \u2014 start a project to begin tracking.</div>";
     return;
   }
   wrap.innerHTML = events.map((e) =>
     '<div class="activity-item">' +
-      '<span class="activity-dot">' + (e.status === "completed" ? "\u2705" : "\ud83d\ude80") + "</span>" +
+      '<span class="activity-dot ' + (e.status === "completed" ? "done" : "started") + '">' +
+        (e.status === "completed" ? ICONS.circleCheck : ICONS.rocket) + "</span>" +
       "<div>" +
         "<b>" + escapeHtml(e.project.title) + "</b> " +
         (e.status === "completed"
@@ -398,7 +513,7 @@ function renderAchievements() {
     const unlocked = a.test(stats);
     return (
       '<div class="ach-item' + (unlocked ? "" : " locked") + '">' +
-        '<span class="ach-emoji">' + (unlocked ? a.emoji : "\ud83d\udd12") + "</span>" +
+        '<span class="ach-emoji">' + (unlocked ? a.icon : ICONS.lock) + "</span>" +
         "<div><b>" + a.name + "</b><span>" + a.desc + "</span></div>" +
       "</div>"
     );
@@ -415,7 +530,7 @@ function renderProgressBars() {
     .sort((a, b) => b.prog.percent - a.prog.percent);
 
   if (!rows.length) {
-    wrap.innerHTML = '<div class="dash-empty">Start projects to see your progress here.</div>';
+    wrap.innerHTML = '<div class="dash-empty"><span class="empty-ico">' + ICONS.trending + "</span>Start projects to see your progress here.</div>";
     return;
   }
   wrap.innerHTML = rows.map((r) =>
@@ -563,32 +678,6 @@ function refreshCategories() {
     cats.map((c) => '<option value="' + escapeHtml(c) + '">' + escapeHtml(c) + "</option>").join("");
   if ([...select.options].some((o) => o.value === current)) select.value = current;
 }
-
-// Topbar search also filters the projects grid — and jumps to the Projects
-// panel so the results are visible. Clearing the query returns to Home.
-el("dashSearch").addEventListener("input", (e) => {
-  el("projectSearch").value = e.target.value;
-  renderProjects();
-  if (e.target.value) {
-    if (activePanel !== "projects") goToPanel("projects");
-  } else if (activePanel === "projects") {
-    goToPanel("home");
-  }
-});
-
-/* ---------- Notifications + settings ---------- */
-el("dashNotify").addEventListener("click", () => {
-  toast("You're all caught up \ud83d\udd14");
-});
-
-el("settingsThemeBtn").addEventListener("click", () => {
-  if (window.LearnJS && window.LearnJS.theme) window.LearnJS.theme.toggle();
-});
-
-el("notifyToggle").addEventListener("change", (e) => {
-  try { localStorage.setItem("learnjs-notifications", e.target.checked ? "on" : "off"); } catch (err) {}
-  toast(e.target.checked ? "Notifications on." : "Notifications off.");
-});
 
 function logout() {
   signOut(auth).then(() => {

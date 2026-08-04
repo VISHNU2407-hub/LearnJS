@@ -26,9 +26,18 @@ function escapeHtml(value) {
   return div.innerHTML;
 }
 
-const CATEGORY_EMOJI = {
-  "Core JS": "\u26a1", "APIs & Data": "\ud83c\udf10", "Advanced": "\ud83d\ude80",
-  "Full-Stack": "\ud83e\udde9", "Games": "\ud83c\udfae"
+/* Lucide category icons (stroke-based, matches the dashboard). */
+const CATEGORY_ICON = {
+  "Core JS": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.914 4a1.5 1.5 0 0 0-2.474-1.561l-9 9A1.5 1.5 0 0 0 5.5 14h4.002a.5.5 0 0 1 .471.666L8.086 20a1.5 1.5 0 0 0 2.475 1.56l9-9A1.5 1.5 0 0 0 18.5 10h-3.997a.5.5 0 0 1-.472-.667z"/></svg>',
+  "APIs & Data": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>',
+  "Advanced": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></svg>',
+  "Full-Stack": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"/></svg>',
+  "Games": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></svg>'
+};
+/* Start-button icons (swapped when the project is completed). */
+const START_ICONS = {
+  go: '<svg id="dStartIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
+  done: '<svg id="dStartIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
 };
 
 /* ---------- State ---------- */
@@ -36,6 +45,7 @@ let currentUser = null;
 let project = null;
 let progress = { status: "none", percent: 0 };
 let startState = "none"; // "none" | "started" | "completed"
+let lastIconState = null; // guards the start-button icon swap against re-renders
 
 /* ---------- Boot ---------- */
 async function init() {
@@ -80,7 +90,7 @@ function renderProject() {
   el("dDesc").textContent = project.description || "";
   el("dDifficulty").textContent = project.difficulty || "—";
   el("dTime").textContent = project.estimatedTime || "—";
-  el("dCategory").textContent = (CATEGORY_EMOJI[project.category] || "") + " " + (project.category || "—");
+  el("dCategory").innerHTML = (CATEGORY_ICON[project.category] || "") + " " + escapeHtml(project.category || "—");
   el("dTags").innerHTML = (project.tags || []).map((t) => '<span class="tag">' + escapeHtml(t) + "</span>").join("");
 
   el("dStartBtn").addEventListener("click", onStart);
@@ -98,7 +108,7 @@ function renderProgress() {
   const hint = el("dProgressHint");
 
   if (startState === "completed") {
-    label.textContent = "Completed \u2713";
+    label.textContent = "Completed";
     startBtn.disabled = true;
     el("dCompleteBtn").disabled = true;
     hint.textContent = "You finished this project. Great job!";
@@ -109,6 +119,11 @@ function renderProgress() {
     hint.textContent = percent > 0
       ? "You're " + percent + "% through this project. Keep going!"
       : "Not started yet — open the project and start building.";
+  }
+  // Swap the button icon only when the state actually changed (avoid DOM churn).
+  if (startState !== lastIconState) {
+    el("dStartIcon").outerHTML = startState === "completed" ? START_ICONS.done : START_ICONS.go;
+    lastIconState = startState;
   }
 }
 
