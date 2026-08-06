@@ -83,6 +83,35 @@
 .btn.loading .btn-label { opacity: 0.75; }
 .btn.loading { pointer-events: none; }
 
+/* ======================= Difficulty badge ======================= */
+/* Solid, high-contrast status label for project difficulty. Shared by the
+   dashboard project cards (pinned to the cover) and the project-details
+   page (inline in the meta row). Level classes set the fill colour. */
+.difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: #ffffff;
+  background: #64748b; /* neutral fallback for unleveled badges */
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3);
+}
+.difficulty-badge.beginner { background: #22c55e; }
+.difficulty-badge.intermediate { background: #f59e0b; }
+.difficulty-badge.advanced { background: #ef4444; }
+/* Dark mode: swap to a dark outline so the badge stays crisp on dark imagery. */
+html.dark .difficulty-badge {
+  border-color: rgba(15, 23, 42, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
 /* ======================= Navbar ======================= */
 .site-header {
   position: fixed;

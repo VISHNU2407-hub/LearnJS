@@ -261,7 +261,7 @@ function renderAll() {
   computeStats();
   renderStats();
   renderProjects();
-  renderRecent();
+  renderContinue();
   renderActivity();
   renderAchievements();
   renderProgressBars();
@@ -378,8 +378,12 @@ function renderProjects() {
   }
 
   grid.innerHTML = list.map(projectCardHTML).join("");
-  // Bind card actions after render.
-  grid.querySelectorAll("[data-action]").forEach((btn) => {
+  bindCardActions(grid);
+}
+
+/* Shared card-action binding for any container of project cards. */
+function bindCardActions(container) {
+  container.querySelectorAll("[data-action]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const slug = btn.getAttribute("data-slug");
       const action = btn.getAttribute("data-action");
@@ -443,33 +447,40 @@ function projectCardHTML(p) {
   );
 }
 
-/* ---------- Recent projects (home) ---------- */
-function renderRecent() {
-  const wrap = el("homeRecent");
+/* ---------- Continue learning / Your Projects (home) ----------
+   Netflix-style "Continue Watching": only projects the user has actually
+   touched (started, in progress, resumed, completed — anything that wrote a
+   progress doc). Never-opened projects are excluded. Ordered by most recent
+   activity (updatedAt) so resuming a project bumps it to the front.
+   Reuses the exact project-card markup from the Projects panel. */
+function renderContinue() {
+  const wrap = el("homeContinue");
   if (!wrap) return;
-  const recent = [...allProjects].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)).slice(0, 4);
-  if (!recent.length) {
-    wrap.innerHTML = '<div class="dash-empty"><span class="empty-ico">' + ICONS.folderOpen + "</span>Projects will appear here.</div>";
+
+  const active = allProjects
+    .map((p) => ({ project: p, prog: progressMap[p.id] }))
+    .filter((r) => r.prog &&
+      (r.prog.status === "started" || r.prog.status === "completed" || (r.prog.percent || 0) > 0))
+    .sort((a, b) => tsMs(b.prog.updatedAt) - tsMs(a.prog.updatedAt))
+    .slice(0, 4);
+
+  if (!active.length) {
+    wrap.innerHTML =
+      '<div class="dash-empty continue-empty">' +
+        '<span class="empty-emoji">📚</span>' +
+        "<b>No active projects yet</b>" +
+        "<span>Start your first JavaScript project and it will appear here automatically.</span>" +
+        '<button class="btn btn-primary btn-sm" data-action="browse" type="button">' +
+          ICONS.folderOpen + "Browse Projects" +
+        "</button>" +
+      "</div>";
+    const browse = wrap.querySelector('[data-action="browse"]');
+    if (browse) browse.addEventListener("click", () => goToPanel("projects"));
     return;
   }
-  wrap.innerHTML = recent.map((p) => {
-    const { statusLabel, statusClass, diffBadge } = badgeParts(p);
-    return (
-      '<div class="recent-card">' +
-        '<div class="recent-cover">' +
-          '<img src="' + escapeHtml(p.coverImage) + '" alt="' + escapeHtml(p.title) + '" loading="lazy">' +
-          diffBadge +
-        "</div>" +
-        '<div class="recent-card-body">' +
-          "<h3>" + escapeHtml(p.title) + "</h3>" +
-          '<div class="recent-meta">' +
-            '<span class="recent-cat">' + escapeHtml(p.category) + "</span>" +
-            '<span class="project-status ' + statusClass + '">' + statusLabel + "</span>" +
-          "</div>" +
-        "</div>" +
-      "</div>"
-    );
-  }).join("");
+
+  wrap.innerHTML = active.map((r) => projectCardHTML(r.project)).join("");
+  bindCardActions(wrap);
 }
 
 /* ---------- Activity feed ---------- */
@@ -576,8 +587,18 @@ function startProject(slug) {
   }
 }
 
-/** View Details: open the (placeholder) project details page. */
+/** View Details: open the (placeholder) project details page. Also bumps the
+    project's updatedAt (for projects the user has already touched) so opening
+    / resuming a project re-orders it to the front of Continue Learning.
+    Fire-and-forget: the write is a cosmetic re-order, so navigation never
+    waits on it. Status is guarded — docs with percent>0 but no status field
+    would otherwise make Firestore reject the write (undefined field value). */
 function viewDetails(slug) {
+  const prog = progressMap[slug];
+  if (prog && prog.status && currentUser) {
+    persistProgress(currentUser.uid, slug, prog.status, prog.percent || 0, prog)
+      .catch(() => { /* non-fatal — opening the details page must never block */ });
+  }
   window.location.href = "../project-details/?slug=" + encodeURIComponent(slug);
 }
 

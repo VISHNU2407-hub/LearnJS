@@ -88,7 +88,11 @@ function renderProject() {
   el("dCover").alt = project.title;
   el("dTitle").textContent = project.title;
   el("dDesc").textContent = project.description || "";
-  el("dDifficulty").textContent = project.difficulty || "—";
+  // Solid difficulty badge — same component as the dashboard cards
+  // (css/components/components.css). Level class drives the fill colour.
+  const diff = project.difficulty || "";
+  el("dDifficulty").className = "difficulty-badge" + (diff ? " " + diff.toLowerCase() : "");
+  el("dDifficulty").textContent = diff || "—";
   el("dTime").textContent = project.estimatedTime || "—";
   el("dCategory").innerHTML = (CATEGORY_ICON[project.category] || "") + " " + escapeHtml(project.category || "—");
   el("dTags").innerHTML = (project.tags || []).map((t) => '<span class="tag">' + escapeHtml(t) + "</span>").join("");
