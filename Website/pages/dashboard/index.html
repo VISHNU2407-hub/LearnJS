@@ -34,6 +34,10 @@
           <span class="brand-mark"><img src="../../assets/logos/learnjs-mark.svg" alt="LearnJS logo"></span>
           <span class="brand-name">LearnJS</span>
         </a>
+        <button class="icon-btn dash-collapse-toggle" id="dashCollapseToggle" type="button" aria-label="Collapse sidebar" aria-pressed="false">
+          <svg class="dash-ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m16 15-3-3 3-3"/></svg>
+          <svg class="dash-ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m10 15 3-3-3-3"/></svg>
+        </button>
       </div>
       <nav class="dash-nav">
         <button class="dash-nav-item active" data-panel="home" data-label="Home" type="button"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span class="nav-label">Home</span></button>
@@ -56,10 +60,6 @@
       <header class="dash-topbar">
         <button class="icon-btn dash-menu-toggle" id="dashMenuToggle" type="button" aria-label="Toggle sidebar" aria-expanded="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
-        </button>
-        <button class="icon-btn dash-collapse-toggle" id="dashCollapseToggle" type="button" aria-label="Collapse sidebar" aria-pressed="false">
-          <svg class="dash-ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m16 15-3-3 3-3"/></svg>
-          <svg class="dash-ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m10 15 3-3-3-3"/></svg>
         </button>
         <div class="dash-top-actions">
           <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" aria-pressed="false">
@@ -118,14 +118,6 @@
 
           <div class="dash-cols">
             <div class="dash-col-main">
-              <div class="dash-card">
-                <div class="dash-card-head">
-                  <h2>Latest Activity</h2>
-                </div>
-                <div id="homeActivity" class="dash-activity">
-                  <div class="dash-empty"><span class="empty-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></span>No activity yet — start a project to begin tracking.</div>
-                </div>
-              </div>
               <div class="dash-card">
                 <div class="dash-card-head">
                   <h2>Your Projects</h2>

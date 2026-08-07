@@ -57,7 +57,6 @@ function parseHours(estimatedTime) {
 const ICONS = {
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-  circleCheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
   rocket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>',
   arrowRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
@@ -279,7 +278,6 @@ function renderAll() {
   renderStats();
   renderProjects();
   renderContinue();
-  renderActivity();
   renderAchievements();
   renderProgressBars();
   renderProfileStats();
@@ -498,39 +496,6 @@ function renderContinue() {
 
   wrap.innerHTML = active.map((r) => projectCardHTML(r.project)).join("");
   bindCardActions(wrap);
-}
-
-/* ---------- Activity feed ---------- */
-function renderActivity() {
-  const wrap = el("homeActivity");
-  if (!wrap) return;
-  const events = Object.keys(progressMap)
-    .map((slug) => {
-      const p = progressMap[slug];
-      const project = allProjects.find((pr) => pr.id === slug);
-      return project ? { project, ...p } : null;
-    })
-    .filter(Boolean)
-    .sort((a, b) => tsMs(b.updatedAt) - tsMs(a.updatedAt))
-    .slice(0, 5);
-
-  if (!events.length) {
-    wrap.innerHTML = '<div class="dash-empty"><span class="empty-ico">' + ICONS.inbox + "</span>No activity yet \u2014 start a project to begin tracking.</div>";
-    return;
-  }
-  wrap.innerHTML = events.map((e) =>
-    '<div class="activity-item">' +
-      '<span class="activity-dot ' + (e.status === "completed" ? "done" : "started") + '">' +
-        (e.status === "completed" ? ICONS.circleCheck : ICONS.rocket) + "</span>" +
-      "<div>" +
-        "<b>" + escapeHtml(e.project.title) + "</b> " +
-        (e.status === "completed"
-          ? '<span class="text-faint">was completed</span>'
-          : '<span class="text-faint">is ' + (e.percent || 0) + "% done</span>") +
-        '<p class="activity-time">' + relativeTime(e.updatedAt) + "</p>" +
-      "</div>" +
-    "</div>"
-  ).join("");
 }
 
 /* ---------- Achievements ---------- */
@@ -769,17 +734,4 @@ function formatDate(value) {
   return d.toLocaleDateString(undefined, { month: "short", year: "numeric" });
 }
 
-function relativeTime(value) {
-  if (!value) return "";
-  const ms = tsMs(value);
-  const diff = Date.now() - ms;
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return mins + "m ago";
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return hrs + "h ago";
-  const days = Math.floor(hrs / 24);
-  if (days < 7) return days + "d ago";
-  return new Date(ms).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
 // end of dashboard.js
