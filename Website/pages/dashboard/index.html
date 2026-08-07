@@ -194,14 +194,74 @@
           <div class="dash-panel-head">
             <div>
               <p class="dash-hello-eyebrow">Your learning path</p>
-              <h1 class="dash-panel-title">Roadmap</h1>
+              <h1 class="dash-panel-title">JavaScript Roadmap</h1>
+              <p class="dash-hello-sub">From your first variable to expert-level systems — ten levels, one path at a time.</p>
             </div>
           </div>
-          <div class="dash-coming">
-            <div class="dash-coming-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg></div>
-            <h2>The guided roadmap is being mapped</h2>
-            <p>Beginner-to-expert learning paths, curated milestones and skill checkpoints are on the way. Keep building projects in the meantime — every one counts.</p>
-            <a class="btn btn-primary" href="../roadmap/">View Roadmap Preview</a>
+
+          <!-- Overall progress -->
+          <div class="roadmap-progress-card">
+            <div class="roadmap-progress-top">
+              <div class="roadmap-progress-title">
+                <span class="roadmap-progress-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg></span>
+                <div><b>Overall Progress</b><span id="roadmapOverallSub">Loading progress…</span></div>
+              </div>
+              <b class="roadmap-progress-pct" id="roadmapOverallPct">0%</b>
+            </div>
+            <div class="bar roadmap-progress-bar"><div class="bar-fill" id="roadmapOverallBar" style="width:0%"></div></div>
+          </div>
+
+          <!-- Level filters -->
+          <div class="roadmap-filters" id="roadmapFilters" role="group" aria-label="Filter by level"></div>
+
+          <!-- Roadmap tree + topic preview -->
+          <div class="roadmap-layout">
+            <div class="roadmap-tree" id="roadmapTree" aria-label="JavaScript roadmap levels"></div>
+            <aside class="topic-preview" id="topicPreview" aria-label="Topic preview"></aside>
+          </div>
+        </section>
+
+        <!-- ========== LEARNING ========== -->
+        <section class="dash-panel" id="panel-learning" data-panel-body="learning">
+          <div class="learning-layout">
+            <div class="learning-main">
+              <nav class="learn-breadcrumb" id="learnBreadcrumb" aria-label="Breadcrumb"></nav>
+              <p class="dash-hello-eyebrow" id="learnEyebrow"></p>
+              <h1 class="dash-panel-title learning-title" id="learnTitle"></h1>
+
+              <div class="lesson-progress">
+                <div class="lesson-progress-head">
+                  <span id="learnLessonLabel">Lesson 1 of 1</span>
+                  <span id="learnTopicPct">Topic 0% complete</span>
+                </div>
+                <div class="bar"><div class="bar-fill" id="learnLessonBar" style="width:0%"></div></div>
+                <div class="lesson-actions">
+                  <button class="btn btn-primary learn-complete" id="learnCompleteBtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Mark Complete</button>
+                </div>
+              </div>
+
+              <article class="lesson-body">
+                <h2 class="lesson-name" id="learnLessonName"></h2>
+                <div id="learnPlaceholder"></div>
+              </article>
+
+              <div class="lesson-nav">
+                <button class="btn btn-outline lesson-nav-btn" id="learnPrevBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Previous Lesson</button>
+                <button class="btn btn-primary lesson-nav-btn" id="learnNextBtn" type="button">Next Lesson<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+              </div>
+            </div>
+
+            <aside class="learning-rail">
+              <div class="learn-card">
+                <div class="learn-card-head"><span class="learn-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/></svg></span>On this page</div>
+                <div class="learn-toc" id="learnOnThisPage"></div>
+              </div>
+              <div class="learn-card">
+                <div class="learn-card-head"><span class="learn-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></svg></span>Personal Notes</div>
+                <textarea class="learn-notes" id="learnNotesInput" placeholder="Jot down your thoughts for this topic…" rows="6" aria-label="Personal notes"></textarea>
+                <p class="learn-notes-meta" id="learnNotesMeta"></p>
+              </div>
+            </aside>
           </div>
         </section>
 
@@ -333,6 +393,8 @@
   <script src="../../js/common/app.js"></script>
   <!-- Embedded project index fallback (file:// friendly). Generated by scan-projects.js. -->
   <script src="../../data/projects-data.js"></script>
+  <!-- Embedded roadmap fallback (file:// friendly). Generated from learn js roadmap.pdf. -->
+  <script src="../../data/roadmap-data.js"></script>
   <script type="module" src="dashboard.js"></script>
 </body>
 </html>

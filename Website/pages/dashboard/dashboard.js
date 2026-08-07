@@ -12,6 +12,9 @@ import { auth } from "../../js/firebase/firebase.js";
 import { db } from "../../js/firebase/firestore.js";
 import { loadProjects } from "../../js/projects/project-loader.js";
 import { requireAuth } from "../../js/common/require-auth.js";
+import { initRoadmap, renderRoadmap } from "../../js/roadmap/roadmap.js";
+import { initLearning, openTopic } from "../../js/roadmap/learning.js";
+import { initProgress } from "../../js/roadmap/roadmap-progress.js";
 import { setProjectProgress as persistProgress } from "../../js/projects/progress.js";
 import {
   collection,
@@ -170,6 +173,12 @@ async function init() {
 init();
 
 async function boot() {
+  // Roadmap module — the curriculum is LOCAL (data/roadmap.json + embedded
+  // fallback), so the roadmap + learning panels render FIRST and never wait
+  // on Firebase. Progress syncs in the background below.
+  await initRoadmap();
+  await initLearning();
+
   // Load the generated project index (Website/data/projects.json).
   await refreshProjectList();
   // Poll so newly added project folders appear without a manual reload
@@ -178,6 +187,14 @@ async function boot() {
 
   // User profile document (created lazily).
   await loadUserDoc();
+
+  // Roadmap progress — Firestore stores ONLY user-specific progress at
+  // users/{uid}/roadmap (completed lessons, current lesson, notes). Started
+  // after the panels render and deliberately NOT awaited: if Firestore is
+  // slow or unreachable the roadmap tree still shows, and progress catches
+  // up via onSnapshot the moment the connection returns. (initProgress never
+  // rejects — failures are routed to its snapshot error callback.)
+  initProgress(currentUser);
 
   // Realtime progress per user (Firestore — preserved as-is).
   try {
@@ -642,11 +659,25 @@ el("editForm").addEventListener("submit", async (e) => {
 function goToPanel(name) {
   activePanel = name;
   document.querySelectorAll(".dash-nav-item").forEach((btn) => {
-    btn.classList.toggle("active", btn.getAttribute("data-panel") === name);
+    // The Learning page belongs to the Roadmap flow — keep Roadmap highlighted.
+    const target = name === "learning" ? "roadmap" : name;
+    btn.classList.toggle("active", btn.getAttribute("data-panel") === target);
   });
   document.querySelectorAll(".dash-panel").forEach((panel) => {
     panel.classList.toggle("active", panel.getAttribute("data-panel-body") === name);
   });
+  // Roadmap + Learning maximize the content area — collapse the sidebar for
+  // the learning flow only. The user's stored preference is restored when
+  // leaving, so the rest of the dashboard keeps its usual look.
+  if (name === "roadmap" || name === "learning") {
+    if (!dashShell.classList.contains("sidebar-collapsed")) applySidebarState(true);
+  } else if (dashShell.classList.contains("sidebar-collapsed")) {
+    let saved = false;
+    try { saved = localStorage.getItem(SIDEBAR_STORAGE_KEY) === "collapsed"; } catch (err) {}
+    if (!saved) applySidebarState(false);
+  }
+  // Refresh live progress every time the roadmap panel is opened.
+  if (name === "roadmap") renderRoadmap();
   closeSidebar();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -659,6 +690,18 @@ document.querySelectorAll("[data-goto]").forEach((btn) => {
 });
 el("continueBtn").addEventListener("click", () => goToPanel("projects"));
 el("dashAvatarBtn").addEventListener("click", () => goToPanel("profile"));
+
+/* ---------- Roadmap module wiring ----------
+   The roadmap and learning modules are event-driven so they stay
+   decoupled from this page. "Start Learning" navigates to the
+   dedicated Learning panel (never a popup); the breadcrumbs route
+   back to the Roadmap / Home panels. */
+window.addEventListener("learnjs:open-topic", (e) => {
+  openTopic(e.detail && e.detail.topicId, 0);
+  goToPanel("learning");
+});
+window.addEventListener("learnjs:goto-roadmap", () => goToPanel("roadmap"));
+window.addEventListener("learnjs:goto-home", () => goToPanel("home"));
 
 /* ---------- Sidebar (mobile) ---------- */
 function closeSidebar() { document.body.classList.remove("dash-open"); el("dashMenuToggle").setAttribute("aria-expanded", "false"); }

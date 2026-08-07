@@ -116,7 +116,10 @@ Authentication and Firestore are pre-wired to a Firebase project in `js/firebase
 
 ### What uses Firestore
 
-Firestore is used **only for per-user data** (profile document + per-project progress in `users/{uid}/progress`). The project catalog itself comes from the locally generated `data/projects.json` — no seeding or manual Firestore edits required.
+- **Per-user data** — profile document + per-project progress in `users/{uid}/progress`, and roadmap progress/notes in `users/{uid}/roadmap` (owner-only).
+- **Shared curriculum** — the JavaScript roadmap curriculum lives in the shared, app-read-only document `roadmaps/javascript`. It is updated only through code and deployments (Firebase console / admin SDK); the app never writes to it. The roadmap loader fetches it from Firestore, caches it locally, and falls back to the cached / embedded copy when the network is unavailable.
+
+The project catalog itself comes from the locally generated `data/projects.json` — no seeding or manual Firestore edits required.
 
 ## 🎨 Design
 
