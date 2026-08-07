@@ -3,12 +3,16 @@
    Roadmap panel renderer.
    Builds the Level → Main Topic → Sub Topic structure entirely
    from Website/data/roadmap.json (transcribed from the official
-   "learn js roadmap.pdf" curriculum). Responsibilities:
-     - overall progress indicator
-     - level filters (Beginner / Intermediate / Advanced / Expert)
+   "learn js roadmap.pdf" curriculum) and renders it as a clean
+   accordion that matches the LearnJS dashboard design system.
+   Responsibilities:
+     - page title + overall progress indicator
+     - track filters (All / Beginner / Intermediate / Advanced / Expert)
      - accordion — only ONE main topic expanded at a time
-     - compact right-side Topic Preview (name, time, difficulty,
-       subtopic count, Start Learning)
+     - compact right-side Topic Preview (name, estimated time,
+       difficulty, subtopic count, Start Learning)
+   UI only — no Firebase, routing or persistence changes. All
+   progress data comes from the existing roadmap-progress store.
    Interacts with the dashboard via events (no imports of the
    dashboard module — keeps the module reusable).
    ============================================================ */
@@ -34,7 +38,7 @@ function escapeHtml(value) {
 const ICON = {
   chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
-  gauge: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14 4.5 6.5a14.5 14.5 0 0 0 0 11 2 2 0 0 0 2.83 2.83z"/><path d="m2 2 20 20"/><path d="M17.5 17.5 22 22a2 2 0 0 0 0-2.83 14.5 14.5 0 0 0-8.16-4.17"/></svg>',
+  gauge: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 7-7.5a19.5 19.5 0 0 1 7 15.5 1 1 0 0 1-1 1H5a1 1 0 0 1-1-1 19.5 19.5 0 0 1 7-7.5z"/><path d="M9.26 17.68 5.4 20.98"/><path d="M9.26 17.68 12 14.75"/><path d="M14.74 17.68 18.6 20.98"/><path d="M14.74 17.68 12 14.75"/></svg>',
   layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>',
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
@@ -91,15 +95,15 @@ function renderOverall() {
   if (pctEl) pctEl.textContent = pct + "%";
   if (sub) {
     sub.innerHTML =
-      "<b>" + overallDone(data.levels) + "</b> of <b>" + lessons + "</b> lessons completed &middot; " +
-      "<b>" + total + "</b> topics across " + data.levels.length + " levels";
+      "<b>" + overallDone(data.levels) + "</b> / <b>" + lessons + "</b> lessons completed &bull; " +
+      "<b>" + total + "</b> topics";
   }
 }
 
 function renderFilters() {
   const wrap = document.getElementById("roadmapFilters");
   if (!wrap) return;
-  const all = [{ id: "all", label: "All Levels" }].concat(
+  const all = [{ id: "all", label: "All" }].concat(
     TRACKS.map((t) => ({ id: t, label: t }))
   );
   wrap.innerHTML = all
@@ -119,10 +123,10 @@ function renderLevelHead(level) {
   return (
     '<div class="roadmap-level-head">' +
       '<div class="roadmap-level-idx">' + level.level + "</div>" +
-      "<div class=\"roadmap-level-info\">" +
+      '<div class="roadmap-level-info">' +
         '<div class="roadmap-level-title-row">' +
           "<h3>" + escapeHtml(level.title) + "</h3>" +
-          '<span class="roadmap-track-pill ' + level.track.toLowerCase() + '">' + escapeHtml(level.track) + "</span>" +
+          '<span class="roadmap-track-pill ' + (level.track || "").toLowerCase() + '">' + escapeHtml(level.track) + "</span>" +
         "</div>" +
         '<p class="roadmap-level-meta">' +
           "<span>" + topicCount + (topicCount === 1 ? " topic" : " topics") + "</span>" +

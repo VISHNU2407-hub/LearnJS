@@ -842,53 +842,59 @@ body.dash-open .dash-backdrop { opacity: 1; visibility: visible; }
    as the rest of the dashboard.
    ============================================================ */
 
-/* ---------- Overall progress card ---------- */
-.roadmap-progress-card {
-  background: linear-gradient(135deg, var(--brand-mist), var(--card) 65%);
-  border: 1px solid color-mix(in srgb, var(--brand) 26%, var(--line-soft));
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  padding: 1.15rem 1.3rem;
-  margin-bottom: 1.4rem;
+/* ---------- Overall progress ---------- */
+.roadmap-progress {
+  /* Aligns with the roadmap content column (.roadmap-layout tree):
+     full width minus the 320px preview rail and the 1.6rem grid gap. */
+  width: calc(100% - 320px - 1.6rem);
+  margin: 1.25rem 0 2rem;
 }
-html.dark .roadmap-progress-card {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), var(--card) 65%);
-}
-.roadmap-progress-top {
+.roadmap-progress-head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
 }
-.roadmap-progress-title {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  min-width: 0;
-}
-.roadmap-progress-ico {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background: rgba(34, 197, 94, 0.14);
-  color: #16a34a;
-}
-.roadmap-progress-ico svg { width: 19px; height: 19px; }
-.roadmap-progress-title b { display: block; font-size: 0.98rem; font-weight: 700; color: var(--ink); }
-.roadmap-progress-title span { font-size: 0.78rem; color: var(--muted); }
-.roadmap-progress-pct {
-  font-size: 1.9rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+.roadmap-progress-label {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
   color: var(--ink);
-  flex-shrink: 0;
 }
-.roadmap-progress-bar { margin-top: 0.85rem; height: 10px; }
-.roadmap-progress-bar .bar-fill { background: linear-gradient(90deg, var(--brand-strong), var(--brand), #4ade80); }
+.roadmap-progress-pct {
+  flex-shrink: 0;
+  font-size: 1.125rem;   /* ~18px, semibold - in line with the filter labels */
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.roadmap-progress-sub {
+  margin: 0.2rem 0 0.65rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.roadmap-progress-sub b { font-weight: 700; color: var(--ink-2); }
+.roadmap-progress-track {
+  /* Fills the section, which is already aligned to the content column -
+     so the bar starts and ends exactly with the accordion cards below. */
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line-soft);
+  overflow: hidden;
+}
+@media (max-width: 1100px) {
+  /* Below the two-column breakpoint the preview drops under the tree,
+     so the section (and bar) return to full width. */
+  .roadmap-progress { width: 100%; }
+}
+.roadmap-progress-fill {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--brand-strong), var(--brand));
+  transition: width 0.6s var(--ease);
+}
 
 /* ---------- Level filters ---------- */
 .roadmap-filters {
@@ -1382,4 +1388,109 @@ button.learn-crumb:hover { color: var(--brand-strong); background: var(--brand-m
   .lesson-nav .btn { width: 100%; }
   .roadmap-progress-pct { font-size: 1.5rem; }
 }
+/* ---------- Roadmap sync banner (offline indicator) ----------
+   Fixed, top-centered alert that appears only when the roadmap progress
+   store knows Firestore is unreachable. Never shown before we know either
+   way, so a slow first load doesn't flash a false alarm. */
+.roadmap-sync-banner {
+  position: fixed;
+  top: calc(var(--dash-nav-h) + 0.8rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  max-width: min(560px, calc(100vw - 2rem));
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid color-mix(in srgb, #f59e0b 45%, var(--line-soft));
+  box-shadow: var(--shadow-lg);
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  animation: fadeUp 0.3s var(--ease) both;
+}
+.roadmap-sync-banner[hidden] { display: none; }
+.roadmap-sync-banner svg {
+  width: 19px;
+  height: 19px;
+  color: #d97706;
+  flex-shrink: 0;
+}
+.roadmap-sync-banner b { color: var(--ink); font-weight: 700; }
+html.dark .roadmap-sync-banner { border-color: color-mix(in srgb, #fbbf24 40%, var(--line-soft)); }
+@media (max-width: 768px) {
+  .roadmap-sync-banner { top: 0.7rem; font-size: 0.8rem; }
+}
+
+/* ---------- Roadmap debug panel ----------
+   DEV ONLY: the panel itself is built dynamically by dashboard.js and only
+   exists in the DOM when window.LEARNJS_DEV === true. These rules match
+   nothing in production — they only style the dev panel. */
+.roadmap-debug-panel {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 300;
+  width: 300px;
+  border-radius: var(--radius-md);
+  background: rgba(7, 11, 20, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: var(--shadow-lg);
+  color: #e2e8f0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+.roadmap-debug-panel[hidden] { display: none; }
+.roadmap-debug-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+}
+.roadmap-debug-head span {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 6px;
+  padding: 0.05rem 0.35rem;
+}
+.roadmap-debug-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin: 0;
+  padding: 0.4rem 0;
+}
+.roadmap-debug-grid > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.28rem 0.75rem;
+}
+.roadmap-debug-grid dt {
+  color: #64748b;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.roadmap-debug-grid dd {
+  margin: 0;
+  color: #e2e8f0;
+  text-align: right;
+  word-break: break-all;
+  max-width: 65%;
+}
+
 /* end of dashboard.css */

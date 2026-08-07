@@ -296,4 +296,17 @@ export async function initLearning() {
 export function openTopic(topicId, lessonIndex) {
   openLesson(topicId, lessonIndex);
 }
+
+/**
+ * Immediately persist any debounced notes so a logout that happens right
+ * after typing doesn't lose them. Called by the dashboard before it waits
+ * on flushWrites().
+ */
+export function flushPendingNotes() {
+  if (!notesTimer) return;
+  clearTimeout(notesTimer);
+  notesTimer = null;
+  const ta = document.getElementById("learnNotesInput");
+  if (ta) setNotes(current.topicId, ta.value);
+}
 // end of learning.js

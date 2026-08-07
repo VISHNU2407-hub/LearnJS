@@ -1,11 +1,11 @@
 /* ============================================================
    LearnJS — roadmap-progress.js (js/roadmap)
    Shared progress store for the roadmap module, backed by
-   Firestore at users/{uid}/roadmap.
+   Firestore at users/{uid}/roadmap/roadmap.
 
    The roadmap curriculum lives in the shared Firestore document
    roadmaps/javascript (loaded via roadmap-loader.js); only
-   user-specific progress lives here in users/{uid}/roadmap:
+   user-specific progress lives here in users/{uid}/roadmap/roadmap:
      - completedSubtopics  { topicId: [lessonIndexes] }  (source of truth)
      - completedTopics     [topicIds]  (derived: all lessons done)
      - overallPercent      0–100      (derived from the curriculum)
@@ -13,23 +13,33 @@
      - lastVisitedTopic / lastLearningTimestamp
      - notes               { topicId: text }
 
-   Design notes:
-     - The public API is synchronous (topicDoneCount, isLessonDone,
-       getCurrent, getNotes, …) backed by an in-memory cache that is
-       hydrated from Firestore and kept live via onSnapshot — so the
-       Roadmap and Learning panels auto-refresh when progress changes
-       (including from other tabs/devices).
-     - Writes are optimistic: the cache + UI update immediately, then
-       the change is pushed to Firestore.
-     - A document signature guards against emit loops caused by our
-       own writes echoing back through the snapshot listener.
+   Reliability & debugging:
+     - No silent failures: every Firestore write logs its result and
+       shows an error toast when it fails.
+     - Every lesson toggle is verified against the server (one retry)
+       before the UI keeps the optimistic state.
+     - If Firestore rejects the transaction, the optimistic update is
+       rolled back.
+     - A sync-health state drives a visible "Progress cannot be synced."
+       banner when Firestore is unreachable.
+     - flushWrites() lets the dashboard wait for in-flight writes before
+       navigating away on logout.
+     - A dev-only debug panel (dashboard) reads getDebugInfo().
      - Old localStorage progress (learnjs-roadmap-*) is migrated into
        Firestore once on first load, then cleared.
+
+   NOTE on the document path: Firestore document references require an
+   EVEN number of path segments (collection/document pairs). The previous
+   code used doc(db, "users", uid, "roadmap") — a 3-segment (odd) path —
+   which the SDK rejects with INVALID_ARGUMENT, so every read/write failed
+   silently. The valid path under users/{uid}/roadmap needs a document id,
+   here "roadmap": users/{uid}/roadmap/roadmap.
    ============================================================ */
 
 import { db } from "../../js/firebase/firestore.js";
 import {
   doc,
+  getDoc,
   onSnapshot,
   runTransaction,
   setDoc,
@@ -38,18 +48,75 @@ import {
 import { loadRoadmap } from "./roadmap-loader.js";
 
 /* ---------- state ---------- */
-let uid = null;          // current Firebase user id
-let docRef = null;       // users/{uid}/roadmap
-let data = null;         // normalized in-memory copy of the Firestore doc
-let curriculum = null;   // topicId -> { levelId, total } (built from local JSON)
-let unsub = null;        // snapshot listener teardown
-let listeners = [];      // pub/sub subscribers (roadmap.js + learning.js)
-let lastSig = null;      // signature of the last handled snapshot
+let uid = null;            // current Firebase user id
+let docRef = null;         // users/{uid}/roadmap/{ROADMAP_DOC_ID}
+let data = null;           // normalized in-memory copy of the Firestore doc
+let curriculum = null;     // topicId -> { levelId, total } (built from local JSON)
+let unsub = null;          // snapshot listener teardown
+let listeners = [];        // pub/sub subscribers (roadmap.js + learning.js)
+let lastSig = null;        // signature of the last handled snapshot
+let docExists = false;     // whether the Firestore doc exists (set on snapshot)
+
+/* Sync-health + debugging state. */
+const ROADMAP_DOC_ID = "roadmap";     // doc id under users/{uid}/roadmap
+const pendingWrites = new Set();      // in-flight Firestore write promises
+let syncListeners = [];               // offline banner + debug panel subscribers
+let syncHealthy = null;               // null = unknown, true = ok, false = failed
+let snapshotStatus = "idle";          // idle | listening | live | error
+let lastSyncTime = 0;                 // ms epoch of the last successful sync
 
 /* Old localStorage keys (migrated once into Firestore). */
 const OLD_PROGRESS_KEY = "learnjs-roadmap-progress";
 const OLD_NOTES_KEY = "learnjs-roadmap-notes";
 const OLD_CURRENT_KEY = "learnjs-roadmap-current";
+
+/* ---------- helpers ---------- */
+function logInfo(...args) {
+  // Diagnostics are debug-only — printed solely when the dev flag is on.
+  if (isDev()) console.log("[LearnJS][Roadmap]", ...args);
+}
+
+/**
+ * Development mode is driven by an explicit flag — it is NEVER inferred from
+ * hostname or protocol. Internal state (UID, Firestore paths, pending writes,
+ * sync health) must not surface in production, so it is only shown when
+ * window.LEARNJS_DEV === true.
+ */
+export function isDev() {
+  try {
+    return window.LEARNJS_DEV === true;
+  } catch (err) {
+    return false;
+  }
+}
+
+function docPath() {
+  return uid ? "users/" + uid + "/roadmap/" + ROADMAP_DOC_ID : null;
+}
+
+function notifySync() {
+  syncListeners.forEach((fn) => {
+    try { fn(); } catch (err) { console.warn("[LearnJS][Roadmap] sync listener error:", err.message); }
+  });
+}
+
+/** Update sync health and ping subscribers (offline banner / debug panel). */
+function markSync(success, status) {
+  syncHealthy = success;
+  if (status) snapshotStatus = status;
+  if (success) lastSyncTime = Date.now();
+  notifySync();
+}
+
+/** Unified failure handling: log the Firestore error + surface a toast. */
+function reportError(context, err, toastMsg) {
+  const detail = err && err.message ? err.message : String(err);
+  console.error("[LearnJS][Roadmap] " + context + " —", detail, err || "");
+  if (toastMsg && window.LearnJS && window.LearnJS.toast) {
+    window.LearnJS.toast(toastMsg, "error");
+  }
+  markSync(false, "error");
+}
 
 /* ---------- doc normalization ---------- */
 function normalize(raw) {
@@ -80,15 +147,21 @@ function signature(next) {
   ]);
 }
 
+/** Returns true when the snapshot actually changed the in-memory state. */
 function handleSnapshot(snap) {
   const next = normalize(snap.exists() ? snap.data() : null);
+  docExists = snap.exists();
   const sig = signature(next);
-  if (sig === lastSig) return; // our own write echoed back — nothing new
+  if (sig === lastSig) {
+    logInfo("Snapshot update (no change)", { path: docPath(), exists: docExists });
+    return false;
+  }
   lastSig = sig;
   data = next;
   // One-time import of legacy localStorage progress (kept for existing users).
   if (!next) migrateFromLocalStorage();
   emit();
+  return true;
 }
 
 function buildCurriculum(roadmap) {
@@ -121,12 +194,44 @@ function deriveOverallPercent(sub) {
   return total ? Math.round((done / total) * 100) : 0;
 }
 
-/* ---------- Firestore writes (optimistic, fire-and-forget) ---------- */
+/** Number of topics whose lessons are all completed (from current data). */
+function countCompletedTopics() {
+  const sub = data && data.completedSubtopics ? data.completedSubtopics : {};
+  return deriveCompletedTopics(sub).length;
+}
+
+/* ---------- Firestore writes (optimistic, tracked, never silent) ---------- */
+function trackWrite(promise) {
+  pendingWrites.add(promise);
+  notifySync();
+  promise.then(
+    () => pendingWrites.delete(promise),
+    () => pendingWrites.delete(promise)
+  );
+  return promise;
+}
+
+/** Fire-and-forget merge write; always logs + reports success/failure. */
 function writeDoc(patch) {
-  if (!uid || !docRef) return;
-  setDoc(docRef, patch, { merge: true }).catch((err) => {
-    console.warn("[LearnJS] Roadmap progress save failed:", err.message);
-  });
+  if (!uid || !docRef) {
+    logInfo("Write skipped (no user/doc)", patch && Object.keys(patch));
+    return Promise.resolve(false);
+  }
+  const p = setDoc(docRef, patch, { merge: true })
+    .then(() => {
+      logInfo("Firestore write OK", { path: docPath(), fields: Object.keys(patch) });
+      markSync(true, "live");
+      return true;
+    })
+    .catch((err) => {
+      reportError(
+        "Firestore write",
+        err,
+        "Could not save progress — " + (err.code || err.message || "unknown error")
+      );
+      return false;
+    });
+  return trackWrite(p);
 }
 
 /* ---------- lesson completion ---------- */
@@ -134,9 +239,14 @@ export function getProgress() {
   return data ? data.completedSubtopics : {};
 }
 
-/** Toggle a lesson (subtopic index within a topic). Returns the new done state. */
+/**
+ * Toggle a lesson (subtopic index within a topic). Returns the new done state.
+ * The optimistic UI updates immediately; if Firestore rejects the transaction
+ * the optimistic update is rolled back and an error is shown.
+ */
 export function toggleLesson(topicId, lessonIndex) {
   const base = data || {};
+  const prevSub = base.completedSubtopics || {};   // pre-toggle map (for rollback)
   const sub = { ...(base.completedSubtopics || {}) };
   const set = new Set(sub[topicId] || []);
   const had = set.has(lessonIndex);
@@ -146,44 +256,145 @@ export function toggleLesson(topicId, lessonIndex) {
   else delete sub[topicId];
 
   data = { ...base, completedSubtopics: sub };
+  const newDone = !had;
 
   // Update the UI immediately — Firestore catches up right behind it.
   emit();
-  transactToggle(topicId, lessonIndex);
-  return !had;
+
+  transactToggle(topicId, lessonIndex).then((result) => {
+    if (result === "rejected") {
+      // Firestore rejected the transaction — undo ONLY the optimistic lesson
+      // toggle, preserving any other fields (notes, current lesson, or a
+      // concurrent tab's change) that a snapshot may have refreshed since.
+      data = { ...(data || {}), completedSubtopics: prevSub };
+      emit();
+      logInfo("Rolled back optimistic update", { topicId, lessonIndex });
+    }
+    // "verify_failed" keeps the UI (we cannot be sure either way) but the
+    // error was already reported by transactToggle.
+  });
+
+  return newDone;
+}
+
+/** Builds a new completedSubtopics map with lessonIndex toggled in source. */
+function applyToggleToMap(source, topicId, lessonIndex) {
+  const sub = { ...(source || {}) };
+  const set = new Set(sub[topicId] || []);
+  if (set.has(lessonIndex)) set.delete(lessonIndex);
+  else set.add(lessonIndex);
+  if (set.size) sub[topicId] = [...set].sort((a, b) => a - b);
+  else delete sub[topicId];
+  return sub;
+}
+
+function txPayload(tx, sub, topicId) {
+  tx.set(docRef, {
+    completedSubtopics: sub,
+    completedTopics: deriveCompletedTopics(sub),
+    overallPercent: deriveOverallPercent(sub),
+    lastVisitedTopic: topicId,
+    lastLearningTimestamp: Date.now(),
+    updatedAt: serverTimestamp()
+  }, { merge: true });
+}
+
+/**
+ * True when the server doc reflects the local (optimistic) lesson state.
+ * Deliberately checks the specific lesson's presence rather than full array
+ * equality: the whole-topic array can legitimately differ when another tab
+ * toggles the same topic concurrently, and a presence check still converges
+ * to the user's intent without false failures.
+ */
+async function verifyLessonSynced(topicId, lessonIndex) {
+  const localArr = data && data.completedSubtopics ? data.completedSubtopics[topicId] : null;
+  const localDone = !!(localArr && localArr.indexOf(lessonIndex) !== -1);
+  try {
+    const snap = await getDoc(docRef, { source: "server" });
+    const raw = snap.exists() ? snap.data() : null;
+    const serverArr = raw && raw.completedSubtopics ? raw.completedSubtopics[topicId] : null;
+    const serverDone = !!(serverArr && serverArr.indexOf(lessonIndex) !== -1);
+    logInfo("Verify lesson sync", {
+      topicId, lessonIndex, localDone, serverDone,
+      localSub: localArr || [],
+      serverSub: serverArr || []
+    });
+    return localDone === serverDone;
+  } catch (err) {
+    logInfo("Verify read failed", err && err.message);
+    return false;
+  }
 }
 
 /**
  * Race-safe Firestore write for lesson completion: read the freshest doc
  * inside a transaction, apply the toggle, then write — so concurrent tabs
  * or delayed writes never clobber each other's completedSubtopics.
+ *
+ * After the write the server document is re-read and verified against the
+ * local state. On a mismatch the write is retried once (idempotently — the
+ * retry SETS the intended topic state instead of toggling, so it can never
+ * flip the change back). If verification still fails an error is shown.
+ *
+ * @returns {Promise<"ok"|"verify_failed"|"rejected">}
  */
 async function transactToggle(topicId, lessonIndex) {
-  try {
+  if (!uid || !docRef) {
+    reportError("Lesson toggle skipped (not initialized)", new Error("no user or document reference"), "Could not save progress — not signed in.");
+    return "rejected";
+  }
+
+  const runToggle = async () => {
     await runTransaction(db, async (tx) => {
       const snap = await tx.get(docRef);
       const freshest = normalize(snap.exists() ? snap.data() : null);
-      const sub = { ...(freshest ? freshest.completedSubtopics : {}) };
-      const set = new Set(sub[topicId] || []);
-      if (set.has(lessonIndex)) set.delete(lessonIndex);
-      else set.add(lessonIndex);
-      if (set.size) sub[topicId] = [...set].sort((a, b) => a - b);
-      else delete sub[topicId];
-      tx.set(docRef, {
-        completedSubtopics: sub,
-        completedTopics: deriveCompletedTopics(sub),
-        overallPercent: deriveOverallPercent(sub),
-        lastVisitedTopic: topicId,
-        lastLearningTimestamp: Date.now(),
-        updatedAt: serverTimestamp()
-      }, { merge: true });
+      const sub = applyToggleToMap(freshest ? freshest.completedSubtopics : {}, topicId, lessonIndex);
+      txPayload(tx, sub, topicId);
     });
-  } catch (err) {
-    console.warn("[LearnJS] Roadmap progress save failed:", err.message);
-    // Mirror the projects flow — surface persistence failures to the user.
-    if (window.LearnJS && window.LearnJS.toast) {
-      window.LearnJS.toast("Could not save progress — check your connection.", "error");
+  };
+
+  // Retry: SET the intended topic state (idempotent) rather than toggle.
+  const runSet = async () => {
+    await runTransaction(db, async (tx) => {
+      const snap = await tx.get(docRef);
+      const freshest = normalize(snap.exists() ? snap.data() : null);
+      const intended = data && data.completedSubtopics ? data.completedSubtopics[topicId] : null;
+      const sub = { ...(freshest ? freshest.completedSubtopics : {}) };
+      if (intended && intended.length) sub[topicId] = [...intended].sort((a, b) => a - b);
+      else delete sub[topicId];
+      txPayload(tx, sub, topicId);
+    });
+  };
+
+  try {
+    await runToggle();
+    logInfo("Transaction OK", { topicId, lessonIndex, path: docPath() });
+    markSync(true, "live");
+
+    let verified = await verifyLessonSynced(topicId, lessonIndex);
+    if (!verified) {
+      logInfo("Verification mismatch — retrying once", { topicId, lessonIndex });
+      await runSet();
+      markSync(true, "live");
+      verified = await verifyLessonSynced(topicId, lessonIndex);
     }
+
+    if (!verified) {
+      reportError(
+        "Transaction verification",
+        new Error("server state does not match local state after retry"),
+        "Progress could not be verified on the server — check your connection."
+      );
+      return "verify_failed";
+    }
+    return "ok";
+  } catch (err) {
+    reportError(
+      "Lesson transaction",
+      err,
+      "Could not save progress — " + (err.code || err.message || "unknown error")
+    );
+    return "rejected";
   }
 }
 
@@ -288,6 +499,43 @@ function emit() {
   });
 }
 
+/** Subscribe to sync-health changes (offline banner, debug panel). */
+export function subscribeSync(fn) {
+  syncListeners.push(fn);
+  return () => {
+    syncListeners = syncListeners.filter((f) => f !== fn);
+  };
+}
+
+/* ---------- debugging / diagnostics ---------- */
+/**
+ * Snapshot of store state for the dev debug panel and diagnostics.
+ * @returns {Object} uid, path, snapshotStatus, lastSyncTime, pendingWrites,
+ *                   completedTopics, currentLevel, currentLesson, syncHealthy
+ */
+export function getDebugInfo() {
+  const cur = getCurrent();
+  return {
+    uid: uid || null,
+    path: docPath(),
+    snapshotStatus,
+    lastSyncTime,
+    pendingWrites: pendingWrites.size,
+    completedTopics: countCompletedTopics(),
+    currentLevel: cur ? cur.levelId : null,
+    currentLesson: cur ? cur.lessonIndex : 0,
+    syncHealthy
+  };
+}
+
+/** Wait until every in-flight Firestore write has settled. */
+export function flushWrites() {
+  return Promise.allSettled([...pendingWrites]).then(() => {
+    logInfo("Flush complete — " + pendingWrites.size + " pending writes left");
+    return pendingWrites.size === 0;
+  });
+}
+
 /* ---------- legacy localStorage migration ---------- */
 function migrateFromLocalStorage() {
   try {
@@ -323,15 +571,21 @@ function migrateFromLocalStorage() {
 
     // Clear the legacy keys ONLY once the migration write actually landed,
     // so a failed write never destroys the user's existing progress.
-    setDoc(docRef, patch)
+    const p = setDoc(docRef, patch)
       .then(() => {
+        logInfo("Legacy migration write OK", docPath());
+        markSync(true, "live");
         localStorage.removeItem(OLD_PROGRESS_KEY);
         localStorage.removeItem(OLD_NOTES_KEY);
         localStorage.removeItem(OLD_CURRENT_KEY);
       })
-      .catch(() => { /* keep the legacy keys — a later visit can retry */ });
+      .catch((err) => {
+        reportError("Legacy migration write", err, "Could not migrate your saved progress — old data is kept.");
+      });
+    trackWrite(p);
   } catch (err) {
     /* migration is best-effort — never block the app */
+    console.error("[LearnJS][Roadmap] Legacy migration failed —", err);
   }
 }
 
@@ -344,9 +598,13 @@ function migrateFromLocalStorage() {
 export async function initProgress(user) {
   if (!user) return;
   uid = user.uid;
-  docRef = doc(db, "users", uid, "roadmap");
+  // Document references need an EVEN number of path segments — the valid
+  // path for the roadmap subcollection is users/{uid}/roadmap/{docId}.
+  docRef = doc(db, "users", uid, "roadmap", ROADMAP_DOC_ID);
   // The curriculum map drives the derived completedTopics/overallPercent.
   curriculum = buildCurriculum(await loadRoadmap());
+
+  logInfo("initProgress", { uid, path: docPath() });
 
   if (unsub) unsub();
 
@@ -356,22 +614,44 @@ export async function initProgress(user) {
   // offline or unreachable. The snapshot listener still syncs progress the
   // moment a connection is available — this only bounds the initial await.
   const guard = setTimeout(() => {
+    snapshotStatus = "error";
+    notifySync();
     if (resolveFirst) { resolveFirst(); resolveFirst = null; }
   }, 4000);
+
+  snapshotStatus = "listening";
+  notifySync();
+
   unsub = onSnapshot(
     docRef,
     (snap) => {
       clearTimeout(guard);
-      handleSnapshot(snap);
+      const changed = handleSnapshot(snap);
+      const completedTopics = countCompletedTopics();
+      logInfo("Snapshot update", {
+        path: docPath(),
+        exists: snap.exists(),
+        changed,
+        completedTopics
+      });
+      markSync(true, "live");
       if (resolveFirst) { resolveFirst(); resolveFirst = null; }
     },
     (err) => {
-      // Firestore unavailable (offline, rules, etc.) — degrade gracefully.
-      console.warn("[LearnJS] Roadmap progress listener error:", err.message);
       clearTimeout(guard);
+      snapshotStatus = "error";
+      reportError("Snapshot listener", err, "Progress cannot be synced.");
       if (resolveFirst) { resolveFirst(); resolveFirst = null; }
     }
   );
   await first;
+
+  // Login diagnostics — authenticated UID, doc path, existence, topics loaded.
+  logInfo("Roadmap progress ready", {
+    authenticatedUid: uid,
+    documentPath: docPath(),
+    documentExists: docExists,
+    completedTopicsLoaded: countCompletedTopics()
+  });
 }
 // end of roadmap-progress.js

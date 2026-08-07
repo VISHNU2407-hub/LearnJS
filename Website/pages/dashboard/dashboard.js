@@ -13,8 +13,15 @@ import { db } from "../../js/firebase/firestore.js";
 import { loadProjects } from "../../js/projects/project-loader.js";
 import { requireAuth } from "../../js/common/require-auth.js";
 import { initRoadmap, renderRoadmap } from "../../js/roadmap/roadmap.js";
-import { initLearning, openTopic } from "../../js/roadmap/learning.js";
-import { initProgress } from "../../js/roadmap/roadmap-progress.js";
+import { initLearning, openTopic, flushPendingNotes } from "../../js/roadmap/learning.js";
+import {
+  initProgress,
+  subscribe,
+  subscribeSync,
+  getDebugInfo,
+  flushWrites,
+  isDev
+} from "../../js/roadmap/roadmap-progress.js";
 import { setProjectProgress as persistProgress } from "../../js/projects/progress.js";
 import {
   collection,
@@ -194,6 +201,9 @@ async function boot() {
   // up via onSnapshot the moment the connection returns. (initProgress never
   // rejects — failures are routed to its snapshot error callback.)
   initProgress(currentUser);
+
+  // Offline banner + dev debug panel for the roadmap progress store.
+  initRoadmapDiagnostics();
 
   // Realtime progress per user (Firestore — preserved as-is).
   try {
@@ -662,7 +672,7 @@ el("dashAvatarBtn").addEventListener("click", () => goToPanel("profile"));
    dedicated Learning panel (never a popup); the breadcrumbs route
    back to the Roadmap / Home panels. */
 window.addEventListener("learnjs:open-topic", (e) => {
-  openTopic(e.detail && e.detail.topicId, 0);
+  openTopic(e.detail && e.detail.topicId, (e.detail && e.detail.lessonIndex) || 0);
   goToPanel("learning");
 });
 window.addEventListener("learnjs:goto-roadmap", () => goToPanel("roadmap"));
@@ -708,13 +718,99 @@ function refreshCategories() {
   if ([...select.options].some((o) => o.value === current)) select.value = current;
 }
 
-function logout() {
-  signOut(auth).then(() => {
+async function logout() {
+  const btns = document.querySelectorAll("#dashLogout, #settingsLogoutBtn");
+  btns.forEach((b) => { b.disabled = true; });
+  toast("Saving progress…");
+
+  // Flush any pending roadmap writes (incl. debounced notes) and wait for
+  // them to settle before signing out / navigating away — never destroy the
+  // page while a write is still in flight.
+  try {
+    flushPendingNotes();
+    await flushWrites();
+  } catch (err) {
+    console.error("[LearnJS] Could not flush roadmap progress before logout:", err);
+  }
+
+  try {
+    await signOut(auth);
     window.location.href = "../home/";
-  }).catch((err) => toast(err.message, "error"));
+  } catch (err) {
+    toast(err.message, "error");
+    btns.forEach((b) => { b.disabled = false; });
+  }
 }
 el("dashLogout").addEventListener("click", logout);
 el("settingsLogoutBtn").addEventListener("click", logout);
+
+/* ------------------------------------------------------------
+   Roadmap sync banner + developer debug panel (dev only)
+   ------------------------------------------------------------ */
+function refreshRoadmapSyncBanner() {
+  const banner = document.getElementById("roadmapSyncBanner");
+  if (!banner) return;
+  // Show only once a sync failure is known (never before we know either way).
+  banner.hidden = getDebugInfo().syncHealthy !== false;
+}
+
+/**
+ * The debug panel is NEVER part of the production DOM. It is built here, on
+ * the fly, only when the explicit developer flag is enabled — so UID,
+ * Firestore path, snapshot status, pending writes and other sync internals
+ * cannot appear in production.
+ */
+function buildRoadmapDebugPanel() {
+  const existing = document.getElementById("roadmapDebugPanel");
+  if (existing) return existing;
+  const panel = document.createElement("div");
+  panel.className = "roadmap-debug-panel";
+  panel.id = "roadmapDebugPanel";
+  panel.innerHTML =
+    '<div class="roadmap-debug-head">Roadmap Debug <span>DEV</span></div>' +
+    '<dl class="roadmap-debug-grid">' +
+      '<div><dt>UID</dt><dd id="rdbgUid">—</dd></div>' +
+      '<div><dt>Firestore path</dt><dd id="rdbgPath">—</dd></div>' +
+      '<div><dt>Snapshot</dt><dd id="rdbgSnapshot">—</dd></div>' +
+      '<div><dt>Last sync</dt><dd id="rdbgLastSync">—</dd></div>' +
+      '<div><dt>Pending writes</dt><dd id="rdbgPending">—</dd></div>' +
+      '<div><dt>Completed topics</dt><dd id="rdbgTopics">—</dd></div>' +
+      '<div><dt>Current level</dt><dd id="rdbgLevel">—</dd></div>' +
+      '<div><dt>Current lesson</dt><dd id="rdbgLesson">—</dd></div>' +
+    '</dl>';
+  document.body.appendChild(panel);
+  return panel;
+}
+
+function refreshRoadmapDebugPanel() {
+  const info = getDebugInfo();
+  const set = (id, value) => {
+    const node = document.getElementById(id);
+    if (node) node.textContent = value == null || value === "" ? "—" : String(value);
+  };
+  set("rdbgUid", info.uid);
+  set("rdbgPath", info.path);
+  set("rdbgSnapshot", info.snapshotStatus);
+  set("rdbgLastSync", info.lastSyncTime ? new Date(info.lastSyncTime).toLocaleTimeString() : "—");
+  set("rdbgPending", info.pendingWrites);
+  set("rdbgTopics", info.completedTopics);
+  set("rdbgLevel", info.currentLevel);
+  set("rdbgLesson", info.currentLesson);
+}
+
+function initRoadmapDiagnostics() {
+  // Offline banner stays production-safe (it only reflects sync health).
+  refreshRoadmapSyncBanner();
+  subscribeSync(refreshRoadmapSyncBanner);
+
+  // Debug panel: ONLY when the explicit developer flag is enabled.
+  if (!isDev()) return;
+  const panel = buildRoadmapDebugPanel();
+  panel.hidden = false;
+  refreshRoadmapDebugPanel();
+  subscribeSync(refreshRoadmapDebugPanel);
+  subscribe(refreshRoadmapDebugPanel);
+}
 
 /* ------------------------------------------------------------
    Date helpers
