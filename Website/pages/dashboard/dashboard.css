@@ -204,6 +204,12 @@
   box-shadow: 0 0 0 3px var(--bg), var(--ring);
 }
 
+/* ---------- Account menu (top-right avatar) ----------
+   The sidebar is reserved for learning/navigation; personal/account
+   actions live behind the avatar. Reuses the shared .avatar-menu
+   component styles (card, radius, shadow, popIn animation). */
+.dash-account-area { position: relative; }
+
 /* ---------- Content ---------- */
 .dash-content {
   flex: 1;

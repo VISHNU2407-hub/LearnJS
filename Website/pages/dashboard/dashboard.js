@@ -174,6 +174,16 @@ async function init() {
   el("profileEmail").textContent = user.email || "";
   el("profileMemberSince").textContent = formatDate(user.metadata && user.metadata.creationTime);
 
+  // Personal/account actions live behind the top-right avatar.
+  buildAccountMenu(user);
+
+  // Account-menu deep links from other pages (e.g. ../dashboard/#settings).
+  const targetPanel = (location.hash || "").replace(/^#/, "");
+  if (targetPanel === "profile" || targetPanel === "settings") {
+    goToPanel(targetPanel);
+    history.replaceState(null, "", location.pathname + location.search);
+  }
+
   boot();
 }
 init();
@@ -620,6 +630,13 @@ el("editForm").addEventListener("submit", async (e) => {
     el("homeUserName").textContent = name.split(" ")[0];
     el("dashAvatarSpan").textContent = initials(name);
     el("profileAvatar").textContent = initials(name);
+    // Keep the account-menu header in sync with the new display name.
+    if (dashAccountMenu) {
+      const headName = dashAccountMenu.querySelector(".avatar-menu-name");
+      if (headName) headName.textContent = name;
+      const headAvatar = dashAccountMenu.querySelector(".avatar-menu-head .avatar");
+      if (headAvatar) headAvatar.textContent = initials(name);
+    }
     toast("Profile updated! \u2728");
     el("editModal").hidden = true;
     document.body.style.overflow = "";
@@ -664,7 +681,148 @@ document.querySelectorAll("[data-goto]").forEach((btn) => {
   btn.addEventListener("click", () => goToPanel(btn.getAttribute("data-goto")));
 });
 el("continueBtn").addEventListener("click", () => goToPanel("projects"));
-el("dashAvatarBtn").addEventListener("click", () => goToPanel("profile"));
+
+/* ------------------------------------------------------------
+   Account menu (top-right avatar)
+   ------------------------------------------------------------
+   The sidebar is reserved for learning/navigation; personal and
+   account actions live in a compact menu anchored to the avatar.
+   Reuses the shared .avatar-menu visual language from
+   css/components/components.css.
+   ------------------------------------------------------------ */
+const ACCOUNT_ICONS = {
+  profile: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>',
+  logout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>',
+  sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>'
+};
+
+let dashAccountMenu = null;
+
+function dashThemeIsDark() {
+  return !!(window.LearnJS && window.LearnJS.theme && window.LearnJS.theme.isDark());
+}
+function dashThemeIcon() { return dashThemeIsDark() ? ACCOUNT_ICONS.sun : ACCOUNT_ICONS.moon; }
+function dashThemeLabel() { return dashThemeIsDark() ? "Switch to light theme" : "Switch to dark theme"; }
+function dashMenuItems() {
+  return dashAccountMenu ? Array.from(dashAccountMenu.querySelectorAll(".avatar-menu-item")) : [];
+}
+
+function refreshDashThemeItem() {
+  const item = dashAccountMenu && dashAccountMenu.querySelector('[data-account-action="theme"]');
+  if (item) item.innerHTML = dashThemeIcon() + "<span>" + dashThemeLabel() + "</span>";
+}
+
+function openDashAccountMenu() {
+  const menu = dashAccountMenu;
+  const btn = el("dashAvatarBtn");
+  if (!menu) return;
+  refreshDashThemeItem();
+  menu.hidden = false;
+  btn.setAttribute("aria-expanded", "true");
+  const items = dashMenuItems();
+  if (items.length) items[0].focus();
+}
+
+function closeDashAccountMenu() {
+  const menu = dashAccountMenu;
+  const btn = el("dashAvatarBtn");
+  if (!menu || menu.hidden) return;
+  menu.hidden = true;
+  btn.setAttribute("aria-expanded", "false");
+  // Return focus to the avatar whenever it was inside the menu.
+  if (menu.contains(document.activeElement)) btn.focus();
+}
+
+function buildAccountMenu(user) {
+  const area = el("dashAccountArea");
+  const btn = el("dashAvatarBtn");
+  if (!area || !btn) return;
+
+  const name = user.displayName || user.email || "Learner";
+  const menu = document.createElement("div");
+  menu.className = "avatar-menu dash-account-menu";
+  menu.id = "dashAccountMenu";
+  menu.setAttribute("role", "menu");
+  menu.setAttribute("aria-label", "Account");
+  menu.hidden = true;
+  menu.innerHTML =
+    '<div class="avatar-menu-head">' +
+      '<span class="avatar avatar-sm av-green">' + initials(name) + "</span>" +
+      '<div style="min-width:0">' +
+        '<div class="avatar-menu-name">' + escapeHtml(name) + "</div>" +
+        '<div class="avatar-menu-mail">' + escapeHtml(user.email || "") + "</div>" +
+      "</div>" +
+    "</div>" +
+    '<button class="avatar-menu-item" type="button" role="menuitem" data-account-action="profile">' + ACCOUNT_ICONS.profile + "<span>View / Edit Profile</span></button>" +
+    '<button class="avatar-menu-item" type="button" role="menuitem" data-account-action="settings">' + ACCOUNT_ICONS.settings + "<span>Account Settings</span></button>" +
+    '<button class="avatar-menu-item" type="button" role="menuitem" data-account-action="theme">' + dashThemeIcon() + "<span>" + dashThemeLabel() + "</span></button>" +
+    '<button class="avatar-menu-item danger" type="button" role="menuitem" data-account-action="logout">' + ACCOUNT_ICONS.logout + "<span>Logout</span></button>";
+  area.appendChild(menu);
+  dashAccountMenu = menu;
+
+  btn.setAttribute("aria-haspopup", "menu");
+  btn.setAttribute("aria-controls", "dashAccountMenu");
+
+  // Toggle on avatar click (stopPropagation keeps the outside-click
+  // listener below from immediately closing it).
+  btn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (menu.hidden) openDashAccountMenu();
+    else closeDashAccountMenu();
+  });
+
+  // Item actions reuse the existing dashboard functionality: the profile
+  // panel (with its edit modal), the settings panel, the shared theme
+  // toggle and the existing logout flow (which flushes progress first).
+  menu.addEventListener("click", (event) => {
+    const item = event.target.closest("[data-account-action]");
+    if (!item) return;
+    const action = item.getAttribute("data-account-action");
+    closeDashAccountMenu();
+    if (action === "theme") {
+      if (window.LearnJS && window.LearnJS.theme) window.LearnJS.theme.toggle();
+    } else if (action === "profile") {
+      goToPanel("profile");
+    } else if (action === "settings") {
+      goToPanel("settings");
+    } else if (action === "logout") {
+      logout();
+    }
+  });
+
+  // Keyboard navigation inside the open menu (arrows / Home / End / Tab wrap).
+  menu.addEventListener("keydown", (event) => {
+    if (menu.hidden) return;
+    const items = dashMenuItems();
+    if (!items.length) return;
+    const current = items.indexOf(document.activeElement);
+    let next = -1;
+    switch (event.key) {
+      case "ArrowDown": next = current + 1 >= items.length ? 0 : current + 1; break;
+      case "ArrowUp": next = current - 1 < 0 ? items.length - 1 : current - 1; break;
+      case "Home": next = 0; break;
+      case "End": next = items.length - 1; break;
+      case "Tab":
+        if (event.shiftKey && current <= 0) next = items.length - 1;
+        else if (!event.shiftKey && current === items.length - 1) next = 0;
+        else return; // normal tab movement within the menu
+        break;
+      default: return;
+    }
+    event.preventDefault();
+    items[next].focus();
+  });
+
+  // Close when clicking anywhere outside the avatar + menu.
+  document.addEventListener("click", (event) => {
+    if (menu.hidden) return;
+    const areaEl = el("dashAccountArea");
+    if (areaEl && areaEl.contains(event.target)) return;
+    closeDashAccountMenu();
+  });
+}
 
 /* ---------- Roadmap module wiring ----------
    The roadmap and learning modules are event-driven so they stay
@@ -686,10 +844,15 @@ el("dashMenuToggle").addEventListener("click", () => {
 });
 el("dashBackdrop").addEventListener("click", closeSidebar);
 
-// Escape closes the edit-profile modal (kept after the project modal was
-// replaced by the details page).
+// Escape closes the account menu first, then the edit-profile modal
+// (kept after the project modal was replaced by the details page).
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Escape") return;
+  const menu = dashAccountMenu;
+  if (menu && !menu.hidden) {
+    closeDashAccountMenu();
+    return;
+  }
   const edit = el("editModal");
   if (edit && !edit.hidden) {
     edit.hidden = true;
