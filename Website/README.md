@@ -34,6 +34,8 @@ python -m http.server 8080   # optional (run from this folder)
 
 Firebase auth requires an `http(s)` origin — use a local server rather than `file://`.
 
+> **Playground:** The JS Playground (the global `</>` button) lives in the sibling `Js-compiler/` folder at the **project root**, next to `Website/`. Serve the site from the project root (open the root folder in VS Code, or run `npx serve .` there) so `/Js-compiler/index.html` is reachable.
+
 ## 📁 Adding a New Project (no code changes)
 
 Every project lives in its own folder inside `JS PROJECTS/` with at least:
