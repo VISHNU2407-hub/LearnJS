@@ -177,9 +177,10 @@ async function init() {
   // Personal/account actions live behind the top-right avatar.
   buildAccountMenu(user);
 
-  // Account-menu deep links from other pages (e.g. ../dashboard/#settings).
+  // Account-menu deep links from other pages (e.g. ../dashboard/#settings) and
+  // the legacy interview page redirect (../dashboard/#interview).
   const targetPanel = (location.hash || "").replace(/^#/, "");
-  if (targetPanel === "profile" || targetPanel === "settings") {
+  if (targetPanel === "profile" || targetPanel === "settings" || targetPanel === "interview") {
     goToPanel(targetPanel);
     history.replaceState(null, "", location.pathname + location.search);
   }

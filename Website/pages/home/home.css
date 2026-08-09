@@ -230,8 +230,10 @@
 }
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
+  max-width: 780px;
+  margin-inline: auto;
 }
 
 .stat-card {
@@ -280,7 +282,7 @@
 /* ======================= Why LearnJS ======================= */
 .why-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.3rem;
 }
 
