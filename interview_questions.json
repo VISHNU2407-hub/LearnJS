@@ -1,0 +1,1160 @@
+{
+  "title": "JavaScript Interview Questions",
+  "totalQuestions": 100,
+  "categories": {
+    "easy": 30,
+    "medium": 40,
+    "hard": 30
+  },
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the difference between let, const and var?",
+      "difficulty": "easy",
+      "topic": "Variables",
+      "type": "conceptual",
+      "answer": "var is function-scoped and can be redeclared; let is block-scoped and can be reassigned; const is block-scoped and cannot be reassigned after initialization. All three are hoisted, but var is initialized to undefined while let/const stay in the temporal dead zone until their declaration line runs. Modern guidance: use const by default, let when you must reassign, and avoid var.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 2,
+      "question": "What are the primitive data types in JavaScript?",
+      "difficulty": "easy",
+      "topic": "Data Types",
+      "type": "conceptual",
+      "answer": "There are seven primitives: string, number, bigint, boolean, undefined, null, and symbol. Primitives are immutable and compared/stored by value. Everything else — objects, arrays, functions, dates — is an object stored and compared by reference.",
+      "source": [
+        "javascript.info",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 3,
+      "question": "What is the difference between == and === ?",
+      "difficulty": "easy",
+      "topic": "Operators",
+      "type": "conceptual",
+      "answer": "== performs type coercion before comparing, while === compares both value and type without coercion. For example, 1 == '1' is true but 1 === '1' is false. Prefer === to avoid surprising coercion; a common deliberate exception is x == null, which matches both null and undefined.",
+      "source": [
+        "javascript.info",
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 4,
+      "question": "What is type coercion and when does it happen?",
+      "difficulty": "easy",
+      "topic": "Type Conversion",
+      "type": "conceptual",
+      "answer": "Type coercion is the implicit conversion of a value from one type to another performed automatically by JavaScript, for example '5' + 2 producing the string '52' while '5' - 2 produces the number 3. It happens in comparisons, arithmetic, template literals, and conditions. The + operator prefers string concatenation, whereas -, *, / and % prefer numeric conversion.",
+      "source": [
+        "javascript.info",
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 5,
+      "question": "What will this code print and why? console.log(typeof null, typeof undefined)",
+      "difficulty": "easy",
+      "topic": "Data Types",
+      "type": "output",
+      "answer": "It prints 'object' then 'undefined'. typeof null returning 'object' is a long-standing bug kept for backward compatibility. undefined is a genuine type. Because of this, check for null explicitly instead of relying on typeof.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Which values are falsy in JavaScript?",
+      "difficulty": "easy",
+      "topic": "Conditions",
+      "type": "conceptual",
+      "answer": "false, 0, -0, 0n, '', null, undefined, and NaN. Everything else is truthy, including empty objects {}, empty arrays [], and the string '0'. Conditionals and Boolean(x) follow this truthiness table.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 7,
+      "question": "How do you check whether a value is NaN?",
+      "difficulty": "easy",
+      "topic": "Data Types",
+      "type": "practical",
+      "answer": "Use Number.isNaN(value), which does not coerce: Number.isNaN('x') is false. The global isNaN(value) coerces first, so isNaN('x') is true even though 'x' is not a number. Also remember NaN is the only value not equal to itself, so NaN === NaN is false.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 8,
+      "question": "What will this code print and why? console.log(0.1 + 0.2 === 0.3)",
+      "difficulty": "easy",
+      "topic": "Operators",
+      "type": "output",
+      "answer": "It prints false. Numbers are stored in binary floating point, and 0.1 + 0.2 evaluates to 0.30000000000000004, which is not exactly 0.3. For money or precise comparisons, round explicitly or compare against a small epsilon tolerance.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)",
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 9,
+      "question": "What will this code print and why? console.log(2 + '2' - 1)",
+      "difficulty": "easy",
+      "topic": "Type Conversion",
+      "type": "output",
+      "answer": "It prints 21. First 2 + '2' becomes the string '22' because + prefers string concatenation when either side is a string. Then '22' - 1 coerces the string to the number 22 and subtracts 1, giving 21.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 10,
+      "question": "How do you convert a string to a number and a number to a string?",
+      "difficulty": "easy",
+      "topic": "Type Conversion",
+      "type": "practical",
+      "answer": "To number: Number('42'), unary +'42', parseInt('42px', 10) (stops at the first non-digit), or parseFloat('3.14'). To string: String(42), (42).toString(), or the template literal `${42}`. Note Number('10px') is NaN while parseInt('10px') is 10.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 11,
+      "question": "What is the difference between a for loop, a while loop and a do...while loop?",
+      "difficulty": "easy",
+      "topic": "Loops",
+      "type": "conceptual",
+      "answer": "A for loop iterates a known number of times using an initializer, condition, and update expression. A while loop checks its condition before each iteration, so the body may run zero times. A do...while runs the body first and then checks the condition, so it always executes at least once.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 12,
+      "question": "What is the difference between for...of and forEach when iterating an array?",
+      "difficulty": "easy",
+      "topic": "Loops",
+      "type": "conceptual",
+      "answer": "for...of iterates values of any iterable, supports break, continue, and await, and gives you a block scope per iteration. forEach is an Array method that cannot be stopped early, passes (value, index, array) to the callback, and runs the callback synchronously for each element.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 13,
+      "question": "What will this code print? console.log([1, 2, 3].map(x => x * 2))",
+      "difficulty": "easy",
+      "topic": "Basic ES6",
+      "type": "output",
+      "answer": "It prints [2, 4, 6]. map creates a brand new array by applying the callback to each element; the original array is left unchanged.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 14,
+      "question": "How do you add and remove items from the beginning and end of an array?",
+      "difficulty": "easy",
+      "topic": "Arrays",
+      "type": "practical",
+      "answer": "push(item) adds to the end, pop() removes the last item, unshift(item) adds to the front, and shift() removes the first item. push/pop are constant time; shift/unshift are linear because every index has to be moved.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 15,
+      "question": "What is the difference between slice() and splice()?",
+      "difficulty": "easy",
+      "topic": "Arrays",
+      "type": "conceptual",
+      "answer": "slice(start, end) returns a new array copy of a portion without modifying the original and accepts negative indexes. splice(start, deleteCount, ...items) mutates the original array by removing, replacing, or inserting items, and returns the removed elements. slice copies; splice edits.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 16,
+      "question": "What will this code print and why? console.log(typeof [])",
+      "difficulty": "easy",
+      "topic": "Data Types",
+      "type": "output",
+      "answer": "It prints 'object'. Arrays are objects in JavaScript, which is why typeof cannot tell them apart from other objects. Use Array.isArray(value) to check for arrays reliably.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 17,
+      "question": "What does it mean that strings are immutable in JavaScript?",
+      "difficulty": "easy",
+      "topic": "Strings",
+      "type": "conceptual",
+      "answer": "It means a string cannot be changed in place after creation. Every method that transforms a string — toUpperCase(), slice(), replace(), trim() — returns a new string while the original stays intact. This makes strings safe to share and simplifies reasoning about them.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 18,
+      "question": "How do you check whether an object has a given property?",
+      "difficulty": "easy",
+      "topic": "Objects",
+      "type": "practical",
+      "answer": "'key' in obj checks the own and inherited chain; obj.hasOwnProperty('key') or Object.hasOwn(obj, 'key') checks own properties only; obj.key !== undefined fails when the value genuinely is undefined. For most cases, Object.hasOwn or the in operator are the reliable choices.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 19,
+      "question": "What is the difference between dot notation and bracket notation for accessing object properties?",
+      "difficulty": "easy",
+      "topic": "Objects",
+      "type": "conceptual",
+      "answer": "Dot notation requires a literal, valid identifier — obj.name. Bracket notation accepts any string or expression — obj['name'], obj[keyVariable], obj['first name'] — and is required for keys with spaces, hyphens, or dynamic names. Both are equivalent for valid identifiers.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 20,
+      "question": "What will this code print? console.log(!!'false', !!0, !!NaN)",
+      "difficulty": "easy",
+      "topic": "Conditions",
+      "type": "output",
+      "answer": "It prints true, false, false. 'false' is a non-empty string so it is truthy; 0 and NaN are both falsy. !! is a concise way to coerce any value to a boolean.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 21,
+      "question": "How do you declare a function with default parameter values?",
+      "difficulty": "easy",
+      "topic": "Functions",
+      "type": "practical",
+      "answer": "function greet(name = 'there') { ... } — the default applies only when the argument is undefined, not when it is null. Defaults may reference earlier parameters, e.g. function scale(size, factor = size * 2).",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 22,
+      "question": "What is the difference between a function declaration and a function expression?",
+      "difficulty": "easy",
+      "topic": "Functions",
+      "type": "conceptual",
+      "answer": "A function declaration (function foo() {}) is fully hoisted, so it can be called before its line in the source. A function expression (const foo = function() {} or an arrow) is not — only the variable is hoisted, so calling it early throws a ReferenceError or TypeError. Declarations also carry a name for recursion and stack traces.",
+      "source": [
+        "javascript.info",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 23,
+      "question": "What will this code print? function foo(a = 1) { return a; } console.log(foo(), foo(undefined), foo(null))",
+      "difficulty": "easy",
+      "topic": "Functions",
+      "type": "output",
+      "answer": "It prints 1, 1, null. Default parameter values are applied only for undefined arguments. Passing undefined triggers the default; passing null does not, so null is used as-is.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 24,
+      "question": "What is a template literal and how do you use it?",
+      "difficulty": "easy",
+      "topic": "Basic ES6",
+      "type": "practical",
+      "answer": "Template literals are strings delimited by backticks that support multi-line text and interpolation: `Hello, ${name}!`. Interpolated expressions are coerced to strings automatically, making them the standard way to build strings in modern JavaScript.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 25,
+      "question": "What will this code print? console.log(parseInt('10px'), Number('10px'), +'10px')",
+      "difficulty": "easy",
+      "topic": "Type Conversion",
+      "type": "output",
+      "answer": "It prints 10, NaN, NaN. parseInt reads digits up to the first invalid character and stops at 'px'. Number and the unary + require the whole string to be a valid number, so '10px' fails and yields NaN.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 26,
+      "question": "How do you check the type of a value in JavaScript?",
+      "difficulty": "easy",
+      "topic": "Data Types",
+      "type": "practical",
+      "answer": "typeof works well for primitives and functions but is weak for objects (typeof [] is 'object'). Complement it with Array.isArray(x) for arrays, x instanceof Class for class instances, and Object.prototype.toString.call(x) for exact built-in tags like '[object Map]'.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 27,
+      "question": "What is the ternary operator and when would you use it?",
+      "difficulty": "easy",
+      "topic": "Operators",
+      "type": "conceptual",
+      "answer": "condition ? valueIfTrue : valueIfFalse is an expression that picks one of two values. Use it for short, simple choices, ideally as an assignment: const label = isAdmin ? 'admin' : 'user'. Avoid nesting ternaries; use if/else for longer or multi-branch logic for readability.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 28,
+      "question": "What will this code print? const x = { a: 1 }; x.b = 2; console.log(x)",
+      "difficulty": "easy",
+      "topic": "Objects",
+      "type": "output",
+      "answer": "It prints { a: 1, b: 2 }. const prevents reassigning the variable x itself, but the object it references can still be mutated. Use Object.freeze(x) to block adding, removing, or changing properties.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)",
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 29,
+      "question": "How would you remove duplicates from an array of primitives?",
+      "difficulty": "easy",
+      "topic": "Arrays",
+      "type": "practical",
+      "answer": "const unique = [...new Set(arr)] — a Set stores unique values and spread converts it back to an array. This works for primitives in O(n). For arrays of objects, dedupe by a key using a Map or filter with an indexOf check.",
+      "source": [
+        "GreatFrontEnd",
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 30,
+      "question": "What is the difference between break and continue in loops?",
+      "difficulty": "easy",
+      "topic": "Loops",
+      "type": "conceptual",
+      "answer": "break exits the loop entirely, and execution continues after the loop. continue skips the rest of the current iteration and moves directly to the next one. Both apply to for, while, do...while, and labeled statements.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 31,
+      "question": "What is scope in JavaScript and what types of scope exist?",
+      "difficulty": "medium",
+      "topic": "Scope",
+      "type": "conceptual",
+      "answer": "Scope determines where a variable is visible and usable. JavaScript has global scope, function scope (var and function declarations), block scope (let/const inside {}), and module scope (top-level bindings in ES modules). Lexical scoping means inner scopes can read variables from enclosing scopes.",
+      "source": [
+        "javascript.info",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 32,
+      "question": "What is hoisting in JavaScript?",
+      "difficulty": "medium",
+      "topic": "Hoisting",
+      "type": "conceptual",
+      "answer": "Hoisting is the behavior where declarations are processed before the rest of the code runs. Function declarations are fully available before their line. var declarations are hoisted and initialized to undefined. let/const are hoisted into a temporal dead zone and throw a ReferenceError if accessed before their declaration executes.",
+      "source": [
+        "javascript.info",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 33,
+      "question": "What is a closure?",
+      "difficulty": "medium",
+      "topic": "Closures",
+      "type": "conceptual",
+      "answer": "A closure is a function that retains access to variables from its outer lexical scope even after that scope has finished executing. Example: a counter factory whose returned increment function keeps reading a private count variable. Closures enable data privacy, memoization, partial application, and module patterns.",
+      "source": [
+        "javascript.info",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 34,
+      "question": "What will this code print? for (var i = 0; i < 3; i++) { setTimeout(() => console.log(i), 0); }",
+      "difficulty": "medium",
+      "topic": "Hoisting",
+      "type": "output",
+      "answer": "It prints 3, 3, 3. var is function-scoped, so all three timeouts close over the same i variable, which equals 3 by the time they run. Switching to let gives each iteration its own binding and prints 0, 1, 2.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)",
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 35,
+      "question": "What does the this keyword refer to in JavaScript?",
+      "difficulty": "medium",
+      "topic": "this",
+      "type": "conceptual",
+      "answer": "this is determined by how a function is called, not where it is defined. In a method it is the receiving object; in a plain function in strict mode it is undefined (the global object otherwise); with new it is the new instance; with call/apply/bind it is the explicitly provided value; arrow functions inherit this lexically.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 36,
+      "question": "What is the difference between call(), apply() and bind()?",
+      "difficulty": "medium",
+      "topic": "call/apply/bind",
+      "type": "conceptual",
+      "answer": "All three let you set this explicitly. fn.call(thisArg, a, b) invokes immediately with arguments listed individually. fn.apply(thisArg, [a, b]) invokes immediately with an array of arguments. fn.bind(thisArg, a, b) returns a new function for later use and can pre-fill arguments (partial application).",
+      "source": [
+        "JavaScript Interview Questions (Sudheer J)",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 37,
+      "question": "What will this code print? const obj = { x: 42 }; function getX() { return this.x; } console.log(getX.call(obj), getX.apply(obj))",
+      "difficulty": "medium",
+      "topic": "call/apply/bind",
+      "type": "output",
+      "answer": "It prints 42 42. Both call and apply invoke getX immediately with this set to obj. call takes arguments individually and apply takes an array; here there are no arguments, so both simply return obj.x.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 38,
+      "question": "What is an arrow function and how does it differ from a regular function?",
+      "difficulty": "medium",
+      "topic": "Arrow functions",
+      "type": "conceptual",
+      "answer": "Arrow functions are a concise syntax that do not have their own this (they inherit it lexically), cannot be used as constructors with new, have no arguments object, and have no prototype property. They shine as callbacks because this stays bound to the surrounding scope.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 39,
+      "question": "What will this code print? const obj = { value: 10, getValue: () => this.value }; console.log(obj.getValue())",
+      "difficulty": "medium",
+      "topic": "Arrow functions",
+      "type": "output",
+      "answer": "It prints undefined. Arrow functions do not bind their own this, so inside getValue, this is the lexically enclosing scope (the module or global scope), not obj. obj.value is therefore never read.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 40,
+      "question": "What is a higher-order function?",
+      "difficulty": "medium",
+      "topic": "Higher-order functions",
+      "type": "conceptual",
+      "answer": "A higher-order function takes one or more functions as arguments and/or returns a function. Array methods like map, filter, and reduce, plus utilities like debounce and once, are higher-order. They enable composition and generic, reusable logic.",
+      "source": [
+        "javascript.info",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 41,
+      "question": "What is the difference between map() and forEach()?",
+      "difficulty": "medium",
+      "topic": "Array methods",
+      "type": "conceptual",
+      "answer": "map returns a new array of the same length containing the callback's return values and is used for transformation. forEach returns undefined and is used for side effects such as logging or mutating external state. Choose map when you need the result; use forEach when you only want to act per item.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 42,
+      "question": "What will this code print? console.log([1, 2, 3, 4].filter(x => x % 2 === 0).reduce((a, b) => a + b, 0))",
+      "difficulty": "medium",
+      "topic": "Array methods",
+      "type": "output",
+      "answer": "It prints 6. filter keeps the even numbers [2, 4], then reduce sums them starting from an initial value of 0: 0 + 2 + 4 = 6.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 43,
+      "question": "How does reduce() work and what is it useful for?",
+      "difficulty": "medium",
+      "topic": "Array methods",
+      "type": "conceptual",
+      "answer": "reduce(callback, initialValue) collapses an array into a single value. The callback receives an accumulator and the current item, and its return value becomes the accumulator for the next step. It is ideal for sums, products, grouping by key, counting occurrences, and building objects from arrays.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 44,
+      "question": "What is destructuring and how do you use it with objects and arrays?",
+      "difficulty": "medium",
+      "topic": "Destructuring",
+      "type": "practical",
+      "answer": "Destructuring unpacks values into variables: const { name, age } = user; and const [first, second] = arr;. It supports defaults, renaming (const { name: userName }), rest (const [head, ...tail]), nested patterns, and destructuring directly in function parameters.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 45,
+      "question": "What is the difference between the spread operator and rest parameters?",
+      "difficulty": "medium",
+      "topic": "Spread/Rest",
+      "type": "conceptual",
+      "answer": "Spread (...) expands an iterable into individual elements, e.g. [...arr] or fn(...args). Rest (...) collects individual values into an array, e.g. function sum(...nums). The syntax looks identical but the direction differs: rest collects, spread expands.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 46,
+      "question": "What will this code print? const a = [1, 2]; const b = [...a]; b.push(3); console.log(a.length, b.length)",
+      "difficulty": "medium",
+      "topic": "Spread/Rest",
+      "type": "output",
+      "answer": "It prints 2 3. Spread creates a shallow copy, so b is a separate array and pushing to it does not affect a. Note that nested objects inside a would still be shared by reference between the two arrays.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 47,
+      "question": "What is optional chaining and how does it prevent errors?",
+      "difficulty": "medium",
+      "topic": "Optional chaining",
+      "type": "practical",
+      "answer": "The ?. operator short-circuits to undefined when the value before it is null or undefined, instead of throwing 'Cannot read properties of undefined'. Examples: user?.address?.city, arr?.[0], and fn?.(). Chain it with the nullish coalescing operator for clean defaults: user?.age ?? 18.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 48,
+      "question": "What is the nullish coalescing operator and how is it different from || ?",
+      "difficulty": "medium",
+      "topic": "Nullish coalescing",
+      "type": "conceptual",
+      "answer": "?? returns the right-hand side only when the left-hand side is null or undefined. || triggers on any falsy value — 0, '', false, NaN included. So 0 ?? 5 is 0 while 0 || 5 is 5. This makes ?? the right choice when 0 or '' are meaningful values.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 49,
+      "question": "What is a prototype and how does prototypal inheritance work?",
+      "difficulty": "medium",
+      "topic": "Prototypes",
+      "type": "conceptual",
+      "answer": "Every object has an internal [[Prototype]] link (read via Object.getPrototypeOf). Property lookups walk the chain: object, its prototype, and so on until Object.prototype and then null. Objects inherit from other objects; constructor functions attach methods to their .prototype so every instance shares them without duplication.",
+      "source": [
+        "javascript.info",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 50,
+      "question": "What is the difference between __proto__ and prototype?",
+      "difficulty": "medium",
+      "topic": "Prototypes",
+      "type": "conceptual",
+      "answer": "__proto__ is the actual prototype of an instance — the object property lookup uses. .prototype is a property that only exists on constructor functions and classes, and its value becomes the prototype of instances created with new. Prefer Object.getPrototypeOf / Object.setPrototypeOf over __proto__.",
+      "source": [
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 51,
+      "question": "What are classes in JavaScript and how do they differ from constructor functions?",
+      "difficulty": "medium",
+      "topic": "Classes",
+      "type": "conceptual",
+      "answer": "Classes are cleaner syntax over the same prototypal mechanism, with constructor, methods, static members, getters/setters, and extends/super. Unlike constructor functions, class bodies run in strict mode, class declarations are not hoisted (temporal dead zone), and methods are non-enumerable.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 52,
+      "question": "What does the super keyword do in a subclass?",
+      "difficulty": "medium",
+      "topic": "Classes",
+      "type": "practical",
+      "answer": "super() invokes the parent constructor and must be called before using this in a derived class constructor. super.method() calls an overridden method from the parent. This keeps the inheritance chain working when both classes define constructors.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 53,
+      "question": "What are ES modules and how do import/export work?",
+      "difficulty": "medium",
+      "topic": "Modules",
+      "type": "conceptual",
+      "answer": "ES modules are JavaScript's native module system using export and import, loaded via <script type='module'>. They are deferred, run in strict mode, execute in their own module scope, and are cached after the first load. Named exports: export const x / import { x }. Default export: export default fn / import fn.",
+      "source": [
+        "javascript.info",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 54,
+      "question": "How does error handling work in JavaScript with try/catch/finally?",
+      "difficulty": "medium",
+      "topic": "Error handling",
+      "type": "conceptual",
+      "answer": "try runs code that might throw; catch (err) receives the thrown error with its message and stack; finally always executes afterward, even when an error was thrown or a return happened. You can throw custom values or extend the built-in Error class, and handle async errors with .catch or try/catch around await.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 55,
+      "question": "What are the states of a Promise?",
+      "difficulty": "medium",
+      "topic": "Promises",
+      "type": "conceptual",
+      "answer": "A promise starts pending and settles exactly once into either fulfilled (resolved with a value) or rejected (resolved with a reason). Once settled, the state is immutable. Handlers attached with .then, .catch, and .finally are queued and run as microtasks.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 56,
+      "question": "What is the difference between Promise.all, Promise.allSettled and Promise.race?",
+      "difficulty": "medium",
+      "topic": "Promises",
+      "type": "conceptual",
+      "answer": "Promise.all resolves with an array of all results but rejects immediately on the first rejection (fail-fast). Promise.allSettled waits for every promise and reports each outcome as fulfilled or rejected, useful when you need all results. Promise.race settles with the first promise that settles at all. Promise.any (bonus) resolves with the first fulfilled value.",
+      "source": [
+        "javascript.info",
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 57,
+      "question": "What will this code print? Promise.resolve('a').then(v => { console.log(v); return 'b'; }).then(v => console.log(v))",
+      "difficulty": "medium",
+      "topic": "Promises",
+      "type": "output",
+      "answer": "It prints 'a' then 'b'. Each .then receives the previous handler's return value as its argument. Returned values, even primitives, are wrapped in a new promise, so chains continue cleanly.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)",
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 58,
+      "question": "What is async/await and how does it simplify promises?",
+      "difficulty": "medium",
+      "topic": "async/await",
+      "type": "conceptual",
+      "answer": "async functions always return a promise. await pauses the function until a promise settles and then unwraps its value, letting async code read like synchronous code. Errors are handled with try/catch instead of chained .catch calls, and await can be used inside loops and conditionals naturally.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 59,
+      "question": "What will this code print? (async () => { console.log(1); await Promise.resolve(); console.log(2); })(); console.log(3)",
+      "difficulty": "medium",
+      "topic": "async/await",
+      "type": "output",
+      "answer": "It prints 1, 3, 2. The synchronous portion runs first (1, then the outer 3). await yields control back to the event loop, and the continuation after await runs as a microtask once the synchronous code finishes.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 60,
+      "question": "How do you make a GET request with fetch() and handle errors?",
+      "difficulty": "medium",
+      "topic": "Fetch",
+      "type": "practical",
+      "answer": "const res = await fetch(url); if (!res.ok) throw new Error(res.status); const data = await res.json(); — wrapped in try/catch. A crucial detail: fetch only rejects on network-level failures; HTTP errors like 404 still resolve, so you must check res.ok yourself.",
+      "source": [
+        "javascript.info",
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 61,
+      "question": "What is the event loop?",
+      "difficulty": "medium",
+      "topic": "Event Loop",
+      "type": "conceptual",
+      "answer": "The event loop is the mechanism that lets JavaScript be single-threaded yet non-blocking. The call stack runs synchronous code; deferred callbacks wait in task queues. After each task, all queued microtasks (promise callbacks, queueMicrotask) run, then the next macrotask (setTimeout, I/O, events) is processed.",
+      "source": [
+        "javascript.info",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 62,
+      "question": "What is the difference between event bubbling and event capturing?",
+      "difficulty": "medium",
+      "topic": "Events",
+      "type": "conceptual",
+      "answer": "Capturing travels from the root down to the target element; bubbling travels from the target back up to the root. addEventListener defaults to the bubbling phase; passing true or { capture: true } opts into capturing. stopPropagation stops the phase; stopImmediatePropagation also prevents other listeners on the same element.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 63,
+      "question": "What is event delegation and why is it useful?",
+      "difficulty": "medium",
+      "topic": "Events",
+      "type": "practical",
+      "answer": "Event delegation attaches one listener to a parent and handles events from any descendant using event.target. It is ideal for dynamic lists where items are added and removed, reduces the number of listeners, and saves memory. Closest() is often used to find the relevant item from the target.",
+      "source": [
+        "javascript.info",
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 64,
+      "question": "How do you select and modify DOM elements?",
+      "difficulty": "medium",
+      "topic": "DOM",
+      "type": "practical",
+      "answer": "Select with document.querySelector('.cls'), querySelectorAll, or getElementById. Modify with textContent, innerHTML (mind XSS), setAttribute, classList.add/remove/toggle, and style. Create nodes with document.createElement and insert them with appendChild, append, or insertBefore.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 65,
+      "question": "What is the difference between textContent and innerHTML?",
+      "difficulty": "medium",
+      "topic": "DOM",
+      "type": "conceptual",
+      "answer": "textContent sets plain text: the value is inserted literally with no parsing, making it safe even with user input. innerHTML parses the string as HTML, which is powerful but dangerous if the string contains untrusted content (XSS). Prefer textContent unless you deliberately need to inject markup.",
+      "source": [
+        "javascript.info",
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 66,
+      "question": "How do you flatten a nested array in JavaScript?",
+      "difficulty": "medium",
+      "topic": "Array methods",
+      "type": "practical",
+      "answer": "Use arr.flat(depth) for a specific depth or arr.flat(Infinity) for arbitrarily nested arrays. Without flat, reduce with concat recursively: arr.reduce((acc, v) => acc.concat(Array.isArray(v) ? flatten(v) : [v]), []).",
+      "source": [
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 67,
+      "question": "What is an IIFE and why would you use it?",
+      "difficulty": "medium",
+      "topic": "Scope",
+      "type": "conceptual",
+      "answer": "An IIFE (Immediately Invoked Function Expression) is a function that runs right away: (function() { ... })();. Its main purpose is to create a private scope, keeping variables out of the global namespace. It was the standard encapsulation trick before ES modules and still appears in module and singleton patterns.",
+      "source": [
+        "Frontend Interview Handbook",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 68,
+      "question": "How do you copy an object in JavaScript?",
+      "difficulty": "medium",
+      "topic": "Objects",
+      "type": "practical",
+      "answer": "Shallow copy with {...obj} or Object.assign({}, obj). Deep copy with structuredClone(obj), the built-in that handles dates, Maps, and Sets, or JSON.parse(JSON.stringify(obj)) — which drops functions, undefined, symbols, and turns dates into strings. Choose deep copies only when needed because they are more expensive.",
+      "source": [
+        "javascript.info",
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 69,
+      "question": "What will this code print? const user = { name: 'Ada' }; const copy = { ...user }; copy.name = 'Grace'; console.log(user.name)",
+      "difficulty": "medium",
+      "topic": "Destructuring",
+      "type": "output",
+      "answer": "It prints 'Ada'. Spread creates a shallow copy, so changing copy.name leaves user untouched. But if the object contained a nested object, both copies would share the same reference to it.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 70,
+      "question": "What is the difference between a shallow copy and a deep copy?",
+      "difficulty": "medium",
+      "topic": "Objects",
+      "type": "conceptual",
+      "answer": "A shallow copy duplicates top-level values only; nested objects and arrays are still shared by reference between the copies. A deep copy recursively duplicates everything so no references are shared at any depth. Deep copying is safer against mutation bugs but costs more memory and time.",
+      "source": [
+        "javascript.info",
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 71,
+      "question": "What is an execution context and what does it contain?",
+      "difficulty": "hard",
+      "topic": "Execution context",
+      "type": "conceptual",
+      "answer": "An execution context is the environment in which code runs — global, function, or eval. Each one carries the variable environment (declared bindings), the this binding, and a reference to its outer lexical environment. Contexts are created in two phases: the creation phase (hoisting) and the execution phase (running statements), and are managed on the call stack.",
+      "source": [
+        "Frontend Interview Handbook",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 72,
+      "question": "What is the call stack and what happens when it overflows?",
+      "difficulty": "hard",
+      "topic": "Call stack",
+      "type": "conceptual",
+      "answer": "The call stack is the LIFO structure of active execution contexts; every function call pushes a frame, every return pops one. Unbounded recursion fills it and throws RangeError: Maximum call stack size exceeded. A long synchronous loop also blocks the stack, so the event loop cannot run and the page freezes.",
+      "source": [
+        "javascript.info",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 73,
+      "question": "Explain the difference between microtasks and macrotasks and how they are scheduled.",
+      "difficulty": "hard",
+      "topic": "Event loop",
+      "type": "advanced",
+      "answer": "Microtasks — promise callbacks, queueMicrotask, MutationObserver — are drained to completion immediately after the current script and before rendering or any macrotask. Macrotasks — setTimeout, setInterval, I/O, user events — come from the task queue. Each loop iteration processes one macrotask, then all microtasks, then renders. Consequently, microtask loops can starve macrotasks.",
+      "source": [
+        "javascript.info",
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 74,
+      "question": "What will this code print? console.log(1); setTimeout(() => console.log(2), 0); Promise.resolve().then(() => console.log(3)); console.log(4)",
+      "difficulty": "hard",
+      "topic": "Event loop",
+      "type": "output",
+      "answer": "It prints 1, 4, 3, 2. Synchronous code runs first (1 and 4). Microtasks from promises run before the next macrotask, so 3 comes before 2 even though the timer has zero delay.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 75,
+      "question": "How can closures cause memory leaks and how do you avoid them?",
+      "difficulty": "hard",
+      "topic": "Closures",
+      "type": "advanced",
+      "answer": "A closure keeps its outer scope alive as long as any function referencing it exists. Retaining closures — in caches, arrays, global registries, or event listeners that are never removed — keeps entire object graphs reachable and uncollectable. Avoid by nulling references, using WeakMap/WeakSet for caches, removing listeners with removeEventListener, and not creating unnecessary closures in hot paths.",
+      "source": [
+        "Frontend Interview Handbook",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 76,
+      "question": "Explain the prototype chain with an example.",
+      "difficulty": "hard",
+      "topic": "Prototype chain",
+      "type": "conceptual",
+      "answer": "Reading obj.prop triggers a walk: obj, then Object.getPrototypeOf(obj), then further up until Object.prototype, then null. If Person.prototype.sayHi exists, every new Person finds sayHi through the chain instead of storing a copy per instance. Built-ins work the same way — array methods live on Array.prototype.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 77,
+      "question": "What will this code print? function A() {} A.prototype.x = 1; const a = new A(); A.prototype.x = 2; console.log(a.x)",
+      "difficulty": "hard",
+      "topic": "Prototype chain",
+      "type": "output",
+      "answer": "It prints 2. a has no own x property, so the lookup follows the chain to A.prototype at access time. Because lookups are live, mutating the prototype updates what instances see.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 78,
+      "question": "How does memory management work in JavaScript?",
+      "difficulty": "hard",
+      "topic": "Memory management",
+      "type": "conceptual",
+      "answer": "The engine allocates memory for values and structures, and garbage collection reclaims anything no longer reachable. Reachability from roots — the global object, the current call stack, and active closures — decides liveness. Modern engines (V8) layer generational, mark-and-sweep, and compaction strategies on top of the reachability model.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 79,
+      "question": "What is garbage collection and how does mark-and-sweep work?",
+      "difficulty": "hard",
+      "topic": "Garbage collection",
+      "type": "conceptual",
+      "answer": "Garbage collection frees memory for values that are no longer reachable. Mark-and-sweep works in two phases: mark — starting from the roots, walk all references and mark reachable objects — then sweep — free unmarked objects. WeakMap and WeakSet hold weak references, so their entries can be collected with their keys, making them ideal for caches tied to object lifetimes.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 80,
+      "question": "Implement a debounce function and explain when you would use it.",
+      "difficulty": "hard",
+      "topic": "Debouncing",
+      "type": "practical",
+      "answer": "function debounce(fn, delay) { let t; return function(...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), delay); }; } — every call resets the timer, so fn runs only after calls pause for delay ms. Use it for search-as-you-type, resize handlers, and autosave. A leading-edge option runs immediately and then waits.",
+      "source": [
+        "GreatFrontEnd",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 81,
+      "question": "Implement a throttle function and explain when you would use it.",
+      "difficulty": "hard",
+      "topic": "Throttling",
+      "type": "practical",
+      "answer": "function throttle(fn, limit) { let last = 0; return function(...args) { const now = Date.now(); if (now - last >= limit) { last = now; fn.apply(this, args); } }; } — fn runs at most once per limit ms no matter how often the event fires. Use it for scroll, mousemove, and drag tracking where you want steady updates. Debounce waits for a pause; throttle paces frequency.",
+      "source": [
+        "GreatFrontEnd",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 82,
+      "question": "When would you use debounce instead of throttle, and vice versa?",
+      "difficulty": "hard",
+      "topic": "Debouncing",
+      "type": "scenario",
+      "answer": "Use debounce when the action should happen after the user stops acting: autocomplete search, saving on idle, resize-end callbacks. Use throttle when you need periodic updates during continuous events: infinite scroll, scroll progress, game input, or analytics on mousemove. Debounce delays the final call; throttle guarantees a maximum call rate.",
+      "source": [
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 83,
+      "question": "What are generators and how do they work?",
+      "difficulty": "hard",
+      "topic": "Generators",
+      "type": "conceptual",
+      "answer": "Generators are functions declared with function* that can pause at yield and resume later, preserving internal state. Calling one returns an iterator whose next() produces { value, done }. They enable lazy sequences, custom iteration, cooperative multitasking, and async generators (for await...of) for streaming data.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 84,
+      "question": "What is an iterator and what is the iterable protocol?",
+      "difficulty": "hard",
+      "topic": "Iterators",
+      "type": "conceptual",
+      "answer": "An iterable exposes a Symbol.iterator method that returns an iterator — an object with next() yielding { value, done }. Arrays, strings, Maps, and Sets are built-in iterables, consumed by for...of, spread, and destructuring. Any object can become iterable by implementing Symbol.iterator.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 85,
+      "question": "What are Symbols and what are they used for?",
+      "difficulty": "hard",
+      "topic": "Symbols",
+      "type": "conceptual",
+      "answer": "Symbols are unique primitive values created with Symbol(). They serve as well-known protocol keys (Symbol.iterator, Symbol.toPrimitive), as non-string property keys that never collide with other keys, and as a way to hide metadata. They are not true privacy — Object.getOwnPropertySymbols reveals them — and they are skipped by JSON.stringify.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 86,
+      "question": "What is a WeakMap and how is it different from a Map?",
+      "difficulty": "hard",
+      "topic": "WeakMap",
+      "type": "conceptual",
+      "answer": "WeakMap keys must be objects and are held weakly: if no other reference to a key exists, the entry is collected. Unlike Map it has no size, no iteration, no clear of enumerable data — only get/set/has/delete. Use it for caches, per-object metadata, and private data that should not keep objects alive.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 87,
+      "question": "What is a WeakSet and how is it different from a Set?",
+      "difficulty": "hard",
+      "topic": "WeakSet",
+      "type": "conceptual",
+      "answer": "WeakSet stores objects only and holds them weakly — entries disappear when the object is otherwise unreachable. It has no iteration and no size. It is useful for tagging or tracking objects, such as marking items as already visited, without preventing garbage collection.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 88,
+      "question": "What is currying and how would you implement it?",
+      "difficulty": "hard",
+      "topic": "Currying",
+      "type": "practical",
+      "answer": "Currying transforms a function f(a, b, c) into f(a)(b)(c), where each call returns the next function until all arguments are supplied. Implementation: const curry = fn => { const arity = fn.length; return function curried(...args) { return args.length >= arity ? fn(...args) : (...rest) => curried(...args, ...rest); }; };. It enables partial application and point-free style.",
+      "source": [
+        "Frontend Interview Handbook",
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 89,
+      "question": "What is function composition and how does it differ from method chaining?",
+      "difficulty": "hard",
+      "topic": "Composition",
+      "type": "conceptual",
+      "answer": "Composition wires standalone functions so the output of one feeds the input of the next: compose(f, g)(x) equals f(g(x)), typically implemented with reduceRight over a list of functions. Chaining calls methods on the same object one after another. Composition builds behavior from small pure functions and is the backbone of functional-style code.",
+      "source": [
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 90,
+      "question": "How would you write a polyfill for Array.prototype.map?",
+      "difficulty": "hard",
+      "topic": "Polyfills",
+      "type": "practical",
+      "answer": "Array.prototype.map = function(cb, thisArg) { const out = new Array(this.length); for (let i = 0; i < this.length; i++) { if (i in this) out[i] = cb.call(thisArg, this[i], i, this); } return out; }; — it preserves holes via the i in this check, supports a thisArg, and never mutates the original array.",
+      "source": [
+        "GreatFrontEnd",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 91,
+      "question": "Explain how a Promise works internally.",
+      "difficulty": "hard",
+      "topic": "Promise internals",
+      "type": "conceptual",
+      "answer": "new Promise(executor) runs the executor synchronously with resolve and reject. Settling changes state from pending and queues reactions — then/catch/finally callbacks — as microtasks. Callbacks always run asynchronously, the returned promise chains values, and if a handler returns a promise, the chain waits for it to settle.",
+      "source": [
+        "javascript.info",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 92,
+      "question": "What will this code print? new Promise(res => res(1)).then(v => { console.log(v); return Promise.resolve(2); }).then(v => console.log(v)); console.log('end')",
+      "difficulty": "hard",
+      "topic": "Async behavior",
+      "type": "output",
+      "answer": "It prints 'end', 1, 2. The synchronous console.log('end') runs first. The first .then runs as a microtask; because it returns a promise, the next .then must wait for that promise to settle, adding an extra microtask hop.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)"
+      ]
+    },
+    {
+      "id": 93,
+      "question": "What happens to microtasks and macrotasks when a promise resolves inside a setTimeout callback?",
+      "difficulty": "hard",
+      "topic": "Async behavior",
+      "type": "advanced",
+      "answer": "When the setTimeout callback (a macrotask) runs, any microtasks it creates — including a resolved promise's .then — are drained to completion before the next macrotask is considered. Each macrotask is followed by flushing the entire microtask queue, so nested microtasks can delay subsequent timers and rendering.",
+      "source": [
+        "JavaScript Questions (Lydia Hallie)",
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 94,
+      "question": "How do browsers render a page and where does JavaScript fit in?",
+      "difficulty": "hard",
+      "topic": "Browser internals",
+      "type": "conceptual",
+      "answer": "The browser parses HTML into the DOM and CSS into the CSSOM, combines them into a render tree, computes layout (geometry), and paints pixels. JavaScript runs on the main thread and blocks parsing unless marked defer, async, or loaded as a module; DOM and style changes can trigger style and layout recalculation, so long main-thread work delays rendering.",
+      "source": [
+        "javascript.info",
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 95,
+      "question": "What are reflow and repaint, and how do they affect performance?",
+      "difficulty": "hard",
+      "topic": "Performance",
+      "type": "conceptual",
+      "answer": "Reflow (layout) recalculates geometry for affected elements and their surroundings — triggered by size/position changes, reading layout properties, or DOM insertion — and is expensive. Repaint redraws pixels without geometry changes and is cheaper. Batch DOM writes, read styles once, animate with transform/opacity (compositor-only), and avoid forcing layout inside loops.",
+      "source": [
+        "GreatFrontEnd"
+      ]
+    },
+    {
+      "id": 96,
+      "question": "What is requestAnimationFrame and when would you use it over setTimeout?",
+      "difficulty": "hard",
+      "topic": "Performance",
+      "type": "scenario",
+      "answer": "requestAnimationFrame schedules a callback right before the next repaint, matching the display refresh rate and pausing in background tabs — the right tool for animations and visual updates. setTimeout does not sync with rendering, so it can cause jank, wasted frames, or choppy animation. For non-visual throttling (like polling), setTimeout remains appropriate.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 97,
+      "question": "What is the difference between event.target and event.currentTarget?",
+      "difficulty": "hard",
+      "topic": "Advanced DOM/event behavior",
+      "type": "conceptual",
+      "answer": "event.target is the element where the event actually occurred — the deepest element clicked. event.currentTarget is the element whose listener is running. In event delegation, a parent listener sees target as the clicked child and currentTarget as the parent. They can differ during bubbling and capturing, and currentTarget is null after the listener returns.",
+      "source": [
+        "javascript.info"
+      ]
+    },
+    {
+      "id": 98,
+      "question": "How would you implement memoization for an expensive pure function?",
+      "difficulty": "hard",
+      "topic": "Performance",
+      "type": "practical",
+      "answer": "const memoize = fn => { const cache = new Map(); return (...args) => { const key = JSON.stringify(args); if (cache.has(key)) return cache.get(key); const result = fn(...args); cache.set(key, result); return result; }; }; — repeated calls with the same arguments hit the cache. It only works cleanly for pure functions; add a bounded cache or use WeakMap for object arguments to avoid unbounded growth.",
+      "source": [
+        "GreatFrontEnd",
+        "Frontend Interview Handbook"
+      ]
+    },
+    {
+      "id": 99,
+      "question": "What is the module pattern and how does it use closures for privacy?",
+      "difficulty": "hard",
+      "topic": "Closures",
+      "type": "conceptual",
+      "answer": "The module pattern wraps state inside a function and returns an object of methods that close over it: const counter = (() => { let count = 0; return { inc: () => ++count, get: () => count }; })();. The count variable is only reachable through the returned methods — closure-based encapsulation that predates classes and ES modules.",
+      "source": [
+        "Frontend Interview Handbook",
+        "JavaScript Interview Questions (Sudheer J)"
+      ]
+    },
+    {
+      "id": 100,
+      "question": "Why does a long-running synchronous task freeze the page, and how would you fix it?",
+      "difficulty": "hard",
+      "topic": "Event loop",
+      "type": "scenario",
+      "answer": "JavaScript shares one main thread with rendering and events; while the call stack is busy with a long loop, no tasks, microtasks, or paints can run, so the UI freezes. Fixes: chunk the work and yield between pieces (setTimeout/queueMicrotask or requestIdleCallback), move CPU-heavy work to a Web Worker, use async iteration, or improve the algorithm itself.",
+      "source": [
+        "javascript.info",
+        "GreatFrontEnd"
+      ]
+    }
+  ]
+}

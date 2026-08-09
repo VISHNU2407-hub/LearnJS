@@ -1,0 +1,535 @@
+/* ============================================================
+   LearnJS — interview.css (pages/interview)
+   Interview Prep page: stats, filters, question cards, answers,
+   pagination, progress. Reuses the exact design tokens and
+   component language from css/global/style.css and
+   css/components/components.css — no new colors, fonts or radii.
+   ============================================================ */
+
+/* ---------- Hero ---------- */
+.iq-hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
+
+/* ---------- Stats ---------- */
+.iq-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.05rem;
+  margin-bottom: 1.9rem;
+}
+.iq-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+  padding: 1.1rem 1.15rem;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.22s var(--ease), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.iq-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--brand) 26%, var(--line-soft));
+}
+.iq-stat-card b {
+  display: block;
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.iq-stat-card > div > span { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+.iq-stat-card.featured {
+  background: linear-gradient(135deg, var(--brand-mist), var(--card) 62%);
+  border-color: color-mix(in srgb, var(--brand) 28%, var(--line-soft));
+  box-shadow: var(--shadow-md);
+}
+.iq-stat-card.featured b { font-size: 1.75rem; }
+html.dark .iq-stat-card.featured {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.14), var(--card) 65%);
+}
+
+.iq-stat-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.iq-stat-icon svg { width: 22px; height: 22px; }
+.iq-ico-green  { background: rgba(34, 197, 94, 0.14);  color: #16a34a; }
+.iq-ico-blue   { background: rgba(59, 130, 246, 0.14); color: #2563eb; }
+.iq-ico-amber  { background: rgba(245, 158, 11, 0.16); color: #d97706; }
+.iq-ico-teal   { background: rgba(20, 184, 166, 0.14); color: #0d9488; }
+
+/* Difficulty distribution inside the fourth stat card. */
+.iq-diff-card { display: block; }
+.iq-diff-card .iq-diff-head {
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+.iq-diff-card .iq-diff-head b {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.iq-diff-card .iq-diff-head > div > span { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+.iq-diff-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0;
+}
+.iq-diff-row + .iq-diff-row { border-top: 1px dashed var(--line-soft); }
+.iq-diff-row .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.iq-diff-row .dot.easy { background: #22c55e; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.14); }
+.iq-diff-row .dot.medium { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.16); }
+.iq-diff-row .dot.hard { background: #ef4444; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.13); }
+.iq-diff-row .label {
+  flex: 1;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-transform: capitalize;
+}
+.iq-diff-row .count {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Toolbar: difficulty pills + search/topic/bookmarks ---------- */
+.iq-toolbar { margin-bottom: 1.4rem; }
+.iq-difficulty-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 0.9rem;
+}
+.iq-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.15rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--line-soft);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s var(--ease);
+}
+.iq-filter:hover {
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--line));
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+.iq-filter.active {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--shadow-brand);
+}
+.iq-filter svg { width: 15px; height: 15px; }
+.iq-filter.active svg { color: #fff; }
+
+/* Bookmarked toggle — amber when active (matches the site's amber accents).
+   Scoped to the bookmarks button so the difficulty pills keep their green
+   .active styling (both selectors have the same specificity). */
+#iqBookmarksOnly[aria-pressed="true"] {
+  background: rgba(245, 158, 11, 0.16);
+  border-color: color-mix(in srgb, #f59e0b 45%, var(--line-soft));
+  color: #b45309;
+}
+html.dark #iqBookmarksOnly[aria-pressed="true"] { color: #fcd34d; }
+
+.iq-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.iq-search {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+}
+.iq-search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--faint);
+  pointer-events: none;
+}
+.iq-search input,
+.iq-select {
+  height: 42px;
+  padding: 0 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--line-soft);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.iq-search input { width: 100%; padding-left: 2.5rem; }
+.iq-search input::placeholder { color: var(--faint); }
+.iq-select { min-width: 190px; cursor: pointer; }
+.iq-search input:focus,
+.iq-select:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: var(--ring);
+}
+
+/* ---------- List head + progress ---------- */
+.iq-list-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.iq-list-head h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.iq-list-head p { margin-top: 0.15rem; font-size: 0.84rem; }
+.iq-list-progress { min-width: 240px; flex: 1; max-width: 340px; }
+.iq-list-progress-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.iq-list-progress-head b { color: var(--brand-strong); }
+.iq-list-progress .bar { height: 8px; }
+
+/* ---------- Question cards ---------- */
+.iq-list { display: flex; flex-direction: column; gap: 1rem; }
+.iq-question {
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 1.3rem 1.35rem;
+  transition: transform 0.22s var(--ease), box-shadow 0.22s ease, border-color 0.22s ease;
+  animation: fadeUp 0.4s var(--ease) both;
+}
+.iq-question:nth-child(2) { animation-delay: 0.04s; }
+.iq-question:nth-child(3) { animation-delay: 0.08s; }
+.iq-question:nth-child(4) { animation-delay: 0.12s; }
+.iq-question:nth-child(5) { animation-delay: 0.16s; }
+.iq-question:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--brand) 28%, var(--line-soft));
+}
+/* Completed cards get the brand wash. */
+.iq-question.done {
+  border-color: color-mix(in srgb, var(--brand) 40%, var(--line-soft));
+  background: linear-gradient(135deg, var(--brand-mist), var(--card) 55%);
+}
+.iq-question-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.7rem;
+}
+.iq-qnum {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--faint);
+}
+/* Difficulty pill — same palette as the shared .difficulty-badge. */
+.iq-diff {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-transform: capitalize;
+  color: #ffffff;
+  background: #64748b;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3);
+}
+.iq-diff.easy { background: #22c55e; }
+.iq-diff.medium { background: #f59e0b; }
+.iq-diff.hard { background: #ef4444; }
+html.dark .iq-diff { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45); }
+
+.iq-topic {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.26rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--brand-strong);
+  background: var(--brand-mist);
+  border: 1px solid color-mix(in srgb, var(--brand) 20%, transparent);
+}
+.iq-qtext {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+}
+.iq-question.done .iq-qtext { color: var(--ink-2); }
+
+.iq-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--line-soft);
+}
+.iq-actions .btn svg { width: 15px; height: 15px; }
+/* Completed toggle — filled green by default, brand-mist "done" state. */
+.iq-complete.done {
+  background: var(--surface-2);
+  color: var(--brand-strong);
+  box-shadow: none;
+  border: 1.5px solid color-mix(in srgb, var(--brand) 35%, transparent);
+}
+.iq-complete.done:hover { background: var(--brand-mist); }
+.iq-complete.done::after { display: none; }
+/* Bookmark button mirrors .icon-btn inside the action row. */
+.iq-bookmark {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease, transform 0.2s var(--ease);
+}
+.iq-bookmark:hover { border-color: #f59e0b; color: #d97706; transform: translateY(-1px); }
+.iq-bookmark svg { width: 17px; height: 17px; }
+.iq-bookmark.on {
+  border-color: color-mix(in srgb, #f59e0b 45%, var(--line-soft));
+  background: rgba(245, 158, 11, 0.16);
+  color: #b45309;
+}
+html.dark .iq-bookmark.on { color: #fcd34d; }
+
+/* Answer block — hidden until toggled. */
+.iq-answer {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--brand);
+  border-radius: var(--radius-sm);
+  animation: fadeUp 0.3s var(--ease) both;
+}
+.iq-answer-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-strong);
+  margin-bottom: 0.5rem;
+}
+.iq-answer-label svg { width: 14px; height: 14px; }
+.iq-answer p {
+  font-size: 0.92rem;
+  color: var(--ink-2);
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+/* ---------- Loading / empty / error states ---------- */
+.iq-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  color: var(--muted);
+  padding: 3.5rem 0;
+}
+/* Local copy of the dashboard spinner (dashboard.css isn't loaded here). */
+.iq-spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid var(--surface-2);
+  border-top-color: var(--brand);
+  animation: spin360 0.8s linear infinite;
+}
+.iq-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 2.6rem 1.4rem;
+  text-align: center;
+  color: var(--faint);
+  font-size: 0.92rem;
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius-md);
+}
+.iq-state .iq-state-ico {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-mist);
+  border: 1px solid color-mix(in srgb, var(--brand) 22%, transparent);
+  color: var(--brand-strong);
+}
+.iq-state .iq-state-ico svg { width: 26px; height: 26px; }
+.iq-state b { color: var(--ink); font-size: 0.98rem; }
+.iq-state .btn { margin-top: 0.5rem; }
+
+/* ---------- Pagination ---------- */
+.iq-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1.6rem;
+}
+.iq-page {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 0.7rem;
+  border-radius: 11px;
+  border: 1.5px solid var(--line-soft);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease);
+}
+.iq-page:hover {
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--line));
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+.iq-page.active {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--shadow-brand);
+}
+.iq-page.gap { border-color: transparent; background: transparent; pointer-events: none; }
+.iq-page[disabled] { opacity: 0.45; pointer-events: none; }
+.iq-page svg { width: 16px; height: 16px; }
+
+/* ---------- Auth gate (checking / sign-in required) ----------
+   The question UI lives inside #iqContent and is only revealed after
+   Firebase confirms a signed-in user. The [hidden] guard makes sure the
+   `hidden` attribute always wins over any display rule. */
+[hidden] { display: none !important; }
+.iq-auth-gate {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.iq-auth-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  max-width: 460px;
+  width: 100%;
+  padding: 2.6rem 2rem;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  animation: fadeUp 0.45s var(--ease) both;
+}
+.iq-auth-ico {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-mist);
+  border: 1px solid color-mix(in srgb, var(--brand) 22%, transparent);
+  color: var(--brand-strong);
+}
+.iq-auth-ico svg { width: 28px; height: 28px; }
+.iq-auth-card h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.iq-auth-card p {
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.iq-auth-card .btn { margin-top: 0.5rem; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .iq-diff-card { min-height: 130px; }
+}
+@media (max-width: 768px) {
+  .iq-stats { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  .iq-stat-card { padding: 1rem 1rem; }
+  .iq-stat-icon { width: 42px; height: 42px; }
+  .iq-list-head { align-items: flex-start; flex-direction: column; }
+  .iq-list-progress { max-width: none; width: 100%; }
+  .iq-search-row .iq-filter { width: 100%; justify-content: center; }
+}
+@media (max-width: 480px) {
+  .iq-stats { grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .iq-stat-card { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  .iq-stat-card.featured b { font-size: 1.5rem; }
+  .iq-diff-card { grid-column: 1 / -1; }
+  .iq-select { flex: 1; min-width: 150px; }
+  .iq-actions .btn { flex: 1; justify-content: center; }
+}
+/* end of interview.css */
