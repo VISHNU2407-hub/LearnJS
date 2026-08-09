@@ -7,6 +7,13 @@
    JS Playground (Js-compiler/) in a new tab — the compiler itself
    is NOT rebuilt or embedded here, it is reused as-is.
 
+   The compiler lives in the sibling Js-compiler/ folder at the
+   repository root (next to Website/). Before opening, the button
+   verifies the compiler is actually being served; if the site is
+   served from the wrong root (e.g. the Website/ folder instead of
+   the repository root) it shows a helpful toast instead of opening
+   a dead 404 tab.
+
    Visibility is driven by the existing Firebase auth session
    (onAuthStateChanged), so this single module works on every page
    that includes it:
@@ -133,18 +140,82 @@ const FAB_CSS = `
 
 /* ---------- Helpers ---------- */
 
-/** Resolve the existing playground URL.
-    The module always lives at Website/js/components/, i.e. exactly
-    three levels below the project root where Js-compiler/ sits. Deriving
-    the URL from import.meta.url makes this independent of how the page
-    itself was reached (file vs directory form, query strings, depth), so
-    the button always opens the real compiler. */
-function resolvePlaygroundUrl() {
-  return new URL("../../../Js-compiler/index.html", import.meta.url).href;
+/* ---------- Playground URL ----------
+   The compiler sits in Js-compiler/ at the repository root, three
+   levels above this module (Website/js/components/). Resolving against
+   import.meta.url therefore yields the correct URL no matter how the
+   page itself was reached (file vs directory form, query strings, page
+   depth), and it also stays correct when the site is deployed under a
+   sub-path (e.g. GitHub Pages at /LearnJS/).
+
+   Candidates (most likely first):
+     1. Resolved from the module location  -> <root>/Js-compiler/index.html
+     2. Resolved from the page origin      -> /Js-compiler/index.html
+   In the standard setup both collapse to the same URL; the second is a
+   safety net for unusual serve layouts. */
+function playgroundUrlCandidates() {
+  return [
+    new URL("../../../Js-compiler/index.html", import.meta.url).href,
+    new URL("/Js-compiler/index.html", window.location.href).href,
+  ];
 }
 
-function openPlayground() {
-  window.open(resolvePlaygroundUrl(), "_blank", "noopener");
+let cachedPlaygroundUrl = null; // first reachable URL, cached for the session
+let resolvingUrl = null;        // in-flight check so concurrent clicks don't race
+
+function notify(message, type) {
+  const L = window.LearnJS;
+  if (L && typeof L.toast === "function") L.toast(message, type);
+}
+
+/** Resolve the playground URL and verify it is actually served.
+    - Reachable              -> that URL (cached, repeat clicks open instantly)
+    - Verified missing (404/410) -> the most likely URL (caller shows guidance)
+    - Can't verify (HEAD unsupported, auth, network error) -> best-effort open */
+async function resolvePlaygroundUrl() {
+  if (cachedPlaygroundUrl) return cachedPlaygroundUrl;
+  if (!resolvingUrl) {
+    resolvingUrl = (async () => {
+      const candidates = [...new Set(playgroundUrlCandidates())];
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url, { method: "HEAD" });
+          if (res.ok) {
+            cachedPlaygroundUrl = url;
+            return url;
+          }
+          if (res.status === 404 || res.status === 410) continue; // verified missing
+          // Any other status (e.g. HEAD unsupported -> 405, forbidden -> 403)
+          // means we cannot confirm a 404 — open best-effort rather than refuse.
+          cachedPlaygroundUrl = url;
+          return url;
+        } catch (err) {
+          // Network error — can't verify, treat as reachable (best effort).
+          cachedPlaygroundUrl = url;
+          return url;
+        }
+      }
+      return candidates[0]; // server answered 404/410 for every candidate
+    })();
+  }
+  return resolvingUrl;
+}
+
+async function openPlayground() {
+  const url = await resolvePlaygroundUrl();
+
+  // The server answered 404/410 for every candidate — guide the user
+  // instead of silently opening a dead page.
+  if (!cachedPlaygroundUrl) {
+    resolvingUrl = null; // let the next click re-check (the server may have been fixed)
+    notify(
+      "Playground not found. Serve the site from the project root so /Js-compiler/ is reachable.",
+      "error"
+    );
+    return;
+  }
+
+  window.open(url, "_blank", "noopener");
 }
 
 function injectStyles() {
@@ -188,6 +259,6 @@ function buildButton() {
 
   // Expose a tiny programmatic hook (future use: lesson starter code).
   window.LearnJS = window.LearnJS || {};
-  window.LearnJS.playground = { open: openPlayground };
+  window.LearnJS.playground = { open: openPlayground, resolveUrl: resolvePlaygroundUrl };
 })();
 // end of playground-launcher.js
