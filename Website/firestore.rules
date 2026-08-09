@@ -13,6 +13,10 @@ service cloud.firestore {
       match /roadmap/{docId} {
         allow read, write: if request.auth != null && request.auth.uid == uid;
       }
+      // Interview Prep practice state — owner only.
+      match /interviewProgress/{questionId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
     }
 
     // Shared curriculum (roadmaps/javascript) — READ-ONLY from the app.

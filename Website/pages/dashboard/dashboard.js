@@ -333,9 +333,6 @@ function renderStats() {
   el("statTotal").textContent = stats.total;
   el("statCompleted").textContent = stats.completed;
   el("statInProgress").textContent = stats.started;
-  el("statStreak").textContent = stats.streak;
-  el("statRoadmaps").textContent = stats.roadmaps;
-  el("statHours").textContent = stats.hours;
 
   el("progCompleted").textContent = stats.completed;
   el("progStarted").textContent = stats.started;

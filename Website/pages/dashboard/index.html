@@ -105,18 +105,6 @@
               <span class="stat-icon st-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg></span>
               <div><b id="statInProgress">0</b><span>In Progress</span></div>
             </div>
-            <div class="stat-card">
-              <span class="stat-icon st-rose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg></span>
-              <div><b id="statStreak">0</b><span>Day Streak</span></div>
-            </div>
-            <div class="stat-card">
-              <span class="stat-icon st-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></span>
-              <div><b id="statRoadmaps">0</b><span>Roadmaps Done</span></div>
-            </div>
-            <div class="stat-card">
-              <span class="stat-icon st-teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
-              <div><b id="statHours">0</b><span>Learning Hours</span></div>
-            </div>
           </div>
 
           <div class="dash-cols">
@@ -264,6 +252,7 @@
             <div>
               <p class="dash-hello-eyebrow">Ace the interview</p>
               <h1 class="dash-panel-title">Interview Prep</h1>
+              <p class="dash-hello-sub">Practice JavaScript questions, strengthen your fundamentals, and get interview-ready.</p>
             </div>
           </div>
           <!-- Auth gate — the dashboard is already sign-in gated, so this only
@@ -284,25 +273,14 @@
           <!-- Question interface — rendered by interview.js from interview_questions.json. -->
           <div id="iqContent" hidden>
 
-            <!-- Statistics -->
-            <div class="iq-stats">
-              <div class="iq-stat-card featured">
-                <span class="iq-stat-icon iq-ico-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></span>
-                <div><b id="iqStatTotal">—</b><span>Total Questions</span></div>
+            <!-- Topic progress -- per-user practice state from Firestore; the
+                 cards also act as the topic selector. Rendered by interview.js. -->
+            <section class="iq-progress" aria-label="Topic progress">
+              <div class="iq-progress-head">
+                <h2 class="iq-progress-title">Topic Progress</h2>
               </div>
-              <div class="iq-stat-card">
-                <span class="iq-stat-icon iq-ico-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>
-                <div><b id="iqStatEasy">—</b><span>Easy</span></div>
-              </div>
-              <div class="iq-stat-card">
-                <span class="iq-stat-icon iq-ico-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg></span>
-                <div><b id="iqStatMedium">—</b><span>Medium</span></div>
-              </div>
-              <div class="iq-stat-card">
-                <span class="iq-stat-icon iq-ico-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg></span>
-                <div><b id="iqStatHard">—</b><span>Hard</span></div>
-              </div>
-            </div>
+              <div class="iq-topic-progress" id="iqTopicProgress"></div>
+            </section>
 
             <!-- Filters -->
             <div class="iq-toolbar">
@@ -317,18 +295,13 @@
                   <svg class="iq-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
                   <input type="search" id="iqSearch" placeholder="Search questions…" autocomplete="off" aria-label="Search questions">
                 </div>
-                <select id="iqTopic" class="iq-select" aria-label="Filter by topic">
-                  <option value="all">All Topics</option>
-                </select>
               </div>
             </div>
 
             <!-- List head -->
             <div class="iq-list-head">
-              <div>
-                <h2>All Questions</h2>
-                <p class="text-muted" id="iqListRange">Loading…</p>
-              </div>
+              <h2 class="iq-list-title" id="iqSelectionLabel">All Questions</h2>
+              <p class="iq-list-range" id="iqListRange">Loading…</p>
             </div>
 
             <!-- Question list -->
