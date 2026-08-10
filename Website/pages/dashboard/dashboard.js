@@ -55,6 +55,13 @@ function escapeHtml(value) {
   div.textContent = value == null ? "" : String(value);
   return div.innerHTML;
 }
+function escapeAttr(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
 function parseHours(estimatedTime) {
   const m = /(\d+(?:\.\d+)?)/.exec(estimatedTime || "");
   return m ? parseFloat(m[1]) : 0;
@@ -447,7 +454,9 @@ function projectCardHTML(p) {
   return (
     '<article class="project-card">' +
       '<div class="project-cover">' +
-        '<img src="' + escapeHtml(p.coverImage) + '" alt="' + escapeHtml(p.title) + '" loading="lazy">' +
+        '<img src="' + escapeHtml(p.coverImage) + '" alt="' + escapeHtml(p.title) + '" loading="lazy"' +
+          ' data-fb-slug="' + escapeAttr(p.id) + '" data-fb-title="' + escapeAttr(p.title) + '"' +
+          ' onerror="this.onerror=null;if(window.LearnJS&&window.LearnJS.projectCoverFallback){window.LearnJS.projectCoverFallback(this)}else{this.hidden=true}">' +
         diffBadge +
       "</div>" +
       '<div class="project-body">' +

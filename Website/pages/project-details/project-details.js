@@ -84,8 +84,16 @@ function renderProject() {
   el("detailsContent").hidden = false;
 
   document.title = project.title + " — LearnJS";
-  el("dCover").src = project.coverImage || "";
-  el("dCover").alt = project.title;
+  const cover = el("dCover");
+  cover.src = project.coverImage || "";
+  cover.alt = project.title;
+  // Fallback (project-cover.js): swap to a gradient tile if the cover fails.
+  cover.setAttribute("data-fb-slug", project.id || "");
+  cover.setAttribute("data-fb-title", project.title || "");
+  cover.onerror = () => {
+    if (window.LearnJS && window.LearnJS.projectCoverFallback) window.LearnJS.projectCoverFallback(cover);
+    else cover.hidden = true; // script missing — never show a broken icon
+  };
   el("dTitle").textContent = project.title;
   el("dDesc").textContent = project.description || "";
   // Solid difficulty badge — same component as the dashboard cards

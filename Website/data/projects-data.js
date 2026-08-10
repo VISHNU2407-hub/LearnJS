@@ -13,9 +13,9 @@ window.LEARNJS_PROJECTS = [
       "CSS",
       "Generator"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/blog%20website/cover.png",
+    "coverImage": "../../assets/project-covers/blog-website.png",
     "entryUrl": "../../../JS%20PROJECTS/blog%20website/index.html",
     "order": 1,
     "createdAt": "2026-08-02T18:08:57.329Z"
@@ -33,9 +33,9 @@ window.LEARNJS_PROJECTS = [
       "Forms",
       "Math"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/bmi%20calculator/cover.png",
+    "coverImage": "../../assets/project-covers/bmi-calculator.png",
     "entryUrl": "../../../JS%20PROJECTS/bmi%20calculator/index.html",
     "order": 2,
     "createdAt": "2026-08-02T18:08:57.350Z"
@@ -53,9 +53,9 @@ window.LEARNJS_PROJECTS = [
       "Events",
       "Math"
     ],
-    "cover": "cover.webp",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/calculator/cover.webp",
+    "coverImage": "../../assets/project-covers/calculator.png",
     "entryUrl": "../../../JS%20PROJECTS/calculator/index.html",
     "order": 3,
     "createdAt": "2026-08-04T17:37:46.996Z"
@@ -72,9 +72,9 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Text"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/character%20count/cover.png",
+    "coverImage": "../../assets/project-covers/character-count.png",
     "entryUrl": "../../../JS%20PROJECTS/character%20count/index.html",
     "order": 4,
     "createdAt": "2026-08-02T18:08:57.391Z"
@@ -92,9 +92,9 @@ window.LEARNJS_PROJECTS = [
       "UI",
       "State"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/chat-app/cover.png",
+    "coverImage": "../../assets/project-covers/chat-app.png",
     "entryUrl": "../../../JS%20PROJECTS/chat-app/index.html",
     "order": 5,
     "createdAt": "2026-08-02T18:08:57.414Z"
@@ -111,9 +111,9 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Timers"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/clock/cover.png",
+    "coverImage": "../../assets/project-covers/clock.png",
     "entryUrl": "../../../JS%20PROJECTS/clock/index.html",
     "order": 6,
     "createdAt": "2026-08-02T18:08:57.433Z"
@@ -130,9 +130,9 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Events"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/color%20changer/cover.png",
+    "coverImage": "../../assets/project-covers/color-changer.png",
     "entryUrl": "../../../JS%20PROJECTS/color%20changer/index.html",
     "order": 7,
     "createdAt": "2026-08-02T18:08:57.461Z"
@@ -149,9 +149,9 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Events"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/counter/cover.png",
+    "coverImage": "../../assets/project-covers/counter.png",
     "entryUrl": "../../../JS%20PROJECTS/counter/index.html",
     "order": 8,
     "createdAt": "2026-08-02T18:08:57.482Z"
@@ -169,9 +169,9 @@ window.LEARNJS_PROJECTS = [
       "Random",
       "Animation"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/die%20Roller/cover.png",
+    "coverImage": "../../assets/project-covers/die-roller.png",
     "entryUrl": "../../../JS%20PROJECTS/die%20Roller/index.html",
     "order": 9,
     "createdAt": "2026-08-02T18:08:57.489Z"
@@ -189,9 +189,9 @@ window.LEARNJS_PROJECTS = [
       "Cart",
       "LocalStorage"
     ],
-    "cover": "cover.webp",
+    "cover": "cover image.jpeg",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/ecommerce/cover.webp",
+    "coverImage": "../../assets/project-covers/ecommerce.jpeg",
     "entryUrl": "../../../JS%20PROJECTS/ecommerce/index.html",
     "order": 10,
     "createdAt": "2026-08-04T18:06:36.323Z"
@@ -209,9 +209,9 @@ window.LEARNJS_PROJECTS = [
       "LocalStorage",
       "CRUD"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/Expense-Tracker/cover.png",
+    "coverImage": "../../assets/project-covers/expense-tracker.png",
     "entryUrl": "../../../JS%20PROJECTS/Expense-Tracker/index.html",
     "order": 11,
     "createdAt": "2026-08-02T18:08:57.157Z"
@@ -229,9 +229,9 @@ window.LEARNJS_PROJECTS = [
       "Fetch",
       "JSON"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/Git-Hub-Profile-Finder/cover.png",
+    "coverImage": "../../assets/project-covers/git-hub-profile-finder.png",
     "entryUrl": "../../../JS%20PROJECTS/Git-Hub-Profile-Finder/index.html",
     "order": 12,
     "createdAt": "2026-08-02T18:08:57.183Z"
@@ -249,9 +249,9 @@ window.LEARNJS_PROJECTS = [
       "Animations",
       "Events"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/Image%20SLider/cover.png",
+    "coverImage": "../../assets/project-covers/image-slider.png",
     "entryUrl": "../../../JS%20PROJECTS/Image%20SLider/index.html",
     "order": 13,
     "createdAt": "2026-08-02T18:08:57.206Z"
@@ -269,9 +269,9 @@ window.LEARNJS_PROJECTS = [
       "State",
       "LocalStorage"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/kanban-board/cover.png",
+    "coverImage": "../../assets/project-covers/kanban-board.png",
     "entryUrl": "../../../JS%20PROJECTS/kanban-board/index.html",
     "order": 14,
     "createdAt": "2026-08-02T18:08:57.558Z"
@@ -289,9 +289,9 @@ window.LEARNJS_PROJECTS = [
       "Fetch",
       "Search"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/movie-search-app/cover.png",
+    "coverImage": "../../assets/project-covers/movie-search-app.png",
     "entryUrl": "../../../JS%20PROJECTS/movie-search-app/index.html",
     "order": 15,
     "createdAt": "2026-08-02T18:08:57.586Z"
@@ -309,9 +309,9 @@ window.LEARNJS_PROJECTS = [
       "Search",
       "LocalStorage"
     ],
-    "cover": "cover.jpg",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/Notes%20App/cover.jpg",
+    "coverImage": "../../assets/project-covers/notes-app.png",
     "entryUrl": "../../../JS%20PROJECTS/Notes%20App/index.html",
     "order": 16,
     "createdAt": "2026-08-04T17:37:46.952Z"
@@ -329,9 +329,9 @@ window.LEARNJS_PROJECTS = [
       "Logic",
       "DOM"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.jpeg",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/numberGuessingGame/cover.png",
+    "coverImage": "../../assets/project-covers/numberguessinggame.jpeg",
     "entryUrl": "../../../JS%20PROJECTS/numberGuessingGame/index.html",
     "order": 17,
     "createdAt": "2026-08-04T18:06:36.330Z"
@@ -349,9 +349,9 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Clipboard"
     ],
-    "cover": "cover.jpg",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/password%20Generator/cover.jpg",
+    "coverImage": "../../assets/project-covers/password-generator.png",
     "entryUrl": "../../../JS%20PROJECTS/password%20Generator/index.html",
     "order": 18,
     "createdAt": "2026-08-04T17:37:47.009Z"
@@ -369,9 +369,9 @@ window.LEARNJS_PROJECTS = [
       "Fetch",
       "UI"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/Pokedex-App/cover.png",
+    "coverImage": "../../assets/project-covers/pokedex-app.png",
     "entryUrl": "../../../JS%20PROJECTS/Pokedex-App/index.html",
     "order": 19,
     "createdAt": "2026-08-02T18:08:57.255Z"
@@ -389,9 +389,9 @@ window.LEARNJS_PROJECTS = [
       "Events",
       "DOM"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/QuizApp/cover.png",
+    "coverImage": "../../assets/project-covers/quizapp.png",
     "entryUrl": "../../../JS%20PROJECTS/QuizApp/index.html",
     "order": 20,
     "createdAt": "2026-08-02T18:08:57.280Z"
@@ -409,9 +409,9 @@ window.LEARNJS_PROJECTS = [
       "Fetch",
       "DOM"
     ],
-    "cover": "cover.jpeg",
+    "cover": "cover image.jpeg",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/QuoteGenerator/cover.jpeg",
+    "coverImage": "../../assets/project-covers/quotegenerator.jpeg",
     "entryUrl": "../../../JS%20PROJECTS/QuoteGenerator/index.html",
     "order": 21,
     "createdAt": "2026-08-02T18:08:57.280Z"
@@ -428,9 +428,9 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Text"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/text%20repeator/cover.png",
+    "coverImage": "../../assets/project-covers/text-repeator.png",
     "entryUrl": "../../../JS%20PROJECTS/text%20repeator/index.html",
     "order": 22,
     "createdAt": "2026-08-02T18:08:57.620Z"
@@ -448,9 +448,9 @@ window.LEARNJS_PROJECTS = [
       "Math",
       "DOM"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/tipCalculator/cover.png",
+    "coverImage": "../../assets/project-covers/tipcalculator.png",
     "entryUrl": "../../../JS%20PROJECTS/tipCalculator/index.html",
     "order": 23,
     "createdAt": "2026-08-02T18:08:57.643Z"
@@ -468,9 +468,9 @@ window.LEARNJS_PROJECTS = [
       "LocalStorage",
       "DOM"
     ],
-    "cover": "cover.jpg",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/TO-DO%20list/cover.jpg",
+    "coverImage": "../../assets/project-covers/to-do-list.png",
     "entryUrl": "../../../JS%20PROJECTS/TO-DO%20list/index.html",
     "order": 24,
     "createdAt": "2026-08-04T17:37:46.990Z"
@@ -488,9 +488,9 @@ window.LEARNJS_PROJECTS = [
       "Fetch",
       "Geolocation"
     ],
-    "cover": "cover.png",
+    "cover": "cover image.png",
     "entry": "index.html",
-    "coverImage": "../../../JS%20PROJECTS/weather-app/cover.png",
+    "coverImage": "../../assets/project-covers/weather-app.png",
     "entryUrl": "../../../JS%20PROJECTS/weather-app/index.html",
     "order": 25,
     "createdAt": "2026-08-02T18:08:57.665Z"

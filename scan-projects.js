@@ -9,14 +9,21 @@
      Website/data/projects-data.js    (embedded window.LEARNJS_PROJECTS
                                        fallback so the dashboard works
                                        over file:// where fetch is blocked)
+     Website/assets/project-covers/   (one cover per project, copied
+                                       from the folder so image paths work
+                                       locally AND on Firebase Hosting)
 
    Usage:
      node scan-projects.js            one-time scan
      node scan-projects.js --watch    watch for changes & auto-regenerate
 
-   Project folders that are missing project.json are skipped with a
-   warning. Missing cover files are auto-generated as a placeholder
-   cover.png. NEVER edit the generated files by hand.
+   Project folders that are missing project.json keep their previously
+   generated metadata when available (falling back to folder-name
+   defaults), so re-scanning never wipes the index. The cover image is
+   resolved from whatever image file exists in the folder (project.json's
+   `cover` first, then any file starting with "cover" such as
+   "cover image.png"); missing covers get a generated placeholder.
+   NEVER edit the generated files by hand.
    ============================================================ */
 
 "use strict";
@@ -36,6 +43,16 @@ const OUT_JS = path.join(DATA_DIR, "projects-data.js");
 
 // Relative prefix every page under Website/pages/* uses to reach a project file.
 const PAGE_REL = "../../../JS PROJECTS";
+
+// Covers are copied into the deployable site (Website/assets/project-covers)
+// so every page under Website/pages/* can reference them with a short,
+// deployment-safe relative path.
+const COVER_REL = "../../assets/project-covers";
+const ASSETS_COVERS_DIR = path.join(ROOT, "Website", "assets", "project-covers");
+
+// Any image file whose name starts with "cover" counts as the project cover
+// (the folders currently ship "cover image.png" / "cover image.jpeg").
+const COVER_IMAGE_RE = /\.(png|jpe?g|webp|gif|svg)$/i;
 
 const DEFAULTS = {
   difficulty: "Beginner",
@@ -148,57 +165,88 @@ function encodePath(relPath) {
   return relPath.split("/").map((s) => encodeURIComponent(s)).join("/");
 }
 
+/** Find any image file in a folder whose name starts with "cover". */
+function resolveCoverFile(folderPath) {
+  let names = [];
+  try { names = fs.readdirSync(folderPath); } catch (err) { return null; }
+  const found = names
+    .filter((n) => /^cover/i.test(n) && COVER_IMAGE_RE.test(n))
+    .sort((a, b) => a.localeCompare(b));
+  return found.length ? found[0] : null;
+}
+
+/**
+ * Resolve the actual cover file on disk for a project folder.
+ * Priority: project.json's declared cover → any "cover*" image in the
+ * folder → a generated placeholder.
+ */
+function resolveCover(folderPath, folderName, declaredCover) {
+  if (declaredCover && fs.existsSync(path.join(folderPath, declaredCover))) {
+    return declaredCover;
+  }
+  const found = resolveCoverFile(folderPath);
+  if (found) return found;
+  // No real cover — generate a placeholder cover.png (as before).
+  ensureCover(folderPath, folderName);
+  return "cover.png";
+}
+
 /** Read + validate one project folder. Returns null when skipped. */
-function readProject(folderPath, folderName) {
+function readProject(folderPath, folderName, prev) {
   const jsonPath = path.join(folderPath, "project.json");
-  if (!fs.existsSync(jsonPath)) {
+  let raw = null;
+
+  if (fs.existsSync(jsonPath)) {
+    try {
+      raw = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+    } catch (err) {
+      console.warn(`  [warn] ${folderName}: project.json is not valid JSON — skipped. (${err.message})`);
+      return null;
+    }
+  } else if (prev) {
+    // project.json was removed/renamed — keep the previously generated
+    // metadata so a re-scan never wipes the index.
+    console.log(`  [info] ${folderName}: project.json missing — reusing generated metadata.`);
+  } else {
     console.warn(`  [warn] ${folderName}: missing project.json — skipped.`);
     return null;
   }
 
-  let raw;
-  try {
-    raw = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-  } catch (err) {
-    console.warn(`  [warn] ${folderName}: project.json is not valid JSON — skipped. (${err.message})`);
-    return null;
-  }
-
+  const src = raw || prev || {};
   const meta = {
-    title: raw.title || folderName,
-    description: raw.description || "",
-    difficulty: raw.difficulty || DEFAULTS.difficulty,
-    estimatedTime: raw.estimatedTime || DEFAULTS.estimatedTime,
-    category: raw.category || DEFAULTS.category,
-    tags: Array.isArray(raw.tags) ? raw.tags : DEFAULTS.tags,
-    cover: raw.cover || DEFAULTS.cover,
-    entry: raw.entry || DEFAULTS.entry
+    title: src.title || folderName,
+    description: src.description || "",
+    difficulty: src.difficulty || DEFAULTS.difficulty,
+    estimatedTime: src.estimatedTime || DEFAULTS.estimatedTime,
+    category: src.category || DEFAULTS.category,
+    tags: Array.isArray(src.tags) ? src.tags : DEFAULTS.tags,
+    cover: src.cover || DEFAULTS.cover,
+    entry: src.entry || DEFAULTS.entry
   };
 
-  // Auto-generate a placeholder cover.png when the png cover is missing
-  // (before the existence check below, so we don't warn about a file we then create).
-  if (meta.cover === "cover.png" && !fs.existsSync(path.join(folderPath, "cover.png"))) {
-    ensureCover(folderPath, folderName);
+  // Resolve the cover file that actually exists in the folder.
+  meta.cover = resolveCover(folderPath, folderName, meta.cover);
+
+  // Warn when the referenced entry file does not exist.
+  if (!fs.existsSync(path.join(folderPath, meta.entry))) {
+    console.warn(`  [warn] ${folderName}: "${meta.entry}" not found inside the folder.`);
   }
 
-  // Warn when referenced files do not exist.
-  for (const file of [meta.cover, meta.entry]) {
-    if (!fs.existsSync(path.join(folderPath, file))) {
-      console.warn(`  [warn] ${folderName}: "${file}" not found inside the folder.`);
-    }
-  }
-
-  // createdAt: allow project.json to pin it, otherwise use file mtime.
+  // createdAt: allow project.json to pin it, otherwise use file mtime
+  // (or the previously generated value when project.json is missing).
   let createdAt = null;
-  if (raw.createdAt) {
+  if (raw && raw.createdAt) {
     const d = new Date(raw.createdAt);
     createdAt = isNaN(d.getTime()) ? null : d;
   }
-  if (!createdAt) {
+  if (!createdAt && fs.existsSync(jsonPath)) {
     createdAt = fs.statSync(jsonPath).mtime;
   }
+  if (!createdAt) {
+    createdAt = new Date(src.createdAt || Date.now());
+  }
 
-  return { slug: slugify(folderName), folder: folderName, meta, createdAt, rawOrder: raw.order };
+  return { slug: slugify(folderName), folder: folderName, meta, createdAt, rawOrder: src.order };
 }
 
 /** Write a placeholder cover.png when the folder has none. */
@@ -210,6 +258,24 @@ function ensureCover(folderPath, folderName) {
     console.log(`  [gen] ${folderName}: generated placeholder cover.png`);
   } catch (err) {
     console.warn(`  [warn] ${folderName}: could not generate cover.png (${err.message})`);
+  }
+}
+
+/** Copy a project cover into Website/assets/project-covers/<slug>.<ext>. */
+function copyCoverToAssets(srcPath, destName, slug, folderName) {
+  try {
+    fs.mkdirSync(ASSETS_COVERS_DIR, { recursive: true });
+    const destPath = path.join(ASSETS_COVERS_DIR, destName);
+    if (fs.existsSync(srcPath)) {
+      fs.copyFileSync(srcPath, destPath);
+    } else {
+      // No source file — generate the placeholder straight into the assets.
+      const [top, bottom] = paletteFor(slug);
+      fs.writeFileSync(destPath, makeCoverPng(800, 450, top, bottom));
+      console.log(`  [gen] ${folderName}: generated placeholder ${destName}`);
+    }
+  } catch (err) {
+    console.warn(`  [warn] ${folderName}: could not write cover ${destName} (${err.message})`);
   }
 }
 
@@ -226,9 +292,17 @@ function scan() {
     .filter((e) => e.isDirectory() && !e.name.startsWith("."))
     .sort((a, b) => a.name.localeCompare(b.name));
 
+  // Keep previously generated metadata for folders that lost their
+  // project.json (so re-scans never wipe the index).
+  const prevByFolder = {};
+  try {
+    const prev = JSON.parse(fs.readFileSync(OUT_JSON, "utf8"));
+    if (Array.isArray(prev)) prev.forEach((p) => { if (p.folder) prevByFolder[p.folder] = p; });
+  } catch (err) { /* no previous output — fresh scan */ }
+
   const projects = [];
   for (const entry of entries) {
-    const read = readProject(path.join(PROJECTS_DIR, entry.name), entry.name);
+    const read = readProject(path.join(PROJECTS_DIR, entry.name), entry.name, prevByFolder[entry.name]);
     if (read) projects.push(read);
   }
 
@@ -243,6 +317,11 @@ function scan() {
   let order = 0;
   const output = [...withOrder, ...withoutOrder].map((p) => {
     order += 1;
+    // Copy (or generate) the cover into the deployable site so image paths
+    // work locally and on Firebase Hosting, whatever the page depth.
+    const ext = (path.extname(p.meta.cover) || ".png").toLowerCase();
+    const coverName = p.slug + ext;
+    copyCoverToAssets(path.join(PROJECTS_DIR, p.folder, p.meta.cover), coverName, p.slug, p.folder);
     return {
       id: p.slug,
       folder: p.folder,
@@ -254,7 +333,7 @@ function scan() {
       tags: p.meta.tags,
       cover: p.meta.cover,
       entry: p.meta.entry,
-      coverImage: encodePath(`${PAGE_REL}/${p.folder}/${p.meta.cover}`),
+      coverImage: encodePath(`${COVER_REL}/${coverName}`),
       entryUrl: encodePath(`${PAGE_REL}/${p.folder}/${p.meta.entry}`),
       order,
       createdAt: p.createdAt.toISOString()

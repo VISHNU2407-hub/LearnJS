@@ -81,6 +81,8 @@
 }
 
 .details-cover-wrap {
+  /* position context for the .project-cover-fallback tile (project-cover.js) */
+  position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
