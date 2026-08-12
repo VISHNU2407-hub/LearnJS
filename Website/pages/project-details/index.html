@@ -81,7 +81,11 @@
             <div class="bar bar-lg"><div class="bar-fill" id="dBar" style="width:0%"></div></div>
             <p id="dProgressHint" class="text-muted details-hint">Not started yet — open the project and start building.</p>
             <div class="details-actions">
-              <button class="btn btn-primary btn-lg" id="dStartBtn" type="button">
+              <a class="btn btn-primary btn-lg" id="dBuildBtn" href="../../Project-Builder/?project=" hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5 17.5 17.5"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="M18 22l4-4"/><path d="M2 6l4-4"/><path d="M3 10h7"/><path d="M14 3v7"/></svg>
+                <span id="dBuildLabel">Start Building</span>
+              </a>
+              <button class="btn btn-outline btn-lg" id="dStartBtn" type="button">
                 <span id="dStartLabel">Start Learning</span>
                 <svg id="dStartIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </button>

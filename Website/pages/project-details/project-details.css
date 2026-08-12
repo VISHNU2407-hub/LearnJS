@@ -167,6 +167,8 @@
 }
 .details-actions .btn { display: inline-flex; align-items: center; gap: 0.5rem; }
 .details-actions .btn svg { width: 17px; height: 17px; }
+/* Keep [hidden] authoritative even when .btn forces display:inline-flex. */
+.details-actions .btn[hidden] { display: none !important; }
 
 .details-future { margin-top: 1rem; display: grid; gap: 0.55rem; }
 .details-future li {

@@ -36,6 +36,18 @@ Firebase auth requires an `http(s)` origin — use a local server rather than `f
 
 > **Playground:** The JS Playground (the global `</>` button) lives in the sibling `Js-compiler/` folder at the **project root**, next to `Website/`. Serve the site from the project root (open the root folder in VS Code, or run `npx serve .` there) so `/Js-compiler/index.html` is reachable.
 
+> **Project Builder:** The Project Builder IDE (guided HTML/CSS/JS building) lives in its own top-level `Project-Builder/` folder, next to `Js-compiler/` and `Website/`. It loads the real project files from `JS PROJECTS/` (e.g. the Counter App at `JS PROJECTS/counter/`). Open `Project-Builder/index.html?project=counter` directly, or reach it via **Start Building** on the Project Details page.
+>
+> **Two modes, one builder:** opening `Project-Builder/index.html` **without** `?project=` boots **Standalone Mode** — a blank `New Project` workspace (starter `project/index.html`, `style.css`, `script.js`) with no error state, saved separately under `learnjs_builder_standalone`. An unknown id (`?project=does-not-exist`) still shows **Project not found**. Guided Steps are hidden in standalone mode; Check/Hint explain that guided building exists only for registered projects. Standalone work is fully independent from every project's saved work.
+>
+> **Import from your computer:** Standalone Mode includes an **Open Folder** button (header + file-explorer icon, or `Ctrl/Cmd+O`). It reads a local folder with the browser's File System Access API (`window.showDirectoryPicker`, `mode: "read"`) and falls back to an `<input webkitdirectory>` picker where that API is unavailable — no server involved. The folder structure and relative paths are preserved, HTML/CSS/JS/JSON/SVG/TXT are imported as text and **images/fonts (png, jpg, gif, webp, avif, ico, woff/woff2, ttf, otf, …) as inlined data URIs**, so the sandboxed preview renders them without a server (hidden dirs, `node_modules`, and oversized files are skipped). Every HTML page appears in the preview **Entry** selector for multi-page navigation, and the same sandboxed preview engine runs the imported project. Imports are read-only copies stored under `learnjs_builder_imported_<id>` (never under a LearnJS project key), survive refresh via a workspace pointer, are never uploaded anywhere, and **never modify your files on disk**. **New Project** returns to the blank workspace.
+>
+> **Download ZIP:** the **Download** button (header or file-explorer icon, or `Ctrl/Cmd+Shift+S`) exports the current workspace — in any mode — as a `.zip` of the whole virtual file system, folders and all. It uses a small dependency-free ZIP writer (`Project-Builder/zip.js`, STORE method with UTF-8 names) so exporting works fully offline; the archive opens in any unzip tool.
+>
+> **Serve from the repository ROOT** (e.g. `npx serve .`) so `/Project-Builder/`, `/Js-compiler/` and the relative links back into `Website/` all work. If you run VS Code **Live Server on the `Website/` folder**, the top-level `Project-Builder/` (and `Js-compiler/`) folders are NOT served — do not duplicate them inside `Website/`; just serve the repository root instead.
+>
+> The **Start Building** button resolves the root-level `Project-Builder/` from the page script's own URL, so it works even when the browser URL carries a `/Website/` prefix (e.g. `http://host/Website/pages/project-details/`). If the builder is genuinely unreachable, the button hides with a hint instead of opening a dead link.
+
 ## 📁 Adding a New Project (no code changes)
 
 Every project lives in its own folder inside `JS PROJECTS/` with at least:
