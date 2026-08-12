@@ -53,9 +53,9 @@ window.LEARNJS_PROJECTS = [
       "Events",
       "Math"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.webp",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/calculator.png",
+    "coverImage": "../../assets/project-covers/calculator.webp",
     "entryUrl": "../../../JS%20PROJECTS/calculator/index.html",
     "order": 3,
     "createdAt": "2026-08-04T17:37:46.996Z"
@@ -92,7 +92,7 @@ window.LEARNJS_PROJECTS = [
       "UI",
       "State"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/chat-app.png",
     "entryUrl": "../../../JS%20PROJECTS/chat-app/index.html",
@@ -111,7 +111,7 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Timers"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/clock.png",
     "entryUrl": "../../../JS%20PROJECTS/clock/index.html",
@@ -169,7 +169,7 @@ window.LEARNJS_PROJECTS = [
       "Random",
       "Animation"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/die-roller.png",
     "entryUrl": "../../../JS%20PROJECTS/die%20Roller/index.html",
@@ -189,9 +189,9 @@ window.LEARNJS_PROJECTS = [
       "Cart",
       "LocalStorage"
     ],
-    "cover": "cover image.jpeg",
+    "cover": "cover page.webp",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/ecommerce.jpeg",
+    "coverImage": "../../assets/project-covers/ecommerce.webp",
     "entryUrl": "../../../JS%20PROJECTS/ecommerce/index.html",
     "order": 10,
     "createdAt": "2026-08-04T18:06:36.323Z"
@@ -209,9 +209,9 @@ window.LEARNJS_PROJECTS = [
       "LocalStorage",
       "CRUD"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.webp",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/expense-tracker.png",
+    "coverImage": "../../assets/project-covers/expense-tracker.webp",
     "entryUrl": "../../../JS%20PROJECTS/Expense-Tracker/index.html",
     "order": 11,
     "createdAt": "2026-08-02T18:08:57.157Z"
@@ -269,7 +269,7 @@ window.LEARNJS_PROJECTS = [
       "State",
       "LocalStorage"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/kanban-board.png",
     "entryUrl": "../../../JS%20PROJECTS/kanban-board/index.html",
@@ -309,9 +309,9 @@ window.LEARNJS_PROJECTS = [
       "Search",
       "LocalStorage"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.jpg",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/notes-app.png",
+    "coverImage": "../../assets/project-covers/notes-app.jpg",
     "entryUrl": "../../../JS%20PROJECTS/Notes%20App/index.html",
     "order": 16,
     "createdAt": "2026-08-04T17:37:46.952Z"
@@ -329,9 +329,9 @@ window.LEARNJS_PROJECTS = [
       "Logic",
       "DOM"
     ],
-    "cover": "cover image.jpeg",
+    "cover": "Number-Guessing-Game-01.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/numberguessinggame.jpeg",
+    "coverImage": "../../assets/project-covers/numberguessinggame.png",
     "entryUrl": "../../../JS%20PROJECTS/numberGuessingGame/index.html",
     "order": 17,
     "createdAt": "2026-08-04T18:06:36.330Z"
@@ -349,9 +349,9 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Clipboard"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.jpg",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/password-generator.png",
+    "coverImage": "../../assets/project-covers/password-generator.jpg",
     "entryUrl": "../../../JS%20PROJECTS/password%20Generator/index.html",
     "order": 18,
     "createdAt": "2026-08-04T17:37:47.009Z"
@@ -389,7 +389,7 @@ window.LEARNJS_PROJECTS = [
       "Events",
       "DOM"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/quizapp.png",
     "entryUrl": "../../../JS%20PROJECTS/QuizApp/index.html",
@@ -428,7 +428,7 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Text"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/text-repeator.png",
     "entryUrl": "../../../JS%20PROJECTS/text%20repeator/index.html",
@@ -448,9 +448,9 @@ window.LEARNJS_PROJECTS = [
       "Math",
       "DOM"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.webp",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/tipcalculator.png",
+    "coverImage": "../../assets/project-covers/tipcalculator.webp",
     "entryUrl": "../../../JS%20PROJECTS/tipCalculator/index.html",
     "order": 23,
     "createdAt": "2026-08-02T18:08:57.643Z"
@@ -468,7 +468,7 @@ window.LEARNJS_PROJECTS = [
       "LocalStorage",
       "DOM"
     ],
-    "cover": "cover image.png",
+    "cover": "cover page.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/to-do-list.png",
     "entryUrl": "../../../JS%20PROJECTS/TO-DO%20list/index.html",

@@ -18,11 +18,12 @@
      node scan-projects.js --watch    watch for changes & auto-regenerate
 
    Project folders that are missing project.json keep their previously
-   generated metadata when available (falling back to folder-name
+   generated   metadata when available (falling back to folder-name
    defaults), so re-scanning never wipes the index. The cover image is
    resolved from whatever image file exists in the folder (project.json's
    `cover` first, then any file starting with "cover" such as
-   "cover image.png"); missing covers get a generated placeholder.
+   "cover page.webp", falling back to the folder's only image); missing
+   covers get a generated placeholder.
    NEVER edit the generated files by hand.
    ============================================================ */
 
@@ -51,7 +52,8 @@ const COVER_REL = "../../assets/project-covers";
 const ASSETS_COVERS_DIR = path.join(ROOT, "Website", "assets", "project-covers");
 
 // Any image file whose name starts with "cover" counts as the project cover
-// (the folders currently ship "cover image.png" / "cover image.jpeg").
+// (the folders currently ship "cover page.webp" / "cover page.png" etc.).
+// Folders without a "cover*" file fall back to their first image.
 const COVER_IMAGE_RE = /\.(png|jpe?g|webp|gif|svg)$/i;
 
 const DEFAULTS = {
@@ -165,20 +167,28 @@ function encodePath(relPath) {
   return relPath.split("/").map((s) => encodeURIComponent(s)).join("/");
 }
 
-/** Find any image file in a folder whose name starts with "cover". */
+/**
+ * Find the cover image for a folder: prefer any image file whose name
+ * starts with "cover" (e.g. "cover page.webp"), then fall back to the
+ * folder's only image (e.g. "Number-Guessing-Game-01.png").
+ */
 function resolveCoverFile(folderPath) {
   let names = [];
   try { names = fs.readdirSync(folderPath); } catch (err) { return null; }
-  const found = names
-    .filter((n) => /^cover/i.test(n) && COVER_IMAGE_RE.test(n))
+  const images = names
+    .filter((n) => COVER_IMAGE_RE.test(n))
     .sort((a, b) => a.localeCompare(b));
-  return found.length ? found[0] : null;
+  const coverNamed = images.find((n) => /^cover/i.test(n));
+  if (coverNamed) return coverNamed;
+  // Fall back only when the folder has exactly one image, so we never
+  // guess between multiple non-cover images (those still get a placeholder).
+  return images.length === 1 ? images[0] : null;
 }
 
 /**
  * Resolve the actual cover file on disk for a project folder.
  * Priority: project.json's declared cover → any "cover*" image in the
- * folder → a generated placeholder.
+ * folder (falling back to the folder's first image) → a generated placeholder.
  */
 function resolveCover(folderPath, folderName, declaredCover) {
   if (declaredCover && fs.existsSync(path.join(folderPath, declaredCover))) {
