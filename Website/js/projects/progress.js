@@ -34,4 +34,26 @@ export async function setProjectProgress(uid, slug, status, percent, existing) {
     startedAt: prev.startedAt || serverTimestamp()
   }, { merge: true });
 }
+
+/**
+ * Persist step-level progress for a guided build (project learning page).
+ * Writes the same users/{uid}/progress/{slug} doc the dashboard reads, so
+ * step completion shows up as normal project progress everywhere.
+ * @param {string} uid             current user id
+ * @param {string} slug            project id
+ * @param {number[]} stepsCompleted 1-based indexes of completed steps
+ * @param {number} total           total number of steps in the workshop
+ * @param {Object} [existing]      current progress doc (to preserve startedAt)
+ */
+export async function setProjectSteps(uid, slug, stepsCompleted, total, existing) {
+  const prev = existing || {};
+  const percent = total ? Math.round((stepsCompleted.length / total) * 100) : 0;
+  await setDoc(progressRef(uid, slug), {
+    status: percent >= 100 ? "completed" : "started",
+    percent,
+    stepsCompleted,
+    updatedAt: serverTimestamp(),
+    startedAt: prev.startedAt || serverTimestamp()
+  }, { merge: true });
+}
 // end of progress.js

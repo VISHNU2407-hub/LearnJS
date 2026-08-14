@@ -184,10 +184,11 @@ async function init() {
   // Personal/account actions live behind the top-right avatar.
   buildAccountMenu(user);
 
-  // Account-menu deep links from other pages (e.g. ../dashboard/#settings) and
-  // the legacy interview page redirect (../dashboard/#interview).
+  // Account-menu deep links from other pages (e.g. ../dashboard/#settings), the
+  // legacy interview page redirect (../dashboard/#interview), and the sidebar
+  // links on the project learning page (../dashboard/#projects etc.).
   const targetPanel = (location.hash || "").replace(/^#/, "");
-  if (targetPanel === "profile" || targetPanel === "settings" || targetPanel === "interview") {
+  if (["profile", "settings", "interview", "projects", "roadmap", "progress"].indexOf(targetPanel) !== -1) {
     goToPanel(targetPanel);
     history.replaceState(null, "", location.pathname + location.search);
   }
@@ -583,13 +584,16 @@ async function updateProgress(slug, status, percent) {
   }
 }
 
-/** Start Learning: mark progress started, then open the project in a new tab. */
+/** Start Learning: mark progress started, then open the project. */
 function startProject(slug) {
   const prog = progressMap[slug];
   if (prog && prog.status === "completed") return;
   const project = allProjects.find((p) => p.id === slug);
   updateProgress(slug, "started", Math.max((prog && prog.percent) || 0, 10));
-  if (project && project.entryUrl) {
+  // The Digital Clock has a guided build workshop — open it instead of the raw entry.
+  if (slug === "clock") {
+    window.location.href = "../learn/?slug=clock";
+  } else if (project && project.entryUrl) {
     window.open(project.entryUrl, "_blank", "noopener");
   } else {
     toast("This project has no entry file yet.", "error");

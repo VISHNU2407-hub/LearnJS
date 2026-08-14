@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Clock — LearnJS</title>
+  <meta name="description" content="Guided project workshop: build the Digital Clock step by step on LearnJS.">
+  <link rel="icon" type="image/svg+xml" href="../../assets/logos/learnjs-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("learnjs-theme");
+        var dark = t ? t === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (dark) document.documentElement.classList.add("dark");
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="../../css/global/style.css">
+  <link rel="stylesheet" href="../../css/components/components.css">
+  <link rel="stylesheet" href="../../css/global/animations.css">
+  <link rel="stylesheet" href="../../css/responsive/responsive.css">
+  <!-- App-shell layout (sidebar, topbar, panels) — same as the dashboard. -->
+  <link rel="stylesheet" href="../dashboard/dashboard.css">
+  <link rel="stylesheet" href="learn.css">
+</head>
+<body data-page="learn">
+  <div class="dash-shell" id="dashShell">
+
+    <!-- ==================== Sidebar (same shell as the dashboard) ==================== -->
+    <aside class="dash-sidebar" id="dashSidebar" aria-label="LearnJS navigation">
+      <div class="dash-brand">
+        <a href="../home/" class="brand" aria-label="LearnJS home">
+          <span class="brand-mark"><img src="../../assets/logos/learnjs-mark.svg" alt="LearnJS logo"></span>
+          <span class="brand-name">LearnJS</span>
+        </a>
+        <button class="icon-btn dash-collapse-toggle" id="dashCollapseToggle" type="button" aria-label="Collapse sidebar" aria-pressed="false">
+          <svg class="dash-ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m16 15-3-3 3-3"/></svg>
+          <svg class="dash-ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m10 15 3-3-3-3"/></svg>
+        </button>
+      </div>
+      <nav class="dash-nav">
+        <a class="dash-nav-item" href="../dashboard/" data-label="Home"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span class="nav-label">Home</span></a>
+        <a class="dash-nav-item active" href="../dashboard/#projects" data-label="Projects"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v16"/><path d="M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg></span><span class="nav-label">Projects</span></a>
+        <a class="dash-nav-item" href="../dashboard/#roadmap" data-label="Roadmap"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg></span><span class="nav-label">Roadmap</span></a>
+        <a class="dash-nav-item" href="../dashboard/#interview" data-label="Interview Prep"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg></span><span class="nav-label">Interview Prep</span></a>
+        <a class="dash-nav-item" href="../dashboard/#progress" data-label="Progress"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg></span><span class="nav-label">Progress</span></a>
+        <a class="dash-nav-item" href="../dashboard/#settings" data-label="Settings"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg></span><span class="nav-label">Settings</span></a>
+      </nav>
+      <div class="dash-sidebar-foot">
+        <button class="dash-nav-item" id="dashLogout" data-label="Logout" type="button"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg></span><span class="nav-label">Logout</span></button>
+        <div class="dash-sidebar-hint">Learning is a superpower.</div>
+      </div>
+    </aside>
+    <div class="dash-backdrop" id="dashBackdrop"></div>
+
+    <!-- ==================== Main column ==================== -->
+    <div class="dash-main">
+      <header class="dash-topbar">
+        <button class="icon-btn dash-menu-toggle" id="dashMenuToggle" type="button" aria-label="Toggle sidebar" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+        </button>
+        <div class="dash-top-actions">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" aria-pressed="false">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          </button>
+          <div class="dash-account-area" id="dashAccountArea">
+            <button class="dash-avatar" id="dashAvatarBtn" type="button" aria-label="Account menu" aria-expanded="false" aria-haspopup="menu">
+              <span class="avatar avatar-sm av-green" id="dashAvatarSpan">U</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main class="dash-content" id="dashContent">
+
+        <!-- ==================== Loading (kept hidden — the workshop renders directly) ==================== -->
+        <div class="learn-loading" id="learnLoading" hidden></div>
+
+        <!-- ==================== Workshop (filled by learn.js) ==================== -->
+        <div class="learn-wrap" id="learnWrap" hidden>
+
+          <!-- Breadcrumb -->
+          <nav class="learn-breadcrumb" id="learnBreadcrumb" aria-label="Breadcrumb"></nav>
+
+          <div class="learn-grid">
+
+            <!-- ========== Main column: info → steps → hints ========== -->
+            <div class="learn-main">
+
+              <!-- Project header -->
+              <section class="learn-hero" aria-label="About the project">
+                <div class="learn-hero-cover">
+                  <img id="learnCover" class="learn-cover" alt="Digital Clock project cover">
+                </div>
+                <div class="learn-hero-info">
+                  <div class="learn-hero-tags" id="learnHeroTags"></div>
+                  <h1 class="learn-hero-title" id="learnTitle">Digital Clock</h1>
+                  <p class="learn-hero-desc text-muted" id="learnIntro"></p>
+                  <div class="learn-hero-meta">
+                    <span class="difficulty-badge beginner" id="learnDiff">Beginner</span>
+                    <span class="pill"><span class="pill-dot"></span><span id="learnTime">~30 min</span></span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Subtle progress -->
+              <section class="learn-progress" aria-label="Project progress">
+                <div class="learn-progress-head">
+                  <span class="learn-progress-label" id="learnProgressLabel">0 / 6 Steps Completed</span>
+                  <b class="learn-progress-pct" id="learnProgressPct">0%</b>
+                </div>
+                <div class="bar"><div class="bar-fill" id="learnProgressBar" style="width:0%"></div></div>
+              </section>
+
+              <!-- Steps by Step -->
+              <section class="learn-steps-sec" aria-label="Steps by step">
+                <div class="learn-sec-head">
+                  <h2>Steps by Step</h2>
+                  <span class="learn-sec-note" id="learnStepsNote"></span>
+                </div>
+                <div class="learn-steps" id="learnSteps"></div>
+              </section>
+
+              <!-- Project completion state (shown only when all steps are done) -->
+              <section class="learn-done" id="learnDone" hidden aria-label="Project complete">
+                <div class="learn-done-badge">🎉</div>
+                <h2>Project Complete!</h2>
+                <p class="learn-done-sub">You built the Digital Clock. Take a moment to admire your work — then keep going.</p>
+                <div class="learn-done-stats">
+                  <div class="learn-done-stat"><b id="doneSteps">6 / 6</b><span>Steps completed</span></div>
+                  <div class="learn-done-stat"><b id="donePct">100%</b><span>Progress</span></div>
+                </div>
+                <div class="learn-done-concepts">
+                  <b>Concepts practiced</b>
+                  <ul class="learn-done-chips" id="doneConcepts"></ul>
+                </div>
+                <p class="learn-done-challenge text-muted" id="doneChallenge"></p>
+                <div class="learn-done-actions">
+                  <a class="btn btn-primary" href="../dashboard/#projects">Back to Projects</a>
+                  <a class="btn btn-outline" id="doneDetailsLink" href="../project-details/?slug=clock">View Project Details</a>
+                </div>
+              </section>
+
+              <!-- Bottom navigation -->
+              <nav class="learn-nav" id="learnNav" aria-label="Project navigation"></nav>
+
+            </div>
+
+            <!-- ========== Right rail: actions → tips → help ========== -->
+            <aside class="learn-rail" aria-label="Project actions">
+
+              <div class="learn-actions">
+                <button class="learn-action" id="actPreview" type="button">
+                  <span class="learn-action-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></span>
+                  <span class="learn-action-text"><b>Live Preview</b><span>See your project in action</span></span>
+                </button>
+                <button class="learn-action" id="actGithub" type="button">
+                  <span class="learn-action-ico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.35.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.24 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.41-2.69 5.38-5.26 5.66.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg></span>
+                  <span class="learn-action-text"><b>GitHub Repo</b><span>View source code on GitHub</span></span>
+                </button>
+                <button class="learn-action" id="actVscode" type="button">
+                  <span class="learn-action-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/><path d="m13.2 4.5-2.4 15"/></svg></span>
+                  <span class="learn-action-text"><b>Open in VS Code</b><span>Write and run code in VS Code</span></span>
+                </button>
+              </div>
+
+              <!-- Project tips -->
+              <div class="learn-card learn-tips">
+                <div class="learn-card-head"><span class="learn-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg></span>Project Tips</div>
+                <ul class="learn-tips-list" id="learnTips"></ul>
+              </div>
+
+              <!-- Help -->
+              <div class="learn-card learn-help">
+                <div class="learn-card-head"><span class="learn-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg></span>Need Help?</div>
+                <p class="text-muted">Stuck somewhere? Discuss it with other learners.</p>
+                <a class="btn btn-outline btn-sm learn-join" href="../community/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Join Community</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== Not found ==================== -->
+        <div class="learn-wrap" id="learnNotFound" hidden>
+          <div class="learn-empty">
+            <div class="learn-empty-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13.5 8.5-5 5"/><path d="m8.5 8.5 5 5"/><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+            <h1>Guided build not found</h1>
+            <p class="text-muted">This project doesn't have a guided workshop yet. Head back to your projects.</p>
+            <a class="btn btn-primary" href="../dashboard/#projects">Back to Projects</a>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-region" role="status" aria-live="polite"></div>
+
+  <script src="../../js/utils/theme.js"></script>
+  <script src="../../js/common/app.js"></script>
+  <!-- Cover-image onerror fallback (broken thumbnails never show). -->
+  <script src="../../js/common/project-cover.js"></script>
+  <!-- Embedded project index fallback (file:// friendly). -->
+  <script src="../../data/projects-data.js"></script>
+  <!-- Guided-build content for the workshop. -->
+  <script src="learn-data.js"></script>
+  <script type="module" src="learn.js"></script>
+</body>
+</html>

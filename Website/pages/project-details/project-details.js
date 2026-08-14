@@ -144,10 +144,13 @@ async function onStart() {
   if (startState === "completed") return;
   if (!project) return;
 
-  // Persist progress (shared write in progress.js), then open in a new tab.
+  // Persist progress (shared write in progress.js), then open the project.
   try {
     await setProjectProgress(currentUser.uid, project.id, "started", Math.max(progress.percent || 0, 10), progress);
-    if (project.entryUrl) {
+    // The Digital Clock has a guided build workshop — open it instead of the raw entry.
+    if (project.id === "clock") {
+      window.location.href = "../learn/?slug=clock";
+    } else if (project.entryUrl) {
       window.open(project.entryUrl, "_blank", "noopener");
     } else {
       toast("This project has no entry file yet.", "error");
