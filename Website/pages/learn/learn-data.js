@@ -43,6 +43,13 @@ window.LEARNJS_WORKSHOPS = {
           "Open script.js — it only contains comments that mark the steps ahead.",
           "Open index.html in the browser — you'll see a static 00:00:00 clock."
         ],
+        /* Code-form version of the flow above (learning aid, not a solution). */
+        logicCode: [
+          "// 1. index.html — find the clock elements: hours, minutes, seconds, date",
+          "// 2. style.css — layout and colors are already styled for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — you'll see a static 00:00:00 clock"
+        ],
         think: "Which element IDs in index.html will your JavaScript need to update?",
         hints: [
           "Each time block has a unique id — hours, minutes and seconds — plus a date box.",
@@ -64,6 +71,20 @@ window.LEARNJS_WORKSHOPS = {
           "Get the current hours.",
           "Get the current minutes.",
           "Get the current seconds."
+        ],
+        /* Code-form version of the flow above (learning aid, not a solution). */
+        logicCode: [
+          "// 1. Create a Date object",
+          "const now = new Date();",
+          "",
+          "// 2. Get the current hours",
+          "const hours = now.getHours();",
+          "",
+          "// 3. Get the current minutes",
+          "const minutes = now.getMinutes();",
+          "",
+          "// 4. Get the current seconds",
+          "const seconds = now.getSeconds();"
         ],
         think: "How can you get the current hour from a Date object?",
         hints: [
@@ -90,6 +111,22 @@ window.LEARNJS_WORKSHOPS = {
           "Apply the same to hours, minutes and seconds.",
           "Test with a single-digit value like 9."
         ],
+        /* Code-form version of the flow above (learning aid, not a solution). */
+        logicCode: [
+          "// 1. Convert a number to a string",
+          "now.getSeconds().toString()",
+          "",
+          "// 2. Pad it to at least two characters",
+          "'9'.padStart(2, '0')   // '9' -> '09'",
+          "",
+          "// 3. Apply the same to hours, minutes and seconds",
+          "const formattedHours   = hours.toString().padStart(2, '0');",
+          "const formattedMinutes = minutes.toString().padStart(2, '0');",
+          "const formattedSeconds = seconds.toString().padStart(2, '0');",
+          "",
+          "// 4. Test with a single-digit value like 9",
+          "'9'.padStart(2, '0')   // -> '09'"
+        ],
         think: "What does '9'.padStart(2, '0') return — and what about '12'.padStart(2, '0')?",
         hints: [
           "Numbers don't have a padStart method — convert with .toString() first.",
@@ -112,6 +149,21 @@ window.LEARNJS_WORKSHOPS = {
           "Set their text to the formatted values.",
           "Refresh the page and check the values appear."
         ],
+        /* Code-form version of the flow above (learning aid, not a solution). */
+        logicCode: [
+          "// 1. Grab the display elements",
+          "const hoursEl   = document.getElementById('hours');",
+          "const minutesEl = document.getElementById('minutes');",
+          "const secondsEl = document.getElementById('seconds');",
+          "const dateEl    = document.getElementById('date');",
+          "",
+          "// 2. Set their text to the formatted values",
+          "hoursEl.textContent   = formattedHours;",
+          "minutesEl.textContent = formattedMinutes;",
+          "secondsEl.textContent = formattedSeconds;",
+          "",
+          "// 3. Refresh the page and check the values appear"
+        ],
         think: "How do you put text inside an element you grabbed with getElementById()?",
         hints: [
           "Grab elements once at the top of the file so you don't re-query them every second.",
@@ -133,6 +185,19 @@ window.LEARNJS_WORKSHOPS = {
           "Wrap the time logic in a function called updateClock().",
           "Call setInterval(updateClock, 1000) so it runs every second.",
           "Call updateClock() once immediately so the time shows right away."
+        ],
+        /* Code-form version of the flow above (learning aid, not a solution). */
+        logicCode: [
+          "// 1. Wrap the time logic in a function",
+          "function updateClock() {",
+          "  // ... the time logic from the previous steps ...",
+          "}",
+          "",
+          "// 2. Run it every second",
+          "setInterval(updateClock, 1000);",
+          "",
+          "// 3. Call it once immediately so the time shows right away",
+          "updateClock();"
         ],
         think: "What does the second argument of setInterval() mean — and what unit is it in?",
         hints: [
@@ -157,6 +222,15 @@ window.LEARNJS_WORKSHOPS = {
           "Test single-digit times (09:05:07) — do leading zeros appear?",
           "Use console.log() to debug anything unexpected.",
           "Resize the window — the layout should stay centered and readable."
+        ],
+        /* Code-form version of the flow above (learning aid, not a solution). */
+        logicCode: [
+          "// 1. Open the page and watch the seconds tick",
+          "// 2. Test single-digit times (09:05:07) — do leading zeros appear?",
+          "// 3. Debug anything unexpected",
+          "console.log(now.getHours(), now.getMinutes(), now.getSeconds());",
+          "",
+          "// 4. Resize the window — the layout should stay centered and readable"
         ],
         think: "What does your clock show at 09:05:07 — and what would break if padStart were missing?",
         hints: [

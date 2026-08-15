@@ -42,6 +42,7 @@ const ICONS = {
   chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
   target: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
   list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>',
   bulb: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>',
   help: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
   lightbulb: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>',
@@ -132,7 +133,7 @@ function renderBreadcrumb() {
     '<span class="breadcrumb-sep">' + ICONS.chevron + "</span>" +
     '<a class="breadcrumb-item" href="../dashboard/#projects">Projects</a>' +
     '<span class="breadcrumb-sep">' + ICONS.chevron + "</span>" +
-    '<span class="breadcrumb-current">' + escapeHtml(workshop.title) + "</span>";
+    '<span class="breadcrumb-current" aria-current="page">' + escapeHtml(workshop.title) + "</span>";
 }
 
 function renderHero() {
@@ -153,10 +154,6 @@ function renderHero() {
     (workshop.tags || []).map((t) => '<span class="tag">' + escapeHtml(t) + "</span>").join("");
   el("learnTitle").textContent = workshop.title;
   el("learnIntro").textContent = workshop.intro || "";
-  const diff = workshop.difficulty || "";
-  const diffEl = el("learnDiff");
-  diffEl.className = "difficulty-badge" + (diff ? " " + diff.toLowerCase() : "");
-  diffEl.textContent = diff || "—";
   el("learnTime").textContent = workshop.time || "—";
   if (el("learnStepsPill")) {
     el("learnStepsPill").textContent = workshop.steps.length + " guided steps";
@@ -203,7 +200,7 @@ function renderSteps() {
         "</button>" +
         '<div class="learn-step-body"><div class="learn-step-inner">' +
           '<div class="learn-step-content">' +
-            goalBlock(step) + logicBlock(step) + thinkBlock(step) + hintBoxHTML(i) +
+            goalBlock(step) + logicBlock(i) + thinkBlock(step) + hintBoxHTML(i) +
             '<div class="learn-step-actions">' +
               '<button class="btn ' + (done ? "btn-outline" : "btn-primary") + ' btn-sm" data-complete="' + i + '" type="button">' +
                 ICONS.check + (done ? "Mark Incomplete" : "Mark Step Complete") +
@@ -232,16 +229,84 @@ function goalBlock(step) {
   );
 }
 
-function logicBlock(step) {
-  const items = (step.logic || []).map((l, k) =>
-    '<li><span class="logic-num">' + (k + 1) + "</span><span>" + escapeHtml(l) + "</span></li>"
+function logicBlock(i) {
+  const step = workshop.steps[i];
+  // Present the step's flow as a code-style learning block. Steps that
+  // define logicCode show real JS examples; anything else falls back to
+  // the prose logic items rendered as numbered comments.
+  const lines = step.logicCode
+    ? step.logicCode.slice()
+    : (step.logic || []).map((l, k) => "// " + (k + 1) + ". " + l);
+  const rows = lines.map((ln, k) =>
+    '<span class="learn-code-ln">' + (k + 1) + '</span><code class="learn-code-line">' + highlightCode(ln) + "</code>"
   ).join("");
   return (
     '<div class="learn-block">' +
-      "<h3>" + ICONS.list + " Logic</h3>" +
-      '<ol class="learn-logic">' + items + "</ol>" +
+      "<h3>" + ICONS.code + " Logic</h3>" +
+      '<p class="learn-code-sub">Follow this exact flow:</p>' +
+      '<div class="learn-code">' +
+        '<button class="learn-code-copy" type="button" data-copy="' + i + '">' + ICONS.copy + "Copy</button>" +
+        '<div class="learn-code-body">' + rows + "</div>" +
+      "</div>" +
     "</div>"
   );
+}
+
+/* Tiny syntax highlighter for the logic code blocks. Comments and strings
+   are masked to placeholders first so tokens inside them are never
+   re-highlighted, then restored as colored spans. */
+function highlightCode(src) {
+  const esc = src.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const tokens = [];
+  let t = 0;
+  const mask = (m, type) => { tokens.push([type, m]); return "\u0000T" + t++ + "\u0000"; };
+  let out = esc.replace(/\/\/.*$/gm, (m) => mask(m, "com"));
+  out = out.replace(/('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*")/g, (m) => mask(m, "str"));
+  out = out.replace(/\b(const|function|return|new|let|var|if|else|for|while)\b/g, (m) => mask(m, "kw"));
+  out = out.replace(/\b(\d+)\b/g, (m) => mask(m, "num"));
+  out = out.replace(/\b([A-Za-z_$][\w$]*)(?=\s*\()/g, (m) => mask(m, "fn"));
+  return out.replace(/\u0000T(\d+)\u0000/g, (m, n) => {
+    const tok = tokens[Number(n)];
+    return '<span class="tok-' + tok[0] + '">' + tok[1] + "</span>";
+  });
+}
+
+/* Copy the step's logic block (comments + code) to the clipboard. */
+function copyCode(i, btn) {
+  const step = workshop.steps[i];
+  const text = (step.logicCode || step.logic || []).join("\n");
+  // Success feedback: toast + a ~1.5s checkmark state on the copy button.
+  const markCopied = () => {
+    toast("Logic copied to clipboard ✓");
+    if (!btn) return;
+    if (!btn.dataset.orig) btn.dataset.orig = btn.innerHTML;
+    btn.innerHTML = ICONS.check + "Copied";
+    btn.classList.add("copied");
+    window.setTimeout(() => {
+      btn.innerHTML = btn.dataset.orig;
+      btn.classList.remove("copied");
+    }, 1500);
+  };
+  const fallback = () => {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      markCopied();
+    } catch (err) {
+      toast("Could not copy — select the code manually.", "error");
+    }
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(markCopied, fallback);
+  } else {
+    fallback();
+  }
 }
 
 function thinkBlock(step) {
@@ -259,13 +324,16 @@ function hintBoxHTML(i) {
   const step = workshop.steps[i];
   const level = hintLevels[i] || 0;
   const total = (step.hints || []).length;
+  if (!total) return ""; // No hints for this step — don't render hint controls.
   const done = level >= total;
 
   const shown = (step.hints || []).slice(0, level).map((h, k) =>
     '<p class="learn-hint-text"><b>Hint ' + (k + 1) + ":</b> " + escapeHtml(h) + "</p>"
   ).join("");
 
-  const btnLabel = done ? "All hints shown" : level === 0 ? "Show Hint" : "Show next hint";
+  // When every hint is revealed, the button becomes "Hide hints" so the
+  // learner can collapse them all back to the starting state.
+  const btnLabel = done ? "Hide hints" : level === 0 ? "Show Hint" : "Show next hint";
 
   return (
     '<div class="learn-hint" id="hintBox' + i + '">' +
@@ -274,7 +342,7 @@ function hintBoxHTML(i) {
           "<b>" + ICONS.lightbulb + " Need a hint?</b>" +
           '<div class="learn-hint-sub">Stuck on a step? Get a small hint to move forward.</div>' +
         "</div>" +
-        '<button class="learn-hint-btn" data-hint="' + i + '" type="button" ' + (done ? "disabled" : "") + ">" + btnLabel + "</button>" +
+        '<button class="learn-hint-btn" data-hint="' + i + '" type="button">' + btnLabel + "</button>" +
       "</div>" +
       (level > 0 ? '<div class="learn-hint-texts">' + shown + "</div>" : "") +
     "</div>"
@@ -440,6 +508,9 @@ el("learnSteps").addEventListener("click", (e) => {
 
   const hintBtn = e.target.closest("[data-hint]");
   if (hintBtn) { showHint(Number(hintBtn.getAttribute("data-hint"))); return; }
+
+  const copyBtn = e.target.closest("[data-copy]");
+  if (copyBtn) { copyCode(Number(copyBtn.getAttribute("data-copy")), copyBtn); return; }
 });
 
 function toggleOpen(i) {
@@ -454,7 +525,15 @@ function toggleOpen(i) {
 }
 
 function showHint(i) {
-  hintLevels[i] = (hintLevels[i] || 0) + 1;
+  const total = (workshop.steps[i].hints || []).length;
+  if (!total) return; // No hints — no hint controls were rendered.
+  // When every hint is already revealed, the button acts as "Hide hints":
+  // collapse all revealed hints back to the starting state.
+  if ((hintLevels[i] || 0) >= total) {
+    hintLevels[i] = 0;
+  } else {
+    hintLevels[i] = (hintLevels[i] || 0) + 1;
+  }
   const box = el("hintBox" + i);
   if (box) {
     box.outerHTML = hintBoxHTML(i);
@@ -630,12 +709,9 @@ function onNext() {
     toggleOpen(0);
     return;
   }
-  if (!stepsCompleted.has(openStep)) {
-    stepsCompleted.add(openStep);
-    renderSteps();
-    renderNav();
-    saveSteps();
-  }
+  // Navigation buttons never mark steps complete — only the explicit
+  // "Mark Step Complete" button (or Check My Code) adds to progress, so
+  // completion stays trustworthy across every step, including the last.
   if (openStep < total - 1) {
     openStep += 1;
     hintLevels[openStep] = 0;
@@ -644,12 +720,14 @@ function onNext() {
     const card = el("learnStep" + openStep);
     if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
   } else {
-    // Finished the last step — mark complete and celebrate.
-    stepsCompleted.add(total - 1);
+    // Last step ("Complete Project"): never completes the step itself.
+    // The completion state appears on its own once every step has been
+    // explicitly marked complete.
+    if (!stepsCompleted.has(total - 1)) {
+      toast("Mark the final step complete to finish the project.");
+    }
     renderSteps();
     renderNav();
-    saveSteps();
-    toast("Workshop complete \u2014 you built the Digital Clock! \ud83c\udf89");
   }
 }
 
@@ -682,23 +760,23 @@ function listenProgress() {
 function setupActions() {
   const startBtn = el("learnStartBtn");
   if (startBtn) startBtn.addEventListener("click", startLearning);
-  el("actPreview").addEventListener("click", openPreview);
+  el("actPreview").addEventListener("click", (e) => openPreview(e.currentTarget));
   // The hero preview shot opens the same Live Demo window as the action
   // button above — including keyboard access (Enter / Space).
   const heroShot = el("learnHeroShot");
   if (heroShot) {
-    heroShot.addEventListener("click", openPreview);
+    heroShot.addEventListener("click", (e) => openPreview(e.currentTarget));
     heroShot.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        openPreview();
+        openPreview(e.currentTarget);
       }
     });
   }
   el("actGithub").addEventListener("click", () => {
     if (workshop.githubUrl) window.open(workshop.githubUrl, "_blank", "noopener");
   });
-  el("actVscode").addEventListener("click", openVscode);
+  el("actVscode").addEventListener("click", (e) => openVscode(e.currentTarget));
 }
 
 /* ============================================================
@@ -706,6 +784,7 @@ function setupActions() {
    ============================================================ */
 let winZ = 400;
 const openWindows = {}; // key -> element
+const windowTriggers = {}; // key -> element that opened the window (for focus return)
 
 function bringToFront(win) { win.style.zIndex = ++winZ; }
 
@@ -721,6 +800,12 @@ function closeWindow(key) {
   }
   const pill = el("learnWinPill" + key);
   if (pill) pill.remove();
+  // Return focus to whatever opened the window (button / hero shot).
+  const trigger = windowTriggers[key];
+  delete windowTriggers[key];
+  if (trigger && typeof trigger.focus === "function" && document.contains(trigger)) {
+    trigger.focus();
+  }
 }
 
 function restoreWindow(key) {
@@ -730,23 +815,35 @@ function restoreWindow(key) {
   const pill = el("learnWinPill" + key);
   if (pill) pill.remove();
   bringToFront(win);
+  // Move keyboard focus back into the restored window.
+  win.focus();
 }
 
-function makeWindow(key, cfg) {
+function makeWindow(key, cfg, trigger) {
+  windowTriggers[key] = trigger || document.activeElement;
   if (openWindows[key]) { restoreWindow(key); return; }
 
   const win = document.createElement("div");
   win.className = "learn-win " + (cfg.theme || "");
   win.id = "learnWin" + key;
+  // Programmatic focus target — keyboard focus moves into the window on open.
+  win.tabIndex = -1;
 
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const w = Math.min(cfg.width || 860, vw - 24);
-  const h = Math.min(cfg.height || 560, vh - 90);
-  win.style.width = w + "px";
-  win.style.height = h + "px";
-  win.style.left = Math.max(12, (vw - w) / 2) + "px";
-  win.style.top = Math.max(56, (vh - h) / 2 - 20) + "px";
+  // Small screens: open maximized so the editor / preview stays usable.
+  // Desktop behavior is unchanged; the user can still minimize/restore.
+  const smallScreen = window.matchMedia("(max-width: 768px)").matches;
+  if (smallScreen) {
+    win.classList.add("maximized");
+  } else {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const w = Math.min(cfg.width || 860, vw - 24);
+    const h = Math.min(cfg.height || 560, vh - 90);
+    win.style.width = w + "px";
+    win.style.height = h + "px";
+    win.style.left = Math.max(12, (vw - w) / 2) + "px";
+    win.style.top = Math.max(56, (vh - h) / 2 - 20) + "px";
+  }
 
   win.innerHTML =
     '<div class="learn-win-bar">' +
@@ -766,9 +863,33 @@ function makeWindow(key, cfg) {
   bringToFront(win);
   wireWindow(win, key, cfg);
   if (cfg.onOpen) cfg.onOpen(win);
+  // Move keyboard focus into the window. VS Code focuses its editor in
+  // onOpen; Live Preview focuses the container so Tab can enter the frame.
+  if (key === "preview" || !win.contains(document.activeElement)) {
+    win.focus();
+  }
 }
 
 function wireWindow(win, key, cfg) {
+  // Keep Tab / Shift+Tab inside the active window while it is open.
+  win.addEventListener("keydown", (e) => {
+    if (e.key !== "Tab") return;
+    // iframe is included so the Live Preview demo stays keyboard-reachable.
+    const focusables = win.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, iframe, [tabindex]:not([tabindex="-1"])');
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    // Cover both boundaries — including when focus sits on the container
+    // itself right after the window opens.
+    if (e.shiftKey && (document.activeElement === first || document.activeElement === win)) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && (document.activeElement === last || document.activeElement === win)) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
   // Click anywhere brings the window forward.
   win.addEventListener("pointerdown", () => bringToFront(win));
 
@@ -866,6 +987,8 @@ function minimizeWindow(key) {
   pill.innerHTML = (icon ? icon.outerHTML : ICONS.code) + "<span>" + escapeHtml(win.dataset.title || "Window") + "</span>";
   pill.addEventListener("click", () => restoreWindow(key));
   document.body.appendChild(pill);
+  // Keep keyboard users on the restore path (the window itself is hidden).
+  pill.focus();
 }
 
 /* ---------- VS Code window ---------- */
@@ -881,7 +1004,7 @@ function vscodeLang(name) {
   return "js";
 }
 
-function openVscode() {
+function openVscode(trigger) {
   const files = Object.keys(workshop.files || {});
   const explorer = files.map((f) =>
     '<button class="vscode-file" data-file="' + escapeHtml(f) + '" type="button">' +
@@ -917,7 +1040,7 @@ function openVscode() {
               '<span class="vscode-console-title">Terminal</span>' +
               '<button class="vscode-console-clear" id="vscodeConsoleClear" type="button" title="Clear output" aria-label="Clear output">&times;</button>' +
             "</div>" +
-            '<div class="vscode-console-out"></div>' +
+            '<div class="vscode-console-out" aria-live="polite"></div>' +
           "</div>" +
           '<div class="vscode-status"><span>Ln 1, Col 1</span><span class="spacer"></span><span>UTF-8</span><span>Spaces: 2</span></div>' +
         "</div>" +
@@ -942,7 +1065,7 @@ function openVscode() {
         if (c) c.hidden = true;
       });
     }
-  });
+  }, trigger);
 }
 
 function selectVscodeFile(win, name) {
@@ -1127,7 +1250,7 @@ function highlight(line, lang) {
 }
 
 /* ---------- Live Preview window ---------- */
-function openPreview() {
+function openPreview(trigger) {
   makeWindow("preview", {
     title: "Live Preview — " + workshop.title,
     icon: ICONS.eye,
@@ -1135,7 +1258,7 @@ function openPreview() {
     width: 820,
     height: 640,
     body: '<div class="preview-body"><iframe class="preview-frame" src="' + escapeHtml(workshop.previewUrl) + '" title="Live Preview"></iframe></div>'
-  });
+  }, trigger);
 }
 
 /* ============================================================

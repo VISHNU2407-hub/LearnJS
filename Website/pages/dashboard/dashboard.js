@@ -480,7 +480,7 @@ function projectCardHTML(p) {
           '<span class="project-status ' + statusClass + '">' + statusLabel + "</span>" +
         "</div>" +
         '<div class="project-actions">' +
-          '<button class="btn btn-primary btn-sm" data-action="start" data-slug="' + escapeHtml(p.id) + '" type="button"' +
+          '<button class="btn btn-sm' + (prog.status === "started" ? " btn-continue" : " btn-primary") + '" data-action="start" data-slug="' + escapeHtml(p.id) + '" type="button"' +
             (prog.status === "completed" ? " disabled" : "") + ">" +
             actionIcon + actionLabel +
           "</button>" +

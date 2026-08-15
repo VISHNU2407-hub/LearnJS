@@ -652,6 +652,20 @@ html.dark .project-status.done { background: rgba(34, 197, 94, 0.22); color: #86
 .project-actions .btn { flex: 1; justify-content: center; }
 .project-actions .btn svg { width: 15px; height: 15px; }
 
+/* Continue button (in-progress projects) — a secondary action, visually
+   distinct from the solid-green "Start Learning" primary action. Same
+   size/typography as btn-primary (inherited from .btn + .btn-sm). */
+.btn-continue {
+  background: var(--card);
+  color: var(--brand-strong);
+  border: 1.5px solid color-mix(in srgb, var(--brand) 32%, var(--line));
+  box-shadow: var(--shadow-sm);
+}
+.btn-continue:hover {
+  background: var(--brand-mist);
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--line));
+}
+
 /* ---------- Progress bars list ---------- */
 .progress-bars { display: flex; flex-direction: column; gap: 1rem; }
 .progress-row .progress-row-head {

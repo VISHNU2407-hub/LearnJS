@@ -93,10 +93,14 @@
               <!-- Project header: info left (actions at bottom), preview right -->
               <section class="learn-hero" aria-label="About the project">
                 <div class="learn-hero-info">
-                  <h1 class="learn-hero-title" id="learnTitle">Digital Clock</h1>
+                  <div class="learn-hero-heading">
+                    <span class="learn-hero-title-ico" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </span>
+                    <h1 class="learn-hero-title" id="learnTitle">Digital Clock</h1>
+                  </div>
                   <p class="learn-hero-desc text-muted" id="learnIntro"></p>
                   <div class="learn-hero-meta">
-                    <span class="difficulty-badge beginner" id="learnDiff">Beginner</span>
                     <span class="pill"><span id="learnTime">30 min</span></span>
                     <span class="pill"><span id="learnStepsPill">6 guided steps</span></span>
                     <div class="learn-hero-meta-tags" id="learnHeroTags"></div>
@@ -126,14 +130,14 @@
                   <b class="learn-progress-pct" id="learnProgressPct">0%</b>
                 </div>
                 <div class="bar"><div class="bar-fill" id="learnProgressBar" style="width:0%"></div></div>
-                <p class="learn-progress-state" id="learnProgressState"></p>
+                <p class="learn-progress-state" id="learnProgressState" aria-live="polite"></p>
               </section>
 
               <!-- Steps by Step -->
               <section class="learn-steps-sec" aria-label="Steps by step">
                 <div class="learn-sec-head">
                   <h2>Steps by Step</h2>
-                  <span class="learn-sec-note" id="learnStepsNote"></span>
+                  <span class="learn-sec-note" id="learnStepsNote" aria-live="polite"></span>
                 </div>
                 <div class="learn-steps" id="learnSteps"></div>
               </section>

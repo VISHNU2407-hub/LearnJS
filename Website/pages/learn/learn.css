@@ -200,6 +200,22 @@
   .learn-hero-shot-img { transition: none; }
 }
 
+/* Consistent reduced-motion across the rest of the learning page: steps,
+   hints, floating windows, restore pills and step expand/collapse snap
+   instantly instead of animating. */
+@media (prefers-reduced-motion: reduce) {
+  .learn-wrap,
+  .learn-main > *,
+  .learn-rail > *,
+  .learn-hint-text,
+  .learn-win,
+  .learn-win-pill,
+  .learn-step-body {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 /* Project tags (DOM, Timers) — rendered inline in the metadata row and
    sized to match the pills so the whole row reads consistently. */
 .learn-hero-meta-tags { display: inline-flex; align-items: center; gap: 0.45rem; }
@@ -208,6 +224,27 @@
   align-items: center;
   padding: 0.45rem 1rem;
   font-size: 0.84rem;
+}
+.learn-hero-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.learn-hero-title-ico {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--brand) 8%, transparent);
+  box-shadow: 0 1px 2px rgba(7, 11, 20, 0.06);
+  color: var(--brand-strong);
+}
+.learn-hero-title-ico svg {
+  width: 22px;
+  height: 22px;
 }
 .learn-hero-title {
   font-size: clamp(1.5rem, 3.4vw, 2rem);
@@ -438,23 +475,88 @@
 .learn-block h3 svg { width: 15px; height: 15px; }
 .learn-block p, .learn-block li { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
 
-.learn-logic { display: flex; flex-direction: column; gap: 0.5rem; }
-.learn-logic li {
-  display: flex;
-  gap: 0.6rem;
-  align-items: flex-start;
+/* Logic → code-style learning block: a dark editor-styled block with line
+   numbers, syntax highlighting, comments and a copy button. Stays dark in
+   both themes so it reads like a real code editor. */
+.learn-block .learn-code-sub {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: -0.25rem 0 0.6rem;
 }
-.learn-logic .logic-num {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--brand-strong);
-  background: var(--brand-mist);
+.learn-code {
+  position: relative;
+  border-radius: 12px;
+  background: #0d1117;
+  border: 1px solid #1f2630;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.learn-code-copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.65rem;
   border-radius: 7px;
-  padding: 0.1rem 0.42rem;
-  margin-top: 0.18rem;
-  flex-shrink: 0;
-  line-height: 1.5;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #9aa4b2;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.learn-code-copy svg { width: 13px; height: 13px; }
+.learn-code-copy:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+/* Brief success state after copying the logic block (~1.5s in JS). */
+.learn-code-copy.copied {
+  color: #7ee787;
+  border-color: rgba(126, 231, 135, 0.35);
+  background: rgba(126, 231, 135, 0.1);
+}
+.learn-code-body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  max-height: 380px;
+  overflow: auto;
+  padding: 0.95rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.75;
+}
+.learn-code-ln {
+  grid-column: 1;
+  text-align: right;
+  padding-left: 1rem;
+  padding-right: 0.95rem;
+  color: #6e7681; /* readable on the dark editor bg while staying subtle */
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+.learn-code .learn-code-line {
+  grid-column: 2;
+  display: block;
+  white-space: pre;
+  margin: 0;
+  padding: 0 1.2rem 0 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: #e6edf3;
+}
+/* Token colors (GitHub-dark inspired). */
+.tok-com { color: #8b949e; font-style: italic; }
+.tok-str { color: #a5d6ff; }
+.tok-kw  { color: #ff7b72; }
+.tok-num { color: #79c0ff; }
+.tok-fn  { color: #d2a8ff; }
+@media (max-width: 480px) {
+  .learn-code-body { font-size: 0.76rem; line-height: 1.7; }
 }
 
 .learn-think {
