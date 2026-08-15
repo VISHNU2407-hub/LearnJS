@@ -155,9 +155,10 @@ async function onStart() {
   // Persist progress (shared write in progress.js), then open the project.
   try {
     await setProjectProgress(currentUser.uid, project.id, "started", Math.max(progress.percent || 0, 10), progress);
-    // The Digital Clock has a guided build workshop — open it instead of the raw entry.
-    if (project.id === "clock") {
-      window.location.href = "../learn/?slug=clock";
+    // Projects with a guided build workshop open the learning page instead of the raw entry.
+    const workshop = (window.LEARNJS_WORKSHOPS || {})[project.id];
+    if (workshop) {
+      window.location.href = "../learn/?slug=" + encodeURIComponent(project.id);
     } else if (project.entryUrl) {
       window.open(project.entryUrl, "_blank", "noopener");
     } else {

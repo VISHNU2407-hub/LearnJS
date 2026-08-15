@@ -294,6 +294,20 @@
   transform: translateY(-1px);
 }
 .learn-action-mini:active { transform: translateY(0); }
+/* Disabled state — used when a project has no repository link yet. */
+.learn-action-mini:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  color: var(--muted);
+  transform: none;
+}
+.learn-action-mini:disabled:hover {
+  color: var(--muted);
+  background: var(--surface);
+  border-color: var(--line-soft);
+  transform: none;
+}
+.learn-action-mini:disabled svg { color: var(--muted); }
 @media (max-width: 640px) {
   .learn-hero { grid-template-columns: 1fr; }
   .learn-hero-actions { margin-top: 1.1rem; }

@@ -590,9 +590,10 @@ function startProject(slug) {
   if (prog && prog.status === "completed") return;
   const project = allProjects.find((p) => p.id === slug);
   updateProgress(slug, "started", Math.max((prog && prog.percent) || 0, 10));
-  // The Digital Clock has a guided build workshop — open it instead of the raw entry.
-  if (slug === "clock") {
-    window.location.href = "../learn/?slug=clock";
+  // Projects with a guided build workshop open the learning page instead of the raw entry.
+  const workshop = (window.LEARNJS_WORKSHOPS || {})[slug];
+  if (workshop) {
+    window.location.href = "../learn/?slug=" + encodeURIComponent(slug);
   } else if (project && project.entryUrl) {
     window.open(project.entryUrl, "_blank", "noopener");
   } else {

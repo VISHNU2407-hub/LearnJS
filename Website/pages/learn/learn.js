@@ -106,6 +106,8 @@ async function init() {
   }
 
   document.title = workshop.title + " — LearnJS";
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute("content", "Guided project workshop: build the " + workshop.title + " step by step on LearnJS.");
   renderBreadcrumb();
   renderHero();
   renderConcepts();
@@ -139,6 +141,9 @@ function renderBreadcrumb() {
 function renderHero() {
   el("learnLoading").hidden = true;
   el("learnWrap").hidden = false;
+
+  const heroShot = el("learnHeroShot");
+  if (heroShot) heroShot.setAttribute("aria-label", "Open live preview of " + workshop.title);
 
   const cover = el("learnCover");
   cover.src = workshop.cover || "";
@@ -482,6 +487,8 @@ function renderDone() {
     return;
   }
   done.hidden = false;
+  const doneSub = el("learnDoneSub");
+  if (doneSub) doneSub.textContent = "You built the " + workshop.title + ". Take a moment to admire your work — then keep going.";
   el("doneSteps").textContent = stepsCompleted.size + " / " + total;
   el("donePct").textContent = Math.round((stepsCompleted.size / total) * 100) + "%";
   el("doneDetailsLink").href = "../project-details/?slug=" + encodeURIComponent(SLUG);
@@ -773,9 +780,15 @@ function setupActions() {
       }
     });
   }
-  el("actGithub").addEventListener("click", () => {
-    if (workshop.githubUrl) window.open(workshop.githubUrl, "_blank", "noopener");
-  });
+  const ghBtn = el("actGithub");
+  if (workshop.githubUrl) {
+    ghBtn.addEventListener("click", () => window.open(workshop.githubUrl, "_blank", "noopener"));
+  } else {
+    // No configured repository for this project — keep the button safe and disabled.
+    ghBtn.disabled = true;
+    ghBtn.title = "No repository link for this project yet";
+    ghBtn.setAttribute("aria-disabled", "true");
+  }
   el("actVscode").addEventListener("click", (e) => openVscode(e.currentTarget));
 }
 
@@ -1013,7 +1026,7 @@ function openVscode(trigger) {
   ).join("");
 
   makeWindow("vscode", {
-    title: "Digital Clock",
+    title: workshop.title,
     icon: ICONS.code,
     theme: "vscode",
     width: 920,
@@ -1021,7 +1034,7 @@ function openVscode(trigger) {
     body:
       '<div class="vscode-body">' +
         '<div class="vscode-explorer">' +
-          '<div class="vscode-exp-head">' + ICONS.folder + " Digital-Clock</div>" +
+          '<div class="vscode-exp-head">' + ICONS.folder + " " + escapeHtml(workshop.folder || workshop.title) + "</div>" +
           explorer +
         "</div>" +
         '<div class="vscode-main">' +
