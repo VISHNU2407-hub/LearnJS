@@ -480,11 +480,17 @@ html.dark .stat-card.featured {
   box-shadow: var(--ring);
 }
 
-/* ---------- Project grid + cards ---------- */
+/* ---------- Project grid + cards ----------
+   Desktop shows exactly 3 columns so every card is wide and spacious;
+   tablet drops to 2 and mobile to 1 (see responsive rules below). */
 .dash-projects {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.4rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+/* Tablet — sidebar becomes a drawer, so the grid relaxes to 2 columns. */
+@media (max-width: 1100px) {
+  .dash-projects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .dash-loading {
   grid-column: 1 / -1;

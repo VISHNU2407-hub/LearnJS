@@ -74,7 +74,6 @@ const ICONS = {
   rocket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>',
   arrowRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
-  external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
   lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
   sprout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/><path d="M5 21h14"/></svg>',
   flame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg>',
@@ -429,7 +428,6 @@ function bindCardActions(container) {
       const slug = btn.getAttribute("data-slug");
       const action = btn.getAttribute("data-action");
       if (action === "start") startProject(slug);
-      else if (action === "details") viewDetails(slug);
     });
   });
 }
@@ -478,11 +476,9 @@ function projectCardHTML(p) {
           '<span class="project-status ' + statusClass + '">' + statusLabel + "</span>" +
         "</div>" +
         '<div class="project-actions">' +
-          '<button class="btn btn-primary btn-sm" data-action="start" data-slug="' + escapeHtml(p.id) + '" type="button">' +
+          '<button class="btn btn-primary btn-sm" data-action="start" data-slug="' + escapeHtml(p.id) + '" type="button"' +
+            (prog.status === "completed" ? " disabled" : "") + ">" +
             actionIcon + actionLabel +
-          "</button>" +
-          '<button class="btn btn-outline btn-sm" data-action="details" data-slug="' + escapeHtml(p.id) + '" type="button">' +
-            ICONS.external + "View Details" +
           "</button>" +
         "</div>" +
       "</div>" +
@@ -598,21 +594,6 @@ function startProject(slug) {
   } else {
     toast("This project has no entry file yet.", "error");
   }
-}
-
-/** View Details: open the (placeholder) project details page. Also bumps the
-    project's updatedAt (for projects the user has already touched) so opening
-    / resuming a project re-orders it to the front of Continue Learning.
-    Fire-and-forget: the write is a cosmetic re-order, so navigation never
-    waits on it. Status is guarded — docs with percent>0 but no status field
-    would otherwise make Firestore reject the write (undefined field value). */
-function viewDetails(slug) {
-  const prog = progressMap[slug];
-  if (prog && prog.status && currentUser) {
-    persistProgress(currentUser.uid, slug, prog.status, prog.percent || 0, prog)
-      .catch(() => { /* non-fatal — opening the details page must never block */ });
-  }
-  window.location.href = "../project-details/?slug=" + encodeURIComponent(slug);
 }
 
 /* ------------------------------------------------------------
