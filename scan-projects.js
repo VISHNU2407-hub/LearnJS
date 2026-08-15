@@ -169,8 +169,9 @@ function encodePath(relPath) {
 
 /**
  * Find the cover image for a folder: prefer any image file whose name
- * starts with "cover" (e.g. "cover page.webp"), then fall back to the
- * folder's only image (e.g. "Number-Guessing-Game-01.png").
+ * starts with "cover" (e.g. "cover page.webp"), then a file named
+ * "image.<ext>" (the current convention for replaced covers), then fall
+ * back to the folder's only image (e.g. "Number-Guessing-Game-01.png").
  */
 function resolveCoverFile(folderPath) {
   let names = [];
@@ -180,6 +181,8 @@ function resolveCoverFile(folderPath) {
     .sort((a, b) => a.localeCompare(b));
   const coverNamed = images.find((n) => /^cover/i.test(n));
   if (coverNamed) return coverNamed;
+  const imageNamed = images.find((n) => /^image\./i.test(n));
+  if (imageNamed) return imageNamed;
   // Fall back only when the folder has exactly one image, so we never
   // guess between multiple non-cover images (those still get a placeholder).
   return images.length === 1 ? images[0] : null;

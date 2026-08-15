@@ -32,7 +32,7 @@
       "Forms",
       "Math"
     ],
-    "cover": "cover image.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/bmi-calculator.png",
     "entryUrl": "../../../JS%20PROJECTS/bmi%20calculator/index.html",
@@ -52,9 +52,9 @@
       "Events",
       "Math"
     ],
-    "cover": "cover page.webp",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/calculator.webp",
+    "coverImage": "../../assets/project-covers/calculator.png",
     "entryUrl": "../../../JS%20PROJECTS/calculator/index.html",
     "order": 3,
     "createdAt": "2026-08-04T17:37:46.996Z"
@@ -110,7 +110,7 @@
       "DOM",
       "Timers"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/clock.png",
     "entryUrl": "../../../JS%20PROJECTS/clock/index.html",
@@ -168,7 +168,7 @@
       "Random",
       "Animation"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/die-roller.png",
     "entryUrl": "../../../JS%20PROJECTS/die%20Roller/index.html",
@@ -188,9 +188,9 @@
       "Cart",
       "LocalStorage"
     ],
-    "cover": "cover page.webp",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/ecommerce.webp",
+    "coverImage": "../../assets/project-covers/ecommerce.png",
     "entryUrl": "../../../JS%20PROJECTS/ecommerce/index.html",
     "order": 10,
     "createdAt": "2026-08-04T18:06:36.323Z"
@@ -208,9 +208,9 @@
       "LocalStorage",
       "CRUD"
     ],
-    "cover": "cover page.webp",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/expense-tracker.webp",
+    "coverImage": "../../assets/project-covers/expense-tracker.png",
     "entryUrl": "../../../JS%20PROJECTS/Expense-Tracker/index.html",
     "order": 11,
     "createdAt": "2026-08-02T18:08:57.157Z"
@@ -228,7 +228,7 @@
       "Fetch",
       "JSON"
     ],
-    "cover": "cover image.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/git-hub-profile-finder.png",
     "entryUrl": "../../../JS%20PROJECTS/Git-Hub-Profile-Finder/index.html",
@@ -248,7 +248,7 @@
       "Animations",
       "Events"
     ],
-    "cover": "cover image.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/image-slider.png",
     "entryUrl": "../../../JS%20PROJECTS/Image%20SLider/index.html",
@@ -268,7 +268,7 @@
       "State",
       "LocalStorage"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/kanban-board.png",
     "entryUrl": "../../../JS%20PROJECTS/kanban-board/index.html",
@@ -308,9 +308,9 @@
       "Search",
       "LocalStorage"
     ],
-    "cover": "cover page.jpg",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/notes-app.jpg",
+    "coverImage": "../../assets/project-covers/notes-app.png",
     "entryUrl": "../../../JS%20PROJECTS/Notes%20App/index.html",
     "order": 16,
     "createdAt": "2026-08-04T17:37:46.952Z"
@@ -328,7 +328,7 @@
       "Logic",
       "DOM"
     ],
-    "cover": "Number-Guessing-Game-01.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/numberguessinggame.png",
     "entryUrl": "../../../JS%20PROJECTS/numberGuessingGame/index.html",
@@ -348,9 +348,9 @@
       "DOM",
       "Clipboard"
     ],
-    "cover": "cover page.jpg",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/password-generator.jpg",
+    "coverImage": "../../assets/project-covers/password-generator.png",
     "entryUrl": "../../../JS%20PROJECTS/password%20Generator/index.html",
     "order": 18,
     "createdAt": "2026-08-04T17:37:47.009Z"
@@ -388,7 +388,7 @@
       "Events",
       "DOM"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/quizapp.png",
     "entryUrl": "../../../JS%20PROJECTS/QuizApp/index.html",
@@ -427,7 +427,7 @@
       "DOM",
       "Text"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/text-repeator.png",
     "entryUrl": "../../../JS%20PROJECTS/text%20repeator/index.html",
@@ -447,9 +447,9 @@
       "Math",
       "DOM"
     ],
-    "cover": "cover page.webp",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/tipcalculator.webp",
+    "coverImage": "../../assets/project-covers/tipcalculator.png",
     "entryUrl": "../../../JS%20PROJECTS/tipCalculator/index.html",
     "order": 23,
     "createdAt": "2026-08-02T18:08:57.643Z"
@@ -467,7 +467,7 @@
       "LocalStorage",
       "DOM"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/to-do-list.png",
     "entryUrl": "../../../JS%20PROJECTS/TO-DO%20list/index.html",

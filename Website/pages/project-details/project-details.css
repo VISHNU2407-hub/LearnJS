@@ -27,21 +27,6 @@
   border-bottom: 1px solid var(--line-soft);
 }
 
-.details-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--ink-2);
-  padding: 0.55rem 0.9rem;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-.details-back svg { width: 18px; height: 18px; }
-.details-back:hover { background: var(--surface-2); color: var(--ink); }
-
 .details-top-actions { display: flex; align-items: center; }
 
 /* ---------- Main ---------- */
@@ -50,7 +35,10 @@
   width: 100%;
   max-width: 920px;
   margin-inline: auto;
-  padding-block: clamp(1.5rem, 4vw, 2.5rem);
+  /* Slim top padding (~18px) so the breadcrumb sits close to the navbar;
+     horizontal padding comes from the shared .container class. */
+  padding-top: 1.1rem;
+  padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
 }
 
 .details-loading {
@@ -206,7 +194,6 @@
 @media (max-width: 760px) {
   .details-hero { grid-template-columns: 1fr; }
   .details-grid { grid-template-columns: 1fr; }
-  .details-back span { display: none; }
 }
 
 @media (max-width: 480px) {

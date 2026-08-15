@@ -33,7 +33,7 @@ window.LEARNJS_PROJECTS = [
       "Forms",
       "Math"
     ],
-    "cover": "cover image.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/bmi-calculator.png",
     "entryUrl": "../../../JS%20PROJECTS/bmi%20calculator/index.html",
@@ -53,9 +53,9 @@ window.LEARNJS_PROJECTS = [
       "Events",
       "Math"
     ],
-    "cover": "cover page.webp",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/calculator.webp",
+    "coverImage": "../../assets/project-covers/calculator.png",
     "entryUrl": "../../../JS%20PROJECTS/calculator/index.html",
     "order": 3,
     "createdAt": "2026-08-04T17:37:46.996Z"
@@ -111,7 +111,7 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Timers"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/clock.png",
     "entryUrl": "../../../JS%20PROJECTS/clock/index.html",
@@ -169,7 +169,7 @@ window.LEARNJS_PROJECTS = [
       "Random",
       "Animation"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/die-roller.png",
     "entryUrl": "../../../JS%20PROJECTS/die%20Roller/index.html",
@@ -189,9 +189,9 @@ window.LEARNJS_PROJECTS = [
       "Cart",
       "LocalStorage"
     ],
-    "cover": "cover page.webp",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/ecommerce.webp",
+    "coverImage": "../../assets/project-covers/ecommerce.png",
     "entryUrl": "../../../JS%20PROJECTS/ecommerce/index.html",
     "order": 10,
     "createdAt": "2026-08-04T18:06:36.323Z"
@@ -209,9 +209,9 @@ window.LEARNJS_PROJECTS = [
       "LocalStorage",
       "CRUD"
     ],
-    "cover": "cover page.webp",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/expense-tracker.webp",
+    "coverImage": "../../assets/project-covers/expense-tracker.png",
     "entryUrl": "../../../JS%20PROJECTS/Expense-Tracker/index.html",
     "order": 11,
     "createdAt": "2026-08-02T18:08:57.157Z"
@@ -229,7 +229,7 @@ window.LEARNJS_PROJECTS = [
       "Fetch",
       "JSON"
     ],
-    "cover": "cover image.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/git-hub-profile-finder.png",
     "entryUrl": "../../../JS%20PROJECTS/Git-Hub-Profile-Finder/index.html",
@@ -249,7 +249,7 @@ window.LEARNJS_PROJECTS = [
       "Animations",
       "Events"
     ],
-    "cover": "cover image.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/image-slider.png",
     "entryUrl": "../../../JS%20PROJECTS/Image%20SLider/index.html",
@@ -269,7 +269,7 @@ window.LEARNJS_PROJECTS = [
       "State",
       "LocalStorage"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/kanban-board.png",
     "entryUrl": "../../../JS%20PROJECTS/kanban-board/index.html",
@@ -309,9 +309,9 @@ window.LEARNJS_PROJECTS = [
       "Search",
       "LocalStorage"
     ],
-    "cover": "cover page.jpg",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/notes-app.jpg",
+    "coverImage": "../../assets/project-covers/notes-app.png",
     "entryUrl": "../../../JS%20PROJECTS/Notes%20App/index.html",
     "order": 16,
     "createdAt": "2026-08-04T17:37:46.952Z"
@@ -329,7 +329,7 @@ window.LEARNJS_PROJECTS = [
       "Logic",
       "DOM"
     ],
-    "cover": "Number-Guessing-Game-01.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/numberguessinggame.png",
     "entryUrl": "../../../JS%20PROJECTS/numberGuessingGame/index.html",
@@ -349,9 +349,9 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Clipboard"
     ],
-    "cover": "cover page.jpg",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/password-generator.jpg",
+    "coverImage": "../../assets/project-covers/password-generator.png",
     "entryUrl": "../../../JS%20PROJECTS/password%20Generator/index.html",
     "order": 18,
     "createdAt": "2026-08-04T17:37:47.009Z"
@@ -389,7 +389,7 @@ window.LEARNJS_PROJECTS = [
       "Events",
       "DOM"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/quizapp.png",
     "entryUrl": "../../../JS%20PROJECTS/QuizApp/index.html",
@@ -428,7 +428,7 @@ window.LEARNJS_PROJECTS = [
       "DOM",
       "Text"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/text-repeator.png",
     "entryUrl": "../../../JS%20PROJECTS/text%20repeator/index.html",
@@ -448,9 +448,9 @@ window.LEARNJS_PROJECTS = [
       "Math",
       "DOM"
     ],
-    "cover": "cover page.webp",
+    "cover": "image.png",
     "entry": "index.html",
-    "coverImage": "../../assets/project-covers/tipcalculator.webp",
+    "coverImage": "../../assets/project-covers/tipcalculator.png",
     "entryUrl": "../../../JS%20PROJECTS/tipCalculator/index.html",
     "order": 23,
     "createdAt": "2026-08-02T18:08:57.643Z"
@@ -468,7 +468,7 @@ window.LEARNJS_PROJECTS = [
       "LocalStorage",
       "DOM"
     ],
-    "cover": "cover page.png",
+    "cover": "image.png",
     "entry": "index.html",
     "coverImage": "../../assets/project-covers/to-do-list.png",
     "entryUrl": "../../../JS%20PROJECTS/TO-DO%20list/index.html",

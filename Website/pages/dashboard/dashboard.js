@@ -74,7 +74,7 @@ const ICONS = {
   rocket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>',
   arrowRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
-  external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
+  chevronRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
   lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
   sprout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/><path d="M5 21h14"/></svg>',
   flame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg>',
@@ -184,12 +184,16 @@ async function init() {
   // Personal/account actions live behind the top-right avatar.
   buildAccountMenu(user);
 
-  // Account-menu deep links from other pages (e.g. ../dashboard/#settings) and
-  // the legacy interview page redirect (../dashboard/#interview).
+  // Account-menu deep links from other pages (e.g. ../dashboard/#settings), the
+  // legacy interview page redirect (../dashboard/#interview), and the sidebar
+  // links on the project learning page (../dashboard/#projects etc.).
   const targetPanel = (location.hash || "").replace(/^#/, "");
-  if (targetPanel === "profile" || targetPanel === "settings" || targetPanel === "interview") {
+  if (["profile", "settings", "interview", "projects", "roadmap", "progress"].indexOf(targetPanel) !== -1) {
     goToPanel(targetPanel);
     history.replaceState(null, "", location.pathname + location.search);
+  } else {
+    // Default load — Home panel, render its breadcrumb.
+    renderPanelBreadcrumb(activePanel);
   }
 
   boot();
@@ -428,7 +432,6 @@ function bindCardActions(container) {
       const slug = btn.getAttribute("data-slug");
       const action = btn.getAttribute("data-action");
       if (action === "start") startProject(slug);
-      else if (action === "details") viewDetails(slug);
     });
   });
 }
@@ -477,11 +480,9 @@ function projectCardHTML(p) {
           '<span class="project-status ' + statusClass + '">' + statusLabel + "</span>" +
         "</div>" +
         '<div class="project-actions">' +
-          '<button class="btn btn-primary btn-sm" data-action="start" data-slug="' + escapeHtml(p.id) + '" type="button">' +
+          '<button class="btn btn-sm' + (prog.status === "started" ? " btn-continue" : " btn-primary") + '" data-action="start" data-slug="' + escapeHtml(p.id) + '" type="button"' +
+            (prog.status === "completed" ? " disabled" : "") + ">" +
             actionIcon + actionLabel +
-          "</button>" +
-          '<button class="btn btn-outline btn-sm" data-action="details" data-slug="' + escapeHtml(p.id) + '" type="button">' +
-            ICONS.external + "View Details" +
           "</button>" +
         "</div>" +
       "</div>" +
@@ -583,32 +584,20 @@ async function updateProgress(slug, status, percent) {
   }
 }
 
-/** Start Learning: mark progress started, then open the project in a new tab. */
+/** Start Learning: mark progress started, then open the project. */
 function startProject(slug) {
   const prog = progressMap[slug];
   if (prog && prog.status === "completed") return;
   const project = allProjects.find((p) => p.id === slug);
   updateProgress(slug, "started", Math.max((prog && prog.percent) || 0, 10));
-  if (project && project.entryUrl) {
+  // The Digital Clock has a guided build workshop — open it instead of the raw entry.
+  if (slug === "clock") {
+    window.location.href = "../learn/?slug=clock";
+  } else if (project && project.entryUrl) {
     window.open(project.entryUrl, "_blank", "noopener");
   } else {
     toast("This project has no entry file yet.", "error");
   }
-}
-
-/** View Details: open the (placeholder) project details page. Also bumps the
-    project's updatedAt (for projects the user has already touched) so opening
-    / resuming a project re-orders it to the front of Continue Learning.
-    Fire-and-forget: the write is a cosmetic re-order, so navigation never
-    waits on it. Status is guarded — docs with percent>0 but no status field
-    would otherwise make Firestore reject the write (undefined field value). */
-function viewDetails(slug) {
-  const prog = progressMap[slug];
-  if (prog && prog.status && currentUser) {
-    persistProgress(currentUser.uid, slug, prog.status, prog.percent || 0, prog)
-      .catch(() => { /* non-fatal — opening the details page must never block */ });
-  }
-  window.location.href = "../project-details/?slug=" + encodeURIComponent(slug);
 }
 
 /* ------------------------------------------------------------
@@ -655,6 +644,42 @@ el("editForm").addEventListener("submit", async (e) => {
 /* ------------------------------------------------------------
    Navigation
    ------------------------------------------------------------ */
+/* Human labels for the panel breadcrumb (context navigation). */
+const PANEL_LABELS = {
+  home: "Dashboard",
+  projects: "Projects",
+  roadmap: "Roadmap",
+  interview: "Interview Prep",
+  progress: "Progress",
+  profile: "Profile",
+  settings: "Settings"
+};
+
+/* Global breadcrumb — top of the content area, directly below the navbar.
+   Shows the current panel context; "Dashboard" links back to Home. The
+   Learning panel renders its own topic-level breadcrumb, so the generic
+   one is hidden there to avoid duplication. */
+function renderPanelBreadcrumb(name) {
+  const crumb = el("dashBreadcrumb");
+  if (!crumb) return;
+  if (name === "learning") {
+    crumb.hidden = true;
+    return;
+  }
+  crumb.hidden = false;
+  const label = PANEL_LABELS[name] || name;
+  if (name === "home") {
+    crumb.innerHTML = '<span class="breadcrumb-current">' + label + "</span>";
+    return;
+  }
+  crumb.innerHTML =
+    '<button class="breadcrumb-item" data-goto="home" type="button">Dashboard</button>' +
+    '<span class="breadcrumb-sep">' + ICONS.chevronRight + "</span>" +
+    '<span class="breadcrumb-current">' + label + "</span>";
+  const homeBtn = crumb.querySelector('[data-goto="home"]');
+  if (homeBtn) homeBtn.addEventListener("click", () => goToPanel("home"));
+}
+
 function goToPanel(name) {
   activePanel = name;
   document.querySelectorAll(".dash-nav-item").forEach((btn) => {
@@ -677,6 +702,7 @@ function goToPanel(name) {
   }
   // Refresh live progress every time the roadmap panel is opened.
   if (name === "roadmap") renderRoadmap();
+  renderPanelBreadcrumb(name);
   closeSidebar();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }

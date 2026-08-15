@@ -10,7 +10,6 @@ import { db } from "../../js/firebase/firestore.js";
 import { requireAuth } from "../../js/common/require-auth.js";
 import { loadProjects, getProjectById } from "../../js/projects/project-loader.js";
 import { setProjectProgress } from "../../js/projects/progress.js";
-import { getBuilderProjectForSlug } from "../../../Project-Builder/projects.js";
 import {
   doc,
   onSnapshot
@@ -25,61 +24,6 @@ function escapeHtml(value) {
   const div = document.createElement("div");
   div.textContent = value == null ? "" : String(value);
   return div.innerHTML;
-}
-
-/* ---------- Project Builder URL ----------
-   The builder sits in the top-level Project-Builder/ folder at the
-   repository root (sibling of Website/), so a static relative href like
-   "../../Project-Builder/" breaks when the page URL carries a /Website/
-   prefix (e.g. http://host/Website/pages/project-details/ -> resolves to
-   /Website/Project-Builder/). Resolving against import.meta.url instead
-   yields the correct root-level URL no matter how the page was reached
-   (directory form, /Website/ prefix, query strings, sub-path deploys) —
-   the same technique the JS Playground launcher uses for Js-compiler/.
-
-   Candidates (most likely first):
-     1. Resolved from the module location -> <root>/Project-Builder/index.html
-     2. Resolved from the page origin     -> /Project-Builder/index.html
-   The button is enabled only after a candidate verifies it is actually
-   being served; otherwise it stays hidden with a helpful toast. */
-function builderUrlCandidates() {
-  return [
-    new URL("../../../Project-Builder/index.html", import.meta.url).href,
-    new URL("/Project-Builder/index.html", window.location.href).href,
-  ];
-}
-
-let cachedBuilderUrl = null;  // first reachable URL, cached for the session
-let resolvingBuilderUrl = null; // in-flight check so repeated renders don't race
-
-/** Resolve the builder URL and verify it is actually served.
-    - Reachable            -> that URL (cached)
-    - Can't verify (HEAD unsupported, network error) -> best-effort URL
-    - Verified missing (404/410 everywhere) -> null (caller hides the button) */
-async function resolveBuilderUrl() {
-  if (cachedBuilderUrl) return cachedBuilderUrl;
-  if (!resolvingBuilderUrl) {
-    resolvingBuilderUrl = (async () => {
-      const candidates = [...new Set(builderUrlCandidates())];
-      for (const url of candidates) {
-        try {
-          const res = await fetch(url, { method: "HEAD" });
-          if (res.ok) {
-            cachedBuilderUrl = url;
-            return url;
-          }
-          if (res.status === 404 || res.status === 410) continue; // verified missing
-          cachedBuilderUrl = url; // other status — open best-effort
-          return url;
-        } catch (err) {
-          cachedBuilderUrl = url; // network error — best-effort
-          return url;
-        }
-      }
-      return null; // every candidate answered 404/410
-    })();
-  }
-  return resolvingBuilderUrl;
 }
 
 /* Lucide category icons (stroke-based, matches the dashboard). */
@@ -140,6 +84,14 @@ function renderProject() {
   el("detailsContent").hidden = false;
 
   document.title = project.title + " — LearnJS";
+  // Context navigation: Dashboard / Projects / <project>.
+  const chevron = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+  el("dCrumb").innerHTML =
+    '<a class="breadcrumb-item" href="../dashboard/">Dashboard</a>' +
+    '<span class="breadcrumb-sep">' + chevron + "</span>" +
+    '<a class="breadcrumb-item" href="../dashboard/#projects">Projects</a>' +
+    '<span class="breadcrumb-sep">' + chevron + "</span>" +
+    '<span class="breadcrumb-current">' + escapeHtml(project.title) + "</span>";
   const cover = el("dCover");
   cover.src = project.coverImage || "";
   cover.alt = project.title;
@@ -163,32 +115,6 @@ function renderProject() {
 
   el("dStartBtn").addEventListener("click", onStart);
   el("dCompleteBtn").addEventListener("click", onComplete);
-
-  // Project Builder integration: if this library project is powered by a
-  // builder project, surface a "Start Building" button that opens the
-  // dedicated builder page (top-level Project-Builder/ folder). The URL is
-  // resolved from the module location so it never collapses into
-  // /Website/Project-Builder/ when the page URL has a /Website/ prefix.
-  const builderProject = getBuilderProjectForSlug(project.id);
-  const buildBtn = el("dBuildBtn");
-  if (builderProject) {
-    resolveBuilderUrl().then((url) => {
-      if (!url) {
-        // Verified 404 everywhere — the site is not served from the repository
-        // root, so the root-level builder is unreachable. Don't offer a dead link.
-        buildBtn.hidden = true;
-        toast(
-          "Project Builder not found — serve the site from the project root so /Project-Builder/ is reachable.",
-          "error"
-        );
-        return;
-      }
-      buildBtn.href = url + "?project=" + encodeURIComponent(builderProject.id);
-      buildBtn.hidden = false;
-    });
-  } else {
-    buildBtn.hidden = true;
-  }
 }
 
 function renderProgress() {
@@ -226,10 +152,13 @@ async function onStart() {
   if (startState === "completed") return;
   if (!project) return;
 
-  // Persist progress (shared write in progress.js), then open in a new tab.
+  // Persist progress (shared write in progress.js), then open the project.
   try {
     await setProjectProgress(currentUser.uid, project.id, "started", Math.max(progress.percent || 0, 10), progress);
-    if (project.entryUrl) {
+    // The Digital Clock has a guided build workshop — open it instead of the raw entry.
+    if (project.id === "clock") {
+      window.location.href = "../learn/?slug=clock";
+    } else if (project.entryUrl) {
       window.open(project.entryUrl, "_blank", "noopener");
     } else {
       toast("This project has no entry file yet.", "error");
