@@ -213,7 +213,9 @@
 /* ---------- Content ---------- */
 .dash-content {
   flex: 1;
-  padding: clamp(1.4rem, 3vw, 2.4rem);
+  /* Slim top padding (~18px) so the breadcrumb sits close to the navbar;
+     sides and bottom keep the usual breathing room. */
+  padding: 1.1rem clamp(1.4rem, 3vw, 2.4rem) clamp(1.4rem, 3vw, 2.4rem);
 }
 
 .dash-panel { display: none; }

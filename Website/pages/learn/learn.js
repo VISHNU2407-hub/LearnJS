@@ -49,6 +49,7 @@ const ICONS = {
   arrowRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
   arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>',
   eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>',
   folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>',
   fileHtml: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><path d="M14 2v6h6"/><path d="m10 12-2 2 2 2"/><path d="m14 12 2 2-2 2"/></svg>',
   fileCss: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><path d="M14 2v6h6"/><path d="m9 12 2 2-2 2"/><path d="m13 12 2 2-2 2"/></svg>',
@@ -106,6 +107,7 @@ async function init() {
   document.title = workshop.title + " — LearnJS";
   renderBreadcrumb();
   renderHero();
+  renderConcepts();
   renderTips();
   renderSteps();
   renderNav();
@@ -123,13 +125,14 @@ function showNotFound() {
 }
 
 function renderBreadcrumb() {
+  // Global breadcrumb component (css/components/components.css).
   const crumb = el("learnBreadcrumb");
   crumb.innerHTML =
-    '<a class="learn-crumb" href="../dashboard/">Dashboard</a>' +
-    '<span class="learn-crumb-sep">' + ICONS.chevron + "</span>" +
-    '<a class="learn-crumb" href="../dashboard/#projects">Projects</a>' +
-    '<span class="learn-crumb-sep">' + ICONS.chevron + "</span>" +
-    '<span class="learn-crumb-current">' + escapeHtml(workshop.title) + "</span>";
+    '<a class="breadcrumb-item" href="../dashboard/">Dashboard</a>' +
+    '<span class="breadcrumb-sep">' + ICONS.chevron + "</span>" +
+    '<a class="breadcrumb-item" href="../dashboard/#projects">Projects</a>' +
+    '<span class="breadcrumb-sep">' + ICONS.chevron + "</span>" +
+    '<span class="breadcrumb-current">' + escapeHtml(workshop.title) + "</span>";
 }
 
 function renderHero() {
@@ -155,6 +158,21 @@ function renderHero() {
   diffEl.className = "difficulty-badge" + (diff ? " " + diff.toLowerCase() : "");
   diffEl.textContent = diff || "—";
   el("learnTime").textContent = workshop.time || "—";
+  if (el("learnStepsPill")) {
+    el("learnStepsPill").textContent = workshop.steps.length + " guided steps";
+  }
+}
+
+/* What You'll Learn — the JavaScript concepts practiced in this project. */
+function renderConcepts() {
+  const wrap = el("learnConcepts");
+  if (!wrap) return;
+  wrap.innerHTML = (workshop.concepts || []).map((c) =>
+    '<div class="learn-concept">' +
+      '<span class="learn-concept-ico">' + ICONS.target + "</span>" +
+      "<span>" + escapeHtml(c) + "</span>" +
+    "</div>"
+  ).join("");
 }
 
 function renderTips() {
@@ -271,6 +289,53 @@ function renderProgress() {
   el("learnProgressLabel").textContent = done + " / " + total + " Steps Completed";
   el("learnProgressPct").textContent = pct + "%";
   el("learnProgressBar").style.width = pct + "%";
+  renderProgressState(done, total);
+  renderStartButton(done, total);
+}
+
+/* One-line description of the learner's current state under the progress bar. */
+function renderProgressState(done, total) {
+  const state = el("learnProgressState");
+  if (!state) return;
+  if (done === 0) {
+    state.textContent = "Not started yet — open the first step to begin building.";
+  } else if (done < total) {
+    state.textContent = "You're on step " + (done + 1) + " of " + total + " — keep going!";
+  } else {
+    state.textContent = "Workshop complete — you built " + workshop.title + "! \ud83c\udf89";
+  }
+}
+
+/* Header primary button — label follows progress (Start Learning → Continue). */
+function renderStartButton(done, total) {
+  const btn = el("learnStartBtn");
+  if (!btn) return;
+  const label = el("learnStartLabel");
+  const icon = el("learnStartIcon");
+  if (done >= total) {
+    label.textContent = "Completed";
+    btn.disabled = true;
+    icon.innerHTML = ICONS.check;
+  } else {
+    label.textContent = done > 0 ? "Continue" : "Start Learning";
+    btn.disabled = false;
+    icon.innerHTML = done > 0 ? ICONS.arrowRight : ICONS.play;
+  }
+}
+
+/* Start/Continue: open the first incomplete step and scroll it into view. */
+function startLearning() {
+  const total = workshop.steps.length;
+  let target = 0;
+  for (let i = 0; i < total; i++) {
+    if (!stepsCompleted.has(i)) { target = i; break; }
+  }
+  openStep = target;
+  hintLevels[target] = hintLevels[target] || 0;
+  renderSteps();
+  renderNav();
+  const card = el("learnStep" + target);
+  if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 /* ---------- Bottom navigation ---------- */
@@ -613,9 +678,23 @@ function listenProgress() {
   });
 }
 
-/* ---------- Right-rail actions ---------- */
+/* ---------- Project actions (header primary + compact secondary) ---------- */
 function setupActions() {
+  const startBtn = el("learnStartBtn");
+  if (startBtn) startBtn.addEventListener("click", startLearning);
   el("actPreview").addEventListener("click", openPreview);
+  // The hero preview shot opens the same Live Demo window as the action
+  // button above — including keyboard access (Enter / Space).
+  const heroShot = el("learnHeroShot");
+  if (heroShot) {
+    heroShot.addEventListener("click", openPreview);
+    heroShot.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openPreview();
+      }
+    });
+  }
   el("actGithub").addEventListener("click", () => {
     if (workshop.githubUrl) window.open(workshop.githubUrl, "_blank", "noopener");
   });
@@ -1078,8 +1157,11 @@ function applySidebarState(collapsed) {
 }
 
 function setupShell() {
-  let collapsed = false;
-  try { collapsed = localStorage.getItem(SIDEBAR_STORAGE_KEY) === "collapsed"; } catch (err) {}
+  // Learning pages are content-focused: always start with the sidebar
+  // collapsed, regardless of the stored preference. The toggle stays
+  // available so the user can re-open it manually. Only this page forces
+  // the collapsed start — every other page keeps reading the stored state.
+  let collapsed = true;
   applySidebarState(collapsed);
 
   el("dashCollapseToggle").addEventListener("click", () => {

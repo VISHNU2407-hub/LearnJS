@@ -83,6 +83,57 @@
 .btn.loading .btn-label { opacity: 0.75; }
 .btn.loading { pointer-events: none; }
 
+/* ======================= Breadcrumb (global) =======================
+   Context navigation for inner pages. Always placed at the top of the main
+   content area, directly below the navbar, with a consistent ~20px gap
+   before the page heading. Compact and visually secondary to the heading.
+   Shared by the dashboard panels, the project learning page and the
+   project-details page. */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  font-size: 0.84rem;
+  margin-bottom: 1.25rem; /* 20px — gap before the page heading */
+}
+.breadcrumb-item {
+  font-weight: 600;
+  color: var(--muted);
+  padding: 0.2rem 0.35rem;
+  border-radius: 8px;
+  transition: color 0.18s ease, background-color 0.18s ease;
+}
+a.breadcrumb-item:hover,
+button.breadcrumb-item:hover { color: var(--brand-strong); background: var(--brand-mist); }
+button.breadcrumb-item { text-align: left; }
+.breadcrumb-item:focus-visible { outline: none; box-shadow: var(--ring); }
+.breadcrumb-sep { display: inline-flex; color: var(--faint); }
+.breadcrumb-sep svg { width: 14px; height: 14px; }
+.breadcrumb-current {
+  color: var(--ink);
+  font-weight: 700;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Breadcrumb inside the top navbar/header — left-aligned (aligned with the
+   content start), compact, and visually secondary. flex: 1 keeps it on the
+   left while the theme/profile controls stay pinned to the right. */
+.dash-topbar .breadcrumb,
+.details-topbar .breadcrumb {
+  flex: 1;
+  justify-content: flex-start;
+  margin: 0;
+  min-width: 0;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.dash-topbar .breadcrumb-current,
+.details-topbar .breadcrumb-current { min-width: 0; }
+
 /* ======================= Difficulty badge ======================= */
 /* Solid, high-contrast status label for project difficulty. Shared by the
    dashboard project cards (pinned to the cover) and the project-details

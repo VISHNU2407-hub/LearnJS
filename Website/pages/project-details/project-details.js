@@ -84,6 +84,14 @@ function renderProject() {
   el("detailsContent").hidden = false;
 
   document.title = project.title + " — LearnJS";
+  // Context navigation: Dashboard / Projects / <project>.
+  const chevron = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+  el("dCrumb").innerHTML =
+    '<a class="breadcrumb-item" href="../dashboard/">Dashboard</a>' +
+    '<span class="breadcrumb-sep">' + chevron + "</span>" +
+    '<a class="breadcrumb-item" href="../dashboard/#projects">Projects</a>' +
+    '<span class="breadcrumb-sep">' + chevron + "</span>" +
+    '<span class="breadcrumb-current">' + escapeHtml(project.title) + "</span>";
   const cover = el("dCover");
   cover.src = project.coverImage || "";
   cover.alt = project.title;

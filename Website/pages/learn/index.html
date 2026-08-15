@@ -62,6 +62,8 @@
         <button class="icon-btn dash-menu-toggle" id="dashMenuToggle" type="button" aria-label="Toggle sidebar" aria-expanded="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
         </button>
+        <!-- Context navigation, centered in the top navbar -->
+        <nav class="breadcrumb" id="learnBreadcrumb" aria-label="Breadcrumb"></nav>
         <div class="dash-top-actions">
           <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" aria-pressed="false">
             <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
@@ -83,37 +85,48 @@
         <!-- ==================== Workshop (filled by learn.js) ==================== -->
         <div class="learn-wrap" id="learnWrap" hidden>
 
-          <!-- Breadcrumb -->
-          <nav class="learn-breadcrumb" id="learnBreadcrumb" aria-label="Breadcrumb"></nav>
-
           <div class="learn-grid">
 
             <!-- ========== Main column: info → steps → hints ========== -->
             <div class="learn-main">
 
-              <!-- Project header -->
+              <!-- Project header: info left (actions at bottom), preview right -->
               <section class="learn-hero" aria-label="About the project">
-                <div class="learn-hero-cover">
-                  <img id="learnCover" class="learn-cover" alt="Digital Clock project cover">
-                </div>
                 <div class="learn-hero-info">
-                  <div class="learn-hero-tags" id="learnHeroTags"></div>
                   <h1 class="learn-hero-title" id="learnTitle">Digital Clock</h1>
                   <p class="learn-hero-desc text-muted" id="learnIntro"></p>
                   <div class="learn-hero-meta">
                     <span class="difficulty-badge beginner" id="learnDiff">Beginner</span>
-                    <span class="pill"><span class="pill-dot"></span><span id="learnTime">~30 min</span></span>
+                    <span class="pill"><span id="learnTime">30 min</span></span>
+                    <span class="pill"><span id="learnStepsPill">6 guided steps</span></span>
+                    <div class="learn-hero-meta-tags" id="learnHeroTags"></div>
                   </div>
+                  <div class="learn-hero-actions">
+                    <button class="btn btn-primary learn-hero-start" id="learnStartBtn" type="button">
+                      <span class="learn-start-ico" id="learnStartIcon"></span>
+                      <span id="learnStartLabel">Start Learning</span>
+                    </button>
+                    <div class="learn-hero-minis" role="group" aria-label="Project actions">
+                      <button class="learn-action-mini" id="actPreview" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>Live Demo</button>
+                      <button class="learn-action-mini" id="actGithub" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.35.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.24 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.41-2.69 5.38-5.26 5.66.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>GitHub</button>
+                      <button class="learn-action-mini" id="actVscode" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/><path d="m13.2 4.5-2.4 15"/></svg>Open in VS Code</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="learn-hero-shot" id="learnHeroShot" role="button" tabindex="0" aria-label="Open live preview of Digital Clock">
+                  <img id="learnCover" class="learn-hero-shot-img" alt="Digital Clock preview">
+                  <span class="learn-hero-shot-overlay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86a1 1 0 0 0-1.5.86Z"/></svg>Click to see live preview</span>
                 </div>
               </section>
 
-              <!-- Subtle progress -->
+              <!-- Learning progress -->
               <section class="learn-progress" aria-label="Project progress">
                 <div class="learn-progress-head">
                   <span class="learn-progress-label" id="learnProgressLabel">0 / 6 Steps Completed</span>
                   <b class="learn-progress-pct" id="learnProgressPct">0%</b>
                 </div>
                 <div class="bar"><div class="bar-fill" id="learnProgressBar" style="width:0%"></div></div>
+                <p class="learn-progress-state" id="learnProgressState"></p>
               </section>
 
               <!-- Steps by Step -->
@@ -150,28 +163,19 @@
 
             </div>
 
-            <!-- ========== Right rail: actions → tips → help ========== -->
-            <aside class="learn-rail" aria-label="Project actions">
-
-              <div class="learn-actions">
-                <button class="learn-action" id="actPreview" type="button">
-                  <span class="learn-action-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></span>
-                  <span class="learn-action-text"><b>Live Preview</b><span>See your project in action</span></span>
-                </button>
-                <button class="learn-action" id="actGithub" type="button">
-                  <span class="learn-action-ico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.35.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.24 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.41-2.69 5.38-5.26 5.66.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg></span>
-                  <span class="learn-action-text"><b>GitHub Repo</b><span>View source code on GitHub</span></span>
-                </button>
-                <button class="learn-action" id="actVscode" type="button">
-                  <span class="learn-action-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/><path d="m13.2 4.5-2.4 15"/></svg></span>
-                  <span class="learn-action-text"><b>Open in VS Code</b><span>Write and run code in VS Code</span></span>
-                </button>
-              </div>
+            <!-- ========== Right rail: learning support (tips → help) ========== -->
+            <aside class="learn-rail" aria-label="Learning support">
 
               <!-- Project tips -->
               <div class="learn-card learn-tips">
                 <div class="learn-card-head"><span class="learn-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg></span>Project Tips</div>
                 <ul class="learn-tips-list" id="learnTips"></ul>
+              </div>
+
+              <!-- What You'll Learn -->
+              <div class="learn-card learn-concepts-card">
+                <div class="learn-card-head"><span class="learn-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>What You'll Learn</div>
+                <div class="learn-concepts" id="learnConcepts"></div>
               </div>
 
               <!-- Help -->
