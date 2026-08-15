@@ -8,7 +8,8 @@
    Responsibilities:
      - page title + overall progress indicator
      - track filters (All / Beginner / Intermediate / Advanced / Expert)
-     - accordion — only ONE main topic expanded at a time
+     - recursive expand/collapse tree — levels, topics and subtopics
+       each toggle independently (any depth)
      - compact right-side Topic Preview (name, estimated time,
        difficulty, subtopic count, Start Learning)
    UI only — no Firebase, routing or persistence changes. All
@@ -49,7 +50,8 @@ const ICON = {
 /* ---------- state ---------- */
 let data = { levels: [], tracks: {} };
 let activeTrack = "all";
-let expandedTopicId = null;   // only ONE topic expanded at a time
+let expandedNodes = new Set(); // ids of expanded nodes (levels, topics, ...) — each toggles independently
+let seededInitial = false;    // levels are expanded on first paint, then left alone
 let previewTopicId = null;    // topic shown in the right-side preview
 
 const TRACKS = ["Beginner", "Intermediate", "Advanced", "Expert"];
@@ -114,14 +116,83 @@ function renderFilters() {
     .join("");
 }
 
-function renderLevelHead(level) {
+/** Arrays that may hold child nodes at any depth of the curriculum
+    (level → topic → subtopic → sub-subtopic → …). */
+function childItems(item) {
+  if (!item || typeof item !== "object") return [];
+  if (Array.isArray(item.topics) && item.topics.length) return item.topics;
+  if (Array.isArray(item.subtopics) && item.subtopics.length) return item.subtopics;
+  if (Array.isArray(item.children) && item.children.length) return item.children;
+  return [];
+}
+
+/** Display label for a node — plain strings render as-is; objects use their
+    title/name so nested curriculum nodes display correctly. */
+function nodeTitle(item) {
+  if (typeof item === "string") return item;
+  if (item && typeof item === "object") return item.title || item.name || "";
+  return item == null ? "" : String(item);
+}
+
+/** Recursive node builder. topicId/index are only meaningful for the lesson
+    rows directly under a topic (they drive progress lookups); any deeper
+    row carries index -1 and is display-only. */
+function buildNode(item, id, topicId, index) {
+  const children = childItems(item);
+  return {
+    type: "subtopic",
+    id: id,
+    raw: item,
+    topicId: topicId || null,
+    index: typeof index === "number" ? index : -1,
+    hasChildren: children.length > 0,
+    children: children.map((c, i) => buildNode(c, id + ":" + i, topicId, -1))
+  };
+}
+
+/** Build a generic node tree from the roadmap data so EVERY level of the
+    hierarchy (level → topic → subtopic → …) can expand/collapse
+    independently — nothing here is hard-coded to a specific depth. */
+function buildTree(levels) {
+  return (levels || []).map((level) => {
+    const topics = childItems(level);
+    return {
+      type: "level",
+      id: level.id,
+      raw: level,
+      hasChildren: topics.length > 0,
+      children: topics.map((topic) => {
+        const subs = childItems(topic);
+        return {
+          type: "topic",
+          id: topic.id,
+          raw: topic,
+          topicId: topic.id,
+          index: -1,
+          hasChildren: subs.length > 0,
+          children: subs.map((s, i) => buildNode(s, topic.id + ":" + i, topic.id, i))
+        };
+      })
+    };
+  });
+}
+
+function collectNodeIds(nodes, out) {
+  nodes.forEach((n) => {
+    out.add(n.id);
+    collectNodeIds(n.children, out);
+  });
+  return out;
+}
+
+function renderLevelHead(level, open, hasChildren) {
   const topicCount = (level.topics || []).length;
   const lessons = (level.topics || []).reduce((n, t) => n + (t.subtopics || []).length, 0);
   const done = (level.topics || []).reduce((n, t) => n + topicDoneCount(t.id), 0);
   const pct = lessons ? Math.round((done / lessons) * 100) : 0;
 
   return (
-    '<div class="roadmap-level-head">' +
+    '<button class="roadmap-level-head" type="button" aria-expanded="' + (open ? "true" : "false") + '">' +
       '<div class="roadmap-level-idx">' + level.level + "</div>" +
       '<div class="roadmap-level-info">' +
         '<div class="roadmap-level-title-row">' +
@@ -138,37 +209,89 @@ function renderLevelHead(level) {
         '<div class="bar"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
         "<span>" + pct + "%</span>" +
       "</div>" +
-    "</div>"
+      (hasChildren ? '<span class="roadmap-level-arrow">' + ICON.chevron + "</span>" : "") +
+    "</button>"
   );
 }
 
-function renderTopicRow(level, topic, expanded) {
+function renderLevelNode(node, open) {
+  return (
+    '<section class="roadmap-level' + (open ? " open" : "") + '" data-node="' + escapeHtml(node.id) +
+      '" data-node-type="level" data-has-children="' + (node.hasChildren ? "1" : "0") + '">' +
+      renderLevelHead(node.raw, open, node.hasChildren) +
+      '<div class="roadmap-level-body"><div class="roadmap-level-inner">' +
+        '<div class="roadmap-topics">' + node.children.map(renderNode).join("") + "</div>" +
+      "</div></div>" +
+    "</section>"
+  );
+}
+
+function renderTopicNode(node, open) {
+  const topic = node.raw;
   const pct = topicProgress(topic);
   const done = pct === 100;
   const selected = previewTopicId === topic.id;
   return (
-    '<div class="roadmap-topic' + (expanded ? " open" : "") + (selected ? " selected" : "") +
-      '" data-topic="' + escapeHtml(topic.id) + '">' +
-      '<button class="roadmap-topic-head" type="button" aria-expanded="' + (expanded ? "true" : "false") + '">' +
+    '<div class="roadmap-topic' + (open ? " open" : "") + (selected ? " selected" : "") +
+      '" data-node="' + escapeHtml(topic.id) + '" data-node-type="topic" data-has-children="' + (node.hasChildren ? "1" : "0") + '">' +
+      '<button class="roadmap-topic-head" type="button" aria-expanded="' + (open ? "true" : "false") + '">' +
         '<span class="roadmap-topic-num">' + escapeHtml(topic.id) + "</span>" +
         '<span class="roadmap-topic-name">' + escapeHtml(topic.title) + "</span>" +
         '<span class="roadmap-topic-progress' + (done ? " done" : "") + '">' +
           (done ? ICON.check : "") + pct + "%" +
         "</span>" +
-        '<span class="roadmap-topic-arrow">' + ICON.chevron + "</span>" +
+        (node.hasChildren ? '<span class="roadmap-topic-arrow">' + ICON.chevron + "</span>" : "") +
       "</button>" +
       '<div class="roadmap-topic-body"><div class="roadmap-topic-inner">' +
         '<ul class="roadmap-subtopics">' +
-          (topic.subtopics || []).map((s, i) =>
-            '<li class="roadmap-subtopic"' + (isLessonDone(topic.id, i) ? ' data-done="1"' : "") + ' data-index="' + i + '">' +
-              '<span class="roadmap-subtopic-ico">' + (isLessonDone(topic.id, i) ? ICON.check : ICON.circle) + "</span>" +
-              "<span>" + escapeHtml(s) + "</span>" +
-            "</li>"
-          ).join("") +
+          node.children.map(renderNode).join("") +
         "</ul>" +
       "</div></div>" +
     "</div>"
   );
+}
+
+function renderSubtopicNode(node, open) {
+  const done = node.index >= 0 ? isLessonDone(node.topicId, node.index) : false;
+  const head =
+    '<span class="roadmap-subtopic-ico">' + (done ? ICON.check : ICON.circle) + "</span>" +
+    "<span>" + escapeHtml(nodeTitle(node.raw)) + "</span>";
+  // Leaf subtopic (no children) — plain row, exactly like before.
+  if (!node.hasChildren) {
+    // Real lessons (rows that map to topic.subtopics[i]) carry the owning
+    // topic + lesson index so a click can open the exact same lesson page
+    // as the topic preview's "Start Learning" button.
+    const lessonAttrs =
+      node.index >= 0 && node.topicId
+        ? ' data-topic="' + escapeHtml(node.topicId) + '" data-index="' + node.index + '"'
+        : "";
+    return (
+      '<li class="roadmap-subtopic"' + (done ? ' data-done="1"' : "") +
+        ' data-node="' + escapeHtml(node.id) + '" data-node-type="subtopic" data-has-children="0"' +
+        lessonAttrs + ">" +
+        head +
+      "</li>"
+    );
+  }
+  // Deeper nesting — a subtopic with children gets its own toggle.
+  return (
+    '<li class="roadmap-subtopic' + (open ? " open" : "") +
+      '" data-node="' + escapeHtml(node.id) + '" data-node-type="subtopic" data-has-children="1">' +
+      '<button class="roadmap-subtopic-head" type="button" aria-expanded="' + (open ? "true" : "false") + '">' +
+        head + '<span class="roadmap-subtopic-arrow">' + ICON.chevron + "</span>" +
+      "</button>" +
+      '<ul class="roadmap-subtopics">' + node.children.map(renderNode).join("") + "</ul>" +
+    "</li>"
+  );
+}
+
+/** Recursive node renderer — every level of the hierarchy shares the same
+    expand/collapse toggle; only the row markup differs per node type. */
+function renderNode(node) {
+  const open = expandedNodes.has(node.id);
+  if (node.type === "level") return renderLevelNode(node, open);
+  if (node.type === "topic") return renderTopicNode(node, open);
+  return renderSubtopicNode(node, open);
 }
 
 function renderTree() {
@@ -192,19 +315,21 @@ function renderTree() {
   if (!previewTopicId && levels[0] && levels[0].topics[0]) {
     previewTopicId = levels[0].topics[0].id;
   }
-  // An expanded topic hidden by the filter collapses automatically.
-  if (expandedTopicId && !findVisibleTopic(expandedTopicId)) expandedTopicId = null;
 
-  tree.innerHTML = levels
-    .map((level) =>
-      '<section class="roadmap-level">' +
-        renderLevelHead(level) +
-        '<div class="roadmap-topics">' +
-          (level.topics || []).map((t) => renderTopicRow(level, t, t.id === expandedTopicId)).join("") +
-        "</div>" +
-      "</section>"
-    )
-    .join("");
+  const nodes = buildTree(levels);
+  // First paint (or after a filter reset): levels start expanded so their
+  // topics are visible; topics/subtopics stay collapsed until clicked.
+  if (!seededInitial) {
+    seededInitial = true;
+    nodes.forEach((n) => { if (n.hasChildren) expandedNodes.add(n.id); });
+  }
+  // Expanded nodes hidden by the active filter collapse automatically.
+  const visibleIds = collectNodeIds(nodes, new Set());
+  expandedNodes.forEach((id) => {
+    if (!visibleIds.has(id)) expandedNodes.delete(id);
+  });
+
+  tree.innerHTML = nodes.map(renderNode).join("");
 }
 
 function findVisibleTopic(topicId) {
@@ -253,7 +378,8 @@ function bindEvents() {
       const btn = e.target.closest(".roadmap-filter");
       if (!btn) return;
       activeTrack = btn.getAttribute("data-track");
-      expandedTopicId = null;
+      expandedNodes.clear();
+      seededInitial = false;
       renderRoadmap();
     });
   }
@@ -261,14 +387,43 @@ function bindEvents() {
   const tree = document.getElementById("roadmapTree");
   if (tree) {
     tree.addEventListener("click", (e) => {
-      const head = e.target.closest(".roadmap-topic-head");
-      if (!head) return;
-      const id = head.closest(".roadmap-topic").getAttribute("data-topic");
-      // Only ONE main topic expanded at a time.
-      expandedTopicId = expandedTopicId === id ? null : id;
-      previewTopicId = id;
-      renderTree();
-      renderPreview();
+      // The ENTIRE node row is the toggle target — the arrow, the label,
+      // the progress, or any empty space inside the row all behave the same.
+      const row = e.target.closest("[data-node]");
+      if (!row) return;
+      const id = row.getAttribute("data-node");
+      const type = row.getAttribute("data-node-type");
+      const hasChildren = row.getAttribute("data-has-children") === "1";
+
+      // Real lesson rows (leaf subtopics under a topic) open the SAME
+      // Learning page as "Start Learning" — reuse the shared
+      // learnjs:open-topic event so the existing navigation/loading logic
+      // in dashboard.js + learning.js handles the rest. Parent topics and
+      // subtopics (rows with children) still expand/collapse below.
+      if (type === "subtopic" && !hasChildren && row.hasAttribute("data-topic")) {
+        window.dispatchEvent(new CustomEvent("learnjs:open-topic", {
+          detail: {
+            topicId: row.getAttribute("data-topic"),
+            lessonIndex: Number(row.getAttribute("data-index")) || 0
+          }
+        }));
+        return;
+      }
+
+      let changed = false;
+      // Every level of the hierarchy toggles independently — clicking
+      // again collapses that node's children.
+      if (hasChildren) {
+        changed = true;
+        if (expandedNodes.has(id)) expandedNodes.delete(id);
+        else expandedNodes.add(id);
+      }
+      // Topics still drive the right-side preview + Start Learning.
+      if (type === "topic") previewTopicId = id;
+      if (changed || type === "topic") {
+        renderTree();
+        renderPreview();
+      }
     });
   }
 

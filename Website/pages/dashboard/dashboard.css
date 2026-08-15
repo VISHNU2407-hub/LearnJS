@@ -962,7 +962,12 @@ body.dash-open .dash-backdrop { opacity: 1; visibility: visible; }
   display: flex;
   align-items: center;
   gap: 1rem;
+  width: 100%;
   padding: 0.95rem 1.15rem;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
   background: var(--surface);
   border: 1px solid var(--line-soft);
   border-left: 3px solid var(--brand);
@@ -1029,6 +1034,15 @@ html.dark .roadmap-track-pill.expert { color: #c4b5fd; }
 .roadmap-level-progress .bar { width: 110px; }
 .roadmap-level-progress > span { font-size: 0.8rem; font-weight: 700; color: var(--muted); }
 
+/* Level collapse — same smooth grid trick as the topic accordion. */
+.roadmap-level-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.32s var(--ease);
+}
+.roadmap-level.open .roadmap-level-body { grid-template-rows: 1fr; }
+.roadmap-level-inner { overflow: hidden; min-height: 0; }
+
 /* ---------- Topic accordion ---------- */
 .roadmap-topics { margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.55rem; }
 .roadmap-topic {
@@ -1083,14 +1097,22 @@ html.dark .roadmap-track-pill.expert { color: #c4b5fd; }
 }
 .roadmap-topic-progress svg { width: 14px; height: 14px; }
 .roadmap-topic-progress.done { color: var(--brand-strong); }
-.roadmap-topic-arrow {
+.roadmap-topic-arrow,
+.roadmap-level-arrow {
   display: inline-flex;
   color: var(--faint);
   flex-shrink: 0;
   transition: transform 0.3s var(--ease), color 0.2s ease;
+  /* Collapsed: chevron points right (▶); expanded: down (▼). */
+  transform: rotate(-90deg);
 }
-.roadmap-topic-arrow svg { width: 17px; height: 17px; }
-.roadmap-topic.open .roadmap-topic-arrow { transform: rotate(180deg); color: var(--brand-strong); }
+.roadmap-topic-arrow svg,
+.roadmap-level-arrow svg { width: 17px; height: 17px; }
+.roadmap-topic.open .roadmap-topic-arrow,
+.roadmap-level.open .roadmap-level-arrow {
+  transform: rotate(0deg);
+  color: var(--brand-strong);
+}
 
 /* Smooth expand — grid-template-rows 0fr → 1fr trick. */
 .roadmap-topic-body {
@@ -1114,6 +1136,7 @@ html.dark .roadmap-track-pill.expert { color: #c4b5fd; }
   font-size: 0.87rem;
   color: var(--muted);
   line-height: 1.45;
+  cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 .roadmap-subtopic:hover { background: var(--surface); color: var(--ink-2); }
@@ -1125,6 +1148,45 @@ html.dark .roadmap-track-pill.expert { color: #c4b5fd; }
 .roadmap-subtopic-ico svg { width: 15px; height: 15px; }
 .roadmap-subtopic[data-done="1"] .roadmap-subtopic-ico,
 .roadmap-subtopic[data-done="1"] { color: var(--brand-strong); }
+
+/* Expandable subtopics (used when the data nests below lesson level). */
+.roadmap-subtopic[data-has-children="1"] { display: block; padding: 0; border-radius: 10px; }
+.roadmap-subtopic-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.4rem;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.roadmap-subtopic-head:hover { background: var(--surface); color: var(--ink-2); }
+.roadmap-subtopic-arrow {
+  display: inline-flex;
+  color: var(--faint);
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: transform 0.3s var(--ease), color 0.2s ease;
+  transform: rotate(-90deg);
+}
+.roadmap-subtopic-arrow svg { width: 15px; height: 15px; }
+.roadmap-subtopic.open .roadmap-subtopic-arrow { transform: rotate(0deg); color: var(--brand-strong); }
+.roadmap-subtopic:not(.open) > .roadmap-subtopics { display: none; }
+
+/* Nested sub-lists (subtopics with children) — lighter, indented so the
+   deeper levels read as a tree instead of repeating the topic list chrome. */
+.roadmap-subtopic .roadmap-subtopics {
+  margin-top: 0.15rem;
+  margin-left: 1.35rem;
+  border-top: 0;
+  padding: 0.1rem 0 0.15rem;
+}
 
 /* ---------- Topic preview rail ---------- */
 .topic-preview { position: sticky; top: calc(var(--dash-nav-h) + 1.4rem); }
