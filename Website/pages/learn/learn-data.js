@@ -3,7 +3,13 @@
    Content for the Project Learning Page (guided build workshop).
    Structured per project so more guided builds can be added
    later by adding another key to window.LEARNJS_WORKSHOPS.
-   Only the Digital Clock ("clock") is populated for now.
+   Populated for all catalog projects: clock, counter, bmi-calculator,
+   calculator, character-count, color-changer, die-roller,
+   numberguessinggame, text-repeator, tipcalculator, blog-website,
+   chat-app, ecommerce, expense-tracker, git-hub-profile-finder,
+   image-slider, kanban-board, movie-search-app, notes-app,
+   pokedex-app, quizapp, quotegenerator, weather-app,
+   to-do-list and password-generator.
    ============================================================ */
 
 window.LEARNJS_WORKSHOPS = {
@@ -4160,6 +4166,6383 @@ window.LEARNJS_WORKSHOPS = {
         "//   Clear the inputs and amounts on Reset, then test a few combinations"
       ].join("\n")
     }
+  },
+
+  "blog-website": {
+    slug: "blog-website",
+    folder: "blog website",
+    title: "Blog Website",
+    difficulty: "Intermediate",
+    time: "45 min",
+    category: "Full-Stack",
+    tags: ["HTML", "DOM", "Data"],
+    intro: "Build a blog website that stores articles as data and renders them as cards with categories and a full-article detail view. You'll practice structuring HTML, rendering content from JavaScript data, filtering by category, and swapping views in the DOM.",
+    previewNote: "You'll build a blog that keeps its articles in a JavaScript array, renders each one as a card, lets visitors filter by category, and opens any article in a detail view — all without a single page reload.",
+    cover: "../../assets/project-covers/blog-website.png",
+    previewUrl: "../../../JS%20PROJECTS/blog%20website/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Keep the article data in one array so rendering and filtering share the same source of truth.",
+      "Render cards with a loop (forEach or map) so adding a new article automatically appears on the page.",
+      "Give every article a category property — filtering is just a matter of comparing it.",
+      "Hide and show the list and detail views instead of rebuilding the whole page.",
+      "console.log() the array you're rendering when a card looks wrong — the data is usually the culprit."
+    ],
+    concepts: [
+      "Structuring HTML with semantic sections",
+      "Storing content as JavaScript data (arrays of objects)",
+      "Rendering lists to the DOM with loops",
+      "Filtering data by category",
+      "Switching views dynamically with hidden state"
+    ],
+    challenge: "Extra challenge: add an article count per category on the filter buttons, or a 'Newest first' sort button.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the article list (#articleList), the category buttons (#categoryNav) and the detail view (#articleDetail).",
+          "Open style.css — the layout and card styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see an empty article list."
+        ],
+        logicCode: [
+          "// 1. index.html — find #articleList, #categoryNav and #articleDetail",
+          "// 2. style.css — layout and card styles are already done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — the article list is empty"
+        ],
+        think: "Which element IDs will your JavaScript need to select to render and filter articles?",
+        hints: [
+          "The article cards go inside #articleList.",
+          "The category buttons live in #categoryNav.",
+          "The detail view is #articleDetail — it starts hidden."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const articleList = document.getElementById('articleList')." }
+          ]
+        }
+      },
+      {
+        title: "Define Article Data",
+        tagline: "Store your articles as data.",
+        goal: "Create an array of article objects — each with a title, category and content — so the page can be generated from data.",
+        logic: [
+          "Create an array named articles.",
+          "Add 3-4 article objects inside it.",
+          "Give each article a title property.",
+          "Give each article a category and some content text."
+        ],
+        logicCode: [
+          "// 1. Create an array of articles",
+          "const articles = [",
+          "  {",
+          "    // 2. Add a title property",
+          "    title: 'Getting Started with JavaScript',",
+          "    // 3. Add a category property",
+          "    category: 'JavaScript',",
+          "    // 4. Add the article content",
+          "    content: 'JavaScript brings your pages to life...'",
+          "  },",
+          "  // ... add a few more articles",
+          "];"
+        ],
+        think: "Why is it better to store the blog's content as data instead of writing it directly in the HTML?",
+        hints: [
+          "Each article is an object with keys like title, category and content.",
+          "Keep all of them inside one array named articles.",
+          "Add at least 3 articles so filtering has something to show."
+        ],
+        check: {
+          requires: [
+            { pattern: "(const|let|var)\\s+articles", hint: "Create an array: const articles = [ ... ];" },
+            { pattern: "title\\s*:", hint: "Each article needs a title property, e.g. title: 'My First Post'." },
+            { pattern: "category\\s*:", hint: "Each article needs a category property, e.g. category: 'JavaScript'." }
+          ]
+        }
+      },
+      {
+        title: "Render Article Cards",
+        tagline: "Generate the article list from data.",
+        goal: "Loop over the articles array and build a card for each one inside the article list.",
+        logic: [
+          "Write a function that renders the articles.",
+          "Clear the list before rendering.",
+          "Loop over the articles array.",
+          "Create a card element for each article and append it."
+        ],
+        logicCode: [
+          "// 1. Write a render function",
+          "function renderArticles(list) {",
+          "  // 2. Clear the container first",
+          "  articleList.innerHTML = '';",
+          "  // 3. Loop over the articles",
+          "  list.forEach((article) => {",
+          "    // 4. Build a card and add it to the page",
+          "    const card = document.createElement('article');",
+          "    card.innerHTML = article.title + ' <span>' + article.category + '</span>';",
+          "    articleList.appendChild(card);",
+          "  });",
+          "}"
+        ],
+        think: "Why clear the list with innerHTML = '' before rendering again?",
+        hints: [
+          "createElement('article') makes a new card element.",
+          "textContent (or innerHTML) sets the card's text.",
+          "appendChild() adds the finished card to #articleList."
+        ],
+        check: {
+          requires: [
+            { pattern: "(forEach|map|\\.\\.\\.|for\\s*\\()", hint: "Loop over the articles — forEach is the cleanest way." },
+            { pattern: "(createElement|innerHTML|insertAdjacentHTML)", hint: "Build each card with createElement or a template string assigned to innerHTML." },
+            { pattern: "(appendChild|innerHTML\\s*\\+=)", hint: "Add each finished card to the article list with appendChild()." }
+          ]
+        }
+      },
+      {
+        title: "Filter by Category",
+        tagline: "Make the category buttons work.",
+        goal: "When a category button is clicked, re-render the list with only the articles in that category.",
+        logic: [
+          "Listen for clicks on every category button.",
+          "Read which category the clicked button represents.",
+          "Filter the articles array by that category.",
+          "Re-render the list with the filtered articles."
+        ],
+        logicCode: [
+          "// 1. Listen for clicks on the category buttons",
+          "categoryNav.addEventListener('click', (e) => {",
+          "  // 2. Read the clicked button's category",
+          "  const category = e.target.dataset.category;",
+          "  // 3. Filter the articles",
+          "  const filtered = category === 'All' ? articles : articles.filter(a => a.category === category);",
+          "  // 4. Re-render with the filtered list",
+          "  renderArticles(filtered);",
+          "});"
+        ],
+        think: "How does the clicked button tell you which category it belongs to?",
+        hints: [
+          "data-category on each button stores its category name.",
+          "e.target.dataset.category reads it on click.",
+          "Array.filter() keeps only the articles that match."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach a click listener to the category buttons." },
+            { pattern: "(dataset|getAttribute\\([^)]*category)", hint: "Read the clicked category, e.g. e.target.dataset.category." },
+            { pattern: "\\.filter\\s*\\(", hint: "Use array.filter() to keep only matching articles." }
+          ]
+        }
+      },
+      {
+        title: "Article Detail View",
+        tagline: "Open an article to read it fully.",
+        goal: "Clicking a card should hide the list and show that article's full content in the detail view.",
+        logic: [
+          "Listen for clicks on article cards.",
+          "Find the article that was clicked.",
+          "Fill the detail view with its title and content.",
+          "Hide the list and show the detail view."
+        ],
+        logicCode: [
+          "// 1. Listen for clicks on the list",
+          "articleList.addEventListener('click', (e) => {",
+          "  // 2. Find which card was clicked",
+          "  const card = e.target.closest('.card');",
+          "  // 3. Look up the article by its data",
+          "  const article = articles.find(a => a.title === card.dataset.title);",
+          "  // 4. Fill the detail view and swap screens",
+          "  detailTitle.textContent = article.title;",
+          "  detailContent.textContent = article.content;",
+          "  articleList.hidden = true;",
+          "  articleDetail.hidden = false;",
+          "});"
+        ],
+        think: "What should the Back button do when the detail view is open?",
+        hints: [
+          "Store a reference to the clicked article — a data attribute or the array index both work.",
+          "Set detailTitle.textContent and detailContent.textContent.",
+          "Toggle .hidden on the list and the detail view to switch screens."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach a click listener so cards respond to clicks." },
+            { pattern: "(hidden\\s*=\\s*(true|false)|classList)", hint: "Hide the list and show the detail view by toggling .hidden." },
+            { pattern: "(textContent|innerHTML)\\s*=", hint: "Write the article's title and content into the detail view elements." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the whole flow.",
+        goal: "Test every feature — rendering, filtering and the detail view — and polish anything that feels off.",
+        logic: [
+          "Open the page — do all article cards render?",
+          "Click each category — does the list filter correctly?",
+          "Open an article — does the detail view show the right content?",
+          "Use the Back button — does it return to the filtered list?"
+        ],
+        logicCode: [
+          "// 1. Open the page — do all article cards render?",
+          "// 2. Click each category — does the list filter correctly?",
+          "// 3. Open an article — does the detail view show the right content?",
+          "// 4. Click Back — does it return to the list?"
+        ],
+        think: "What happens if two articles share the same title — how could you tell them apart?",
+        hints: [
+          "Test all three categories plus the 'All' filter.",
+          "If cards don't appear, console.log() the array you're rendering.",
+          "Make sure the Back button returns to the (still filtered) list."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one click listener should drive the UI (filter or detail view)." },
+            { pattern: "(textContent|innerHTML)", hint: "Render article content into the page with textContent or innerHTML." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Blog Website</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <header class="blog-header">',
+        "            <h1>My Dev Blog</h1>",
+        '            <p class="subtitle">Stories from a developer\'s journey</p>',
+        "        </header>",
+        '        <nav class="category-nav" id="categoryNav">',
+        '            <button class="cat-btn active" data-category="All">All</button>',
+        '            <button class="cat-btn" data-category="JavaScript">JavaScript</button>',
+        '            <button class="cat-btn" data-category="CSS">CSS</button>',
+        '            <button class="cat-btn" data-category="Career">Career</button>',
+        "        </nav>",
+        '        <section class="articles" id="articleList">',
+        "            <!-- Article cards go here (rendered by JavaScript) -->",
+        "        </section>",
+        '        <section class="article-detail" id="articleDetail" hidden>',
+        '            <button class="btn" id="backBtn">← Back to articles</button>',
+        '            <h2 id="detailTitle"></h2>',
+        '            <p class="detail-meta" id="detailMeta"></p>',
+        '            <p class="detail-content" id="detailContent"></p>',
+        "        </section>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container {",
+        "  width: min(860px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 40px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "}",
+        "",
+        ".blog-header { margin-bottom: 24px; }",
+        ".blog-header h1 { font-size: 2.2rem; }",
+        ".subtitle { color: #6b7280; margin-top: 6px; }",
+        "",
+        ".category-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }",
+        "",
+        ".cat-btn {",
+        "  border: 1px solid #e5e7eb;",
+        "  background: #ffffff;",
+        "  color: #374151;",
+        "  padding: 8px 16px;",
+        "  border-radius: 9999px;",
+        "  font-size: 0.9rem;",
+        "  cursor: pointer;",
+        "  transition: all 0.15s ease;",
+        "}",
+        "",
+        ".cat-btn:hover { border-color: #2563eb; color: #2563eb; }",
+        ".cat-btn.active { background: #2563eb; border-color: #2563eb; color: #fff; }",
+        "",
+        ".articles { display: grid; gap: 16px; }",
+        "",
+        ".card {",
+        "  padding: 20px;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 14px;",
+        "  cursor: pointer;",
+        "  transition: all 0.15s ease;",
+        "}",
+        "",
+        ".card:hover {",
+        "  border-color: #2563eb;",
+        "  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.1);",
+        "}",
+        "",
+        ".card h3 { margin-bottom: 6px; }",
+        ".card .cat-chip {",
+        "  display: inline-block;",
+        "  font-size: 0.75rem;",
+        "  color: #2563eb;",
+        "  background: #eff6ff;",
+        "  padding: 3px 10px;",
+        "  border-radius: 9999px;",
+        "}",
+        ".card .excerpt { color: #6b7280; margin-top: 10px; font-size: 0.95rem; }",
+        "",
+        ".article-detail h2 { margin: 16px 0 8px; }",
+        ".detail-meta { color: #2563eb; font-size: 0.85rem; }",
+        ".detail-content { color: #374151; line-height: 1.7; margin-top: 12px; }",
+        "",
+        ".btn {",
+        "  border: 1px solid #e5e7eb;",
+        "  background: #ffffff;",
+        "  color: #374151;",
+        "  padding: 8px 16px;",
+        "  border-radius: 10px;",
+        "  cursor: pointer;",
+        "  font-size: 0.9rem;",
+        "}",
+        ".btn:hover { border-color: #2563eb; color: #2563eb; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .container { padding: 24px 18px; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the article list (#articleList), category buttons (#categoryNav)",
+        "//   and a hidden detail view (#articleDetail)",
+        "//   style.css is complete — the layout and card styles are done for you",
+        "",
+        "// Step 2: Define article data",
+        "//   Create an articles array — each article is an object with",
+        "//   title, category and content properties",
+        "",
+        "// Step 3: Render article cards",
+        "//   Write a render function that clears #articleList, loops over an array,",
+        "//   builds a card per article, and appends it to the page",
+        "",
+        "// Step 4: Filter by category",
+        "//   Listen for clicks on the category buttons, read the clicked category,",
+        "//   filter the articles array, and re-render with the result",
+        "",
+        "// Step 5: Article detail view",
+        "//   When a card is clicked, fill #articleDetail with the article's title",
+        "//   and content, then hide the list and show the detail view",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test rendering, filtering and the detail view — then polish the flow"
+      ].join("\n")
+    }
+  },
+
+  "chat-app": {
+    slug: "chat-app",
+    folder: "chat-app",
+    title: "Chat App",
+    difficulty: "Intermediate",
+    time: "40 min",
+    category: "Full-Stack",
+    tags: ["DOM", "Events", "State"],
+    intro: "Build a chat interface where messages render as conversation bubbles. You'll manage a messages array, handle form submits, render messages to the DOM, and update the UI dynamically as new messages arrive.",
+    previewNote: "You'll build a working chat window: type a message, send it, and it appears as a bubble — followed by an automatic reply that keeps the conversation going.",
+    cover: "../../assets/project-covers/chat-app.png",
+    previewUrl: "../../../JS%20PROJECTS/chat-app/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Keep all messages in one array — rendering and state always stay in sync.",
+      "Store each message as an object with text and who sent it, so your styles know which bubble to draw.",
+      "Clear the input after sending, and keep focus in it for a smooth experience.",
+      "Scroll the messages container to the bottom after rendering so new messages are always visible.",
+      "Use a short setTimeout() to simulate a reply arriving — it makes the UI feel alive."
+    ],
+    concepts: [
+      "DOM selection and manipulation",
+      "Event handling (submit and click)",
+      "Managing state with an array of message objects",
+      "Rendering lists dynamically",
+      "Simulating async behavior with setTimeout()"
+    ],
+    challenge: "Extra challenge: add a typing indicator that shows for a second before the reply appears.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the messages container (#messages), the form (#chatForm) and the input (#messageInput).",
+          "Open style.css — the chat layout and bubble styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see an empty chat window."
+        ],
+        logicCode: [
+          "// 1. index.html — find #messages, #chatForm and #messageInput",
+          "// 2. style.css — chat layout and bubble styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — the chat window is empty"
+        ],
+        think: "Which element IDs will your JavaScript need to select to send and render messages?",
+        hints: [
+          "Messages render inside #messages.",
+          "The form is #chatForm — its submit event sends a message.",
+          "The input is #messageInput — read its value to get the message text."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const messagesEl = document.getElementById('messages')." }
+          ]
+        }
+      },
+      {
+        title: "Message State",
+        tagline: "Set up the messages array.",
+        goal: "Create an array that will hold every message, each with its text and who sent it.",
+        logic: [
+          "Create an array named messages.",
+          "Give each message a text property.",
+          "Give each message a from property to say who sent it.",
+          "Seed the array with one welcome message."
+        ],
+        logicCode: [
+          "// 1. Create the messages array",
+          "const messages = [",
+          "  {",
+          "    // 2. The message text",
+          "    text: 'Welcome to the chat!',",
+          "    // 3. Who sent it ('me' or 'them')",
+          "    from: 'them'",
+          "  }",
+          "];"
+        ],
+        think: "Why store 'who sent it' on every message instead of styling every bubble the same?",
+        hints: [
+          "Each message is an object with text and from keys.",
+          "Seed the array with at least one message so the chat isn't empty on load.",
+          "The from value will decide which bubble style to use later."
+        ],
+        check: {
+          requires: [
+            { pattern: "(const|let|var)\\s+messages", hint: "Create an array: const messages = [ ... ];" },
+            { pattern: "text\\s*:", hint: "Each message needs a text property, e.g. text: 'Hello!'." }
+          ]
+        }
+      },
+      {
+        title: "Send a Message",
+        tagline: "Handle the form submit.",
+        goal: "When the form is submitted, read the input, add the message to the array, and clear the input.",
+        logic: [
+          "Listen for the submit event on the form.",
+          "Prevent the page from reloading.",
+          "Read the value of the input and trim it.",
+          "Push a new message object and clear the input."
+        ],
+        logicCode: [
+          "// 1. Listen for form submit",
+          "chatForm.addEventListener('submit', (e) => {",
+          "  // 2. Stop the page reload",
+          "  e.preventDefault();",
+          "  // 3. Read the input value",
+          "  const text = messageInput.value.trim();",
+          "  if (!text) return;",
+          "  // 4. Add the message and clear the input",
+          "  messages.push({ text, from: 'me' });",
+          "  messageInput.value = '';",
+          "});"
+        ],
+        think: "Why call e.preventDefault() on a form submit?",
+        hints: [
+          "Attach the listener to the form: chatForm.addEventListener('submit', ...).",
+          "e.preventDefault() stops the page from reloading.",
+          "messageInput.value gives the typed text; set it to '' after sending."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener\\s*\\(\\s*[\"']submit", hint: "Listen for the submit event on the form." },
+            { pattern: "preventDefault", hint: "Call e.preventDefault() so the page doesn't reload." },
+            { pattern: "\\.push\\s*\\(", hint: "Add the new message to the array with messages.push({ ... })." }
+          ]
+        }
+      },
+      {
+        title: "Render Messages",
+        tagline: "Draw the conversation on screen.",
+        goal: "Loop over the messages array and render each one as a bubble in the messages container.",
+        logic: [
+          "Write a render function.",
+          "Clear the container before rendering.",
+          "Loop over the messages array.",
+          "Create a bubble element per message and append it."
+        ],
+        logicCode: [
+          "// 1. Write a render function",
+          "function renderMessages() {",
+          "  // 2. Clear the container",
+          "  messagesEl.innerHTML = '';",
+          "  // 3. Loop over the messages",
+          "  messages.forEach((msg) => {",
+          "    // 4. Build a bubble and append it",
+          "    const bubble = document.createElement('div');",
+          "    bubble.className = 'bubble ' + msg.from;",
+          "    bubble.textContent = msg.text;",
+          "    messagesEl.appendChild(bubble);",
+          "  });",
+          "  // Keep the newest message in view",
+          "  messagesEl.scrollTop = messagesEl.scrollHeight;",
+          "}"
+        ],
+        think: "How does the from value change which bubble style gets applied?",
+        hints: [
+          "createElement('div') makes a new bubble.",
+          "Set bubble.className based on msg.from — 'bubble me' or 'bubble them'.",
+          "bubble.textContent = msg.text writes the message text."
+        ],
+        check: {
+          requires: [
+            { pattern: "(forEach|map|for\\s*\\()", hint: "Loop over the messages array — forEach is the cleanest way." },
+            { pattern: "(createElement|innerHTML|insertAdjacentHTML)", hint: "Build each bubble with createElement or innerHTML." },
+            { pattern: "(appendChild|innerHTML\\s*\\+=)", hint: "Add each bubble to the messages container." }
+          ]
+        }
+      },
+      {
+        title: "Simulate a Reply",
+        tagline: "Make the chat feel alive.",
+        goal: "After the user sends a message, schedule a reply that appears after a short delay.",
+        logic: [
+          "Call the render function after sending a message.",
+          "Use setTimeout() to delay the reply.",
+          "Push a reply message from 'them'.",
+          "Re-render when the reply arrives."
+        ],
+        logicCode: [
+          "// 1. Render right after sending",
+          "renderMessages();",
+          "// 2. Delay the reply",
+          "setTimeout(() => {",
+          "  // 3. Push a reply from the other side",
+          "  messages.push({ text: 'Thanks for your message!', from: 'them' });",
+          "  // 4. Render the new message",
+          "  renderMessages();",
+          "}, 1500);"
+        ],
+        think: "Why does the reply need a separate render call after it's pushed?",
+        hints: [
+          "setTimeout(fn, 1500) runs the reply code after 1.5 seconds.",
+          "Push the reply with from: 'them' so it styles as the other side.",
+          "Call renderMessages() again inside the timeout so the bubble appears."
+        ],
+        check: {
+          requires: [
+            { pattern: "setTimeout", hint: "Schedule the reply with setTimeout(fn, delay)." },
+            { pattern: "\\.push\\s*\\(", hint: "Add the reply to the messages array inside the timeout." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the chat flow.",
+        goal: "Test sending messages, rendering, and the delayed reply — then polish the experience.",
+        logic: [
+          "Open the page — is the welcome message visible?",
+          "Send a few messages — do they appear as 'me' bubbles?",
+          "Wait for the reply — does it appear as a 'them' bubble?",
+          "Try sending an empty message — nothing should happen."
+        ],
+        logicCode: [
+          "// 1. Open the page — is the welcome message visible?",
+          "// 2. Send a few messages — do they appear as 'me' bubbles?",
+          "// 3. Wait — does the reply appear as a 'them' bubble?",
+          "// 4. Send an empty message — nothing should happen"
+        ],
+        think: "What could go wrong if you render before pushing the new message to the array?",
+        hints: [
+          "The scroll-to-bottom behavior keeps the newest message visible.",
+          "If bubbles look identical, check the from value on each message.",
+          "console.log(messages) after sending is a quick way to inspect state."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive the chat (submit or click)." },
+            { pattern: "(textContent|innerHTML)", hint: "Render message text into the page with textContent or innerHTML." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Chat App</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="chat-card">',
+        '        <header class="chat-header">',
+        "            <h1>Chat</h1>",
+        '            <span class="online-dot"></span><span class="online-text">Online</span>',
+        "        </header>",
+        '        <div class="messages" id="messages">',
+        "            <!-- Message bubbles go here (rendered by JavaScript) -->",
+        "        </div>",
+        '        <form class="chat-form" id="chatForm">',
+        '            <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off">',
+        '            <button type="submit" id="sendBtn">Send</button>',
+        "        </form>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".chat-card {",
+        "  width: min(520px, 100%);",
+        "  height: 560px;",
+        "  display: flex;",
+        "  flex-direction: column;",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "  overflow: hidden;",
+        "}",
+        "",
+        ".chat-header {",
+        "  display: flex;",
+        "  align-items: center;",
+        "  gap: 8px;",
+        "  padding: 18px 24px;",
+        "  border-bottom: 1px solid #e5e7eb;",
+        "}",
+        "",
+        ".chat-header h1 { font-size: 1.2rem; }",
+        ".online-dot {",
+        "  width: 8px;",
+        "  height: 8px;",
+        "  border-radius: 50%;",
+        "  background: #16a34a;",
+        "  margin-left: auto;",
+        "}",
+        ".online-text { color: #16a34a; font-size: 0.8rem; }",
+        "",
+        ".messages {",
+        "  flex: 1;",
+        "  overflow-y: auto;",
+        "  padding: 20px 24px;",
+        "  display: flex;",
+        "  flex-direction: column;",
+        "  gap: 10px;",
+        "  background: #f9fafb;",
+        "}",
+        "",
+        ".bubble {",
+        "  max-width: 75%;",
+        "  padding: 10px 14px;",
+        "  border-radius: 16px;",
+        "  font-size: 0.95rem;",
+        "  line-height: 1.4;",
+        "}",
+        "",
+        ".bubble.me {",
+        "  align-self: flex-end;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  border-bottom-right-radius: 4px;",
+        "}",
+        "",
+        ".bubble.them {",
+        "  align-self: flex-start;",
+        "  background: #e5e7eb;",
+        "  color: #111827;",
+        "  border-bottom-left-radius: 4px;",
+        "}",
+        "",
+        ".chat-form {",
+        "  display: flex;",
+        "  gap: 10px;",
+        "  padding: 16px 24px;",
+        "  border-top: 1px solid #e5e7eb;",
+        "}",
+        "",
+        ".chat-form input {",
+        "  flex: 1;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 9999px;",
+        "  padding: 10px 16px;",
+        "  font-size: 0.95rem;",
+        "  font-family: inherit;",
+        "  outline: none;",
+        "}",
+        "",
+        ".chat-form input:focus { border-color: #2563eb; }",
+        "",
+        ".chat-form button {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 10px 20px;",
+        "  border-radius: 9999px;",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".chat-form button:hover { background: #1d4ed8; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .chat-card { height: 90vh; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the messages container (#messages), the form (#chatForm)",
+        "//   and the message input (#messageInput)",
+        "//   style.css is complete — the chat layout and bubble styles are done for you",
+        "",
+        "// Step 2: Set up message state",
+        "//   Create a messages array — each message is an object with",
+        "//   text and from properties ('me' or 'them')",
+        "",
+        "// Step 3: Send a message",
+        "//   Listen for submit on the form, preventDefault(), read the input,",
+        "//   push a new message, and clear the input",
+        "",
+        "// Step 4: Render messages",
+        "//   Write a render function that clears #messages, loops over the array,",
+        "//   builds a bubble per message (class depends on from), and appends it",
+        "",
+        "// Step 5: Simulate a reply",
+        "//   After sending, use setTimeout() to push a reply from 'them'",
+        "//   and re-render so the bubble appears",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Send messages, wait for the reply, and confirm the bubbles look right"
+      ].join("\n")
+    }
+  },
+
+  "ecommerce": {
+    slug: "ecommerce",
+    folder: "ecommerce",
+    title: "E-commerce Store",
+    difficulty: "Intermediate",
+    time: "50 min",
+    category: "Full-Stack",
+    tags: ["Data", "DOM", "State"],
+    intro: "Build a storefront that renders products from data, lets shoppers filter and search, and keeps a live cart with a running total. You'll practice data-driven rendering, filtering, and keeping the cart state in sync with the DOM.",
+    previewNote: "You'll build a working store: products render from an array, category buttons and a search box filter them, and every Add to Cart click updates the cart count and total instantly.",
+    cover: "../../assets/project-covers/ecommerce.png",
+    previewUrl: "../../../JS%20PROJECTS/ecommerce/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Keep products in one array — rendering, filtering and the cart all read from the same data.",
+      "Give every product an id so the cart can track it reliably.",
+      "Re-render the product grid whenever the filter or search changes.",
+      "Keep the cart as an array of { product, quantity } and recompute the total from it.",
+      "Format prices with toFixed(2) so totals always show two decimals."
+    ],
+    concepts: [
+      "Storing product data as arrays of objects",
+      "Rendering product cards dynamically",
+      "Filtering and searching data",
+      "Managing cart state",
+      "Updating the DOM with computed totals"
+    ],
+    challenge: "Extra challenge: add a quantity stepper on cart items, or disable the Add button when a product is out of stock.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the product grid (#productGrid), the filter buttons (#filterNav), the search input (#searchInput) and the cart summary (#cartCount, #cartTotal).",
+          "Open style.css — the store layout and product card styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see an empty product grid."
+        ],
+        logicCode: [
+          "// 1. index.html — find #productGrid, #filterNav, #searchInput, #cartCount, #cartTotal",
+          "// 2. style.css — store layout and product cards are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — the product grid is empty"
+        ],
+        think: "Which element IDs will your JavaScript need to select to render products and update the cart?",
+        hints: [
+          "Products render inside #productGrid.",
+          "Filter buttons live in #filterNav — they carry a data-category.",
+          "The cart summary uses #cartCount and #cartTotal."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const productGrid = document.getElementById('productGrid')." }
+          ]
+        }
+      },
+      {
+        title: "Product Data",
+        tagline: "Store your products as data.",
+        goal: "Create an array of product objects — each with a name, price and category — so the storefront can be generated from data.",
+        logic: [
+          "Create an array named products.",
+          "Add 4-6 product objects inside it.",
+          "Give each product a name and a price.",
+          "Give each product a category and a small image (emoji works)."
+        ],
+        logicCode: [
+          "// 1. Create the products array",
+          "const products = [",
+          "  {",
+          "    // 2. Product name and price",
+          "    name: 'Wireless Headphones',",
+          "    price: 59.99,",
+          "    // 3. Product category",
+          "    category: 'Electronics',",
+          "    // 4. A simple visual (emoji keeps it dependency-free)",
+          "    emoji: '🎧'",
+          "  },",
+          "  // ... add a few more products",
+          "];"
+        ],
+        think: "Why is it better to keep products as data instead of hard-coding every card in HTML?",
+        hints: [
+          "Each product is an object with name, price, category and emoji keys.",
+          "Keep them all inside one array named products.",
+          "Add products from at least two categories so filtering has something to show."
+        ],
+        check: {
+          requires: [
+            { pattern: "(const|let|var)\\s+products", hint: "Create an array: const products = [ ... ];" },
+            { pattern: "price\\s*:", hint: "Each product needs a price property, e.g. price: 19.99." },
+            { pattern: "category\\s*:", hint: "Each product needs a category property, e.g. category: 'Electronics'." }
+          ]
+        }
+      },
+      {
+        title: "Render Products",
+        tagline: "Generate the product grid from data.",
+        goal: "Loop over the products array and build a card for each one inside the product grid.",
+        logic: [
+          "Write a function that renders products.",
+          "Clear the grid before rendering.",
+          "Loop over the products array.",
+          "Build a card with an Add to Cart button for each product."
+        ],
+        logicCode: [
+          "// 1. Write a render function",
+          "function renderProducts(list) {",
+          "  // 2. Clear the grid",
+          "  productGrid.innerHTML = '';",
+          "  // 3. Loop over the products",
+          "  list.forEach((product) => {",
+          "    // 4. Build a card",
+          "    const card = document.createElement('div');",
+          "    card.className = 'product-card';",
+          "    card.innerHTML = product.emoji + ' <h3>' + product.name + '</h3>' +",
+          "      '<p>$' + product.price.toFixed(2) + '</p>' +",
+          "      '<button data-id=\"' + product.id + '\">Add to Cart</button>';",
+          "    productGrid.appendChild(card);",
+          "  });",
+          "}"
+        ],
+        think: "Why clear the grid before rendering again?",
+        hints: [
+          "createElement('div') makes a new card element.",
+          "innerHTML (or a template literal) fills the card with product info.",
+          "appendChild() adds the finished card to #productGrid."
+        ],
+        check: {
+          requires: [
+            { pattern: "(forEach|map|for\\s*\\()", hint: "Loop over the products — forEach is the cleanest way." },
+            { pattern: "(createElement|innerHTML|insertAdjacentHTML)", hint: "Build each card with createElement or innerHTML." },
+            { pattern: "(appendChild|innerHTML\\s*\\+=)", hint: "Add each card to the product grid with appendChild()." }
+          ]
+        }
+      },
+      {
+        title: "Filter & Search",
+        tagline: "Let shoppers find products.",
+        goal: "Make the category buttons and the search box filter which products are shown.",
+        logic: [
+          "Listen for clicks on the filter buttons.",
+          "Read the clicked category from the button.",
+          "Filter the products by that category and re-render.",
+          "Listen for input on the search box and filter by name."
+        ],
+        logicCode: [
+          "// 1. Listen for clicks on the filter buttons",
+          "filterNav.addEventListener('click', (e) => {",
+          "  // 2. Read the clicked category",
+          "  const category = e.target.dataset.category;",
+          "  // 3. Filter and re-render",
+          "  const filtered = category === 'All' ? products : products.filter(p => p.category === category);",
+          "  renderProducts(filtered);",
+          "});",
+          "// 4. Search box — filter by name as the user types",
+          "searchInput.addEventListener('input', () => {",
+          "  const term = searchInput.value.toLowerCase();",
+          "  const found = products.filter(p => p.name.toLowerCase().includes(term));",
+          "  renderProducts(found);",
+          "});"
+        ],
+        think: "What should happen when the search box is empty?",
+        hints: [
+          "e.target.dataset.category reads the clicked button's category.",
+          "Array.filter() keeps only the matching products.",
+          "For search, compare p.name.toLowerCase() against the typed term."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach listeners to the filter buttons and/or the search input." },
+            { pattern: "\\.filter\\s*\\(", hint: "Use array.filter() to narrow down the products." },
+            { pattern: "(dataset|toLowerCase|includes)", hint: "Read the category from the button, or match the name with toLowerCase() and includes()." }
+          ]
+        }
+      },
+      {
+        title: "Cart State",
+        tagline: "Track what's in the cart.",
+        goal: "When Add to Cart is clicked, add the product to a cart array and update the count and total.",
+        logic: [
+          "Create a cart array to hold the chosen products.",
+          "Listen for clicks on the product grid.",
+          "Find which product's Add button was clicked.",
+          "Push it into the cart and update the count and total."
+        ],
+        logicCode: [
+          "// 1. Create the cart",
+          "const cart = [];",
+          "// 2. Listen for clicks on the grid",
+          "productGrid.addEventListener('click', (e) => {",
+          "  if (!e.target.matches('button')) return;",
+          "  // 3. Find the product by its data-id",
+          "  const product = products.find(p => p.id == e.target.dataset.id);",
+          "  // 4. Add to cart and update the summary",
+          "  cart.push(product);",
+          "  cartCount.textContent = cart.length;",
+          "  cartTotal.textContent = '$' + cart.reduce((sum, p) => sum + p.price, 0).toFixed(2);",
+          "});"
+        ],
+        think: "Why recompute the total from the cart array instead of keeping a running sum?",
+        hints: [
+          "Listen on the grid and use e.target to find the clicked button.",
+          "Find the product with array.find() using a data-id attribute.",
+          "cart.reduce((sum, p) => sum + p.price, 0) totals the prices in one pass."
+        ],
+        check: {
+          requires: [
+            { pattern: "(const|let|var)\\s+cart", hint: "Create a cart array: const cart = [];" },
+            { pattern: "\\.push\\s*\\(", hint: "Add the chosen product to the cart with cart.push(...)." },
+            { pattern: "(reduce|\\+=|cart\\.length)", hint: "Update the count and total — cart.length for the count, and sum the prices for the total." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the storeflow.",
+        goal: "Test rendering, filtering, search and the cart — then polish anything that feels off.",
+        logic: [
+          "Open the page — do all product cards render?",
+          "Click each category — does the grid update?",
+          "Type in the search box — do matching products appear?",
+          "Add items to the cart — does the count and total update?"
+        ],
+        logicCode: [
+          "// 1. Open the page — do all product cards render?",
+          "// 2. Click each category — does the grid update?",
+          "// 3. Type in the search box — do matching products appear?",
+          "// 4. Add to cart — does the count and total update?"
+        ],
+        think: "What should happen if a search has no matches — how would you tell the shopper?",
+        hints: [
+          "Test every filter category plus the search box.",
+          "console.log(cart) after adding to verify the cart state.",
+          "If the total looks wrong, check that prices are numbers, not strings."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive the store (filter, search or cart)." },
+            { pattern: "(textContent|innerHTML)", hint: "Render product or cart data into the page with textContent or innerHTML." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>E-commerce Store</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <header class="store-header">',
+        "            <h1>ShopHub</h1>",
+        '            <div class="cart-summary">🛒 <span id="cartCount">0</span> items · <span id="cartTotal">$0.00</span></div>',
+        "        </header>",
+        '        <nav class="filter-nav" id="filterNav">',
+        '            <button class="filter-btn active" data-category="All">All</button>',
+        '            <button class="filter-btn" data-category="Electronics">Electronics</button>',
+        '            <button class="filter-btn" data-category="Clothing">Clothing</button>',
+        '            <button class="filter-btn" data-category="Home">Home</button>',
+        "        </nav>",
+        '        <input type="text" id="searchInput" class="search-input" placeholder="Search products..." autocomplete="off">',
+        '        <section class="product-grid" id="productGrid">',
+        "            <!-- Product cards go here (rendered by JavaScript) -->",
+        "        </section>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container {",
+        "  width: min(960px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 32px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "}",
+        "",
+        ".store-header {",
+        "  display: flex;",
+        "  justify-content: space-between;",
+        "  align-items: center;",
+        "  margin-bottom: 20px;",
+        "}",
+        "",
+        ".store-header h1 { font-size: 1.8rem; }",
+        ".cart-summary {",
+        "  background: #eff6ff;",
+        "  color: #1d4ed8;",
+        "  padding: 8px 16px;",
+        "  border-radius: 9999px;",
+        "  font-size: 0.9rem;",
+        "  font-weight: 600;",
+        "}",
+        "",
+        ".filter-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }",
+        "",
+        ".filter-btn {",
+        "  border: 1px solid #e5e7eb;",
+        "  background: #ffffff;",
+        "  color: #374151;",
+        "  padding: 7px 14px;",
+        "  border-radius: 9999px;",
+        "  font-size: 0.85rem;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".filter-btn:hover { border-color: #2563eb; color: #2563eb; }",
+        ".filter-btn.active { background: #2563eb; border-color: #2563eb; color: #fff; }",
+        "",
+        ".search-input {",
+        "  width: 100%;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 12px;",
+        "  padding: 10px 14px;",
+        "  font-size: 0.95rem;",
+        "  margin-bottom: 24px;",
+        "  font-family: inherit;",
+        "  outline: none;",
+        "}",
+        "",
+        ".search-input:focus { border-color: #2563eb; }",
+        "",
+        ".product-grid {",
+        "  display: grid;",
+        "  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));",
+        "  gap: 16px;",
+        "}",
+        "",
+        ".product-card {",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 16px;",
+        "  padding: 20px;",
+        "  text-align: center;",
+        "  transition: all 0.15s ease;",
+        "}",
+        "",
+        ".product-card:hover {",
+        "  border-color: #2563eb;",
+        "  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.1);",
+        "}",
+        "",
+        ".product-card .emoji { font-size: 2.5rem; display: block; margin-bottom: 8px; }",
+        ".product-card h3 { font-size: 1rem; margin-bottom: 4px; }",
+        ".product-card .price { color: #2563eb; font-weight: 700; margin-bottom: 12px; }",
+        "",
+        ".product-card button {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 8px 14px;",
+        "  border-radius: 10px;",
+        "  font-size: 0.85rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "  width: 100%;",
+        "}",
+        "",
+        ".product-card button:hover { background: #1d4ed8; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .container { padding: 20px 16px; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the product grid (#productGrid), filter buttons (#filterNav),",
+        "//   a search box (#searchInput) and the cart summary (#cartCount, #cartTotal)",
+        "//   style.css is complete — the store layout and product cards are done for you",
+        "",
+        "// Step 2: Define product data",
+        "//   Create a products array — each product is an object with",
+        "//   id, name, price, category and emoji properties",
+        "",
+        "// Step 3: Render products",
+        "//   Write a render function that clears #productGrid, loops over an array,",
+        "//   builds a card per product (with an Add to Cart button), and appends it",
+        "",
+        "// Step 4: Filter & search",
+        "//   Category buttons filter by category; the search box filters by name —",
+        "//   both re-render the grid with the matching products",
+        "",
+        "// Step 5: Cart state",
+        "//   On Add to Cart, push the product into a cart array and update",
+        "//   #cartCount and #cartTotal (sum the prices with reduce)",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test rendering, filtering, search and the cart — then polish the flow"
+      ].join("\n")
+    }
+  },
+
+  "expense-tracker": {
+    slug: "expense-tracker",
+    folder: "Expense-Tracker",
+    title: "Expense Tracker",
+    difficulty: "Intermediate",
+    time: "45 min",
+    category: "Core JS",
+    tags: ["Forms", "Math", "DOM"],
+    intro: "Build an expense tracker that records transactions from a form, validates the input, and calculates running totals. You'll practice form handling, data validation, calculations and keeping the DOM in sync with your data.",
+    previewNote: "You'll build a working expense tracker: add a description and amount, see it appear in the transaction list, and watch the income, expense and balance totals update automatically.",
+    cover: "../../assets/project-covers/expense-tracker.png",
+    previewUrl: "../../../JS%20PROJECTS/Expense-Tracker/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Store every transaction as an object with description, amount and type.",
+      "Validate before you save — reject empty descriptions and amounts that aren't positive numbers.",
+      "Recompute the totals from the transactions array so they can never drift out of sync.",
+      "Convert input values with parseFloat() — form inputs always return strings.",
+      "Use toFixed(2) when displaying money so totals look clean."
+    ],
+    concepts: [
+      "Form handling and submit events",
+      "Input validation",
+      "Storing data as an array of objects",
+      "Calculating totals with reduce()",
+      "Rendering lists and updating the DOM"
+    ],
+    challenge: "Extra challenge: add a delete button on each transaction, or a category dropdown that groups expenses in the list.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the form (#expenseForm), its inputs (#descInput, #amountInput), the list (#transactionList) and the totals (#totalIncome, #totalExpense, #balance).",
+          "Open style.css — the layout and card styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see an empty tracker."
+        ],
+        logicCode: [
+          "// 1. index.html — find #expenseForm, #descInput, #amountInput, #transactionList",
+          "// 2. style.css — layout and card styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — the tracker is empty"
+        ],
+        think: "Which element IDs will your JavaScript need to select to add and display transactions?",
+        hints: [
+          "The form is #expenseForm — its submit event adds a transaction.",
+          "Amounts come from #amountInput and descriptions from #descInput.",
+          "Transactions render inside #transactionList."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const form = document.getElementById('expenseForm')." }
+          ]
+        }
+      },
+      {
+        title: "Transaction Data",
+        tagline: "Set up the transactions array.",
+        goal: "Create an array that will hold every transaction as an object with a description, amount and type.",
+        logic: [
+          "Create an array named transactions.",
+          "Give each transaction a description property.",
+          "Give each transaction an amount property.",
+          "Give each transaction a type property ('income' or 'expense')."
+        ],
+        logicCode: [
+          "// 1. Create the transactions array",
+          "const transactions = [",
+          "  {",
+          "    // 2. What the transaction was",
+          "    description: 'Freelance work',",
+          "    // 3. How much money moved",
+          "    amount: 150,",
+          "    // 4. Income or expense",
+          "    type: 'income'",
+          "  }",
+          "];"
+        ],
+        think: "Why track the type of each transaction instead of only storing amounts?",
+        hints: [
+          "Each transaction is an object with description, amount and type keys.",
+          "The type decides whether money comes in (income) or goes out (expense).",
+          "Keep them all inside one array named transactions."
+        ],
+        check: {
+          requires: [
+            { pattern: "(const|let|var)\\s+transactions", hint: "Create an array: const transactions = [ ... ];" },
+            { pattern: "description\\s*:", hint: "Each transaction needs a description property." },
+            { pattern: "type\\s*:", hint: "Each transaction needs a type — 'income' or 'expense'." }
+          ]
+        }
+      },
+      {
+        title: "Handle the Form",
+        tagline: "Read and validate the inputs.",
+        goal: "On submit, read the description and amount, validate them, and only accept valid transactions.",
+        logic: [
+          "Listen for the submit event on the form.",
+          "Prevent the page from reloading.",
+          "Read and trim the description and amount values.",
+          "Show an error if either field is missing or invalid."
+        ],
+        logicCode: [
+          "// 1. Listen for form submit",
+          "expenseForm.addEventListener('submit', (e) => {",
+          "  // 2. Stop the page reload",
+          "  e.preventDefault();",
+          "  // 3. Read the inputs",
+          "  const description = descInput.value.trim();",
+          "  const amount = parseFloat(amountInput.value);",
+          "  // 4. Validate before saving",
+          "  if (!description || isNaN(amount) || amount <= 0) {",
+          "    errorMsg.hidden = false;",
+          "    return;",
+          "  }",
+          "  errorMsg.hidden = true;",
+          "});"
+        ],
+        think: "Why do you need parseFloat() on the amount input?",
+        hints: [
+          "Attach the listener to the form and call e.preventDefault().",
+          "descInput.value.trim() removes accidental spaces from the description.",
+          "parseFloat(amountInput.value) converts the string input to a number for math."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener\\s*\\(\\s*[\"']submit", hint: "Listen for the submit event on the form." },
+            { pattern: "preventDefault", hint: "Call e.preventDefault() so the page doesn't reload." },
+            { pattern: "(parseFloat|Number\\s*\\()", hint: "Convert the amount input to a number with parseFloat() or Number()." }
+          ]
+        }
+      },
+      {
+        title: "Add a Transaction",
+        tagline: "Save and render the transaction.",
+        goal: "When the form is valid, add the transaction to the array, render it in the list, and reset the form.",
+        logic: [
+          "Push the new transaction into the array.",
+          "Write a render function for the list.",
+          "Clear the list and loop over the transactions.",
+          "Clear the inputs after adding."
+        ],
+        logicCode: [
+          "// 1. Add the transaction to the array",
+          "transactions.push({ description, amount, type });",
+          "// 2. Render the list",
+          "function renderTransactions() {",
+          "  // 3. Clear and loop over the transactions",
+          "  transactionList.innerHTML = '';",
+          "  transactions.forEach((t) => {",
+          "    const li = document.createElement('li');",
+          "    li.textContent = t.description + ' — $' + t.amount.toFixed(2) + ' (' + t.type + ')';",
+          "    transactionList.appendChild(li);",
+          "  });",
+          "}",
+          "// 4. Reset the form",
+          "descInput.value = '';",
+          "amountInput.value = '';"
+        ],
+        think: "Why clear the list before re-rendering instead of appending each time?",
+        hints: [
+          "transactions.push({ description, amount, type }) adds the new entry.",
+          "Loop over the array with forEach and build an li for each one.",
+          "Reset the inputs (set .value to '') so the form is ready for the next entry."
+        ],
+        check: {
+          requires: [
+            { pattern: "\\.push\\s*\\(", hint: "Add the new transaction to the array with transactions.push(...)." },
+            { pattern: "(forEach|map|for\\s*\\()", hint: "Loop over the transactions to render each one." },
+            { pattern: "(createElement|innerHTML|insertAdjacentHTML)", hint: "Build each list item with createElement or innerHTML." }
+          ]
+        }
+      },
+      {
+        title: "Calculate Totals",
+        tagline: "Add up income, expenses and balance.",
+        goal: "Compute the total income, total expense and balance from the transactions array and display them.",
+        logic: [
+          "Sum the amounts of income transactions.",
+          "Sum the amounts of expense transactions.",
+          "Compute the balance as income minus expenses.",
+          "Write the three totals into their elements."
+        ],
+        logicCode: [
+          "// 1. Sum the income",
+          "const income = transactions",
+          "  .filter(t => t.type === 'income')",
+          "  .reduce((sum, t) => sum + t.amount, 0);",
+          "// 2. Sum the expenses",
+          "const expense = transactions",
+          "  .filter(t => t.type === 'expense')",
+          "  .reduce((sum, t) => sum + t.amount, 0);",
+          "// 3. Balance = income - expense",
+          "const balance = income - expense;",
+          "// 4. Display the totals",
+          "totalIncome.textContent = '$' + income.toFixed(2);",
+          "totalExpense.textContent = '$' + expense.toFixed(2);",
+          "balanceEl.textContent = '$' + balance.toFixed(2);"
+        ],
+        think: "Why use reduce() instead of manually adding each transaction?",
+        hints: [
+          "filter() first keeps only income (or only expense) transactions.",
+          "reduce((sum, t) => sum + t.amount, 0) adds them all up.",
+          "balance = income - expense — call this update after every render."
+        ],
+        check: {
+          requires: [
+            { pattern: "\\.reduce\\s*\\(", hint: "Use reduce() to total the amounts." },
+            { pattern: "(income|expense)", hint: "Separate income from expenses when summing." },
+            { pattern: "toFixed\\s*\\(", hint: "Format the totals with toFixed(2) for clean money display." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the tracker.",
+        goal: "Test adding transactions, validation and totals — then polish anything that feels off.",
+        logic: [
+          "Open the page — do the seeded totals show?",
+          "Add an income — does the list and totals update?",
+          "Add an expense — does the balance go down?",
+          "Try an empty or invalid entry — does the error show?"
+        ],
+        logicCode: [
+          "// 1. Open the page — do the seeded totals show?",
+          "// 2. Add an income — does the list and totals update?",
+          "// 3. Add an expense — does the balance go down?",
+          "// 4. Try an invalid entry — does the error show?"
+        ],
+        think: "What should happen when you add an expense larger than your income?",
+        hints: [
+          "Make sure updateTotals() runs after every add.",
+          "Test negative and zero amounts — validation should block them.",
+          "console.log(transactions) is a quick way to verify the data."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive the tracker (form submit)." },
+            { pattern: "(textContent|innerHTML)", hint: "Render transactions or totals into the page with textContent or innerHTML." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Expense Tracker</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <header class="tracker-header">',
+        "            <h1>Expense Tracker</h1>",
+        '            <p class="subtitle">Know where your money goes</p>',
+        "        </header>",
+        '        <section class="totals">',
+        '            <div class="total-card"><span>Income</span><b id="totalIncome">$0.00</b></div>',
+        '            <div class="total-card"><span>Expenses</span><b id="totalExpense">$0.00</b></div>',
+        '            <div class="total-card"><span>Balance</span><b id="balance">$0.00</b></div>',
+        "        </section>",
+        '        <form class="expense-form" id="expenseForm">',
+        '            <input type="text" id="descInput" placeholder="Description (e.g. Groceries)" autocomplete="off">',
+        '            <input type="number" id="amountInput" placeholder="Amount" min="0" step="0.01">',
+        '            <select id="typeSelect">',
+        '                <option value="expense">Expense</option>',
+        '                <option value="income">Income</option>',
+        "            </select>",
+        '            <button type="submit">Add</button>',
+        "        </form>",
+        '        <p class="error-msg" id="errorMsg" hidden>Please enter a description and a valid positive amount.</p>',
+        '        <ul class="transaction-list" id="transactionList">',
+        "            <!-- Transactions go here (rendered by JavaScript) -->",
+        "        </ul>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container {",
+        "  width: min(720px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 32px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "}",
+        "",
+        ".tracker-header { margin-bottom: 20px; }",
+        ".tracker-header h1 { font-size: 1.8rem; }",
+        ".subtitle { color: #6b7280; margin-top: 4px; }",
+        "",
+        ".totals {",
+        "  display: grid;",
+        "  grid-template-columns: repeat(3, 1fr);",
+        "  gap: 12px;",
+        "  margin-bottom: 20px;",
+        "}",
+        "",
+        ".total-card {",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 14px;",
+        "  padding: 14px;",
+        "  text-align: center;",
+        "}",
+        "",
+        ".total-card span { display: block; color: #6b7280; font-size: 0.8rem; margin-bottom: 4px; }",
+        ".total-card b { font-size: 1.15rem; }",
+        "#totalIncome b, #totalIncome { color: #16a34a; }",
+        "#totalExpense { color: #dc2626; }",
+        "",
+        ".expense-form {",
+        "  display: flex;",
+        "  gap: 10px;",
+        "  margin-bottom: 12px;",
+        "}",
+        "",
+        ".expense-form input,",
+        ".expense-form select {",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 10px;",
+        "  padding: 10px 12px;",
+        "  font-size: 0.95rem;",
+        "  font-family: inherit;",
+        "  outline: none;",
+        "}",
+        "",
+        ".expense-form input:focus, .expense-form select:focus { border-color: #2563eb; }",
+        ".expense-form input:first-child { flex: 1; }",
+        "",
+        ".expense-form button {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 10px 18px;",
+        "  border-radius: 10px;",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".error-msg { color: #dc2626; font-size: 0.85rem; margin-bottom: 12px; }",
+        "",
+        ".transaction-list { list-style: none; }",
+        "",
+        ".transaction-list li {",
+        "  display: flex;",
+        "  justify-content: space-between;",
+        "  padding: 12px 0;",
+        "  border-bottom: 1px solid #f3f4f6;",
+        "  font-size: 0.95rem;",
+        "}",
+        "",
+        ".transaction-list li .amount.income { color: #16a34a; font-weight: 600; }",
+        ".transaction-list li .amount.expense { color: #dc2626; font-weight: 600; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .expense-form { flex-direction: column; }",
+        "  .totals { grid-template-columns: 1fr; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the form (#expenseForm), its inputs (#descInput, #amountInput,",
+        "//   #typeSelect), the list (#transactionList) and the totals (#totalIncome,",
+        "//   #totalExpense, #balance)",
+        "//   style.css is complete — the layout and cards are done for you",
+        "",
+        "// Step 2: Set up transaction data",
+        "//   Create a transactions array — each transaction is an object with",
+        "//   description, amount and type ('income' or 'expense') properties",
+        "",
+        "// Step 3: Handle the form",
+        "//   Listen for submit, preventDefault(), read and trim the description,",
+        "//   parse the amount, and validate before accepting the entry",
+        "",
+        "// Step 4: Add a transaction",
+        "//   Push the valid transaction into the array, render it in the list,",
+        "//   and reset the inputs",
+        "",
+        "// Step 5: Calculate totals",
+        "//   Sum income and expenses with filter() + reduce(), compute the balance,",
+        "//   and write the three totals into their elements with toFixed(2)",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test adding income and expenses, invalid entries, and the totals"
+      ].join("\n")
+    }
+  },
+
+  "git-hub-profile-finder": {
+    slug: "git-hub-profile-finder",
+    folder: "Git-Hub-Profile-Finder",
+    title: "GitHub Profile Finder",
+    difficulty: "Intermediate",
+    time: "45 min",
+    category: "APIs & Data",
+    tags: ["API", "Fetch", "JSON"],
+    intro: "Build a GitHub profile finder that fetches real user data from the GitHub API and renders a profile card with stats and recent repositories. You'll practice fetch(), async/await, JSON handling and error handling.",
+    previewNote: "You'll build a working profile finder: type a GitHub username, hit search, and see their avatar, bio, stats and latest repositories pulled live from the GitHub API.",
+    cover: "../../assets/project-covers/git-hub-profile-finder.png",
+    previewUrl: "../../../JS%20PROJECTS/Git-Hub-Profile-Finder/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "The GitHub API is open — no key needed for public user data: https://api.github.com/users/{username}",
+      "Use async/await with fetch() to keep the code readable.",
+      "Check response.ok — GitHub returns 404 when a user doesn't exist.",
+      "response.json() converts the JSON response into a JavaScript object.",
+      "Wrap the request in try/catch so network errors don't break the page."
+    ],
+    concepts: [
+      "Making API requests with fetch()",
+      "Writing async functions with await",
+      "Handling JSON responses",
+      "Rendering API data into the DOM",
+      "Error handling with try/catch and status checks"
+    ],
+    challenge: "Extra challenge: show a loading spinner while the request is in flight, or cache recent searches in localStorage.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the search form (#searchForm), the input (#searchInput), the profile card (#profileCard) and the repos container (#repoList).",
+          "Open style.css — the layout and card styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see the search form."
+        ],
+        logicCode: [
+          "// 1. index.html — find #searchForm, #searchInput, #profileCard, #repoList",
+          "// 2. style.css — layout and card styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — you'll see the search form"
+        ],
+        think: "Which element IDs will your JavaScript need to select to render a user profile?",
+        hints: [
+          "The form is #searchForm — submitting it triggers the fetch.",
+          "The username comes from #searchInput.",
+          "Profile info renders inside #profileCard and repos inside #repoList."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const searchForm = document.getElementById('searchForm')." }
+          ]
+        }
+      },
+      {
+        title: "Search Handler",
+        tagline: "Trigger a search on submit.",
+        goal: "When the form is submitted, read the username and kick off the fetch — without reloading the page.",
+        logic: [
+          "Listen for the submit event on the form.",
+          "Prevent the page from reloading.",
+          "Read and trim the username from the input.",
+          "Call a search function with that username."
+        ],
+        logicCode: [
+          "// 1. Listen for form submit",
+          "searchForm.addEventListener('submit', (e) => {",
+          "  // 2. Stop the page reload",
+          "  e.preventDefault();",
+          "  // 3. Read the username",
+          "  const username = searchInput.value.trim();",
+          "  if (!username) return;",
+          "  // 4. Kick off the fetch",
+          "  getUser(username);",
+          "});"
+        ],
+        think: "Why guard against an empty username before fetching?",
+        hints: [
+          "Attach the listener to the form and call e.preventDefault().",
+          "searchInput.value.trim() cleans up the typed username.",
+          "Skip the request if the username is empty."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener\\s*\\(\\s*[\"']submit", hint: "Listen for the submit event on the form." },
+            { pattern: "preventDefault", hint: "Call e.preventDefault() so the page doesn't reload." },
+            { pattern: "\\.value", hint: "Read the username from the input, e.g. searchInput.value.trim()." }
+          ]
+        }
+      },
+      {
+        title: "Fetch the User",
+        tagline: "Request data from the GitHub API.",
+        goal: "Write an async function that fetches the user's profile and their latest repositories from the GitHub API.",
+        logic: [
+          "Write an async function named getUser.",
+          "Build the API URL with the username.",
+          "Await fetch() and check response.ok.",
+          "Await response.json() to get the data."
+        ],
+        logicCode: [
+          "// 1. Async function to fetch a user",
+          "async function getUser(username) {",
+          "  // 2. Build the API URL",
+          "  const url = 'https://api.github.com/users/' + encodeURIComponent(username);",
+          "  // 3. Fetch and check the response",
+          "  const response = await fetch(url);",
+          "  if (!response.ok) throw new Error('User not found');",
+          "  // 4. Parse the JSON",
+          "  const data = await response.json();",
+          "  renderProfile(data);",
+          "}"
+        ],
+        think: "What does response.ok tell you before you try to read the JSON?",
+        hints: [
+          "The URL is 'https://api.github.com/users/' + the username.",
+          "await fetch(url) returns the response — check response.ok first.",
+          "await response.json() turns the body into a JavaScript object."
+        ],
+        check: {
+          requires: [
+            { pattern: "async", hint: "Make the function async so you can use await." },
+            { pattern: "fetch\\s*\\(", hint: "Call fetch() with the GitHub API URL." },
+            { pattern: "\\.json\\s*\\(", hint: "Parse the response with response.json()." }
+          ]
+        }
+      },
+      {
+        title: "Handle Errors",
+        tagline: "Fail gracefully when things go wrong.",
+        goal: "Wrap the fetch in try/catch and show a friendly message when the user isn't found or the network fails.",
+        logic: [
+          "Wrap the request in a try block.",
+          "Check the status — a 404 means the user doesn't exist.",
+          "Catch the error and show a message.",
+          "Hide the profile card when an error occurs."
+        ],
+        logicCode: [
+          "// 1. Try the request",
+          "try {",
+          "  const response = await fetch(url);",
+          "  // 2. 404 means no such user",
+          "  if (response.status === 404) {",
+          "    throw new Error('No user found with that username');",
+          "  }",
+          "  const data = await response.json();",
+          "  renderProfile(data);",
+          "} catch (err) {",
+          "  // 3. Show the error message",
+          "  errorMsg.textContent = err.message;",
+          "  errorMsg.hidden = false;",
+          "  // 4. Hide the profile card",
+          "  profileCard.hidden = true;",
+          "}"
+        ],
+        think: "Why is it important to handle errors in API code?",
+        hints: [
+          "Use try { ... } catch (err) { ... } around the fetch.",
+          "A 404 status (or !response.ok) means the user wasn't found.",
+          "Show err.message in an error element instead of letting it crash."
+        ],
+        check: {
+          requires: [
+            { pattern: "(try\\s*\\{|catch)", hint: "Wrap the request in try/catch so errors are handled." },
+            { pattern: "(response\\.ok|response\\.status|===?\\s*404)", hint: "Check the response status — 404 means the user doesn't exist." },
+            { pattern: "(errorMsg|errorMessage)", hint: "Show the error in an error element, e.g. errorMsg.textContent = err.message." }
+          ]
+        }
+      },
+      {
+        title: "Render the Profile",
+        tagline: "Display the user's data.",
+        goal: "Fill the profile card with the user's avatar, name, bio and stats, and render their repositories.",
+        logic: [
+          "Set the avatar image source.",
+          "Write the name, login and bio into their elements.",
+          "Fill the stats (repos, followers, following).",
+          "Loop over the repositories and render them as list items."
+        ],
+        logicCode: [
+          "// 1. Avatar and identity",
+          "avatar.src = data.avatar_url;",
+          "nameEl.textContent = data.name || data.login;",
+          "bioEl.textContent = data.bio || 'No bio available.';",
+          "// 2. Stats",
+          "reposCount.textContent = data.public_repos;",
+          "followersCount.textContent = data.followers;",
+          "followingCount.textContent = data.following;",
+          "// 3. Show the card",
+          "profileCard.hidden = false;",
+          "errorMsg.hidden = true;"
+        ],
+        think: "Why use data.name || data.login for the display name?",
+        hints: [
+          "The avatar URL comes from data.avatar_url.",
+          "Set .textContent for names, bio and stats.",
+          "data.name can be null — fall back to data.login."
+        ],
+        check: {
+          requires: [
+            { pattern: "\\.src\\s*=", hint: "Set the avatar image source, e.g. avatar.src = data.avatar_url." },
+            { pattern: "textContent\\s*=", hint: "Write profile data into elements with textContent." },
+            { pattern: "(forEach|map|for\\s*\\()", hint: "Loop over the repositories to render each one." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the finder.",
+        goal: "Test the full flow — searching, rendering and errors — and polish anything that feels off.",
+        logic: [
+          "Search a real username like 'octocat' — does the profile render?",
+          "Search a nonsense username — does the error message appear?",
+          "Check that the repo list shows several repositories.",
+          "Try an empty search — nothing should happen."
+        ],
+        logicCode: [
+          "// 1. Search 'octocat' — does the profile render?",
+          "// 2. Search a nonsense name — does the error appear?",
+          "// 3. Does the repo list show several repositories?",
+          "// 4. Try an empty search — nothing should happen"
+        ],
+        think: "What happens to old profile data when a new search fails?",
+        hints: [
+          "GitHub's API is rate-limited — a few searches per minute is fine.",
+          "If data doesn't appear, console.log(data) after response.json().",
+          "Hide the card on error so stale profiles don't linger."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive the search (form submit)." },
+            { pattern: "fetch\\s*\\(", hint: "The page should make an API request with fetch()." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>GitHub Profile Finder</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <header class="finder-header">',
+        "            <h1>GitHub Profile Finder</h1>",
+        '            <p class="subtitle">Search any GitHub username</p>',
+        "        </header>",
+        '        <form class="search-form" id="searchForm">',
+        '            <input type="text" id="searchInput" placeholder="e.g. octocat" autocomplete="off">',
+        '            <button type="submit" id="searchBtn">Search</button>',
+        "        </form>",
+        '        <p class="error-msg" id="errorMsg" hidden></p>',
+        '        <section class="profile-card" id="profileCard" hidden>',
+        '            <img id="avatar" alt="User avatar">',
+        '            <div class="identity">',
+        '                <h2 id="nameEl">—</h2>',
+        '                <a id="loginEl" href="#" target="_blank" rel="noopener">@—</a>',
+        "            </div>",
+        '            <p class="bio" id="bioEl"></p>',
+        '            <div class="stats">',
+        '                <div class="stat"><b id="reposCount">0</b><span>Repos</span></div>',
+        '                <div class="stat"><b id="followersCount">0</b><span>Followers</span></div>',
+        '                <div class="stat"><b id="followingCount">0</b><span>Following</span></div>',
+        "            </div>",
+        '            <h3>Latest Repositories</h3>',
+        '            <ul class="repo-list" id="repoList"></ul>',
+        "        </section>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container {",
+        "  width: min(680px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 32px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "}",
+        "",
+        ".finder-header { margin-bottom: 20px; }",
+        ".finder-header h1 { font-size: 1.8rem; }",
+        ".subtitle { color: #6b7280; margin-top: 4px; }",
+        "",
+        ".search-form { display: flex; gap: 10px; margin-bottom: 16px; }",
+        "",
+        ".search-form input {",
+        "  flex: 1;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 10px;",
+        "  padding: 10px 14px;",
+        "  font-size: 0.95rem;",
+        "  font-family: inherit;",
+        "  outline: none;",
+        "}",
+        "",
+        ".search-form input:focus { border-color: #2563eb; }",
+        "",
+        ".search-form button {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 10px 20px;",
+        "  border-radius: 10px;",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".error-msg { color: #dc2626; font-size: 0.9rem; margin-bottom: 12px; }",
+        "",
+        ".profile-card { text-align: center; }",
+        "",
+        ".profile-card img {",
+        "  width: 110px;",
+        "  height: 110px;",
+        "  border-radius: 50%;",
+        "  border: 3px solid #e5e7eb;",
+        "  margin-bottom: 12px;",
+        "}",
+        "",
+        ".identity h2 { font-size: 1.4rem; }",
+        ".identity a { color: #2563eb; text-decoration: none; font-size: 0.95rem; }",
+        ".bio { color: #6b7280; margin: 10px 0 18px; }",
+        "",
+        ".stats {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  gap: 24px;",
+        "  margin-bottom: 20px;",
+        "}",
+        "",
+        ".stat { display: flex; flex-direction: column; }",
+        ".stat b { font-size: 1.2rem; }",
+        ".stat span { color: #6b7280; font-size: 0.8rem; }",
+        "",
+        ".profile-card h3 { text-align: left; margin-bottom: 10px; }",
+        "",
+        ".repo-list { list-style: none; text-align: left; }",
+        "",
+        ".repo-list li {",
+        "  padding: 12px 14px;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 10px;",
+        "  margin-bottom: 8px;",
+        "  font-size: 0.9rem;",
+        "}",
+        "",
+        ".repo-list li a { color: #2563eb; text-decoration: none; font-weight: 600; }",
+        ".repo-list li p { color: #6b7280; font-size: 0.85rem; margin-top: 4px; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .stats { gap: 14px; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the search form (#searchForm), the input (#searchInput),",
+        "//   an error element (#errorMsg), the profile card (#profileCard) with its",
+        "//   avatar/stats elements, and the repo list (#repoList)",
+        "//   style.css is complete — the layout and card styles are done for you",
+        "",
+        "// Step 2: Search handler",
+        "//   Listen for submit on the form, preventDefault(), read and trim the",
+        "//   username, and call a search function",
+        "",
+        "// Step 3: Fetch the user",
+        "//   Write an async function that fetches",
+        "//   https://api.github.com/users/{username}, checks response.ok,",
+        "//   and parses the JSON with response.json()",
+        "",
+        "// Step 4: Handle errors",
+        "//   Wrap the request in try/catch, check the status for 404,",
+        "//   and show a friendly message in #errorMsg on failure",
+        "",
+        "// Step 5: Render the profile",
+        "//   Fill the avatar, name, login, bio and stats from the data,",
+        "//   then loop over the repositories and render them in #repoList",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test with a real username, a nonsense username, and an empty search"
+      ].join("\n")
+    }
+  },
+
+  "image-slider": {
+    slug: "image-slider",
+    folder: "Image SLider",
+    title: "Image Slider",
+    difficulty: "Beginner",
+    time: "35 min",
+    category: "Core JS",
+    tags: ["Arrays", "DOM", "Events"],
+    intro: "Build an image slider that cycles through a set of images with next/previous controls and navigation dots. You'll practice arrays, index-based state, event handling and updating the DOM as the slide changes.",
+    previewNote: "You'll build a working image slider: a picture with a caption, Next and Previous buttons, a slide counter, and clickable dots that jump straight to any slide.",
+    cover: "../../assets/project-covers/image-slider.png",
+    previewUrl: "../../../JS%20PROJECTS/Image%20SLider/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Store every slide as an object with src, title and description.",
+      "Keep a single currentIndex variable — everything else derives from it.",
+      "Wrap the index with the modulo operator (%) so Next after the last slide returns to the first.",
+      "Write one update() function and call it from every control — never duplicate the render logic.",
+      "Reuse the same images array when building the dots so dots and slides always match."
+    ],
+    concepts: [
+      "Storing slide data in arrays",
+      "Managing state with an index variable",
+      "Event handling for buttons and dots",
+      "Updating the DOM when state changes",
+      "Wrapping around with the modulo operator"
+    ],
+    challenge: "Extra challenge: add autoplay with setInterval(), or fade the image in as it changes.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the image (#image), the counter (#counter), the caption (#title, #description), the buttons (#prevBtn, #nextBtn) and the dots container (#dots).",
+          "Open style.css — the slider layout and button styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see an empty slide area."
+        ],
+        logicCode: [
+          "// 1. index.html — find #image, #counter, #title, #description, #prevBtn, #nextBtn, #dots",
+          "// 2. style.css — slider layout and button styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — the slide area is empty"
+        ],
+        think: "Which element IDs will your JavaScript need to select to show a slide and its caption?",
+        hints: [
+          "The picture is <img id=\"image\"> — its src changes per slide.",
+          "The caption uses #title and #description.",
+          "Navigation lives in #prevBtn, #nextBtn and #dots."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const image = document.getElementById('image')." }
+          ]
+        }
+      },
+      {
+        title: "Slide Data & State",
+        tagline: "Store the slides and the current index.",
+        goal: "Create an array of slide objects and a variable that tracks which slide is showing.",
+        logic: [
+          "Create an array named slides.",
+          "Add 3-5 slide objects with src, title and description.",
+          "Create a variable named currentIndex starting at 0.",
+          "Keep the index in a let variable so it can change."
+        ],
+        logicCode: [
+          "// 1. Create the slides array",
+          "const slides = [",
+          "  {",
+          "    // 2. Each slide needs an image, title and description",
+          "    src: 'https://picsum.photos/seed/mountain/800/450',",
+          "    title: 'Mountain Retreat',",
+          "    description: 'A serene mountain landscape at golden hour.'",
+          "  },",
+          "  // ... add a few more slides",
+          "];",
+          "// 3. Track the current slide",
+          "let currentIndex = 0;"
+        ],
+        think: "Why must currentIndex be declared with let instead of const?",
+        hints: [
+          "Each slide is an object with src, title and description keys.",
+          "Use picsum.photos/seed/... URLs so the images load without extra files.",
+          "let currentIndex = 0 tracks which slide is visible — it changes as you navigate."
+        ],
+        check: {
+          requires: [
+            { pattern: "(const|let|var)\\s+slides", hint: "Create an array: const slides = [ ... ];" },
+            { pattern: "(currentIndex|index)\\s*=\\s*0", hint: "Track the current slide with an index variable starting at 0." },
+            { pattern: "(src|title|description)\\s*:", hint: "Each slide needs a src (and ideally title/description) property." }
+          ]
+        }
+      },
+      {
+        title: "Render the Slide",
+        tagline: "Draw the current slide.",
+        goal: "Write an update function that shows the slide at currentIndex — image, counter, caption and active dot.",
+        logic: [
+          "Write a function named updateSlide.",
+          "Set the image src from the current slide.",
+          "Update the counter and caption.",
+          "Mark the matching dot as active."
+        ],
+        logicCode: [
+          "// 1. Write an update function",
+          "function updateSlide() {",
+          "  const slide = slides[currentIndex];",
+          "  // 2. Set the image",
+          "  image.src = slide.src;",
+          "  // 3. Update counter and caption",
+          "  counter.textContent = (currentIndex + 1) + ' / ' + slides.length;",
+          "  title.textContent = slide.title;",
+          "  description.textContent = slide.description;",
+          "  // 4. Mark the active dot",
+          "  dotsEl.querySelectorAll('.dot').forEach((dot, i) => {",
+          "    dot.classList.toggle('active', i === currentIndex);",
+          "  });",
+          "}"
+        ],
+        think: "Why show currentIndex + 1 in the counter instead of currentIndex?",
+        hints: [
+          "image.src = slide.src swaps the picture.",
+          "The counter shows (currentIndex + 1) because indices start at 0.",
+          "Toggle the .active class on dots to highlight the current one."
+        ],
+        check: {
+          requires: [
+            { pattern: "\\.src\\s*=", hint: "Set the image source, e.g. image.src = slide.src." },
+            { pattern: "textContent\\s*=", hint: "Update the counter or caption with textContent." },
+            { pattern: "(currentIndex|index)", hint: "Read from the current index variable to know which slide to show." }
+          ]
+        }
+      },
+      {
+        title: "Next & Previous",
+        tagline: "Navigate through the slides.",
+        goal: "Make the Next and Previous buttons move the index — wrapping around at both ends.",
+        logic: [
+          "Listen for clicks on the Next button.",
+          "Increase the index by 1.",
+          "Wrap around with the modulo operator.",
+          "Call updateSlide after changing the index."
+        ],
+        logicCode: [
+          "// 1. Next button",
+          "nextBtn.addEventListener('click', () => {",
+          "  // 2. Move forward",
+          "  currentIndex = (currentIndex + 1) % slides.length;",
+          "  // 3. Show the new slide",
+          "  updateSlide();",
+          "});",
+          "// 4. Previous button — wrap backwards too",
+          "prevBtn.addEventListener('click', () => {",
+          "  currentIndex = (currentIndex - 1 + slides.length) % slides.length;",
+          "  updateSlide();",
+          "});"
+        ],
+        think: "How does (currentIndex + 1) % slides.length handle the last slide?",
+        hints: [
+          "Attach click listeners to #prevBtn and #nextBtn.",
+          "(index + 1) % slides.length wraps forward past the last slide.",
+          "(index - 1 + slides.length) % slides.length wraps backward from the first."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach click listeners to the Next and Previous buttons." },
+            { pattern: "(currentIndex|index)\\s*(\\+\\+|\\+=|--|-=)", hint: "Change the index when a button is clicked." },
+            { pattern: "slides\\.length", hint: "Use slides.length to wrap the index around (modulo is the clean way)." }
+          ]
+        }
+      },
+      {
+        title: "Navigation Dots",
+        tagline: "Jump to any slide with a dot.",
+        goal: "Create one dot per slide and make clicking a dot jump straight to that slide.",
+        logic: [
+          "Loop over the slides to create a dot for each.",
+          "Append the dots to the dots container.",
+          "Listen for clicks on the dots.",
+          "Set the index to the clicked dot's position and update."
+        ],
+        logicCode: [
+          "// 1. Build one dot per slide",
+          "slides.forEach((slide, i) => {",
+          "  const dot = document.createElement('button');",
+          "  dot.className = 'dot';",
+          "  // 2. Remember which slide this dot belongs to",
+          "  dot.dataset.index = i;",
+          "  dotsEl.appendChild(dot);",
+          "});",
+          "// 3. Listen for dot clicks",
+          "dotsEl.addEventListener('click', (e) => {",
+          "  if (!e.target.classList.contains('dot')) return;",
+          "  // 4. Jump to that slide",
+          "  currentIndex = Number(e.target.dataset.index);",
+          "  updateSlide();",
+          "});"
+        ],
+        think: "How does dataset.index tell you which slide a dot belongs to?",
+        hints: [
+          "createElement('button') makes each dot.",
+          "Store the slide index with dot.dataset.index = i.",
+          "On click, read e.target.dataset.index and set currentIndex to it."
+        ],
+        check: {
+          requires: [
+            { pattern: "(forEach|map|for\\s*\\()", hint: "Loop over the slides to create one dot per slide." },
+            { pattern: "(createElement|innerHTML|insertAdjacentHTML)", hint: "Build each dot with createElement or innerHTML." },
+            { pattern: "(dataset|data-index)", hint: "Store the slide position on each dot, e.g. dot.dataset.index = i." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the slider.",
+        goal: "Test all controls — next, previous, dots — and make sure the slider wraps correctly.",
+        logic: [
+          "Open the page — does the first slide show?",
+          "Click Next past the last slide — does it wrap to the first?",
+          "Click Previous on the first slide — does it wrap to the last?",
+          "Click each dot — does it jump to the right slide?"
+        ],
+        logicCode: [
+          "// 1. Open the page — does the first slide show?",
+          "// 2. Click Next past the last slide — does it wrap?",
+          "// 3. Click Previous on the first — does it wrap?",
+          "// 4. Click each dot — does it jump to the right slide?"
+        ],
+        think: "Why should updateSlide() be the only place that touches the DOM?",
+        hints: [
+          "Test the wrap-around in both directions.",
+          "If the image doesn't load, check the src URLs in the slides array.",
+          "Make sure updateSlide() runs once on page load so the slider isn't empty."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one control (button or dot) should have a click listener." },
+            { pattern: "(updateSlide|update\\s*\\()", hint: "Extract the render logic into a function you call after every change." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Image Slider</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="slider">',
+        '        <span class="counter" id="counter">1 / 5</span>',
+        '        <div class="viewport">',
+        '            <img id="image" src="" alt="Slide image">',
+        '            <button class="nav-btn prev" id="prevBtn" aria-label="Previous image">‹</button>',
+        '            <button class="nav-btn next" id="nextBtn" aria-label="Next image">›</button>',
+        "        </div>",
+        '        <nav class="dots" id="dots">',
+        "            <!-- Dots go here (rendered by JavaScript) -->",
+        "        </nav>",
+        '        <div class="caption">',
+        '            <h2 id="title"></h2>',
+        '            <p id="description"></p>',
+        "        </div>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".slider {",
+        "  width: min(760px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 24px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "  text-align: center;",
+        "}",
+        "",
+        ".counter {",
+        "  display: inline-block;",
+        "  background: #eff6ff;",
+        "  color: #1d4ed8;",
+        "  padding: 4px 14px;",
+        "  border-radius: 9999px;",
+        "  font-size: 0.85rem;",
+        "  font-weight: 600;",
+        "  margin-bottom: 14px;",
+        "}",
+        "",
+        ".viewport {",
+        "  position: relative;",
+        "  border-radius: 16px;",
+        "  overflow: hidden;",
+        "  margin-bottom: 16px;",
+        "}",
+        "",
+        ".viewport img {",
+        "  width: 100%;",
+        "  height: 380px;",
+        "  object-fit: cover;",
+        "  display: block;",
+        "}",
+        "",
+        ".nav-btn {",
+        "  position: absolute;",
+        "  top: 50%;",
+        "  transform: translateY(-50%);",
+        "  width: 44px;",
+        "  height: 44px;",
+        "  border: none;",
+        "  border-radius: 50%;",
+        "  background: rgba(255, 255, 255, 0.9);",
+        "  color: #111827;",
+        "  font-size: 1.6rem;",
+        "  line-height: 1;",
+        "  cursor: pointer;",
+        "  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);",
+        "}",
+        "",
+        ".nav-btn:hover { background: #ffffff; }",
+        ".nav-btn.prev { left: 14px; }",
+        ".nav-btn.next { right: 14px; }",
+        "",
+        ".dots {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  gap: 8px;",
+        "  margin-bottom: 16px;",
+        "}",
+        "",
+        ".dot {",
+        "  width: 10px;",
+        "  height: 10px;",
+        "  border: none;",
+        "  border-radius: 50%;",
+        "  background: #d1d5db;",
+        "  cursor: pointer;",
+        "  padding: 0;",
+        "}",
+        "",
+        ".dot.active { background: #2563eb; }",
+        "",
+        ".caption h2 { font-size: 1.3rem; margin-bottom: 6px; }",
+        ".caption p { color: #6b7280; font-size: 0.95rem; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .viewport img { height: 240px; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the image (#image), counter (#counter), caption (#title,",
+        "//   #description), the buttons (#prevBtn, #nextBtn) and the dots (#dots)",
+        "//   style.css is complete — the slider layout and controls are done for you",
+        "",
+        "// Step 2: Slide data & state",
+        "//   Create a slides array — each slide is an object with src, title and",
+        "//   description — and a let currentIndex = 0 to track the visible slide",
+        "",
+        "// Step 3: Render the slide",
+        "//   Write an updateSlide() that sets the image src, counter, caption",
+        "//   and highlights the active dot",
+        "",
+        "// Step 4: Next & previous",
+        "//   Next moves the index forward, Previous moves it back — wrap around",
+        "//   with the modulo operator and call updateSlide()",
+        "",
+        "// Step 5: Navigation dots",
+        "//   Create one dot per slide (dot.dataset.index = i), and on click",
+        "//   jump to that slide",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test next, previous, dots and the wrap-around — then polish"
+      ].join("\n")
+    }
+  },
+
+  "kanban-board": {
+    slug: "kanban-board",
+    folder: "kanban-board",
+    title: "Kanban Board",
+    difficulty: "Intermediate",
+    time: "45 min",
+    category: "Advanced",
+    tags: ["DOM", "Events", "State"],
+    intro: "Build a kanban board with three columns — To Do, In Progress and Done — where tasks can be added and moved between columns. You'll practice DOM manipulation, task state, event handling and dynamic UI updates.",
+    previewNote: "You'll build a working kanban board: add a task to any column, see it render as a card, and move it between To Do, In Progress and Done with the arrow buttons.",
+    cover: "../../assets/project-covers/kanban-board.png",
+    previewUrl: "../../../JS%20PROJECTS/kanban-board/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Store every task as an object with an id, text and status (todo, doing or done).",
+      "Keep all tasks in one array — each column renders only the tasks whose status matches.",
+      "Generate a unique id for each task (Date.now() is a simple approach).",
+      "Write one render() function and call it after every change — add, move or delete.",
+      "Use event delegation: listen once on the board and read data attributes from the clicked button."
+    ],
+    concepts: [
+      "Managing state with a tasks array",
+      "Rendering tasks into columns by status",
+      "Creating elements dynamically with createElement",
+      "Event handling with delegation",
+      "Updating state and re-rendering the UI"
+    ],
+    challenge: "Extra challenge: add a delete button per task, or save the board to localStorage so tasks survive a refresh.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the form (#taskForm), the input (#taskInput), the column select (#taskColumn) and the three task lists (#colTodo, #colDoing, #colDone).",
+          "Open style.css — the board layout and column styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see three empty columns."
+        ],
+        logicCode: [
+          "// 1. index.html — find #taskForm, #taskInput, #taskColumn, #colTodo, #colDoing, #colDone",
+          "// 2. style.css — board layout and column styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — three empty columns"
+        ],
+        think: "Which element IDs will your JavaScript need to select to add tasks and render columns?",
+        hints: [
+          "The form is #taskForm — submitting it adds a task.",
+          "The task text comes from #taskInput and the starting column from #taskColumn.",
+          "Tasks render inside #colTodo, #colDoing and #colDone."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const taskForm = document.getElementById('taskForm')." }
+          ]
+        }
+      },
+      {
+        title: "Task State",
+        tagline: "Set up the tasks array.",
+        goal: "Create an array that will hold every task as an object with an id, text and status.",
+        logic: [
+          "Create an array named tasks.",
+          "Seed it with one or two example tasks.",
+          "Give each task an id property.",
+          "Give each task text and status properties."
+        ],
+        logicCode: [
+          "// 1. Create the tasks array",
+          "const tasks = [",
+          "  {",
+          "    // 2. A unique id (Date.now() is a simple generator)",
+          "    id: Date.now(),",
+          "    // 3. The task text",
+          "    text: 'Plan the launch',",
+          "    // 4. Which column it lives in: 'todo', 'doing' or 'done'",
+          "    status: 'todo'",
+          "  },",
+          "  // ... add a second example task",
+          "];"
+        ],
+        think: "Why does every task need a unique id?",
+        hints: [
+          "Each task is an object with id, text and status keys.",
+          "Seed the array with at least one task so columns aren't empty.",
+          "The status decides which column the task renders in."
+        ],
+        check: {
+          requires: [
+            { pattern: "(const|let|var)\\s+tasks", hint: "Create an array: const tasks = [ ... ];" },
+            { pattern: "text\\s*:", hint: "Each task needs a text property." },
+            { pattern: "status\\s*:", hint: "Each task needs a status — 'todo', 'doing' or 'done'." }
+          ]
+        }
+      },
+      {
+        title: "Add a Task",
+        tagline: "Create tasks from the form.",
+        goal: "When the form is submitted, create a task object and add it to the tasks array.",
+        logic: [
+          "Listen for the submit event on the form.",
+          "Prevent the page from reloading.",
+          "Read the task text and the chosen column.",
+          "Push a new task object into the array."
+        ],
+        logicCode: [
+          "// 1. Listen for form submit",
+          "taskForm.addEventListener('submit', (e) => {",
+          "  // 2. Stop the page reload",
+          "  e.preventDefault();",
+          "  const text = taskInput.value.trim();",
+          "  if (!text) return;",
+          "  // 3. Read the chosen column",
+          "  const status = taskColumn.value;",
+          "  // 4. Add the task",
+          "  tasks.push({ id: Date.now(), text, status });",
+          "  taskInput.value = '';",
+          "  render();",
+          "});"
+        ],
+        think: "Why generate the id with Date.now() instead of a counter?",
+        hints: [
+          "Attach the listener to the form and call e.preventDefault().",
+          "taskColumn.value holds the selected column.",
+          "tasks.push({ id: Date.now(), text, status }) adds the task."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener\\s*\\(\\s*[\"']submit", hint: "Listen for the submit event on the form." },
+            { pattern: "preventDefault", hint: "Call e.preventDefault() so the page doesn't reload." },
+            { pattern: "\\.push\\s*\\(", hint: "Add the new task to the array with tasks.push({ ... })." }
+          ]
+        }
+      },
+      {
+        title: "Render Tasks",
+        tagline: "Draw the board from the data.",
+        goal: "Write a render function that places every task as a card in the column matching its status.",
+        logic: [
+          "Write a function named render.",
+          "Clear all three columns.",
+          "Loop over the tasks array.",
+          "Append each task to the column that matches its status."
+        ],
+        logicCode: [
+          "// 1. Write the render function",
+          "function render() {",
+          "  // 2. Clear the columns",
+          "  [colTodo, colDoing, colDone].forEach((col) => { col.innerHTML = ''; });",
+          "  // 3. Loop over the tasks",
+          "  tasks.forEach((task) => {",
+          "    // 4. Create a card",
+          "    const card = document.createElement('div');",
+          "    card.className = 'task-card';",
+          "    card.innerHTML = task.text;",
+          "    if (task.status === 'todo') colTodo.appendChild(card);",
+          "    else if (task.status === 'doing') colDoing.appendChild(card);",
+          "    else colDone.appendChild(card);",
+          "  });",
+          "}"
+        ],
+        think: "Why clear all columns before rendering?",
+        hints: [
+          "Clear each column with innerHTML = '' first.",
+          "Loop over tasks and pick the column from task.status.",
+          "appendChild() adds each card to the right column."
+        ],
+        check: {
+          requires: [
+            { pattern: "(forEach|map|for\\s*\\()", hint: "Loop over the tasks array to render each one." },
+            { pattern: "(createElement|innerHTML|insertAdjacentHTML)", hint: "Build each card with createElement or innerHTML." },
+            { pattern: "(status|colTodo|colDoing|colDone)", hint: "Place each card in the column matching its status." }
+          ]
+        }
+      },
+      {
+        title: "Move Tasks",
+        tagline: "Move cards between columns.",
+        goal: "Add move buttons to each card so a task can be pushed to the next (or previous) column.",
+        logic: [
+          "Add a move button to each card with a data attribute.",
+          "Listen for clicks on the board (event delegation).",
+          "Find the task by its id.",
+          "Update the task's status and re-render."
+        ],
+        logicCode: [
+          "// 1. Add a move button to each card",
+          "const btn = document.createElement('button');",
+          "btn.dataset.id = task.id;",
+          "btn.textContent = '→';",
+          "card.appendChild(btn);",
+          "// 2. Listen once on the board",
+          "boardEl.addEventListener('click', (e) => {",
+          "  const btn = e.target.closest('button[data-id]');",
+          "  if (!btn) return;",
+          "  // 3. Find the task",
+          "  const task = tasks.find(t => t.id == btn.dataset.id);",
+          "  // 4. Move it to the next column and re-render",
+          "  if (task.status === 'todo') task.status = 'doing';",
+          "  else if (task.status === 'doing') task.status = 'done';",
+          "  render();",
+          "});"
+        ],
+        think: "Why listen on the board once instead of on every card?",
+        hints: [
+          "Give each button btn.dataset.id = task.id so you can find the task.",
+          "e.target.closest('button') finds the clicked button even inside the card.",
+          "Update task.status, then call render() to redraw the board."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach a click listener to the board (delegation)." },
+            { pattern: "(dataset|data-id)", hint: "Store the task id on the button, e.g. btn.dataset.id = task.id." },
+            { pattern: "(status\\s*=|find\\s*\\()", hint: "Update the task's status, then re-render." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the board.",
+        goal: "Test adding and moving tasks — and polish anything that feels off.",
+        logic: [
+          "Open the page — do the seeded tasks show in their columns?",
+          "Add a task — does it appear in the chosen column?",
+          "Move a task — does it advance to the next column?",
+          "Move a Done task — does it stay (or wrap) sensibly?"
+        ],
+        logicCode: [
+          "// 1. Open the page — do the seeded tasks show?",
+          "// 2. Add a task — does it appear in the chosen column?",
+          "// 3. Move a task — does it advance a column?",
+          "// 4. Move a Done task — what should happen?"
+        ],
+        think: "What should happen when you try to move a task past the last column?",
+        hints: [
+          "Test all three columns and the move flow end to end.",
+          "If tasks duplicate, check that render() clears before redrawing.",
+          "console.log(tasks) after moving is a quick way to inspect state."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive the board (submit or click)." },
+            { pattern: "(textContent|innerHTML)", hint: "Render task text into the page with textContent or innerHTML." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Kanban Board</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <header class="board-header">',
+        "            <h1>Kanban Board</h1>",
+        '            <p class="subtitle">Plan · Do · Done</p>',
+        "        </header>",
+        '        <form class="task-form" id="taskForm">',
+        '            <input type="text" id="taskInput" placeholder="Add a new task..." autocomplete="off">',
+        '            <select id="taskColumn">',
+        '                <option value="todo">To Do</option>',
+        '                <option value="doing">In Progress</option>',
+        '                <option value="done">Done</option>',
+        "            </select>",
+        '            <button type="submit">Add Task</button>',
+        "        </form>",
+        '        <section class="board" id="boardEl">',
+        '            <div class="column"><h2>To Do</h2><div class="task-list" id="colTodo"></div></div>',
+        '            <div class="column"><h2>In Progress</h2><div class="task-list" id="colDoing"></div></div>',
+        '            <div class="column"><h2>Done</h2><div class="task-list" id="colDone"></div></div>',
+        "        </section>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container {",
+        "  width: min(1000px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 32px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "}",
+        "",
+        ".board-header { margin-bottom: 18px; }",
+        ".board-header h1 { font-size: 1.8rem; }",
+        ".subtitle { color: #6b7280; margin-top: 4px; }",
+        "",
+        ".task-form { display: flex; gap: 10px; margin-bottom: 24px; }",
+        "",
+        ".task-form input,",
+        ".task-form select {",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 10px;",
+        "  padding: 10px 12px;",
+        "  font-size: 0.95rem;",
+        "  font-family: inherit;",
+        "  outline: none;",
+        "}",
+        "",
+        ".task-form input { flex: 1; }",
+        ".task-form input:focus, .task-form select:focus { border-color: #2563eb; }",
+        "",
+        ".task-form button {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 10px 18px;",
+        "  border-radius: 10px;",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".board {",
+        "  display: grid;",
+        "  grid-template-columns: repeat(3, 1fr);",
+        "  gap: 16px;",
+        "}",
+        "",
+        ".column {",
+        "  background: #f3f4f6;",
+        "  border-radius: 14px;",
+        "  padding: 14px;",
+        "  min-height: 220px;",
+        "}",
+        "",
+        ".column h2 { font-size: 0.95rem; margin-bottom: 12px; color: #374151; }",
+        "",
+        ".task-list { display: flex; flex-direction: column; gap: 10px; }",
+        "",
+        ".task-card {",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 10px;",
+        "  padding: 12px 14px;",
+        "  display: flex;",
+        "  justify-content: space-between;",
+        "  align-items: center;",
+        "  font-size: 0.9rem;",
+        "  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);",
+        "}",
+        "",
+        ".task-card button {",
+        "  border: 1px solid #e5e7eb;",
+        "  background: #ffffff;",
+        "  border-radius: 8px;",
+        "  padding: 4px 10px;",
+        "  cursor: pointer;",
+        "  font-size: 0.85rem;",
+        "}",
+        "",
+        ".task-card button:hover { border-color: #2563eb; color: #2563eb; }",
+        "",
+        "@media (max-width: 640px) {",
+        "  .board { grid-template-columns: 1fr; }",
+        "  .task-form { flex-direction: column; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the form (#taskForm), the input (#taskInput), the column",
+        "//   select (#taskColumn) and three task lists (#colTodo, #colDoing, #colDone)",
+        "//   style.css is complete — the board layout and columns are done for you",
+        "",
+        "// Step 2: Set up task state",
+        "//   Create a tasks array — each task is an object with id, text and",
+        "//   status ('todo', 'doing' or 'done') properties",
+        "",
+        "// Step 3: Add a task",
+        "//   Listen for submit on the form, preventDefault(), read the text and",
+        "//   column, push a new task into the array, and clear the input",
+        "",
+        "// Step 4: Render tasks",
+        "//   Write a render() that clears the three columns, loops over the tasks,",
+        "//   and appends each card to the column matching its status",
+        "",
+        "// Step 5: Move tasks",
+        "//   Add a move button with dataset.id to each card; on click, find the",
+        "//   task, advance its status, and re-render",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test adding and moving tasks in all three columns — then polish"
+      ].join("\n")
+    }
+  },
+
+  "movie-search-app": {
+    slug: "movie-search-app",
+    folder: "movie-search-app",
+    title: "Movie Search App",
+    difficulty: "Intermediate",
+    time: "45 min",
+    category: "APIs & Data",
+    tags: ["API", "Fetch", "Search"],
+    intro: "Build a movie search app that fetches results from the OMDb API and renders them as cards with posters and details. You'll practice async/await, handling JSON responses, and showing loading and error states.",
+    previewNote: "You'll build a working movie search: type a title, press search, and see movie cards with posters, titles and years pulled live from the OMDb API — with loading and error states along the way.",
+    cover: "../../assets/project-covers/movie-search-app.png",
+    previewUrl: "../../../JS%20PROJECTS/movie-search-app/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "OMDb needs an API key — get a free one at omdbapi.com/apikey.aspx and store it in a constant.",
+      "The search endpoint is https://www.omdbapi.com/?apikey=KEY&s=QUERY",
+      "Use async/await with fetch() to keep the request code readable.",
+      "OMDb returns { Response: 'False', Error: ... } for a failed search — check for it.",
+      "Show a loading state while the request is in flight and an error state when it fails."
+    ],
+    concepts: [
+      "Making API requests with fetch()",
+      "Writing async functions with await",
+      "Handling JSON responses",
+      "Rendering search results into the DOM",
+      "Managing loading and error states"
+    ],
+    challenge: "Extra challenge: click a movie to open a detail view with the full plot and ratings.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the search form (#searchForm), the input (#searchInput), the loading indicator (#loading), the error element (#errorMsg) and the results grid (#resultsGrid).",
+          "Open style.css — the layout and movie card styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see the search form."
+        ],
+        logicCode: [
+          "// 1. index.html — find #searchForm, #searchInput, #loading, #errorMsg, #resultsGrid",
+          "// 2. style.css — layout and movie card styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — you'll see the search form"
+        ],
+        think: "Which element IDs will your JavaScript need to select to search and render movies?",
+        hints: [
+          "The form is #searchForm — submitting it triggers the search.",
+          "The query comes from #searchInput.",
+          "Results render inside #resultsGrid."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const searchForm = document.getElementById('searchForm')." }
+          ]
+        }
+      },
+      {
+        title: "Search Handler",
+        tagline: "Trigger a search on submit.",
+        goal: "When the form is submitted, read the query and kick off the API request — without reloading the page.",
+        logic: [
+          "Listen for the submit event on the form.",
+          "Prevent the page from reloading.",
+          "Read and trim the query from the input.",
+          "Call a search function with that query."
+        ],
+        logicCode: [
+          "// 1. Listen for form submit",
+          "searchForm.addEventListener('submit', (e) => {",
+          "  // 2. Stop the page reload",
+          "  e.preventDefault();",
+          "  // 3. Read the query",
+          "  const query = searchInput.value.trim();",
+          "  if (!query) return;",
+          "  // 4. Kick off the search",
+          "  searchMovies(query);",
+          "});"
+        ],
+        think: "Why guard against an empty query before fetching?",
+        hints: [
+          "Attach the listener to the form and call e.preventDefault().",
+          "searchInput.value.trim() cleans up the typed query.",
+          "Skip the request if the query is empty."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener\\s*\\(\\s*[\"']submit", hint: "Listen for the submit event on the form." },
+            { pattern: "preventDefault", hint: "Call e.preventDefault() so the page doesn't reload." },
+            { pattern: "\\.value", hint: "Read the query from the input, e.g. searchInput.value.trim()." }
+          ]
+        }
+      },
+      {
+        title: "Fetch Movies",
+        tagline: "Request data from the OMDb API.",
+        goal: "Write an async function that fetches movies from the OMDb API for the given query.",
+        logic: [
+          "Write an async function named searchMovies.",
+          "Build the API URL with the query and your key.",
+          "Await fetch() and parse the JSON.",
+          "Handle the 'not found' response from the API."
+        ],
+        logicCode: [
+          "// 1. Async function to search movies",
+          "async function searchMovies(query) {",
+          "  // 2. Build the OMDb URL",
+          "  const url = 'https://www.omdbapi.com/?apikey=' + API_KEY + '&s=' + encodeURIComponent(query);",
+          "  // 3. Fetch and parse",
+          "  const response = await fetch(url);",
+          "  const data = await response.json();",
+          "  // 4. OMDb signals failures with Response: 'False'",
+          "  if (data.Response === 'False') {",
+          "    showError(data.Error || 'No movies found');",
+          "    return;",
+          "  }",
+          "  renderResults(data.Search);",
+          "}"
+        ],
+        think: "Why encode the query with encodeURIComponent()?",
+        hints: [
+          "The search endpoint is https://www.omdbapi.com/?apikey=KEY&s=QUERY.",
+          "Store your key in a constant like const API_KEY = '...'.",
+          "OMDb returns Response: 'False' with an Error message when nothing matches."
+        ],
+        check: {
+          requires: [
+            { pattern: "async", hint: "Make the function async so you can use await." },
+            { pattern: "fetch\\s*\\(", hint: "Call fetch() with the OMDb search URL." },
+            { pattern: "\\.json\\s*\\(", hint: "Parse the response with response.json()." }
+          ]
+        }
+      },
+      {
+        title: "Render Results",
+        tagline: "Display the movie cards.",
+        goal: "Loop over the search results and render each movie as a card with poster, title and year.",
+        logic: [
+          "Write a function named renderResults.",
+          "Clear the results grid before rendering.",
+          "Loop over the movies array.",
+          "Build a card for each movie and append it."
+        ],
+        logicCode: [
+          "// 1. Write the render function",
+          "function renderResults(movies) {",
+          "  // 2. Clear the grid",
+          "  resultsGrid.innerHTML = '';",
+          "  // 3. Loop over the movies",
+          "  movies.forEach((movie) => {",
+          "    // 4. Build a card",
+          "    const card = document.createElement('div');",
+          "    card.className = 'movie-card';",
+          "    const poster = movie.Poster === 'N/A' ? '' : movie.Poster;",
+          "    card.innerHTML = '<img src=\"' + poster + '\" alt=\"\">' +",
+          "      '<h3>' + movie.Title + '</h3><p>' + movie.Year + '</p>';",
+          "    resultsGrid.appendChild(card);",
+          "  });",
+          "}"
+        ],
+        think: "Why handle Poster === 'N/A' specially?",
+        hints: [
+          "Clear the grid with innerHTML = '' before re-rendering.",
+          "Each result has Title, Year and Poster properties.",
+          "Some movies have Poster 'N/A' — skip the image in that case."
+        ],
+        check: {
+          requires: [
+            { pattern: "(forEach|map|for\\s*\\()", hint: "Loop over the results to render each movie." },
+            { pattern: "(createElement|innerHTML|insertAdjacentHTML)", hint: "Build each card with createElement or innerHTML." },
+            { pattern: "(appendChild|innerHTML\\s*\\+=)", hint: "Add each card to the results grid." }
+          ]
+        }
+      },
+      {
+        title: "Loading & Error States",
+        tagline: "Show feedback while fetching.",
+        goal: "Show a loading indicator while the request runs and an error message when it fails.",
+        logic: [
+          "Show the loading indicator before fetching.",
+          "Hide it once the request finishes.",
+          "Write a showError function.",
+          "Wrap the fetch in try/catch for network errors."
+        ],
+        logicCode: [
+          "// 1. Show loading before the request",
+          "loading.hidden = false;",
+          "errorMsg.hidden = true;",
+          "try {",
+          "  const response = await fetch(url);",
+          "  const data = await response.json();",
+          "  // 2. Hide loading when done",
+          "  loading.hidden = true;",
+          "  if (data.Response === 'False') { showError(data.Error); return; }",
+          "  renderResults(data.Search);",
+          "} catch (err) {",
+          "  // 3. Network errors land here",
+          "  loading.hidden = true;",
+          "  showError('Something went wrong. Try again.');",
+          "}"
+        ],
+        think: "Why hide the loading indicator in both the success and error paths?",
+        hints: [
+          "Toggle the .hidden property on #loading before and after the request.",
+          "A showError(message) function sets #errorMsg text and unhides it.",
+          "try/catch catches network failures that aren't API errors."
+        ],
+        check: {
+          requires: [
+            { pattern: "(hidden|classList)", hint: "Toggle loading and error states with the hidden property or classList." },
+            { pattern: "(try\\s*\\{|catch)", hint: "Wrap the request in try/catch to handle network errors." },
+            { pattern: "(showError|errorMsg|errorMessage)", hint: "Display errors in an error element." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the search.",
+        goal: "Test the full flow — searching, rendering, loading and errors — and polish anything that feels off.",
+        logic: [
+          "Search for a real movie like 'Inception' — do cards render?",
+          "Search for nonsense — does the error message appear?",
+          "Watch the loading indicator during a search.",
+          "Clear the grid before a new search starts."
+        ],
+        logicCode: [
+          "// 1. Search 'Inception' — do cards render?",
+          "// 2. Search nonsense — does the error appear?",
+          "// 3. Does the loading indicator show during the search?",
+          "// 4. Does a new search replace the old results?"
+        ],
+        think: "What should happen to the previous results when a new search starts?",
+        hints: [
+          "OMDb rate-limits free keys — a search every few seconds is fine.",
+          "If images don't load, it's usually a slow network, not a bug.",
+          "console.log(data) after response.json() helps debug the API shape."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive the search (form submit)." },
+            { pattern: "fetch\\s*\\(", hint: "The page should make an API request with fetch()." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Movie Search App</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <header class="movie-header">',
+        "            <h1>🎬 Movie Search</h1>",
+        '            <p class="subtitle">Discover your next favorite film</p>',
+        "        </header>",
+        '        <form class="search-form" id="searchForm">',
+        '            <input type="text" id="searchInput" placeholder="Search for a movie..." autocomplete="off">',
+        '            <button type="submit" id="searchBtn">Search</button>',
+        "        </form>",
+        '        <p class="loading" id="loading" hidden>Searching movies...</p>',
+        '        <p class="error-msg" id="errorMsg" hidden></p>',
+        '        <section class="results-grid" id="resultsGrid">',
+        "            <!-- Movie cards go here (rendered by JavaScript) -->",
+        "        </section>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container {",
+        "  width: min(880px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 32px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "}",
+        "",
+        ".movie-header { margin-bottom: 20px; }",
+        ".movie-header h1 { font-size: 1.8rem; }",
+        ".subtitle { color: #6b7280; margin-top: 4px; }",
+        "",
+        ".search-form { display: flex; gap: 10px; margin-bottom: 16px; }",
+        "",
+        ".search-form input {",
+        "  flex: 1;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 10px;",
+        "  padding: 10px 14px;",
+        "  font-size: 0.95rem;",
+        "  font-family: inherit;",
+        "  outline: none;",
+        "}",
+        "",
+        ".search-form input:focus { border-color: #2563eb; }",
+        "",
+        ".search-form button {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 10px 20px;",
+        "  border-radius: 10px;",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".loading { color: #6b7280; font-size: 0.9rem; margin-bottom: 12px; }",
+        ".error-msg { color: #dc2626; font-size: 0.9rem; margin-bottom: 12px; }",
+        "",
+        ".results-grid {",
+        "  display: grid;",
+        "  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));",
+        "  gap: 16px;",
+        "}",
+        "",
+        ".movie-card {",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 14px;",
+        "  overflow: hidden;",
+        "  text-align: center;",
+        "  transition: all 0.15s ease;",
+        "}",
+        "",
+        ".movie-card:hover {",
+        "  border-color: #2563eb;",
+        "  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.1);",
+        "}",
+        "",
+        ".movie-card img {",
+        "  width: 100%;",
+        "  height: 210px;",
+        "  object-fit: cover;",
+        "  display: block;",
+        "  background: #e5e7eb;",
+        "}",
+        "",
+        ".movie-card h3 { font-size: 0.9rem; padding: 10px 10px 2px; }",
+        ".movie-card p { color: #6b7280; font-size: 0.8rem; padding: 0 10px 12px; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .results-grid { grid-template-columns: repeat(2, 1fr); }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the search form (#searchForm), the input (#searchInput),",
+        "//   the loading indicator (#loading), the error element (#errorMsg) and",
+        "//   the results grid (#resultsGrid)",
+        "//   style.css is complete — the layout and movie cards are done for you",
+        "",
+        "// Step 2: Search handler",
+        "//   Listen for submit on the form, preventDefault(), read and trim the",
+        "//   query, and call a search function",
+        "",
+        "// Step 3: Fetch movies",
+        "//   Write an async function that fetches",
+        "//   https://www.omdbapi.com/?apikey=KEY&s=QUERY (store your key in a",
+        "//   const API_KEY), parses the JSON, and checks Response === 'False'",
+        "",
+        "// Step 4: Render results",
+        "//   Clear #resultsGrid, loop over data.Search, and build a card with",
+        "//   poster, title and year for each movie",
+        "",
+        "// Step 5: Loading & error states",
+        "//   Show #loading while fetching, hide it when done, and show errors",
+        "//   in #errorMsg (both API 'not found' and network failures)",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test a real search, a nonsense search, and the loading state"
+      ].join("\n")
+    }
+  },
+
+  "notes-app": {
+    slug: "notes-app",
+    folder: "Notes App",
+    title: "Notes App",
+    difficulty: "Intermediate",
+    time: "40 min",
+    category: "Core JS",
+    tags: ["CRUD", "DOM", "localStorage"],
+    intro: "Build a notes app that creates, renders and deletes notes — and remembers them across refreshes with localStorage. You'll practice CRUD operations, form handling, DOM manipulation and persistence.",
+    previewNote: "You'll build a working notes app: type a title and note text, click Add, and the note appears as a card — and it's still there after you refresh the page.",
+    cover: "../../assets/project-covers/notes-app.png",
+    previewUrl: "../../../JS%20PROJECTS/Notes%20App/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Store every note as an object with id, title and text.",
+      "Keep the notes in one array — localStorage saves the whole array as JSON.",
+      "localStorage.setItem(key, JSON.stringify(notes)) saves; JSON.parse() loads.",
+      "Render from the array, not from the DOM — delete by filtering the array and re-rendering.",
+      "Wrap localStorage calls in try/catch — storage can be unavailable in some browsers."
+    ],
+    concepts: [
+      "CRUD operations (create, read, delete)",
+      "Form handling and input events",
+      "Rendering lists dynamically",
+      "Persisting data with localStorage",
+      "JSON serialization (stringify and parse)"
+    ],
+    challenge: "Extra challenge: add an edit mode, or a search box that filters notes as you type.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the form (#noteForm), its inputs (#noteTitle, #noteText) and the notes grid (#notesGrid).",
+          "Open style.css — the layout and note card styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see the form and an empty grid."
+        ],
+        logicCode: [
+          "// 1. index.html — find #noteForm, #noteTitle, #noteText, #notesGrid",
+          "// 2. style.css — layout and note card styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — form and empty grid"
+        ],
+        think: "Which element IDs will your JavaScript need to select to add and render notes?",
+        hints: [
+          "The form is #noteForm — submitting it adds a note.",
+          "The title comes from #noteTitle and the body from #noteText.",
+          "Notes render inside #notesGrid."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const noteForm = document.getElementById('noteForm')." }
+          ]
+        }
+      },
+      {
+        title: "Notes State",
+        tagline: "Set up the notes array.",
+        goal: "Create an array that will hold every note as an object with an id, title and text.",
+        logic: [
+          "Create an array named notes.",
+          "Give each note an id property.",
+          "Give each note title and text properties.",
+          "Seed it with one welcome note."
+        ],
+        logicCode: [
+          "// 1. Create the notes array",
+          "const notes = [",
+          "  {",
+          "    // 2. A unique id",
+          "    id: Date.now(),",
+          "    // 3. Title and text",
+          "    title: 'Welcome 👋',",
+          "    text: 'This is your first note!'",
+          "  }",
+          "];"
+        ],
+        think: "Why give every note a unique id?",
+        hints: [
+          "Each note is an object with id, title and text keys.",
+          "Date.now() is a simple way to generate unique ids.",
+          "Seed the array with one note so the grid isn't empty on load."
+        ],
+        check: {
+          requires: [
+            { pattern: "(const|let|var)\\s+notes", hint: "Create an array: const notes = [ ... ];" },
+            { pattern: "title\\s*:", hint: "Each note needs a title property." }
+          ]
+        }
+      },
+      {
+        title: "Add a Note",
+        tagline: "Create notes from the form.",
+        goal: "When the form is submitted, read the inputs, create a note, and add it to the array.",
+        logic: [
+          "Listen for the submit event on the form.",
+          "Prevent the page from reloading.",
+          "Read the title and text from the inputs.",
+          "Push a new note object into the array."
+        ],
+        logicCode: [
+          "// 1. Listen for form submit",
+          "noteForm.addEventListener('submit', (e) => {",
+          "  // 2. Stop the page reload",
+          "  e.preventDefault();",
+          "  const title = noteTitle.value.trim();",
+          "  const text = noteText.value.trim();",
+          "  if (!title) return;",
+          "  // 3. Add the note",
+          "  notes.push({ id: Date.now(), title, text });",
+          "  // 4. Reset the form",
+          "  noteTitle.value = '';",
+          "  noteText.value = '';",
+          "  renderNotes();",
+          "});"
+        ],
+        think: "Why reset the inputs after adding a note?",
+        hints: [
+          "Attach the listener to the form and call e.preventDefault().",
+          "Read both inputs with .value.trim().",
+          "notes.push({ id: Date.now(), title, text }) adds the note."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener\\s*\\(\\s*[\"']submit", hint: "Listen for the submit event on the form." },
+            { pattern: "preventDefault", hint: "Call e.preventDefault() so the page doesn't reload." },
+            { pattern: "\\.push\\s*\\(", hint: "Add the new note to the array with notes.push({ ... })." }
+          ]
+        }
+      },
+      {
+        title: "Render Notes",
+        tagline: "Draw the notes grid.",
+        goal: "Loop over the notes array and render each one as a card with a delete button.",
+        logic: [
+          "Write a function named renderNotes.",
+          "Clear the grid before rendering.",
+          "Loop over the notes array.",
+          "Build a card with a delete button for each note."
+        ],
+        logicCode: [
+          "// 1. Write the render function",
+          "function renderNotes() {",
+          "  // 2. Clear the grid",
+          "  notesGrid.innerHTML = '';",
+          "  // 3. Loop over the notes",
+          "  notes.forEach((note) => {",
+          "    // 4. Build a card",
+          "    const card = document.createElement('div');",
+          "    card.className = 'note-card';",
+          "    card.innerHTML = '<h3>' + note.title + '</h3>' +",
+          "      '<p>' + note.text + '</p>' +",
+          "      '<button data-id=\"' + note.id + '\">Delete</button>';",
+          "    notesGrid.appendChild(card);",
+          "  });",
+          "}"
+        ],
+        think: "Why build the delete button with a data-id instead of wiring it inline?",
+        hints: [
+          "Clear the grid with innerHTML = '' before re-rendering.",
+          "Loop with forEach and build each card with createElement or innerHTML.",
+          "Put note.id in a data-id attribute so clicks can find the note."
+        ],
+        check: {
+          requires: [
+            { pattern: "(forEach|map|for\\s*\\()", hint: "Loop over the notes array to render each one." },
+            { pattern: "(createElement|innerHTML|insertAdjacentHTML)", hint: "Build each card with createElement or innerHTML." },
+            { pattern: "(appendChild|innerHTML\\s*\\+=)", hint: "Add each card to the notes grid." }
+          ]
+        }
+      },
+      {
+        title: "Delete a Note",
+        tagline: "Remove notes with one click.",
+        goal: "Clicking Delete should remove that note from the array and re-render the grid.",
+        logic: [
+          "Listen for clicks on the notes grid.",
+          "Find the delete button that was clicked.",
+          "Filter the note out of the array by its id.",
+          "Re-render the grid."
+        ],
+        logicCode: [
+          "// 1. Listen for clicks on the grid",
+          "notesGrid.addEventListener('click', (e) => {",
+          "  const btn = e.target.closest('button[data-id]');",
+          "  if (!btn) return;",
+          "  // 2. Filter out the clicked note",
+          "  const filtered = notes.filter(note => note.id != btn.dataset.id);",
+          "  // 3. Replace the array",
+          "  notes.length = 0;",
+          "  notes.push(...filtered);",
+          "  // 4. Re-render",
+          "  renderNotes();",
+          "});"
+        ],
+        think: "Why filter the array instead of removing the DOM element directly?",
+        hints: [
+          "Listen on the grid and use e.target.closest('button[data-id]') to find the button.",
+          "Array.filter() returns a new array without the deleted note.",
+          "Then re-render so the DOM matches the data."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach a click listener to the notes grid." },
+            { pattern: "\\.filter\\s*\\(", hint: "Remove the note with array.filter(), keeping everything except the clicked id." },
+            { pattern: "(dataset|data-id)", hint: "Identify the clicked note via a data attribute." }
+          ]
+        }
+      },
+      {
+        title: "Save with localStorage",
+        tagline: "Remember notes across refreshes.",
+        goal: "Save the notes array to localStorage whenever it changes, and load it back when the page opens.",
+        logic: [
+          "Write a save function using JSON.stringify.",
+          "Write a load function using JSON.parse.",
+          "Call load when the page starts.",
+          "Call save after every change."
+        ],
+        logicCode: [
+          "// 1. Save the notes array",
+          "function saveNotes() {",
+          "  localStorage.setItem('notes', JSON.stringify(notes));",
+          "}",
+          "// 2. Load on startup",
+          "function loadNotes() {",
+          "  const saved = localStorage.getItem('notes');",
+          "  if (saved) {",
+          "    const parsed = JSON.parse(saved);",
+          "    notes.length = 0;",
+          "    notes.push(...parsed);",
+          "  }",
+          "}",
+          "// 3. Call load when the page starts",
+          "loadNotes();",
+          "renderNotes();",
+          "// 4. Call save after every change",
+          "saveNotes();"
+        ],
+        think: "Why do you need JSON.stringify to save an array to localStorage?",
+        hints: [
+          "localStorage only stores strings — JSON.stringify(notes) encodes the array.",
+          "JSON.parse(saved) turns the string back into an array.",
+          "Call saveNotes() after adding and deleting; call loadNotes() on startup."
+        ],
+        check: {
+          requires: [
+            { pattern: "localStorage", hint: "Use localStorage to persist the notes." },
+            { pattern: "JSON\\.stringify", hint: "Encode the array with JSON.stringify() before saving." },
+            { pattern: "JSON\\.parse", hint: "Decode the saved string with JSON.parse() when loading." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Notes App</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <header class="notes-header">',
+        "            <h1>📝 Notes App</h1>",
+        '            <p class="subtitle">Write. Organize. Remember.</p>',
+        "        </header>",
+        '        <form class="note-form" id="noteForm">',
+        '            <input type="text" id="noteTitle" placeholder="Note title" autocomplete="off">',
+        '            <textarea id="noteText" placeholder="Write your note..." rows="3"></textarea>',
+        '            <button type="submit">Add Note</button>',
+        "        </form>",
+        '        <section class="notes-grid" id="notesGrid">',
+        "            <!-- Note cards go here (rendered by JavaScript) -->",
+        "        </section>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container {",
+        "  width: min(760px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 32px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "}",
+        "",
+        ".notes-header { margin-bottom: 20px; }",
+        ".notes-header h1 { font-size: 1.8rem; }",
+        ".subtitle { color: #6b7280; margin-top: 4px; }",
+        "",
+        ".note-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }",
+        "",
+        ".note-form input,",
+        ".note-form textarea {",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 10px;",
+        "  padding: 10px 14px;",
+        "  font-size: 0.95rem;",
+        "  font-family: inherit;",
+        "  outline: none;",
+        "  resize: vertical;",
+        "}",
+        "",
+        ".note-form input:focus, .note-form textarea:focus { border-color: #2563eb; }",
+        "",
+        ".note-form button {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 10px 18px;",
+        "  border-radius: 10px;",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "  align-self: flex-start;",
+        "}",
+        "",
+        ".notes-grid {",
+        "  display: grid;",
+        "  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));",
+        "  gap: 16px;",
+        "}",
+        "",
+        ".note-card {",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 14px;",
+        "  padding: 16px;",
+        "  background: #fffbeb;",
+        "  transition: all 0.15s ease;",
+        "}",
+        "",
+        ".note-card:hover {",
+        "  border-color: #d97706;",
+        "  box-shadow: 0 8px 16px rgba(217, 119, 6, 0.12);",
+        "}",
+        "",
+        ".note-card h3 { font-size: 1rem; margin-bottom: 6px; }",
+        ".note-card p { color: #6b7280; font-size: 0.9rem; margin-bottom: 12px; }",
+        "",
+        ".note-card button {",
+        "  border: 1px solid #fca5a5;",
+        "  background: #fef2f2;",
+        "  color: #dc2626;",
+        "  padding: 5px 12px;",
+        "  border-radius: 8px;",
+        "  font-size: 0.8rem;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".note-card button:hover { background: #fee2e2; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .notes-grid { grid-template-columns: 1fr; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the form (#noteForm), its inputs (#noteTitle, #noteText)",
+        "//   and the notes grid (#notesGrid)",
+        "//   style.css is complete — the layout and note cards are done for you",
+        "",
+        "// Step 2: Set up notes state",
+        "//   Create a notes array — each note is an object with id, title and text",
+        "",
+        "// Step 3: Add a note",
+        "//   Listen for submit on the form, preventDefault(), read the inputs,",
+        "//   push a new note into the array, reset the form, and re-render",
+        "",
+        "// Step 4: Render notes",
+        "//   Write a renderNotes() that clears #notesGrid, loops over the notes,",
+        "//   and builds a card (with a Delete button carrying data-id) for each",
+        "",
+        "// Step 5: Delete a note",
+        "//   Listen for clicks on the grid, find the clicked id, filter it out",
+        "//   of the array, and re-render",
+        "",
+        "// Step 6: Save with localStorage",
+        "//   saveNotes() stores JSON.stringify(notes); loadNotes() reads it back;",
+        "//   call load on startup and save after every change"
+      ].join("\n")
+    }
+  },
+
+  "pokedex-app": {
+    slug: "pokedex-app",
+    folder: "Pokedex-App",
+    title: "Pokédex App",
+    difficulty: "Intermediate",
+    time: "45 min",
+    category: "APIs & Data",
+    tags: ["API", "Fetch", "DOM"],
+    intro: "Build a Pokédex that fetches Pokémon from the PokéAPI and renders a card with the sprite, types and base stats. You'll practice API requests, async JavaScript, JSON handling and dynamic rendering.",
+    previewNote: "You'll build a working Pokédex: search for a Pokémon by name or number, and see its sprite, types, height, weight and base stats pulled live from the PokéAPI.",
+    cover: "../../assets/project-covers/pokedex-app.png",
+    previewUrl: "../../../JS%20PROJECTS/Pokedex-App/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "The PokéAPI needs no key — fetch https://pokeapi.co/api/v2/pokemon/{name-or-id} directly.",
+      "Use async/await with fetch() for readable request code.",
+      "The sprite lives at data.sprites.front_default — some Pokémon have null sprites, so handle that.",
+      "Types are nested in data.types — map over them to get type names.",
+      "Check response.ok and wrap the request in try/catch for a clean error state."
+    ],
+    concepts: [
+      "Making API requests with fetch()",
+      "Writing async functions with await",
+      "Handling nested JSON structures",
+      "Rendering API data into the DOM",
+      "Error handling with try/catch"
+    ],
+    challenge: "Extra challenge: add Previous/Next buttons that step through Pokémon by number.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the search form (#searchForm), the input (#searchInput), the error element (#errorMsg) and the Pokédex card (#pokedexCard) with its image, name, types and stats elements.",
+          "Open style.css — the layout and card styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see the search form."
+        ],
+        logicCode: [
+          "// 1. index.html — find #searchForm, #searchInput, #errorMsg, #pokedexCard",
+          "// 2. style.css — layout and card styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — you'll see the search form"
+        ],
+        think: "Which element IDs will your JavaScript need to select to render a Pokémon?",
+        hints: [
+          "The form is #searchForm — submitting it triggers the fetch.",
+          "The identifier comes from #searchInput.",
+          "The card is #pokedexCard — it starts hidden until a Pokémon loads."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const searchForm = document.getElementById('searchForm')." }
+          ]
+        }
+      },
+      {
+        title: "Search Handler",
+        tagline: "Trigger a search on submit.",
+        goal: "When the form is submitted, read the name or number and kick off the API request.",
+        logic: [
+          "Listen for the submit event on the form.",
+          "Prevent the page from reloading.",
+          "Read and trim the identifier from the input.",
+          "Call a fetch function with that identifier."
+        ],
+        logicCode: [
+          "// 1. Listen for form submit",
+          "searchForm.addEventListener('submit', (e) => {",
+          "  // 2. Stop the page reload",
+          "  e.preventDefault();",
+          "  // 3. Read the identifier (name or number)",
+          "  const identifier = searchInput.value.trim().toLowerCase();",
+          "  if (!identifier) return;",
+          "  // 4. Kick off the fetch",
+          "  fetchPokemon(identifier);",
+          "});"
+        ],
+        think: "Why lowercase the input before fetching?",
+        hints: [
+          "Attach the listener to the form and call e.preventDefault().",
+          "searchInput.value.trim().toLowerCase() normalizes the identifier.",
+          "Skip the request if the identifier is empty."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener\\s*\\(\\s*[\"']submit", hint: "Listen for the submit event on the form." },
+            { pattern: "preventDefault", hint: "Call e.preventDefault() so the page doesn't reload." },
+            { pattern: "\\.value", hint: "Read the identifier from the input, e.g. searchInput.value.trim()." }
+          ]
+        }
+      },
+      {
+        title: "Fetch a Pokémon",
+        tagline: "Request data from the PokéAPI.",
+        goal: "Write an async function that fetches a Pokémon from the PokéAPI and parses the JSON.",
+        logic: [
+          "Write an async function named fetchPokemon.",
+          "Build the API URL with the identifier.",
+          "Await fetch() and check response.ok.",
+          "Await response.json() to get the data."
+        ],
+        logicCode: [
+          "// 1. Async function to fetch a Pokémon",
+          "async function fetchPokemon(identifier) {",
+          "  // 2. Build the PokéAPI URL",
+          "  const url = 'https://pokeapi.co/api/v2/pokemon/' + identifier;",
+          "  // 3. Fetch and check the response",
+          "  const response = await fetch(url);",
+          "  if (!response.ok) throw new Error('Pokémon not found');",
+          "  // 4. Parse the JSON",
+          "  const data = await response.json();",
+          "  renderPokemon(data);",
+          "}"
+        ],
+        think: "Why check response.ok before parsing the JSON?",
+        hints: [
+          "The URL is 'https://pokeapi.co/api/v2/pokemon/' + the identifier.",
+          "await fetch(url) returns the response — check response.ok first.",
+          "await response.json() turns the body into a JavaScript object."
+        ],
+        check: {
+          requires: [
+            { pattern: "async", hint: "Make the function async so you can use await." },
+            { pattern: "fetch\\s*\\(", hint: "Call fetch() with the PokéAPI URL." },
+            { pattern: "\\.json\\s*\\(", hint: "Parse the response with response.json()." }
+          ]
+        }
+      },
+      {
+        title: "Render the Card",
+        tagline: "Display the Pokémon's data.",
+        goal: "Fill the card with the Pokémon's sprite, name, number, height and weight.",
+        logic: [
+          "Set the sprite image source.",
+          "Write the name and number into their elements.",
+          "Write the height and weight.",
+          "Show the card and hide the error."
+        ],
+        logicCode: [
+          "// 1. Sprite and identity",
+          "pokemonImage.src = data.sprites.front_default || '';",
+          "pokemonName.textContent = data.name;",
+          "pokemonId.textContent = '#' + String(data.id).padStart(3, '0');",
+          "// 2. Height and weight (decimeters / hectograms)",
+          "pokemonHeight.textContent = data.height;",
+          "pokemonWeight.textContent = data.weight;",
+          "// 3. Show the card",
+          "pokedexCard.hidden = false;",
+          "errorMsg.hidden = true;"
+        ],
+        think: "Why pad the id number with leading zeros?",
+        hints: [
+          "data.sprites.front_default holds the sprite URL — it can be null.",
+          "data.name is the Pokémon's name and data.id its number.",
+          "String(data.id).padStart(3, '0') formats the number like #025."
+        ],
+        check: {
+          requires: [
+            { pattern: "\\.src\\s*=", hint: "Set the sprite image source, e.g. pokemonImage.src = data.sprites.front_default." },
+            { pattern: "textContent\\s*=", hint: "Write the name, id or stats into elements with textContent." },
+            { pattern: "(data\\.|sprites|name)", hint: "Read values from the parsed Pokémon data object." }
+          ]
+        }
+      },
+      {
+        title: "Types & Stats",
+        tagline: "Render the nested data.",
+        goal: "Loop over the Pokémon's types and base stats and render them as chips and stat bars.",
+        logic: [
+          "Clear the types container.",
+          "Loop over data.types to create type chips.",
+          "Clear the stats container.",
+          "Loop over data.stats to render each base stat."
+        ],
+        logicCode: [
+          "// 1. Render the types",
+          "typeBadges.innerHTML = '';",
+          "data.types.forEach((t) => {",
+          "  const chip = document.createElement('span');",
+          "  chip.className = 'type-chip';",
+          "  chip.textContent = t.type.name;",
+          "  typeBadges.appendChild(chip);",
+          "});",
+          "// 2. Render the base stats",
+          "statsContainer.innerHTML = '';",
+          "data.stats.forEach((s) => {",
+          "  const row = document.createElement('div');",
+          "  row.className = 'stat-row';",
+          "  row.innerHTML = s.stat.name + ' <b>' + s.base_stat + '</b>';",
+          "  statsContainer.appendChild(row);",
+          "});"
+        ],
+        think: "Why are types and stats nested arrays in the API response?",
+        hints: [
+          "data.types is an array of objects — each has .type.name.",
+          "data.stats is an array — each has .stat.name and .base_stat.",
+          "Clear each container before appending so re-renders don't duplicate."
+        ],
+        check: {
+          requires: [
+            { pattern: "(forEach|map|for\\s*\\()", hint: "Loop over the types and/or stats arrays." },
+            { pattern: "(createElement|innerHTML|insertAdjacentHTML)", hint: "Build the chips or stat rows with createElement or innerHTML." },
+            { pattern: "(types|stats)", hint: "Read the nested data from data.types and/or data.stats." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the Pokédex.",
+        goal: "Test searching by name and number, and handling errors — then polish anything that feels off.",
+        logic: [
+          "Search 'pikachu' — does the card render with types and stats?",
+          "Search '25' — does it show Pikachu?",
+          "Search a nonsense name — does the error message appear?",
+          "Search with mixed casing — does it still work?"
+        ],
+        logicCode: [
+          "// 1. Search 'pikachu' — does the card render?",
+          "// 2. Search '25' — does it show Pikachu?",
+          "// 3. Search nonsense — does the error appear?",
+          "// 4. Search 'Pikachu' — does casing still work?"
+        ],
+        think: "What should happen to the old card when a new search fails?",
+        hints: [
+          "Wrap the fetch in try/catch and show a message on failure.",
+          "If the sprite is blank, check data.sprites.front_default is set.",
+          "console.log(data) after response.json() helps explore the API shape."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive the search (form submit)." },
+            { pattern: "fetch\\s*\\(", hint: "The page should make an API request with fetch()." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Pokédex App</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <header class="pokedex-header">',
+        "            <h1>⚡ Pokédex</h1>",
+        '            <p class="subtitle">Gotta search \'em all!</p>',
+        "        </header>",
+        '        <form class="search-form" id="searchForm">',
+        '            <input type="text" id="searchInput" placeholder="Pokémon name or number (e.g. pikachu or 25)" autocomplete="off">',
+        '            <button type="submit" id="searchBtn">Search</button>',
+        "        </form>",
+        '        <p class="error-msg" id="errorMsg" hidden></p>',
+        '        <section class="pokedex-card" id="pokedexCard" hidden>',
+        '            <img id="pokemonImage" alt="Pokémon sprite">',
+        '            <span class="pokemon-id" id="pokemonId">#000</span>',
+        '            <h2 class="pokemon-name" id="pokemonName">—</h2>',
+        '            <div class="type-badges" id="typeBadges"></div>',
+        '            <div class="details">',
+        '                <div><span>Height</span><b id="pokemonHeight">—</b></div>',
+        '                <div><span>Weight</span><b id="pokemonWeight">—</b></div>',
+        "            </div>",
+        '            <h3>Base Stats</h3>',
+        '            <div class="stats" id="statsContainer"></div>',
+        "        </section>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container {",
+        "  width: min(560px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 32px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "}",
+        "",
+        ".pokedex-header { margin-bottom: 20px; text-align: center; }",
+        ".pokedex-header h1 { font-size: 1.8rem; }",
+        ".subtitle { color: #6b7280; margin-top: 4px; }",
+        "",
+        ".search-form { display: flex; gap: 10px; margin-bottom: 16px; }",
+        "",
+        ".search-form input {",
+        "  flex: 1;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 10px;",
+        "  padding: 10px 14px;",
+        "  font-size: 0.95rem;",
+        "  font-family: inherit;",
+        "  outline: none;",
+        "}",
+        "",
+        ".search-form input:focus { border-color: #2563eb; }",
+        "",
+        ".search-form button {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 10px 20px;",
+        "  border-radius: 10px;",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".error-msg { color: #dc2626; font-size: 0.9rem; margin-bottom: 12px; text-align: center; }",
+        "",
+        ".pokedex-card { text-align: center; padding: 20px; border: 1px solid #e5e7eb; border-radius: 18px; }",
+        "",
+        ".pokedex-card img {",
+        "  width: 140px;",
+        "  height: 140px;",
+        "  object-fit: contain;",
+        "  margin-bottom: 6px;",
+        "}",
+        "",
+        ".pokemon-id { color: #6b7280; font-size: 0.9rem; font-weight: 600; }",
+        ".pokemon-name { text-transform: capitalize; margin: 4px 0 10px; font-size: 1.5rem; }",
+        "",
+        ".type-badges { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }",
+        "",
+        ".type-chip {",
+        "  background: #eff6ff;",
+        "  color: #1d4ed8;",
+        "  padding: 4px 14px;",
+        "  border-radius: 9999px;",
+        "  font-size: 0.8rem;",
+        "  font-weight: 600;",
+        "  text-transform: capitalize;",
+        "}",
+        "",
+        ".details {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  gap: 32px;",
+        "  margin-bottom: 16px;",
+        "}",
+        "",
+        ".details div { display: flex; flex-direction: column; }",
+        ".details span { color: #6b7280; font-size: 0.8rem; }",
+        "",
+        ".pokedex-card h3 { margin-bottom: 10px; font-size: 1rem; }",
+        "",
+        ".stats { display: flex; flex-direction: column; gap: 6px; }",
+        "",
+        ".stat-row {",
+        "  display: flex;",
+        "  justify-content: space-between;",
+        "  padding: 8px 12px;",
+        "  background: #f3f4f6;",
+        "  border-radius: 8px;",
+        "  font-size: 0.85rem;",
+        "  text-transform: capitalize;",
+        "}",
+        "",
+        "@media (max-width: 480px) {",
+        "  .container { padding: 20px 16px; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the search form (#searchForm), the input (#searchInput),",
+        "//   the error element (#errorMsg) and the card (#pokedexCard) with image,",
+        "//   id, name, types (#typeBadges), height/weight and stats (#statsContainer)",
+        "//   style.css is complete — the layout and card styles are done for you",
+        "",
+        "// Step 2: Search handler",
+        "//   Listen for submit on the form, preventDefault(), read and lowercase",
+        "//   the identifier, and call a fetch function",
+        "",
+        "// Step 3: Fetch a Pokémon",
+        "//   Write an async function that fetches",
+        "//   https://pokeapi.co/api/v2/pokemon/{identifier}, checks response.ok,",
+        "//   and parses the JSON with response.json()",
+        "",
+        "// Step 4: Render the card",
+        "//   Set the sprite src, write the name and padded id, and show height/weight",
+        "",
+        "// Step 5: Types & stats",
+        "//   Loop over data.types to build type chips, and data.stats to build",
+        "//   the stat rows",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test by name, by number, and a nonsense search — then polish"
+      ].join("\n")
+    }
+  },
+
+  "quizapp": {
+    slug: "quizapp",
+    folder: "QuizApp",
+    title: "Quiz App",
+    difficulty: "Beginner",
+    time: "35 min",
+    category: "Core JS",
+    tags: ["State", "Events", "DOM"],
+    intro: "Build a quiz app with a start screen, a series of questions, answer selection, and a results screen with your score. You'll practice question data, state management, score calculation and conditional logic.",
+    previewNote: "You'll build a working quiz: hit Start, answer each question by clicking an option, see your score tick up, and get a results screen when you're done.",
+    cover: "../../assets/project-covers/quizapp.png",
+    previewUrl: "../../../JS%20PROJECTS/QuizApp/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Store questions as an array of objects with question, options and correctIndex.",
+      "Track currentIndex and score as variables — the whole UI derives from them.",
+      "Render one question at a time; the Next button advances currentIndex.",
+      "Compare the clicked option to the question's correctIndex to score it.",
+      "Swap screens with the hidden property — start, quiz and result screens."
+    ],
+    concepts: [
+      "Storing questions as data",
+      "Managing state with index and score variables",
+      "Event handling for options and buttons",
+      "Score calculation with conditional logic",
+      "Switching screens dynamically"
+    ],
+    challenge: "Extra challenge: add a timer per question, or shuffle the questions each round.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the three screens: #startScreen, #quizScreen and #resultScreen, plus #questionText, #optionsContainer, #scoreValue and #nextBtn.",
+          "Open style.css — the layout and screen styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see the start screen."
+        ],
+        logicCode: [
+          "// 1. index.html — find #startScreen, #quizScreen, #resultScreen, #questionText, #optionsContainer",
+          "// 2. style.css — layout and screen styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — you'll see the start screen"
+        ],
+        think: "Which element IDs will your JavaScript need to select to run the quiz?",
+        hints: [
+          "The question text goes into #questionText.",
+          "Options render inside #optionsContainer.",
+          "Screens swap via #startScreen, #quizScreen and #resultScreen."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const questionText = document.getElementById('questionText')." }
+          ]
+        }
+      },
+      {
+        title: "Question Data & State",
+        tagline: "Store the questions and game state.",
+        goal: "Create a questions array and the state variables the quiz needs to run.",
+        logic: [
+          "Create an array named questions.",
+          "Add 4-6 question objects with question, options and correctIndex.",
+          "Create a variable named currentIndex starting at 0.",
+          "Create a score variable starting at 0."
+        ],
+        logicCode: [
+          "// 1. Create the questions array",
+          "const questions = [",
+          "  {",
+          "    // 2. The question text",
+          "    question: 'What does CSS stand for?',",
+          "    // 3. The answer options",
+          "    options: ['Cascading Style Sheets', 'Creative Style System', 'Computer Style Sheets'],",
+          "    // 4. The correct option's index",
+          "    correctIndex: 0",
+          "  },",
+          "  // ... add a few more questions",
+          "];",
+          "// 5. Game state",
+          "let currentIndex = 0;",
+          "let score = 0;"
+        ],
+        think: "Why store the correct answer as an index instead of the text?",
+        hints: [
+          "Each question is an object with question, options and correctIndex keys.",
+          "correctIndex is the position of the right option in the options array.",
+          "let currentIndex and let score track the game's state."
+        ],
+        check: {
+          requires: [
+            { pattern: "(const|let|var)\\s+questions", hint: "Create an array: const questions = [ ... ];" },
+            { pattern: "(currentIndex|score)\\s*=\\s*0", hint: "Track state with currentIndex and score, both starting at 0." },
+            { pattern: "correctIndex\\s*:", hint: "Each question needs a correctIndex property." }
+          ]
+        }
+      },
+      {
+        title: "Render a Question",
+        tagline: "Show the current question.",
+        goal: "Write a function that renders the question text and its options as buttons.",
+        logic: [
+          "Write a function named renderQuestion.",
+          "Write the question text into its element.",
+          "Clear the options container.",
+          "Create a button for each option and append it."
+        ],
+        logicCode: [
+          "// 1. Write the render function",
+          "function renderQuestion() {",
+          "  const q = questions[currentIndex];",
+          "  // 2. Show the question text",
+          "  questionText.textContent = q.question;",
+          "  // 3. Clear the options",
+          "  optionsContainer.innerHTML = '';",
+          "  // 4. Create one button per option",
+          "  q.options.forEach((option, i) => {",
+          "    const btn = document.createElement('button');",
+          "    btn.className = 'option-btn';",
+          "    btn.dataset.index = i;",
+          "    btn.textContent = option;",
+          "    optionsContainer.appendChild(btn);",
+          "  });",
+          "}"
+        ],
+        think: "Why store the option index on each button?",
+        hints: [
+          "questions[currentIndex] is the current question.",
+          "Loop over q.options to create one button per option.",
+          "btn.dataset.index = i remembers which option the button represents."
+        ],
+        check: {
+          requires: [
+            { pattern: "(forEach|map|for\\s*\\()", hint: "Loop over the options to create one button each." },
+            { pattern: "(createElement|innerHTML|insertAdjacentHTML)", hint: "Build option buttons with createElement or innerHTML." },
+            { pattern: "textContent\\s*=", hint: "Write the question text into its element." }
+          ]
+        }
+      },
+      {
+        title: "Answer Selection",
+        tagline: "Score the chosen answer.",
+        goal: "When an option is clicked, check whether it's correct and update the score.",
+        logic: [
+          "Listen for clicks on the options container.",
+          "Read the clicked option's index.",
+          "Compare it with the question's correctIndex.",
+          "Increase the score if it matches."
+        ],
+        logicCode: [
+          "// 1. Listen for clicks on the options",
+          "optionsContainer.addEventListener('click', (e) => {",
+          "  const btn = e.target.closest('.option-btn');",
+          "  if (!btn) return;",
+          "  // 2. Read the chosen index",
+          "  const chosen = Number(btn.dataset.index);",
+          "  const q = questions[currentIndex];",
+          "  // 3. Compare with the correct answer",
+          "  if (chosen === q.correctIndex) {",
+          "    // 4. Increase the score",
+          "    score += 1;",
+          "    scoreValue.textContent = score;",
+          "  }",
+          "});"
+        ],
+        think: "What should happen after the player clicks an answer?",
+        hints: [
+          "Listen on the container and use e.target.closest('.option-btn').",
+          "Number(btn.dataset.index) gives the chosen option's index.",
+          "Compare it to q.correctIndex — if equal, score += 1."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach a click listener to the options." },
+            { pattern: "(correctIndex|correct)", hint: "Compare the choice against the question's correct answer." },
+            { pattern: "score\\s*(\\+=|\\+\\+|=\\s*score\\s*\\+)", hint: "Increase the score when the answer is correct." }
+          ]
+        }
+      },
+      {
+        title: "Next & Results",
+        tagline: "Advance through the quiz.",
+        goal: "The Next button moves to the next question — and shows the results screen after the last one.",
+        logic: [
+          "Listen for clicks on the Next button.",
+          "Increase the current index.",
+          "If questions remain, render the next one.",
+          "Otherwise, show the results screen with the final score."
+        ],
+        logicCode: [
+          "// 1. Listen for Next clicks",
+          "nextBtn.addEventListener('click', () => {",
+          "  // 2. Move to the next question",
+          "  currentIndex += 1;",
+          "  // 3. More questions? Render the next one",
+          "  if (currentIndex < questions.length) {",
+          "    renderQuestion();",
+          "  } else {",
+          "    // 4. Quiz over — show the results screen",
+          "    finalScore.textContent = score;",
+          "    quizScreen.hidden = true;",
+          "    resultScreen.hidden = false;",
+          "  }",
+          "});"
+        ],
+        think: "Why check currentIndex against questions.length?",
+        hints: [
+          "currentIndex += 1 advances the quiz.",
+          "If currentIndex < questions.length, keep going — otherwise the quiz is over.",
+          "Write the score into the results screen and swap screens with .hidden."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach a click listener to the Next button." },
+            { pattern: "(currentIndex|index)\\s*(\\+=|\\+\\+)", hint: "Advance the current question index." },
+            { pattern: "(hidden|classList)", hint: "Swap to the results screen by toggling .hidden." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the quiz.",
+        goal: "Test the full flow — start, answer, next, results — and polish anything that feels off.",
+        logic: [
+          "Open the page — does the start screen show?",
+          "Click Start — does the first question appear?",
+          "Answer each question — does the score update?",
+          "Finish the quiz — does the results screen show the right score?"
+        ],
+        logicCode: [
+          "// 1. Open the page — does the start screen show?",
+          "// 2. Click Start — does the first question appear?",
+          "// 3. Answer each question — does the score update?",
+          "// 4. Finish — does the results screen show the right score?"
+        ],
+        think: "What should happen if you click Start again after finishing?",
+        hints: [
+          "Wire the Start button to reset currentIndex and score, then show the quiz screen.",
+          "If the score seems wrong, console.log(score) at each step.",
+          "Make sure only one screen is visible at a time."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive the quiz (start, options or next)." },
+            { pattern: "(textContent|innerHTML)", hint: "Render question or score data into the page with textContent or innerHTML." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Quiz App</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        "        <!-- Start screen -->",
+        '        <section class="screen" id="startScreen">',
+        '            <div class="card">',
+        "                <h1>Quiz App</h1>",
+        "                <p>Test your knowledge with 5 questions.</p>",
+        '                <button class="btn btn-primary" id="startBtn">Start Quiz</button>',
+        "            </div>",
+        "        </section>",
+        "        <!-- Quiz screen -->",
+        '        <section class="screen" id="quizScreen" hidden>',
+        '            <div class="card">',
+        '                <p class="progress" id="progressText">Question 1 of 5</p>',
+        '                <h2 id="questionText"></h2>',
+        '                <div class="options" id="optionsContainer"></div>',
+        '                <div class="quiz-footer">',
+        '                    <span>Score: <b id="scoreValue">0</b></span>',
+        '                    <button class="btn btn-primary" id="nextBtn">Next</button>',
+        "                </div>",
+        "            </div>",
+        "        </section>",
+        "        <!-- Result screen -->",
+        '        <section class="screen" id="resultScreen" hidden>',
+        '            <div class="card">',
+        "                <h1>Quiz Complete!</h1>",
+        '                <p>Your score: <b id="finalScore">0</b> / 5</p>',
+        '                <button class="btn btn-primary" id="restartBtn">Restart Quiz</button>',
+        "            </div>",
+        "        </section>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container {",
+        "  width: min(560px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 32px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "}",
+        "",
+        ".card { text-align: center; }",
+        ".card h1 { font-size: 1.8rem; margin-bottom: 8px; }",
+        ".card p { color: #6b7280; margin-bottom: 20px; }",
+        "",
+        ".progress { font-size: 0.85rem; color: #6b7280; margin-bottom: 8px; }",
+        ".card h2 { font-size: 1.3rem; margin-bottom: 20px; }",
+        "",
+        ".options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }",
+        "",
+        ".option-btn {",
+        "  border: 1px solid #e5e7eb;",
+        "  background: #ffffff;",
+        "  color: #111827;",
+        "  padding: 12px 16px;",
+        "  border-radius: 12px;",
+        "  font-size: 0.95rem;",
+        "  font-family: inherit;",
+        "  cursor: pointer;",
+        "  text-align: left;",
+        "  transition: all 0.15s ease;",
+        "}",
+        "",
+        ".option-btn:hover { border-color: #2563eb; color: #2563eb; }",
+        "",
+        ".quiz-footer {",
+        "  display: flex;",
+        "  justify-content: space-between;",
+        "  align-items: center;",
+        "}",
+        "",
+        ".btn-primary {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 10px 22px;",
+        "  border-radius: 10px;",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".btn-primary:hover { background: #1d4ed8; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .container { padding: 20px 16px; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has three screens (#startScreen, #quizScreen, #resultScreen)",
+        "//   plus the question (#questionText), options (#optionsContainer),",
+        "//   score (#scoreValue), Next button (#nextBtn) and final score (#finalScore)",
+        "//   style.css is complete — the layout and screens are done for you",
+        "",
+        "// Step 2: Question data & state",
+        "//   Create a questions array — each question has question, options and",
+        "//   correctIndex — plus let currentIndex = 0 and let score = 0",
+        "",
+        "// Step 3: Render a question",
+        "//   Write renderQuestion() that shows the question text and creates",
+        "//   one button per option (with dataset.index)",
+        "",
+        "// Step 4: Answer selection",
+        "//   On option click, compare the chosen index to correctIndex and",
+        "//   increase the score when correct",
+        "",
+        "// Step 5: Next & results",
+        "//   Next advances currentIndex — render the next question or show",
+        "//   the results screen with the final score",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Wire Start (and Restart) to reset the state, then test the full flow"
+      ].join("\n")
+    }
+  },
+
+  "quotegenerator": {
+    slug: "quotegenerator",
+    folder: "QuoteGenerator",
+    title: "Quote Generator",
+    difficulty: "Beginner",
+    time: "25 min",
+    category: "Core JS",
+    tags: ["Arrays", "Random", "DOM"],
+    intro: "Build a quote generator that picks a random quote from an array and displays it with its author. You'll practice working with arrays, random selection, DOM updates and button events.",
+    previewNote: "You'll build a working quote generator: click New Quote and a random quote appears — with a Copy button that puts it on your clipboard.",
+    cover: "../../assets/project-covers/quotegenerator.jpeg",
+    previewUrl: "../../../JS%20PROJECTS/QuoteGenerator/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Store quotes as an array of objects with text and author.",
+      "Math.random() returns a value from 0 up to (but not including) 1 — multiply by the array length.",
+      "Math.floor() rounds down so the random value becomes a valid array index.",
+      "Avoid showing the same quote twice in a row by remembering the last index.",
+      "navigator.clipboard.writeText() copies text with a clean one-liner."
+    ],
+    concepts: [
+      "Storing data as arrays of objects",
+      "Random selection with Math.random() and Math.floor()",
+      "Updating the DOM with textContent",
+      "Event handling for buttons",
+      "Using the Clipboard API"
+    ],
+    challenge: "Extra challenge: show a toast when the quote is copied, or fade the quote in on each change.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the quote display (#quote), the author (#author), and the two buttons (#newQuoteBtn, #copyBtn).",
+          "Open style.css — the card layout is already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see a static quote."
+        ],
+        logicCode: [
+          "// 1. index.html — find #quote, #author, #newQuoteBtn, #copyBtn",
+          "// 2. style.css — card layout is already done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — you'll see a static quote"
+        ],
+        think: "Which element IDs will your JavaScript need to select to show quotes?",
+        hints: [
+          "The quote text goes into #quote.",
+          "The author goes into #author.",
+          "The buttons are #newQuoteBtn and #copyBtn."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const quoteEl = document.getElementById('quote')." }
+          ]
+        }
+      },
+      {
+        title: "Quote Data",
+        tagline: "Store your quotes as data.",
+        goal: "Create an array of quote objects — each with a text and an author — so the generator can pick from them.",
+        logic: [
+          "Create an array named quotes.",
+          "Add 5-6 quote objects inside it.",
+          "Give each quote a text property.",
+          "Give each quote an author property."
+        ],
+        logicCode: [
+          "// 1. Create the quotes array",
+          "const quotes = [",
+          "  {",
+          "    // 2. The quote text",
+          "    text: 'The only way to do great work is to love what you do.',",
+          "    // 3. The author",
+          "    author: 'Steve Jobs'",
+          "  },",
+          "  // ... add a few more quotes",
+          "];"
+        ],
+        think: "Why store the author with the quote instead of hard-coding it in the HTML?",
+        hints: [
+          "Each quote is an object with text and author keys.",
+          "Keep them all inside one array named quotes.",
+          "Add at least 5 quotes so the generator feels random."
+        ],
+        check: {
+          requires: [
+            { pattern: "(const|let|var)\\s+quotes", hint: "Create an array: const quotes = [ ... ];" },
+            { pattern: "author\\s*:", hint: "Each quote needs an author property." }
+          ]
+        }
+      },
+      {
+        title: "Random Selection",
+        tagline: "Pick a random quote.",
+        goal: "Write a function that picks a random index from the quotes array.",
+        logic: [
+          "Write a function that returns a random quote.",
+          "Generate a random number with Math.random().",
+          "Scale it by the array length.",
+          "Round it down with Math.floor() to get an index."
+        ],
+        logicCode: [
+          "// 1. Pick a random quote",
+          "function getRandomQuote() {",
+          "  // 2. Random value scaled by the array length",
+          "  const randomIndex = Math.floor(Math.random() * quotes.length);",
+          "  // 3. Return the quote at that index",
+          "  return quotes[randomIndex];",
+          "}"
+        ],
+        think: "Why multiply Math.random() by quotes.length?",
+        hints: [
+          "Math.random() gives a value between 0 and 1.",
+          "Multiplying by quotes.length scales it to the array's size.",
+          "Math.floor() rounds down so the result is a valid index (0 to length - 1)."
+        ],
+        check: {
+          requires: [
+            { pattern: "Math\\.random\\s*\\(", hint: "Generate randomness with Math.random()." },
+            { pattern: "Math\\.floor\\s*\\(", hint: "Round down with Math.floor() to get a valid array index." },
+            { pattern: "quotes\\.length", hint: "Scale the random value by quotes.length." }
+          ]
+        }
+      },
+      {
+        title: "Display a Quote",
+        tagline: "Write the quote to the page.",
+        goal: "Write a function that takes a quote and shows its text and author in the DOM.",
+        logic: [
+          "Write a function named displayQuote.",
+          "Accept a quote object as a parameter.",
+          "Write the quote text into #quote.",
+          "Write the author into #author."
+        ],
+        logicCode: [
+          "// 1. Write the display function",
+          "function displayQuote(quote) {",
+          "  // 2. Show the quote text",
+          "  quoteEl.textContent = '\"' + quote.text + '\"';",
+          "  // 3. Show the author",
+          "  authorEl.textContent = '— ' + quote.author;",
+          "}",
+          "// 4. Show a quote right away",
+          "displayQuote(getRandomQuote());"
+        ],
+        think: "Why call displayQuote once at the start?",
+        hints: [
+          "textContent replaces the element's text cleanly.",
+          "Pass the quote object in as a parameter.",
+          "Call displayQuote(getRandomQuote()) on load so the page isn't empty."
+        ],
+        check: {
+          requires: [
+            { pattern: "(textContent|innerText)\\s*=", hint: "Write the quote text with textContent." },
+            { pattern: "(author|quote)", hint: "Update both the quote and the author elements." }
+          ]
+        }
+      },
+      {
+        title: "Button Events",
+        tagline: "Make the buttons work.",
+        goal: "The New Quote button shows a new random quote — and the Copy button copies it to the clipboard.",
+        logic: [
+          "Listen for clicks on the New Quote button.",
+          "Get a random quote and display it.",
+          "Listen for clicks on the Copy button.",
+          "Copy the current quote text to the clipboard."
+        ],
+        logicCode: [
+          "// 1. New Quote button",
+          "newQuoteBtn.addEventListener('click', () => {",
+          "  // 2. Show a fresh random quote",
+          "  displayQuote(getRandomQuote());",
+          "});",
+          "// 3. Copy button",
+          "copyBtn.addEventListener('click', () => {",
+          "  // 4. Copy the current quote",
+          "  const text = quoteEl.textContent + ' — ' + authorEl.textContent;",
+          "  navigator.clipboard.writeText(text);",
+          "});"
+        ],
+        think: "What exactly should the Copy button copy to the clipboard?",
+        hints: [
+          "Attach click listeners to both buttons.",
+          "New Quote just calls displayQuote(getRandomQuote()).",
+          "navigator.clipboard.writeText(text) copies the quote — it returns a Promise."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach click listeners to the buttons." },
+            { pattern: "(clipboard|execCommand|select\\s*\\(\\s*\\))", hint: "Copy the text with navigator.clipboard.writeText() (or a select() fallback)." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the generator.",
+        goal: "Test the New Quote and Copy buttons — and polish anything that feels off.",
+        logic: [
+          "Open the page — does a quote show immediately?",
+          "Click New Quote — does it change?",
+          "Click it several times — do quotes vary?",
+          "Click Copy — does the quote land on your clipboard?"
+        ],
+        logicCode: [
+          "// 1. Open the page — does a quote show immediately?",
+          "// 2. Click New Quote — does it change?",
+          "// 3. Click it several times — do quotes vary?",
+          "// 4. Click Copy — does it land on your clipboard?"
+        ],
+        think: "How could you stop the same quote from appearing twice in a row?",
+        hints: [
+          "Check the quote changes on each click.",
+          "If Copy fails, the Clipboard API needs a secure context (https or localhost).",
+          "Remembering the last index and re-rolling is a fun improvement."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one button should have a click listener." },
+            { pattern: "(textContent|innerText)", hint: "Render the quote into the page with textContent." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Quote Generator</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <div class="card">',
+        '            <div class="header">',
+        "                <h1>Quote Generator</h1>",
+        "                <p>Get inspired with random quotes</p>",
+        "            </div>",
+        '            <div class="line"></div>',
+        '            <div class="quote-box">',
+        '                <p id="quote">\"Click New Quote to get inspired.\"</p>',
+        '                <h3 id="author">— Unknown</h3>',
+        "            </div>",
+        '            <div class="buttons">',
+        '                <button id="newQuoteBtn">New Quote</button>',
+        '                <button id="copyBtn" class="secondary">Copy</button>',
+        "            </div>",
+        "        </div>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  align-items: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container { width: min(520px, 100%); }",
+        "",
+        ".card {",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 36px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "  text-align: center;",
+        "}",
+        "",
+        ".header h1 { font-size: 1.6rem; }",
+        ".header p { color: #6b7280; margin-top: 6px; font-size: 0.95rem; }",
+        "",
+        ".line {",
+        "  width: 70px;",
+        "  height: 4px;",
+        "  background: #2563eb;",
+        "  border-radius: 10px;",
+        "  margin: 20px auto 28px;",
+        "}",
+        "",
+        ".quote-box { margin-bottom: 28px; }",
+        "",
+        ".quote-box p {",
+        "  font-size: 1.25rem;",
+        "  line-height: 1.6;",
+        "  color: #1f2937;",
+        "  font-style: italic;",
+        "  min-height: 100px;",
+        "}",
+        "",
+        ".quote-box h3 {",
+        "  color: #2563eb;",
+        "  margin-top: 12px;",
+        "  font-size: 1rem;",
+        "  font-weight: 600;",
+        "}",
+        "",
+        ".buttons { display: flex; gap: 12px; justify-content: center; }",
+        "",
+        ".buttons button {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 10px 22px;",
+        "  border-radius: 10px;",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "  font-family: inherit;",
+        "}",
+        "",
+        ".buttons button:hover { background: #1d4ed8; }",
+        ".buttons button.secondary { background: #e5e7eb; color: #374151; }",
+        ".buttons button.secondary:hover { background: #d1d5db; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .card { padding: 24px 18px; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the quote (#quote), the author (#author) and the",
+        "//   buttons (#newQuoteBtn, #copyBtn)",
+        "//   style.css is complete — the card layout is done for you",
+        "",
+        "// Step 2: Quote data",
+        "//   Create a quotes array — each quote is an object with text and author",
+        "",
+        "// Step 3: Random selection",
+        "//   Write getRandomQuote() that returns a random quote using",
+        "//   Math.floor(Math.random() * quotes.length)",
+        "",
+        "// Step 4: Display a quote",
+        "//   Write displayQuote(quote) that writes the text into #quote and the",
+        "//   author into #author — and call it once on load",
+        "",
+        "// Step 5: Button events",
+        "//   New Quote shows a fresh random quote; Copy copies the current quote",
+        "//   with navigator.clipboard.writeText()",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test New Quote and Copy — then polish"
+      ].join("\n")
+    }
+  },
+
+  "weather-app": {
+    slug: "weather-app",
+    folder: "weather-app",
+    title: "Weather App",
+    difficulty: "Intermediate",
+    time: "45 min",
+    category: "APIs & Data",
+    tags: ["API", "Fetch", "Async"],
+    intro: "Build a weather app that fetches live conditions from the OpenWeatherMap API and renders temperature, description, humidity and wind for any city. You'll practice API requests, async/await, JSON handling and loading/error states.",
+    previewNote: "You'll build a working weather app: type a city, hit search, and see the live temperature, conditions, humidity and wind pulled from the OpenWeatherMap API.",
+    cover: "../../assets/project-covers/weather-app.png",
+    previewUrl: "../../../JS%20PROJECTS/weather-app/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "OpenWeatherMap needs an API key — get a free one at openweathermap.org/api and store it in a constant.",
+      "The endpoint is https://api.openweathermap.org/data/2.5/weather?q=CITY&appid=KEY&units=metric",
+      "units=metric returns Celsius — much easier to read for this project.",
+      "Use async/await with fetch() and check response.ok (a 404 means the city wasn't found).",
+      "The icon URL is https://openweathermap.org/img/wn/{icon}@2x.png from data.weather[0].icon."
+    ],
+    concepts: [
+      "Making API requests with fetch()",
+      "Writing async functions with await",
+      "Handling JSON responses",
+      "Rendering weather data into the DOM",
+      "Managing loading and error states"
+    ],
+    challenge: "Extra challenge: show a 5-day forecast, or add a 'Current location' button that uses the geolocation API.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the search form (#searchForm), the input (#searchInput), the loading indicator (#loading), the error element (#errorMsg) and the weather card (#weatherCard) with its temperature, description, humidity and wind elements.",
+          "Open style.css — the layout and card styles are already done for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see the search form."
+        ],
+        logicCode: [
+          "// 1. index.html — find #searchForm, #searchInput, #loading, #errorMsg, #weatherCard",
+          "// 2. style.css — layout and card styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — you'll see the search form"
+        ],
+        think: "Which element IDs will your JavaScript need to select to render weather data?",
+        hints: [
+          "The form is #searchForm — submitting it triggers the fetch.",
+          "The city comes from #searchInput.",
+          "Weather renders inside #weatherCard — it starts hidden."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const searchForm = document.getElementById('searchForm')." }
+          ]
+        }
+      },
+      {
+        title: "Search Handler",
+        tagline: "Trigger a search on submit.",
+        goal: "When the form is submitted, read the city name and kick off the API request — without reloading the page.",
+        logic: [
+          "Listen for the submit event on the form.",
+          "Prevent the page from reloading.",
+          "Read and trim the city from the input.",
+          "Call a fetch function with that city."
+        ],
+        logicCode: [
+          "// 1. Listen for form submit",
+          "searchForm.addEventListener('submit', (e) => {",
+          "  // 2. Stop the page reload",
+          "  e.preventDefault();",
+          "  // 3. Read the city",
+          "  const city = searchInput.value.trim();",
+          "  if (!city) return;",
+          "  // 4. Kick off the fetch",
+          "  getWeather(city);",
+          "});"
+        ],
+        think: "Why guard against an empty city name before fetching?",
+        hints: [
+          "Attach the listener to the form and call e.preventDefault().",
+          "searchInput.value.trim() cleans up the typed city.",
+          "Skip the request if the city is empty."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener\\s*\\(\\s*[\"']submit", hint: "Listen for the submit event on the form." },
+            { pattern: "preventDefault", hint: "Call e.preventDefault() so the page doesn't reload." },
+            { pattern: "\\.value", hint: "Read the city from the input, e.g. searchInput.value.trim()." }
+          ]
+        }
+      },
+      {
+        title: "Fetch the Weather",
+        tagline: "Request data from OpenWeatherMap.",
+        goal: "Write an async function that fetches the weather for the given city from the OpenWeatherMap API.",
+        logic: [
+          "Write an async function named getWeather.",
+          "Build the API URL with the city, your key and units=metric.",
+          "Await fetch() and check response.ok.",
+          "Await response.json() to get the data."
+        ],
+        logicCode: [
+          "// 1. Async function to fetch the weather",
+          "async function getWeather(city) {",
+          "  // 2. Build the OpenWeatherMap URL",
+          "  const url = 'https://api.openweathermap.org/data/2.5/weather?q=' +",
+          "    encodeURIComponent(city) + '&appid=' + API_KEY + '&units=metric';",
+          "  // 3. Fetch and check the response",
+          "  const response = await fetch(url);",
+          "  if (!response.ok) throw new Error('City not found');",
+          "  // 4. Parse the JSON",
+          "  const data = await response.json();",
+          "  renderWeather(data);",
+          "}"
+        ],
+        think: "Why add units=metric to the request URL?",
+        hints: [
+          "The endpoint is https://api.openweathermap.org/data/2.5/weather.",
+          "Add ?q=CITY&appid=KEY&units=metric to the URL.",
+          "Store your key in a constant like const API_KEY = '...'."
+        ],
+        check: {
+          requires: [
+            { pattern: "async", hint: "Make the function async so you can use await." },
+            { pattern: "fetch\\s*\\(", hint: "Call fetch() with the OpenWeatherMap URL." },
+            { pattern: "\\.json\\s*\\(", hint: "Parse the response with response.json()." }
+          ]
+        }
+      },
+      {
+        title: "Render the Weather",
+        tagline: "Display the weather data.",
+        goal: "Fill the card with the temperature, description, humidity, wind and icon from the API data.",
+        logic: [
+          "Set the temperature with the metric value.",
+          "Write the city name and description.",
+          "Write the humidity and wind values.",
+          "Set the weather icon image and show the card."
+        ],
+        logicCode: [
+          "// 1. Temperature and conditions",
+          "temperature.textContent = Math.round(data.main.temp) + '°C';",
+          "cityName.textContent = data.name;",
+          "description.textContent = data.weather[0].description;",
+          "// 2. Humidity and wind",
+          "humidity.textContent = data.main.humidity + '%';",
+          "windSpeed.textContent = data.wind.speed + ' km/h';",
+          "// 3. Weather icon",
+          "weatherIcon.src = 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png';",
+          "// 4. Show the card",
+          "weatherCard.hidden = false;",
+          "errorMsg.hidden = true;"
+        ],
+        think: "Why is data.weather an array?",
+        hints: [
+          "data.main.temp is the temperature and data.main.humidity the humidity.",
+          "data.weather is an array — use data.weather[0] for the conditions.",
+          "Math.round() keeps the temperature display clean."
+        ],
+        check: {
+          requires: [
+            { pattern: "textContent\\s*=", hint: "Write weather values into elements with textContent." },
+            { pattern: "(main|weather)", hint: "Read from data.main (temp, humidity) and/or data.weather (description, icon)." },
+            { pattern: "(hidden|classList)", hint: "Show the weather card once the data is rendered." }
+          ]
+        }
+      },
+      {
+        title: "Loading & Error States",
+        tagline: "Show feedback while fetching.",
+        goal: "Show a loading indicator while the request runs and an error message when it fails.",
+        logic: [
+          "Show the loading indicator before fetching.",
+          "Hide it once the request finishes.",
+          "Show a friendly error for a missing city.",
+          "Wrap the fetch in try/catch for network errors."
+        ],
+        logicCode: [
+          "// 1. Show loading before the request",
+          "loading.hidden = false;",
+          "errorMsg.hidden = true;",
+          "try {",
+          "  const response = await fetch(url);",
+          "  if (!response.ok) throw new Error('City not found — check the spelling');",
+          "  const data = await response.json();",
+          "  // 2. Hide loading when done",
+          "  loading.hidden = true;",
+          "  renderWeather(data);",
+          "} catch (err) {",
+          "  // 3. Show the error",
+          "  loading.hidden = true;",
+          "  errorMsg.textContent = err.message;",
+          "  errorMsg.hidden = false;",
+          "}"
+        ],
+        think: "Why hide the loading indicator in both the success and error paths?",
+        hints: [
+          "Toggle the .hidden property on #loading before and after the request.",
+          "A 404 (or !response.ok) means the city wasn't found.",
+          "try/catch catches network failures that aren't API errors."
+        ],
+        check: {
+          requires: [
+            { pattern: "(hidden|classList)", hint: "Toggle loading and error states with the hidden property or classList." },
+            { pattern: "(try\\s*\\{|catch)", hint: "Wrap the request in try/catch to handle failures." },
+            { pattern: "(errorMsg|errorMessage)", hint: "Display errors in an error element." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the app.",
+        goal: "Test searching real cities and error handling — then polish anything that feels off.",
+        logic: [
+          "Search 'London' — does the weather card render?",
+          "Search 'New York' — does it update?",
+          "Search a nonsense city — does the error appear?",
+          "Watch the loading indicator during a search."
+        ],
+        logicCode: [
+          "// 1. Search 'London' — does the weather card render?",
+          "// 2. Search 'New York' — does it update?",
+          "// 3. Search nonsense — does the error appear?",
+          "// 4. Does the loading indicator show during the search?"
+        ],
+        think: "What should happen to the old weather card when a new search fails?",
+        hints: [
+          "OpenWeatherMap rate-limits free keys — a search every few seconds is fine.",
+          "If the icon is blank, check data.weather[0].icon is present.",
+          "console.log(data) after response.json() helps debug the API shape."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive the search (form submit)." },
+            { pattern: "fetch\\s*\\(", hint: "The page should make an API request with fetch()." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>Weather App</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <header class="weather-header">',
+        "            <h1>⛅ Weather App</h1>",
+        '            <p class="subtitle">Real-time weather at your fingertips</p>',
+        "        </header>",
+        '        <form class="search-form" id="searchForm">',
+        '            <input type="text" id="searchInput" placeholder="Search for a city..." autocomplete="off">',
+        '            <button type="submit" id="searchBtn">Search</button>',
+        "        </form>",
+        '        <p class="loading" id="loading" hidden>Fetching weather...</p>',
+        '        <p class="error-msg" id="errorMsg" hidden></p>',
+        '        <section class="weather-card" id="weatherCard" hidden>',
+        '            <img id="weatherIcon" alt="Weather icon">',
+        '            <h2 id="cityName">—</h2>',
+        '            <span class="temperature" id="temperature">—°C</span>',
+        '            <p class="description" id="description">—</p>',
+        '            <div class="details">',
+        '                <div><span>Humidity</span><b id="humidity">—</b></div>',
+        '                <div><span>Wind</span><b id="windSpeed">—</b></div>',
+        "            </div>",
+        "        </section>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  background: #f9fafb;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  padding: 40px 24px;",
+        "}",
+        "",
+        ".container {",
+        "  width: min(520px, 100%);",
+        "  background: #ffffff;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 24px;",
+        "  padding: 32px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "}",
+        "",
+        ".weather-header { margin-bottom: 20px; text-align: center; }",
+        ".weather-header h1 { font-size: 1.8rem; }",
+        ".subtitle { color: #6b7280; margin-top: 4px; }",
+        "",
+        ".search-form { display: flex; gap: 10px; margin-bottom: 16px; }",
+        "",
+        ".search-form input {",
+        "  flex: 1;",
+        "  border: 1px solid #e5e7eb;",
+        "  border-radius: 10px;",
+        "  padding: 10px 14px;",
+        "  font-size: 0.95rem;",
+        "  font-family: inherit;",
+        "  outline: none;",
+        "}",
+        "",
+        ".search-form input:focus { border-color: #2563eb; }",
+        "",
+        ".search-form button {",
+        "  border: none;",
+        "  background: #2563eb;",
+        "  color: #ffffff;",
+        "  padding: 10px 20px;",
+        "  border-radius: 10px;",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".loading { color: #6b7280; font-size: 0.9rem; margin-bottom: 12px; text-align: center; }",
+        ".error-msg { color: #dc2626; font-size: 0.9rem; margin-bottom: 12px; text-align: center; }",
+        "",
+        ".weather-card { text-align: center; padding: 20px; border: 1px solid #e5e7eb; border-radius: 18px; }",
+        "",
+        ".weather-card img { width: 90px; height: 90px; margin-bottom: 6px; }",
+        ".weather-card h2 { font-size: 1.4rem; }",
+        "",
+        ".temperature {",
+        "  display: block;",
+        "  font-size: 3rem;",
+        "  font-weight: 700;",
+        "  color: #2563eb;",
+        "  margin: 4px 0;",
+        "}",
+        "",
+        ".description { color: #6b7280; text-transform: capitalize; margin-bottom: 18px; }",
+        "",
+        ".details {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  gap: 40px;",
+        "}",
+        "",
+        ".details div { display: flex; flex-direction: column; }",
+        ".details span { color: #6b7280; font-size: 0.8rem; }",
+        "",
+        "@media (max-width: 480px) {",
+        "  .container { padding: 20px 16px; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the search form (#searchForm), the input (#searchInput),",
+        "//   the loading indicator (#loading), the error element (#errorMsg) and the",
+        "//   weather card (#weatherCard) with its temperature, description, humidity",
+        "//   and wind elements",
+        "//   style.css is complete — the layout and card styles are done for you",
+        "",
+        "// Step 2: Search handler",
+        "//   Listen for submit on the form, preventDefault(), read and trim the",
+        "//   city, and call a fetch function",
+        "",
+        "// Step 3: Fetch the weather",
+        "//   Write an async function that fetches",
+        "//   https://api.openweathermap.org/data/2.5/weather?q=CITY&appid=KEY&units=metric",
+        "//   (store your key in a const API_KEY), checks response.ok, and parses the JSON",
+        "",
+        "// Step 4: Render the weather",
+        "//   Fill temperature, city name, description, humidity and wind from the",
+        "//   data, set the icon from data.weather[0].icon, and show the card",
+        "",
+        "// Step 5: Loading & error states",
+        "//   Show #loading while fetching, hide it when done, and show errors",
+        "//   in #errorMsg (both unknown cities and network failures)",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test a real city, a second city, and a nonsense city — then polish"
+      ].join("\n")
+    }
+  },
+
+  "password-generator": {
+    slug: "password-generator",
+    folder: "password Generator",
+    title: "Password Generator",
+    difficulty: "Beginner",
+    time: "40 min",
+    category: "Core JS",
+    tags: ["DOM", "Strings", "Random"],
+    intro: "Build a password generator with a length slider, character options and one-click copy. You'll practice DOM manipulation, strings and arrays, random selection with Math.random(), loops, and assembling a password from character sets.",
+    previewNote: "You'll build a working password generator: drag the length slider, pick which character types to include, hit Generate — and get a random password you can copy with one click.",
+    cover: "../../assets/project-covers/password-generator.png",
+    previewUrl: "../../../JS%20PROJECTS/password%20Generator/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Store each character set as a string constant — uppercase, lowercase, numbers and symbols.",
+      "Math.random() * set.length gives a random index — Math.floor() turns it into a valid position.",
+      "Collect the checked sets into an array first, then join them into one pool of characters to pick from.",
+      "Guarantee at least one character from every selected set before filling the rest randomly — it makes the password balanced.",
+      "If every checkbox is unchecked, fall back to lowercase instead of generating an empty password.",
+      "Strings index like arrays: 'abc'[1] is 'b' — so chars[Math.floor(Math.random() * chars.length)] picks a random character."
+    ],
+    concepts: [
+      "DOM manipulation with element selection and events",
+      "Working with strings and character sets",
+      "Arrays and joining a character pool",
+      "Random selection with Math.random() and Math.floor()",
+      "Loops for building the password"
+    ],
+    challenge: "Extra challenge: add a strength meter that scores the password, or a shuffle pass so the generated password isn't predictable.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the generator UI.",
+        goal: "Open the starter files and understand how the controls, the output panel and script.js fit together.",
+        logic: [
+          "Look at index.html — find the password display (#password), the copy button (#copyBtn), the length slider (#lengthSlider) with its badge (#lengthValue), the four option checkboxes (#upper, #lower, #number, #symbol) and the generate button (#generateBtn).",
+          "Find the strength meter (#strengthLabel, #fill) and the 'Generate Another' button (#againBtn).",
+          "Open style.css — the layout, slider, option cards and output panel are already styled for you.",
+          "Open script.js — it only contains comments that mark the steps ahead."
+        ],
+        logicCode: [
+          "// 1. index.html — find #password, #copyBtn, #lengthSlider, #lengthValue",
+          "// 2. Checkboxes — #upper, #lower, #number, #symbol",
+          "// 3. style.css — layout and controls are done for you",
+          "// 4. script.js — comments mark the steps ahead"
+        ],
+        think: "Which element IDs will your JavaScript need to select to read options and show the password?",
+        hints: [
+          "The generated password shows in #password.",
+          "The length comes from #lengthSlider and its value is shown in #lengthValue.",
+          "The four checkboxes live at #upper, #lower, #number and #symbol."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const passwordEl = document.getElementById('password')." }
+          ]
+        }
+      },
+      {
+        title: "Select Elements",
+        tagline: "Connect the controls.",
+        goal: "Select the password display, the length slider, the checkboxes, the generate button and the strength elements.",
+        logic: [
+          "Select the password display and the generate button.",
+          "Select the length slider and its value badge.",
+          "Select the four option checkboxes.",
+          "Select the strength label and fill."
+        ],
+        logicCode: [
+          "// 1. Display and generate button",
+          "const passwordEl = document.getElementById('password');",
+          "const generateBtn = document.getElementById('generateBtn');",
+          "// 2. Length slider and badge",
+          "const lengthSlider = document.getElementById('lengthSlider');",
+          "const lengthValue = document.getElementById('lengthValue');",
+          "// 3. Option checkboxes",
+          "const upperCheck = document.getElementById('upper');",
+          "const lowerCheck = document.getElementById('lower');",
+          "const numberCheck = document.getElementById('number');",
+          "const symbolCheck = document.getElementById('symbol');"
+        ],
+        think: "Why keep all the selected elements in constants at the top of the script?",
+        hints: [
+          "The password shows in #password and is generated by #generateBtn.",
+          "The slider is #lengthSlider and its badge is #lengthValue.",
+          "The options are #upper, #lower, #number and #symbol."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector)." },
+            { pattern: "(lengthSlider|generateBtn|upper|lower|number|symbol)", hint: "Hook into the generator controls — the slider, the generate button and the option checkboxes." }
+          ]
+        }
+      },
+      {
+        title: "Create Character Sets",
+        tagline: "Prepare the character pools.",
+        goal: "Define the uppercase, lowercase, number and symbol character sets, then build a pool from the checked options.",
+        logic: [
+          "Define a string constant for each character set.",
+          "Collect the checked sets into an array.",
+          "Join them into a single pool of characters.",
+          "Fall back to lowercase if nothing is checked."
+        ],
+        logicCode: [
+          "// 1. Character sets",
+          "const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';",
+          "const lower = 'abcdefghijklmnopqrstuvwxyz';",
+          "const numbers = '0123456789';",
+          "const symbols = '!@#$%^&*';",
+          "// 2. Pool from checked options",
+          "const sets = [];",
+          "if (upperCheck.checked) sets.push(upper);",
+          "if (lowerCheck.checked) sets.push(lower);",
+          "if (numberCheck.checked) sets.push(numbers);",
+          "if (symbolCheck.checked) sets.push(symbols);",
+          "// 3. Fallback when nothing is checked",
+          "if (sets.length === 0) sets.push(lower);"
+        ],
+        think: "Why fall back to lowercase when every checkbox is unchecked?",
+        hints: [
+          "Each set is just a string of characters.",
+          "Array.push() adds the checked sets to a list.",
+          "sets.join('') combines them into one pool of characters."
+        ],
+        check: {
+          requires: [
+            { pattern: "(ABCDEFGHIJKLMNOPQRSTUVWXYZ|abcdefghijklmnopqrstuvwxyz|0123456789)", hint: "Define the character sets as strings, e.g. 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'." },
+            { pattern: "checked", hint: "Read the checkboxes — .checked tells you which sets are selected." }
+          ]
+        }
+      },
+      {
+        title: "Generate the Password",
+        tagline: "Pick random characters.",
+        goal: "Build the password by picking random characters from the pool until it reaches the chosen length.",
+        logic: [
+          "Read the target length from the slider.",
+          "Build the pool from the selected sets.",
+          "Pick a random character with Math.random() and Math.floor().",
+          "Loop until the password reaches the target length."
+        ],
+        logicCode: [
+          "// 1. Target length from the slider",
+          "const length = +lengthSlider.value;",
+          "// 2. Pick a random character",
+          "const pool = sets.join('');",
+          "const randomChar = pool[Math.floor(Math.random() * pool.length)];",
+          "// 3. Loop until the password is long enough",
+          "let password = '';",
+          "for (let i = 0; i < length; i++) {",
+          "  password += pool[Math.floor(Math.random() * pool.length)];",
+          "}"
+        ],
+        think: "Why do you need Math.floor() around Math.random() * pool.length?",
+        hints: [
+          "Math.random() returns a decimal between 0 and 1.",
+          "Math.floor() rounds down so the index is always a valid position.",
+          "A for loop that runs length times builds the full password."
+        ],
+        check: {
+          requires: [
+            { pattern: "Math\\.random", hint: "Use Math.random() to pick a random character." },
+            { pattern: "Math\\.floor", hint: "Math.floor() turns the random value into a valid index." },
+            { pattern: "(for\\s*\\(|while\\s*\\()", hint: "Loop until the password reaches the target length." }
+          ]
+        }
+      },
+      {
+        title: "Display the Password",
+        tagline: "Show the generated password.",
+        goal: "Write the generated password into the display, and update the length badge as the slider moves.",
+        logic: [
+          "Write the password into the display element.",
+          "Update the badge when the slider moves.",
+          "Generate on the button click.",
+          "Generate on the 'Generate Another' button too."
+        ],
+        logicCode: [
+          "// 1. Show the password",
+          "passwordEl.textContent = password;",
+          "// 2. Badge follows the slider",
+          "lengthSlider.addEventListener('input', () => {",
+          "  lengthValue.textContent = lengthSlider.value;",
+          "});",
+          "// 3. Generate on click",
+          "generateBtn.addEventListener('click', generatePassword);"
+        ],
+        think: "Why use textContent instead of innerHTML for the password?",
+        hints: [
+          "passwordEl.textContent = password shows the generated text.",
+          "The badge #lengthValue updates on the slider's input event.",
+          "Attach the same generate function to #generateBtn and #againBtn."
+        ],
+        check: {
+          requires: [
+            { pattern: "(textContent|innerText)\\s*=", hint: "Write the password into the display with textContent." },
+            { pattern: "addEventListener", hint: "Attach a listener to the generate button (and the slider)." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Validate and test combos.",
+        goal: "Test different lengths and option combinations, and make sure the generator never breaks.",
+        logic: [
+          "Generate with all four options — is it the right length?",
+          "Uncheck everything except symbols — does it still generate?",
+          "Uncheck all four — does it fall back instead of breaking?",
+          "Drag the slider to 8 and to 32 — does the badge update?",
+          "Click Generate repeatedly — is every password different?"
+        ],
+        logicCode: [
+          "// 1. All four options — right length?",
+          "// 2. Only symbols — still generates?",
+          "// 3. Nothing checked — falls back to lowercase?",
+          "// 4. Slider at 8 and 32 — does the badge update?",
+          "// 5. Repeated clicks — different passwords?"
+        ],
+        think: "What should happen if the user tries to copy before generating anything?",
+        hints: [
+          "A fresh password should appear on every click — randomness gives you that for free.",
+          "If a combo produces an empty password, check the fallback for an empty sets array.",
+          "Bonus: wire up #copyBtn with navigator.clipboard.writeText(passwordEl.textContent)."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive generation (the button)." },
+            { pattern: "Math\\.random", hint: "The generator should use Math.random() to build the password." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '  <meta charset="UTF-8" />',
+        '  <meta name="viewport" content="width=device-width, initial-scale=1.0" />',
+        "  <title>Password Generator</title>",
+        '  <link rel="stylesheet" href="style.css" />',
+        "</head>",
+        "<body>",
+        '  <main id="hero">',
+        "",
+        "    <!-- LEFT PANEL : Controls -->",
+        '    <section id="controls">',
+        '      <h1 class="heading">Strong Password<br /><span class="gradient-text">Generator</span></h1>',
+        '      <p class="subtitle">Create secure, random passwords with custom options.</p>',
+        "",
+        '      <div class="control-group">',
+        '        <div class="control-header">',
+        "          <h3>Password Length</h3>",
+        '          <span class="badge" id="lengthValue">16</span>',
+        "        </div>",
+        '        <div class="slider-wrapper">',
+        '          <input type="range" id="lengthSlider" class="premium-slider" min="8" max="32" value="16" aria-label="Password length" />',
+        '          <div class="slider-labels"><span>8</span><span>16</span><span>24</span><span>32</span></div>',
+        "        </div>",
+        "      </div>",
+        "",
+        '      <div class="control-group">',
+        '        <h3 class="control-heading">Include Characters</h3>',
+        '        <div class="option-grid">',
+        '          <label class="option-card">',
+        '            <input type="checkbox" id="upper" class="option-check" checked />',
+        '            <span class="option-icon purple">Aa</span>',
+        "            <span class=\"option-title\">Uppercase</span>",
+        "            <span class=\"option-desc\">A &ndash; Z</span>",
+        "          </label>",
+        '          <label class="option-card">',
+        '            <input type="checkbox" id="lower" class="option-check" checked />',
+        '            <span class="option-icon blue">aa</span>',
+        "            <span class=\"option-title\">Lowercase</span>",
+        "            <span class=\"option-desc\">a &ndash; z</span>",
+        "          </label>",
+        '          <label class="option-card">',
+        '            <input type="checkbox" id="number" class="option-check" checked />',
+        '            <span class="option-icon cyan">09</span>',
+        "            <span class=\"option-title\">Numbers</span>",
+        "            <span class=\"option-desc\">0 &ndash; 9</span>",
+        "          </label>",
+        '          <label class="option-card">',
+        '            <input type="checkbox" id="symbol" class="option-check" checked />',
+        '            <span class="option-icon orange">!@#</span>',
+        "            <span class=\"option-title\">Symbols</span>",
+        "            <span class=\"option-desc\">! @ # $ &hellip;</span>",
+        "          </label>",
+        "        </div>",
+        "      </div>",
+        "",
+        '      <button class="btn-primary" id="generateBtn">Generate Password</button>',
+        "    </section>",
+        "",
+        "    <!-- RIGHT PANEL : Output -->",
+        '    <section id="output">',
+        "      <h2 class=\"section-label\">Your Password</h2>",
+        '      <div class="password-display">',
+        '        <p class="password-text" id="password">Click generate to start</p>',
+        '        <button class="icon-btn" id="copyBtn" aria-label="Copy password">Copy</button>',
+        "      </div>",
+        '      <p id="copyMsg"></p>',
+        "",
+        '      <div class="strength-section">',
+        '        <div class="strength-header">',
+        "          <h3>Strength</h3>",
+        '          <span class="strength-label strong" id="strengthLabel">Strong</span>',
+        "        </div>",
+        '        <div class="strength-meter"><div class="strength-fill strong" id="fill" style="width: 100%"></div></div>',
+        '        <div class="meter-labels"><span>Weak</span><span>Medium</span><span>Strong</span></div>',
+        "      </div>",
+        "",
+        '      <button class="btn-secondary" id="againBtn">Generate Another</button>',
+        "    </section>",
+        "  </main>",
+        "",
+        '  <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        ":root {",
+        "  --bg-primary: #0B1020;",
+        "  --bg-secondary: #131A2F;",
+        "  --bg-tertiary: #0F1629;",
+        "  --surface: rgba(19, 26, 47, 0.75);",
+        "  --text-primary: #EEF2FF;",
+        "  --text-secondary: #A7B0D0;",
+        "  --text-muted: #6B7294;",
+        "  --purple: #7C4DFF;",
+        "  --blue: #3B82F6;",
+        "  --cyan: #06B6D4;",
+        "  --orange: #FB923C;",
+        "  --green: #22C55E;",
+        "  --red: #EF4444;",
+        "  --yellow: #EAB308;",
+        "  --gradient-accent: linear-gradient(135deg, #7C4DFF, #3B82F6);",
+        "  --glass-border: rgba(38, 49, 79, 0.6);",
+        "  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);",
+        "  --radius-sm: 12px;",
+        "  --radius-md: 16px;",
+        "  --radius-lg: 20px;",
+        "  --radius-xl: 24px;",
+        "  --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);",
+        "}",
+        "",
+        "body {",
+        "  font-family: 'Poppins', system-ui, sans-serif;",
+        "  background: var(--bg-primary);",
+        "  color: var(--text-primary);",
+        "  min-height: 100vh;",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  align-items: center;",
+        "  padding: 20px;",
+        "}",
+        "",
+        "#hero {",
+        "  width: 100%;",
+        "  max-width: 1000px;",
+        "  display: grid;",
+        "  grid-template-columns: 1fr 1fr;",
+        "  gap: 32px;",
+        "}",
+        "",
+        "#controls, #output {",
+        "  background: var(--surface);",
+        "  border: 1px solid var(--glass-border);",
+        "  border-radius: var(--radius-xl);",
+        "  padding: 36px 32px;",
+        "  box-shadow: var(--glass-shadow);",
+        "}",
+        "",
+        ".heading {",
+        "  font-size: 2.2rem;",
+        "  font-weight: 800;",
+        "  line-height: 1.2;",
+        "  letter-spacing: -0.5px;",
+        "}",
+        "",
+        ".gradient-text {",
+        "  display: block;",
+        "  background: linear-gradient(135deg, #7C4DFF, #06B6D4);",
+        "  -webkit-background-clip: text;",
+        "  background-clip: text;",
+        "  -webkit-text-fill-color: transparent;",
+        "}",
+        "",
+        ".subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 12px; line-height: 1.6; }",
+        "",
+        ".control-group { margin-top: 28px; }",
+        "",
+        ".control-header {",
+        "  display: flex;",
+        "  justify-content: space-between;",
+        "  align-items: center;",
+        "  margin-bottom: 14px;",
+        "}",
+        "",
+        ".control-header h3, .control-heading {",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  color: var(--text-primary);",
+        "}",
+        "",
+        ".control-heading { margin-bottom: 14px; }",
+        "",
+        ".badge {",
+        "  background: var(--bg-tertiary);",
+        "  color: var(--purple);",
+        "  font-size: 1rem;",
+        "  font-weight: 700;",
+        "  padding: 2px 14px;",
+        "  border-radius: 8px;",
+        "  border: 1px solid rgba(124, 77, 255, 0.2);",
+        "  min-width: 36px;",
+        "  text-align: center;",
+        "}",
+        "",
+        ".premium-slider {",
+        "  -webkit-appearance: none;",
+        "  appearance: none;",
+        "  width: 100%;",
+        "  height: 6px;",
+        "  border-radius: 6px;",
+        "  background: var(--bg-tertiary);",
+        "  outline: none;",
+        "}",
+        "",
+        ".premium-slider::-webkit-slider-thumb {",
+        "  -webkit-appearance: none;",
+        "  appearance: none;",
+        "  width: 22px;",
+        "  height: 22px;",
+        "  border-radius: 50%;",
+        "  background: var(--gradient-accent);",
+        "  cursor: pointer;",
+        "  border: 3px solid var(--bg-primary);",
+        "  box-shadow: 0 0 0 2px rgba(124, 77, 255, 0.3);",
+        "}",
+        "",
+        ".slider-labels {",
+        "  display: flex;",
+        "  justify-content: space-between;",
+        "  margin-top: 8px;",
+        "}",
+        "",
+        ".slider-labels span { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; }",
+        "",
+        ".option-grid {",
+        "  display: grid;",
+        "  grid-template-columns: 1fr 1fr;",
+        "  gap: 12px;",
+        "}",
+        "",
+        ".option-card {",
+        "  background: var(--bg-tertiary);",
+        "  border: 1px solid var(--glass-border);",
+        "  border-radius: var(--radius-md);",
+        "  padding: 16px 14px;",
+        "  cursor: pointer;",
+        "  display: flex;",
+        "  flex-direction: column;",
+        "  gap: 4px;",
+        "  transition: all var(--transition);",
+        "}",
+        "",
+        ".option-card:hover { transform: translateY(-4px); border-color: var(--purple); }",
+        "",
+        ".option-check {",
+        "  accent-color: var(--purple);",
+        "  width: 18px;",
+        "  height: 18px;",
+        "  cursor: pointer;",
+        "}",
+        "",
+        ".option-icon { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.5px; }",
+        ".option-title { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }",
+        ".option-desc { font-size: 0.72rem; color: var(--text-muted); }",
+        "",
+        ".purple { color: #A855F7; }",
+        ".blue { color: #60A5FA; }",
+        ".cyan { color: #22D3EE; }",
+        ".orange { color: #FB923C; }",
+        "",
+        ".btn-primary {",
+        "  width: 100%;",
+        "  padding: 16px 24px;",
+        "  border: none;",
+        "  border-radius: var(--radius-md);",
+        "  background: var(--gradient-accent);",
+        "  color: #fff;",
+        "  font-size: 1.02rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "  margin-top: 28px;",
+        "  transition: all var(--transition);",
+        "  box-shadow: 0 4px 20px rgba(124, 77, 255, 0.25);",
+        "}",
+        "",
+        ".btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 35px rgba(124, 77, 255, 0.4); }",
+        "",
+        ".section-label { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }",
+        "",
+        ".password-display {",
+        "  display: flex;",
+        "  justify-content: space-between;",
+        "  align-items: center;",
+        "  background: var(--bg-tertiary);",
+        "  border: 1px solid var(--glass-border);",
+        "  border-radius: var(--radius-md);",
+        "  padding: 18px 20px;",
+        "  margin-bottom: 20px;",
+        "}",
+        "",
+        ".password-text {",
+        "  font-size: 1.15rem;",
+        "  font-weight: 500;",
+        "  font-family: 'Courier New', monospace;",
+        "  letter-spacing: 0.5px;",
+        "  color: var(--text-primary);",
+        "  word-break: break-all;",
+        "  user-select: all;",
+        "}",
+        "",
+        ".icon-btn {",
+        "  background: var(--bg-secondary);",
+        "  border: 1px solid var(--glass-border);",
+        "  color: var(--text-secondary);",
+        "  padding: 10px 16px;",
+        "  border-radius: var(--radius-sm);",
+        "  cursor: pointer;",
+        "  font-size: 0.9rem;",
+        "  font-weight: 600;",
+        "  transition: all var(--transition);",
+        "}",
+        "",
+        ".icon-btn:hover { background: var(--purple); color: #fff; border-color: var(--purple); }",
+        "",
+        "#copyMsg { font-size: 0.82rem; min-height: 1.4em; color: var(--green); font-weight: 600; margin-bottom: 16px; }",
+        "",
+        ".strength-section { margin-bottom: 20px; }",
+        "",
+        ".strength-header {",
+        "  display: flex;",
+        "  justify-content: space-between;",
+        "  align-items: center;",
+        "  margin-bottom: 10px;",
+        "}",
+        "",
+        ".strength-header h3 { font-size: 0.95rem; font-weight: 500; color: var(--text-secondary); }",
+        "",
+        ".strength-label { font-size: 0.88rem; font-weight: 700; padding: 2px 12px; border-radius: 6px; }",
+        ".strength-label.weak { color: var(--red); background: rgba(239, 68, 68, 0.12); }",
+        ".strength-label.medium { color: var(--yellow); background: rgba(234, 179, 8, 0.12); }",
+        ".strength-label.strong { color: var(--green); background: rgba(34, 197, 94, 0.12); }",
+        "",
+        ".strength-meter { height: 8px; background: var(--bg-tertiary); border-radius: 10px; overflow: hidden; }",
+        "",
+        ".strength-fill { height: 100%; border-radius: 10px; transition: width 0.6s ease; }",
+        ".strength-fill.weak { background: linear-gradient(90deg, var(--red), #F87171); }",
+        ".strength-fill.medium { background: linear-gradient(90deg, var(--yellow), #FACC15); }",
+        ".strength-fill.strong { background: linear-gradient(90deg, var(--green), #4ADE80); }",
+        "",
+        ".meter-labels { display: flex; justify-content: space-between; margin-top: 6px; }",
+        ".meter-labels span { font-size: 0.68rem; color: var(--text-muted); }",
+        "",
+        ".btn-secondary {",
+        "  width: 100%;",
+        "  padding: 14px 24px;",
+        "  border: 1px solid var(--glass-border);",
+        "  border-radius: var(--radius-md);",
+        "  background: transparent;",
+        "  color: var(--text-primary);",
+        "  font-size: 0.95rem;",
+        "  font-weight: 600;",
+        "  cursor: pointer;",
+        "  transition: all var(--transition);",
+        "}",
+        "",
+        ".btn-secondary:hover { background: var(--bg-secondary); border-color: var(--purple); transform: translateY(-2px); }",
+        "",
+        "@media (max-width: 800px) {",
+        "  #hero { grid-template-columns: 1fr; max-width: 600px; }",
+        "  .heading { font-size: 1.8rem; }",
+        "  .option-grid { grid-template-columns: 1fr; }",
+        "  #controls, #output { padding: 24px 20px; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the password display (#password), the copy button (#copyBtn),",
+        "//   the length slider (#lengthSlider) with its badge (#lengthValue), the four",
+        "//   option checkboxes (#upper, #lower, #number, #symbol), the generate button",
+        "//   (#generateBtn) and the strength meter (#strengthLabel, #fill)",
+        "//   style.css is complete — the layout and controls are styled for you",
+        "",
+        "// Step 2: Select elements",
+        "//   Grab the display, the slider and its badge, the four checkboxes and the",
+        "//   generate button with document.getElementById()",
+        "",
+        "// Step 3: Create character sets",
+        "//   Define string constants for uppercase, lowercase, numbers and symbols,",
+        "//   then collect the checked ones into a pool to pick from",
+        "",
+        "// Step 4: Generate the password",
+        "//   Read the length from the slider, pick a random character from the pool",
+        "//   with Math.random() and Math.floor(), and loop until you reach the length",
+        "",
+        "// Step 5: Display the password",
+        "//   Write the result into #password with textContent, update #lengthValue as",
+        "//   the slider moves, and generate a fresh password on button clicks",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test different lengths, single-option combos and the all-unchecked",
+        "//   fallback — then polish (e.g. wire up the copy button)"
+      ].join("\n")
+    }
+  },
+
+  "to-do-list": {
+    slug: "to-do-list",
+    folder: "TO-DO list",
+    title: "To-Do List",
+    difficulty: "Beginner",
+    time: "40 min",
+    category: "Core JS",
+    tags: ["CRUD", "DOM", "localStorage"],
+    intro: "Build a to-do list that adds, completes, deletes and remembers your tasks. You'll practice DOM manipulation, form handling, dynamic rendering, state management and persisting tasks with localStorage.",
+    previewNote: "You'll build a working to-do list: type a task, hit Add, tick it off when it's done, delete it when it's finished — and your tasks are still there after a page refresh.",
+    cover: "../../assets/project-covers/to-do-list.png",
+    previewUrl: "../../../JS%20PROJECTS/TO-DO%20list/index.html",
+    githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
+    communityUrl: "../community/",
+    tips: [
+      "Keep every task as an object — { text, completed } — in one array, and render the list from that array instead of from the DOM.",
+      "localStorage only stores strings: save with localStorage.setItem('tasks', JSON.stringify(tasks)) and load with JSON.parse().",
+      "Call the save function after every change — add, complete and delete — then load once when the page opens.",
+      "Toggle a .completed class on finished tasks and let CSS strike them through.",
+      "Trim the input before checking it's empty — a string of spaces is not a real task.",
+      "Compute total, completed and remaining from the array so the stats can never get out of sync."
+    ],
+    concepts: [
+      "DOM manipulation with createElement and appendChild",
+      "Form handling and input events",
+      "Rendering task lists dynamically",
+      "State management with a tasks array",
+      "Persisting data with localStorage and JSON"
+    ],
+    challenge: "Extra challenge: add edit-in-place, or a filter bar that shows All / Active / Completed tasks.",
+    steps: [
+      {
+        title: "Project Setup",
+        tagline: "Understand the starter files.",
+        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        logic: [
+          "Look at index.html — find the task input (#taskInput), the Add button (#addTaskBtn), the task list (#taskList), the progress section (#progressText, #progressFill) and the three stat cards (#totalTasks, #completedTasks, #remainingTasks).",
+          "Open style.css — the layout, task rows, progress bar and stat cards are already styled for you.",
+          "Open script.js — it only contains comments that mark the steps ahead.",
+          "Open index.html in the browser — you'll see the task form."
+        ],
+        logicCode: [
+          "// 1. index.html — find #taskInput, #addTaskBtn, #taskList, #progressText, #progressFill",
+          "// 2. style.css — layout and task styles are done for you",
+          "// 3. script.js — comments mark the steps ahead",
+          "// 4. Open index.html in the browser — you'll see the task form"
+        ],
+        think: "Which element IDs will your JavaScript need to select to add and track tasks?",
+        hints: [
+          "The task text comes from #taskInput.",
+          "The Add button is #addTaskBtn — clicking it adds the task.",
+          "Tasks render inside #taskList."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector) — e.g. const taskInput = document.getElementById('taskInput')." }
+          ]
+        }
+      },
+      {
+        title: "Select Elements",
+        tagline: "Connect the form and the list.",
+        goal: "Select the input, the Add button, the task list and the stat and progress elements so your script can talk to the page.",
+        logic: [
+          "Select the task input and the Add button.",
+          "Select the task list where tasks will render.",
+          "Select the three stat elements and the progress elements.",
+          "Select the progress text and progress fill."
+        ],
+        logicCode: [
+          "// 1. Input and button",
+          "const taskInput = document.getElementById('taskInput');",
+          "const addTaskBtn = document.getElementById('addTaskBtn');",
+          "// 2. Task list",
+          "const taskList = document.getElementById('taskList');",
+          "// 3. Stats and progress",
+          "const totalEl = document.getElementById('totalTasks');",
+          "const completedEl = document.getElementById('completedTasks');",
+          "const remainingEl = document.getElementById('remainingTasks');",
+          "const progressText = document.getElementById('progressText');",
+          "const progressFill = document.getElementById('progressFill');"
+        ],
+        think: "Why store every selected element in a constant instead of calling getElementById everywhere?",
+        hints: [
+          "Use document.getElementById() for each element you need.",
+          "The stats are #totalTasks, #completedTasks and #remainingTasks.",
+          "The progress bar is made of #progressText and #progressFill."
+        ],
+        check: {
+          requires: [
+            { pattern: "(getElementById|querySelector(?:All)?)", hint: "Select elements with document.getElementById() (or querySelector)." },
+            { pattern: "(taskInput|addTaskBtn|taskList)", hint: "Hook into the form and list elements — #taskInput, #addTaskBtn, #taskList." }
+          ]
+        }
+      },
+      {
+        title: "Add Tasks",
+        tagline: "Create and render a new task.",
+        goal: "Read the input, guard against empty text, build a task row and append it to the list.",
+        logic: [
+          "Read the input value and trim it.",
+          "If it's empty, show a message and stop.",
+          "Create the task elements with createElement.",
+          "Append the task to the list and clear the input."
+        ],
+        logicCode: [
+          "// 1. Read and trim the input",
+          "const value = taskInput.value.trim();",
+          "if (!value) { alert('Enter a task.'); return; }",
+          "// 2. Build the task row",
+          "const taskRow = document.createElement('div');",
+          "taskRow.classList.add('task');",
+          "const checkbox = document.createElement('input');",
+          "checkbox.type = 'checkbox';",
+          "const text = document.createElement('span');",
+          "text.textContent = value;",
+          "// 3. Append and clear",
+          "taskRow.append(checkbox, text);",
+          "taskList.appendChild(taskRow);",
+          "taskInput.value = '';",
+          "taskInput.focus();"
+        ],
+        think: "Why clear the input after adding, and what happens if the user clicks Add with nothing typed?",
+        hints: [
+          "taskInput.value.trim() removes whitespace around the text.",
+          "Build each row with document.createElement and fill it with textContent.",
+          "Append the finished row to #taskList and reset the input."
+        ],
+        check: {
+          requires: [
+            { pattern: "\\.value", hint: "Read the task from the input, e.g. taskInput.value.trim()." },
+            { pattern: "createElement", hint: "Create the task row with document.createElement()." },
+            { pattern: "(append|appendChild)", hint: "Add the new task to the list with append() or appendChild()." }
+          ]
+        }
+      },
+      {
+        title: "Complete & Delete Tasks",
+        tagline: "Handle task completion and deletion.",
+        goal: "Let users tick tasks off and delete them — and keep the counters in sync.",
+        logic: [
+          "Listen for the checkbox change on each task.",
+          "Toggle a completed class on the task text.",
+          "Listen for clicks on the delete button.",
+          "Remove the task and update the counters."
+        ],
+        logicCode: [
+          "// 1. Checkbox toggles completion",
+          "checkbox.addEventListener('change', () => {",
+          "  text.classList.toggle('completed');",
+          "  updateCounters();",
+          "});",
+          "// 2. Delete removes the row",
+          "deleteBtn.addEventListener('click', () => {",
+          "  taskRow.remove();",
+          "  updateCounters();",
+          "});"
+        ],
+        think: "Where should the counters and progress bar be updated after a change?",
+        hints: [
+          "Add an event listener to the checkbox and the delete button.",
+          "classList.toggle('completed') adds or removes the line-through style.",
+          "element.remove() takes the task row out of the DOM."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach listeners to the checkbox and delete button." },
+            { pattern: "(classList|checked)", hint: "Toggle completion with classList or the checkbox checked state." },
+            { pattern: "(remove|removeChild)", hint: "Remove the task row when delete is clicked." }
+          ]
+        }
+      },
+      {
+        title: "Save Tasks",
+        tagline: "Persist tasks with localStorage.",
+        goal: "Save the tasks to localStorage whenever they change, and load them back when the page opens.",
+        logic: [
+          "Keep the tasks in an array of objects.",
+          "Write a save function using JSON.stringify.",
+          "Write a load function using JSON.parse.",
+          "Load on startup and save after every change."
+        ],
+        logicCode: [
+          "// 1. Save the tasks array",
+          "function saveTasks() {",
+          "  localStorage.setItem('tasks', JSON.stringify(tasks));",
+          "}",
+          "// 2. Load on startup",
+          "function loadTasks() {",
+          "  const saved = localStorage.getItem('tasks');",
+          "  return saved ? JSON.parse(saved) : [];",
+          "}",
+          "// 3. Call load when the page starts",
+          "let tasks = loadTasks();",
+          "renderTasks();",
+          "// 4. Call save after every change",
+          "saveTasks();"
+        ],
+        think: "Why do you need JSON.stringify to save an array to localStorage?",
+        hints: [
+          "localStorage only stores strings — JSON.stringify(tasks) encodes the array.",
+          "JSON.parse(saved) turns the string back into an array of task objects.",
+          "Render the list from the array on load, and save after every add, complete and delete."
+        ],
+        check: {
+          requires: [
+            { pattern: "localStorage", hint: "Use localStorage to persist the tasks." },
+            { pattern: "JSON\\.stringify", hint: "Encode the array with JSON.stringify() before saving." },
+            { pattern: "JSON\\.parse", hint: "Decode the saved string with JSON.parse() when loading." }
+          ]
+        }
+      },
+      {
+        title: "Final Touch & Test",
+        tagline: "Polish and test the app.",
+        goal: "Test adding, completing, deleting, empty input and persistence — then polish anything that feels off.",
+        logic: [
+          "Add a few tasks — do they appear in the list?",
+          "Tick one off — does it strike through and update the stats?",
+          "Delete a task — does it disappear and update the counters?",
+          "Type only spaces — does the app reject it?",
+          "Refresh the page — are the tasks still there?"
+        ],
+        logicCode: [
+          "// 1. Add a few tasks — do they appear in the list?",
+          "// 2. Tick one off — does the stats bar update?",
+          "// 3. Delete a task — do the counters update?",
+          "// 4. Type only spaces — is it rejected?",
+          "// 5. Refresh — are the tasks still there?"
+        ],
+        think: "What should the progress bar show when every task is completed?",
+        hints: [
+          "Pressing Enter should also add a task — listen for the keydown event on the input.",
+          "If tasks vanish on refresh, check that saveTasks() runs after every change.",
+          "If the stats look wrong, compute them from the tasks array, not from the DOM."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "At least one listener should drive adding or completing tasks." },
+            { pattern: "localStorage", hint: "The app should persist tasks with localStorage." }
+          ]
+        }
+      }
+    ],
+    files: {
+      "index.html": [
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <title>To-Do List</title>",
+        '    <link rel="stylesheet" href="style.css">',
+        "</head>",
+        "<body>",
+        '  <main class="main-wrapper">',
+        '    <div class="container">',
+        '        <div class="header">',
+        '            <div class="logo">✓</div>',
+        "            <div>",
+        "                <h1>My <span>To-Do List</span></h1>",
+        "                <p>Organize your tasks. Stay productive.</p>",
+        "            </div>",
+        "        </div>",
+        '        <div class="input-section">',
+        '            <input type="text" id="taskInput" placeholder="What do you need to do?">',
+        '            <button id="addTaskBtn">Add Task</button>',
+        "        </div>",
+        '        <div class="progress-section">',
+        '            <div class="progress-text"><span id="progressText">0 of 0 tasks completed</span></div>',
+        '            <div class="progress-bar"><div id="progressFill"></div></div>',
+        "        </div>",
+        '        <div id="taskList"></div>',
+        '        <div class="stats">',
+        "            <div class=\"card\">",
+        '                <h2 id="totalTasks">0</h2>',
+        "                <p>Total Tasks</p>",
+        "            </div>",
+        "            <div class=\"card\">",
+        '                <h2 id="completedTasks">0</h2>',
+        "                <p>Completed</p>",
+        "            </div>",
+        "            <div class=\"card\">",
+        '                <h2 id="remainingTasks">0</h2>',
+        "                <p>Remaining</p>",
+        "            </div>",
+        "        </div>",
+        "    </div>",
+        "  </main>",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>"
+      ].join("\n"),
+      "style.css": [
+        "* { margin: 0; padding: 0; box-sizing: border-box; }",
+        "",
+        "body {",
+        "  min-height: 100vh;",
+        "  display: flex;",
+        "  flex-direction: column;",
+        "  padding: 30px;",
+        "  background: #f1f5f9;",
+        "  color: #111827;",
+        "  font-family: 'Inter', system-ui, sans-serif;",
+        "}",
+        "",
+        ".main-wrapper {",
+        "  flex: 1;",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  align-items: center;",
+        "  padding: 20px 0;",
+        "}",
+        "",
+        ".container {",
+        "  width: 100%;",
+        "  max-width: 720px;",
+        "  background: #ffffff;",
+        "  border-radius: 24px;",
+        "  padding: 40px;",
+        "  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);",
+        "  border: 1px solid #e5e7eb;",
+        "}",
+        "",
+        ".header {",
+        "  display: flex;",
+        "  align-items: center;",
+        "  justify-content: center;",
+        "  gap: 20px;",
+        "  margin-bottom: 40px;",
+        "  text-align: center;",
+        "}",
+        "",
+        ".logo {",
+        "  width: 80px;",
+        "  height: 80px;",
+        "  border-radius: 50%;",
+        "  background: #eef2ff;",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  align-items: center;",
+        "  font-size: 38px;",
+        "  color: #4f46e5;",
+        "}",
+        "",
+        ".header h1 { font-size: 2.4rem; color: #111827; }",
+        ".header span { color: #4f46e5; }",
+        ".header p { color: #6b7280; margin-top: 8px; }",
+        "",
+        ".input-section { display: flex; gap: 20px; margin-bottom: 30px; }",
+        "",
+        "#taskInput {",
+        "  flex: 1;",
+        "  height: 60px;",
+        "  border: 2px solid #e5e7eb;",
+        "  border-radius: 12px;",
+        "  padding: 0 20px;",
+        "  outline: none;",
+        "  font-size: 1rem;",
+        "  font-family: inherit;",
+        "  color: #111827;",
+        "  background: #ffffff;",
+        "}",
+        "",
+        "#taskInput:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px #eef2ff; }",
+        "",
+        "#addTaskBtn {",
+        "  width: 180px;",
+        "  border: none;",
+        "  border-radius: 12px;",
+        "  cursor: pointer;",
+        "  color: #ffffff;",
+        "  font-size: 1rem;",
+        "  font-weight: 600;",
+        "  background: #4f46e5;",
+        "  transition: all 0.2s ease;",
+        "}",
+        "",
+        "#addTaskBtn:hover { background: #4338ca; transform: translateY(-2px); }",
+        "",
+        ".progress-section {",
+        "  background: #f8fafc;",
+        "  border-radius: 16px;",
+        "  padding: 20px;",
+        "  margin-bottom: 30px;",
+        "  border: 1px solid #e5e7eb;",
+        "}",
+        "",
+        ".progress-text {",
+        "  display: flex;",
+        "  justify-content: center;",
+        "  margin-bottom: 15px;",
+        "  font-weight: 600;",
+        "  color: #6b7280;",
+        "}",
+        "",
+        ".progress-bar {",
+        "  width: 100%;",
+        "  height: 12px;",
+        "  border-radius: 20px;",
+        "  background: #e5e7eb;",
+        "  overflow: hidden;",
+        "}",
+        "",
+        "#progressFill {",
+        "  width: 0%;",
+        "  height: 100%;",
+        "  border-radius: 20px;",
+        "  background: #4f46e5;",
+        "  transition: width 0.3s ease;",
+        "}",
+        "",
+        "#taskList { display: flex; flex-direction: column; gap: 18px; margin-bottom: 35px; }",
+        "",
+        ".task {",
+        "  display: flex;",
+        "  justify-content: space-between;",
+        "  align-items: center;",
+        "  background: #ffffff;",
+        "  border: 2px solid #e5e7eb;",
+        "  border-radius: 16px;",
+        "  padding: 18px 22px;",
+        "  transition: all 0.2s ease;",
+        "}",
+        "",
+        ".task:hover { border-color: #4f46e5; transform: translateY(-2px); }",
+        "",
+        ".task input { width: 20px; height: 20px; cursor: pointer; }",
+        "",
+        ".task span {",
+        "  font-size: 1rem;",
+        "  color: #111827;",
+        "  word-break: break-word;",
+        "}",
+        "",
+        ".completed { text-decoration: line-through; color: #9ca3af !important; }",
+        "",
+        ".edit-btn, .delete-btn {",
+        "  border: none;",
+        "  background: none;",
+        "  cursor: pointer;",
+        "  font-size: 1rem;",
+        "  font-weight: 600;",
+        "}",
+        "",
+        ".edit-btn { color: #4f46e5; }",
+        ".delete-btn { color: #dc2626; }",
+        "",
+        ".stats {",
+        "  display: grid;",
+        "  grid-template-columns: repeat(3, 1fr);",
+        "  gap: 20px;",
+        "}",
+        "",
+        ".card {",
+        "  background: #f8fafc;",
+        "  border-radius: 20px;",
+        "  padding: 25px;",
+        "  text-align: center;",
+        "  border: 1px solid #e5e7eb;",
+        "}",
+        "",
+        ".card h2 { font-size: 2rem; margin-bottom: 8px; color: #111827; }",
+        ".card p { color: #6b7280; }",
+        "",
+        "@media (max-width: 768px) {",
+        "  .container { padding: 25px; }",
+        "  .header { flex-direction: column; }",
+        "  .header h1 { font-size: 2rem; }",
+        "  .input-section { flex-direction: column; }",
+        "  #addTaskBtn { width: 100%; height: 55px; }",
+        "  .stats { grid-template-columns: 1fr; }",
+        "  .task { flex-direction: column; align-items: flex-start; gap: 18px; }",
+        "}"
+      ].join("\n"),
+      "script.js": [
+        "// Step 1: Understand the starter files",
+        "//   index.html has the task input (#taskInput), the Add button (#addTaskBtn),",
+        "//   the task list (#taskList), the progress section (#progressText, #progressFill)",
+        "//   and three stat cards (#totalTasks, #completedTasks, #remainingTasks)",
+        "//   style.css is complete — the layout, task rows, progress bar and stats are styled for you",
+        "",
+        "// Step 2: Select elements",
+        "//   Grab the input, the Add button, the task list, the stat elements and the",
+        "//   progress elements with document.getElementById()",
+        "",
+        "// Step 3: Add tasks",
+        "//   Read and trim the input, guard against empty text, build a task row with",
+        "//   createElement (checkbox + text + edit + delete), append it to the list,",
+        "//   then clear the input",
+        "",
+        "// Step 4: Complete & delete tasks",
+        "//   Toggle a 'completed' class when the checkbox changes, remove the row when",
+        "//   delete is clicked, and keep the stats and progress bar in sync",
+        "",
+        "// Step 5: Save tasks",
+        "//   Keep tasks in an array of objects { text, completed }, save it with",
+        "//   localStorage.setItem(key, JSON.stringify(tasks)) after every change, and",
+        "//   load it back with JSON.parse() when the page opens",
+        "",
+        "// Step 6: Final touch & test",
+        "//   Test adding, completing, deleting, empty input and a page refresh —",
+        "//   then polish the details"
+      ].join("\n")
+    }
   }
+
 };
 // end of learn-data.js
