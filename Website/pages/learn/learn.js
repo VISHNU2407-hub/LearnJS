@@ -57,6 +57,17 @@ const ICONS = {
   fileJs: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><path d="M14 2v6h6"/><path d="m9.5 12.5 1.5 1.5 2.5-2.5"/><path d="m9.5 17 1.5 1.5 2.5-2.5"/></svg>'
 };
 
+/* Per-project hero icons, keyed by workshop slug. Digital Clock keeps the
+   default clock icon baked into the template and is intentionally absent.
+   Counter uses a plus/minus glyph (plus above minus, built from the Lucide
+   plus and minus geometry — unique to the counter); BMI uses the Lucide
+   weighing-scale icon (same stroke style as the rest of the LearnJS icon
+   library). */
+const PROJECT_ICONS = {
+  counter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v8"/><path d="M7 9h10"/><path d="M7 17h10"/></svg>',
+  "bmi-calculator": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="m19 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"/><path d="m5 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M7 21h10"/></svg>'
+};
+
 /* ---------- State ---------- */
 const SLUG = new URLSearchParams(window.location.search).get("slug") || "clock";
 let currentUser = null;
@@ -155,14 +166,15 @@ function renderHero() {
     else cover.hidden = true;
   };
 
-  el("learnHeroTags").innerHTML =
-    (workshop.tags || []).map((t) => '<span class="tag">' + escapeHtml(t) + "</span>").join("");
+  // Per-project hero icon — the rounded green title-icon container keeps its
+  // existing styling; only the glyph swaps for projects with a custom icon.
+  const titleIco = document.querySelector(".learn-hero-title-ico");
+  if (titleIco && PROJECT_ICONS[SLUG]) {
+    titleIco.innerHTML = PROJECT_ICONS[SLUG];
+  }
+
   el("learnTitle").textContent = workshop.title;
   el("learnIntro").textContent = workshop.intro || "";
-  el("learnTime").textContent = workshop.time || "—";
-  if (el("learnStepsPill")) {
-    el("learnStepsPill").textContent = workshop.steps.length + " guided steps";
-  }
 }
 
 /* What You'll Learn — the JavaScript concepts practiced in this project. */
@@ -1263,6 +1275,41 @@ function highlight(line, lang) {
 }
 
 /* ---------- Live Preview window ---------- */
+/* Scale the project page down to fit the preview frame, so the WHOLE app is
+   visible without scrolling (scale-to-fit). Injects a small style block into
+   the project's own document; every re-fit removes it first so we always
+   measure the natural size before scaling again. */
+function fitPreview(frame) {
+  try {
+    const doc = frame.contentDocument;
+    if (!doc || !doc.documentElement) return;
+    const html = doc.documentElement;
+    const prev = doc.getElementById("learnjs-preview-fit");
+    if (prev) prev.remove();
+
+    const w = frame.clientWidth;
+    const h = frame.clientHeight;
+    if (!w || !h) return;
+
+    const nw = html.scrollWidth;
+    const nh = html.scrollHeight;
+    if (!nw || !nh) return;
+
+    const s = Math.min(w / nw, h / nh, 1);
+    if (s >= 1) return; // already fits — no scaling needed
+
+    const style = doc.createElement("style");
+    style.id = "learnjs-preview-fit";
+    style.textContent =
+      "html{transform:scale(" + s.toFixed(4) + ");transform-origin:top left;" +
+      "width:" + (100 / s).toFixed(4) + "%;overflow:hidden;}" +
+      "body{overflow:hidden;}";
+    (doc.head || html).appendChild(style);
+  } catch (err) {
+    /* Different origin or document not ready — leave the preview as-is. */
+  }
+}
+
 function openPreview(trigger) {
   makeWindow("preview", {
     title: "Live Preview — " + workshop.title,
@@ -1272,6 +1319,24 @@ function openPreview(trigger) {
     height: 640,
     body: '<div class="preview-body"><iframe class="preview-frame" src="' + escapeHtml(workshop.previewUrl) + '" title="Live Preview"></iframe></div>'
   }, trigger);
+
+  const win = openWindows.preview;
+  if (!win) return;
+  const frame = win.querySelector(".preview-frame");
+  // Only wire the fit logic once per window lifetime (reopening restores).
+  if (!frame || frame.dataset.fit === "1") return;
+  frame.dataset.fit = "1";
+
+  const refit = () => fitPreview(frame);
+  frame.addEventListener("load", () => {
+    refit();
+    // Retry a couple of times so late-loading fonts/images don't leave the
+    // page overflowing after the first measurement.
+    [300, 900].forEach((t) => window.setTimeout(refit, t));
+  });
+  // Covers the maximize button and the manual resize handle.
+  if (typeof ResizeObserver === "function") new ResizeObserver(refit).observe(frame);
+  refit();
 }
 
 /* ============================================================
