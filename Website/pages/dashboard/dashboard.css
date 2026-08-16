@@ -727,6 +727,12 @@ html.dark .project-status.done { background: rgba(34, 197, 94, 0.22); color: #86
 .profile-meta b { font-size: 1.25rem; font-weight: 800; color: var(--ink); }
 .profile-meta span { font-size: 0.76rem; color: var(--faint); }
 .profile-card .btn { margin-top: 0.4rem; }
+/* Right column of the profile grid: About + Achievements stacked below it. */
+.dash-profile-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
 /* ---------- Settings ---------- */
 .settings-row {
