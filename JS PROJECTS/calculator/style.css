@@ -1,4 +1,21 @@
-@import url('../design-system.css');
+:root {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F9FAFB;
+  --bg-tertiary: #F3F4F6;
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+  --text-tertiary: #9CA3AF;
+  --accent: #2563EB;
+  --accent-hover: #1D4ED8;
+  --danger: #EF4444;
+  --border: #E5E7EB;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-2xl: 24px;
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --font-body: 'Inter', system-ui, sans-serif;
+}
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -8,6 +25,8 @@ body {
   flex-direction: column;
   background: var(--bg-secondary);
   padding: 30px;
+  font-family: var(--font-body);
+  color: var(--text-primary);
 }
 
 .main-wrapper {
@@ -19,7 +38,7 @@ body {
 }
 
 .calculator {
-  width: min(95vw, 540px);
+  width: min(95vw, 400px);
   background: var(--bg-primary);
   border-radius: var(--radius-2xl);
   padding: 24px;
@@ -30,7 +49,7 @@ body {
 .display {
   background: var(--bg-secondary);
   border-radius: var(--radius-lg);
-  height: 150px;
+  height: 140px;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -42,7 +61,7 @@ body {
 .expression {
   text-align: right;
   color: var(--text-secondary);
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   min-height: 24px;
   word-break: break-all;
 }
@@ -51,33 +70,35 @@ body {
   text-align: right;
   color: var(--text-primary);
   font-size: 3.2rem;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
 }
+
 .result::-webkit-scrollbar { display: none; }
 
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 14px;
 }
 
 .btn {
-  height: 82px;
+  height: 76px;
   border: none;
   border-radius: var(--radius-lg);
   background: var(--bg-tertiary);
   color: var(--text-primary);
-  font-size: 2rem;
+  font-size: 1.7rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
   font-family: var(--font-body);
 }
 
-.btn:hover { 
+.btn:hover {
   background: var(--border);
   transform: translateY(-2px);
 }
@@ -86,7 +107,7 @@ body {
 
 .operator, .equal {
   background: var(--accent);
-  color: white;
+  color: #fff;
 }
 
 .operator:hover, .equal:hover {
@@ -95,25 +116,22 @@ body {
 
 .clear {
   background: var(--danger);
-  color: white;
+  color: #fff;
 }
 
-.clear:hover {
-  background: #DC2626;
-}
+.clear:hover { filter: brightness(1.05); }
 
 .zero { grid-column: span 2; }
-.delete { font-size: 1.4rem; }
 
-@media(max-width:600px) {
+@media (max-width: 600px) {
   .calculator { width: 100%; padding: 18px; }
-  .display { height: 130px; }
-  .result { font-size: 3rem; }
-  .btn { height: 70px; font-size: 1.6rem; }
+  .display { height: 120px; }
+  .result { font-size: 2.8rem; }
+  .btn { height: 66px; font-size: 1.5rem; }
 }
 
-@media(max-width:420px) {
-  .buttons { gap: 12px; }
-  .btn { height: 62px; font-size: 1.4rem; }
-  .result { font-size: 2.6rem; }
+@media (max-width: 420px) {
+  .buttons { gap: 10px; }
+  .btn { height: 58px; font-size: 1.3rem; }
+  .result { font-size: 2.4rem; }
 }
