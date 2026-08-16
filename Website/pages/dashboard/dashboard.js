@@ -526,9 +526,9 @@ function renderContinue() {
   bindCardActions(wrap);
 }
 
-/* ---------- Achievements ---------- */
+/* ---------- Achievements (rendered on the Profile panel) ---------- */
 function renderAchievements() {
-  const wrap = el("homeAchievements");
+  const wrap = el("profileAchievements");
   if (!wrap) return;
   wrap.innerHTML = ACHIEVEMENTS.map((a) => {
     const unlocked = a.test(stats);

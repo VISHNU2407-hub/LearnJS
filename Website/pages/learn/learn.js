@@ -61,8 +61,8 @@ const ICONS = {
    default clock icon baked into the template and is intentionally absent.
    Counter uses a plus/minus glyph (plus above minus, built from the Lucide
    plus and minus geometry — unique to the counter); BMI uses the Lucide
-   weighing-scale icon (same stroke style as the rest of the LearnJS icon
-   library). Every other workshop has its own Lucide-style icon so the glyph
+   weighing-scale icon; Calculator uses the Lucide calculator icon — all in
+   the same stroke style as the rest of the LearnJS icon library. Every other workshop has its own Lucide-style icon so the glyph
    always represents the project. */
 const PROJECT_ICONS = {
   counter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v8"/><path d="M7 9h10"/><path d="M7 17h10"/></svg>',

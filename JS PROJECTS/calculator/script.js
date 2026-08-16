@@ -1,140 +1,128 @@
+/* Calculator — the working solution (used by the live preview). */
+
 const buttons = document.querySelectorAll(".btn");
-const outputElement = document.getElementById("result");
-let output = "";
+const expressionEl = document.getElementById("expression");
+const resultEl = document.getElementById("result");
 
-buttons.forEach((button) => {
+let firstNumber = "";    // the number on the left (or the running result)
+let operator = "";       // the pending operation: +  −  ×  ÷  %
+let secondNumber = "";   // the number being typed on the right
+let justEvaluated = false; // true right after pressing =
 
-    button.addEventListener("click", () => {
-
-        // Numbers
-        if (!isNaN(button.innerText)) {
-            output += button.innerText;
-            outputElement.innerText = output;
-        }
-
-        // Operators
-        if (
-            button.innerText == "+" ||
-            button.innerText == "-" ||
-            button.innerText == "×" ||
-            button.innerText == "÷" ||
-            button.innerText == "%"
-        ) {
-
-           let lastChar = output[output.length - 1];
-
-if (
-    lastChar == "+" ||
-    lastChar == "-" ||
-    lastChar == "×" ||
-    lastChar == "÷" ||
-    lastChar == "%"
-) {
-    return;
+function render() {
+  expressionEl.textContent = (firstNumber + " " + operator + " " + secondNumber).trim();
+  resultEl.textContent = secondNumber !== "" ? secondNumber : firstNumber !== "" ? firstNumber : "0";
 }
 
-            output += button.innerText;
-            outputElement.innerText = output;
+function reset() {
+  firstNumber = "";
+  operator = "";
+  secondNumber = "";
+  justEvaluated = false;
+}
+
+function toggleSign(num) {
+  return num.startsWith("-") ? num.slice(1) : "-" + num;
+}
+
+/* Apply one operation. Returns the result, or "Error" for invalid input
+   (including division by zero). % means "percent of": a % b → (a / 100) * b. */
+function calculate(a, op, b) {
+  const x = parseFloat(a);
+  const y = parseFloat(b);
+  if (isNaN(x) || isNaN(y)) return "Error";
+  let result;
+  if (op === "+") result = x + y;
+  else if (op === "−") result = x - y;
+  else if (op === "×") result = x * y;
+  else if (op === "÷") {
+    if (y === 0) return "Error";
+    result = x / y;
+  } else if (op === "%") result = (x / 100) * y;
+  // Round away floating-point noise (0.1 + 0.2 → 0.3, not 0.30000000000000004).
+  return Math.round(result * 1e10) / 1e10;
+}
+
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const value = button.textContent;
+
+    // AC — clear everything
+    if (button.classList.contains("clear")) {
+      reset();
+      render();
+      return;
+    }
+
+    // ± — flip the sign of the number being typed
+    if (button.classList.contains("sign")) {
+      if (secondNumber !== "") secondNumber = toggleSign(secondNumber);
+      else if (firstNumber !== "") firstNumber = toggleSign(firstNumber);
+      render();
+      return;
+    }
+
+    // Digits — append to the current number
+    if (button.classList.contains("number")) {
+      if (justEvaluated) reset();
+      if (operator) secondNumber += value;
+      else firstNumber += value;
+      render();
+      return;
+    }
+
+    // Decimal point — only one "." per number
+    if (button.classList.contains("decimal")) {
+      if (justEvaluated) reset();
+      if (operator) {
+        if (!secondNumber.includes(".")) secondNumber += ".";
+      } else {
+        if (!firstNumber.includes(".")) firstNumber += ".";
+      }
+      render();
+      return;
+    }
+
+    // Operators — record the pending operation
+    if (button.classList.contains("operator")) {
+      if (justEvaluated) {
+        // keep the result as the first number and continue
+        operator = value;
+        justEvaluated = false;
+        render();
+        return;
+      }
+      if (secondNumber !== "") {
+        // chain: finish the pending operation first, then keep going
+        const result = calculate(firstNumber, operator, secondNumber);
+        if (result === "Error") {
+          reset();
+          render();
+          return;
         }
+        firstNumber = String(result);
+        secondNumber = "";
+      }
+      operator = value;
+      render();
+      return;
+    }
 
-        // Decimal
-        if (button.innerText == ".") {
-
-            let expression = output
-                .replaceAll("×", "*")
-                .replaceAll("÷", "/");
-
-            let operator = "";
-
-            for (let char of expression) {
-                if (isNaN(char) && char != ".") {
-                    operator = char;
-                    break;
-                }
-            }
-
-            let currentNumber;
-
-            if (operator == "") {
-                currentNumber = expression;
-            } else {
-                let parts = expression.split(operator);
-                currentNumber = parts[parts.length - 1];
-            }
-
-            if (!currentNumber.includes(".")) {
-                output += ".";
-                outputElement.innerText = output;
-            }
-        }
-
-        // Clear
-        if (button.innerText == "C") {
-            output = "";
-            outputElement.innerText = 0;
-        }
-
-        // Delete
-        if (button.classList.contains("delete")) {
-            if (output.length > 1) {
-                output = output.slice(0, -1);
-                outputElement.innerText = output;
-            } else {
-                output = "";
-                outputElement.innerText = 0;
-            }
-        }
-
-        // Equal
-        if (button.classList.contains("equal")) {
-
-            let expression = output;
-
-            expression = expression
-                .replaceAll("×", "*")
-                .replaceAll("÷", "/");
-
-            let operator = "";
-
-            for (let char of expression) {
-                if (isNaN(char) && char != ".") {
-                    operator = char;
-                    break;
-                }
-            }
-
-            if (expression.includes(operator)) {
-
-                let numbers = expression.split(operator);
-
-                let firstNumber = parseFloat(numbers[0]);
-                let secondNumber = parseFloat(numbers[1]);
-
-                if (isNaN(firstNumber) || isNaN(secondNumber)) {
-                    output = "Error";
-                    outputElement.innerText = output;
-                } else {
-
-                    let result;
-
-                    if (operator == "+") {
-                        result = firstNumber + secondNumber;
-                    } else if (operator == "-") {
-                        result = firstNumber - secondNumber;
-                    } else if (operator == "*") {
-                        result = firstNumber * secondNumber;
-                    } else if (operator == "/") {
-                        result = firstNumber / secondNumber;
-                    } else if (operator == "%") {
-                        result = firstNumber % secondNumber;
-                    }
-
-                    output = result.toString();
-                    outputElement.innerText = output;
-                }
-            }
-        }
-
-    });
-
+    // Equals — evaluate and display the result
+    if (button.classList.contains("equal")) {
+      if (!operator || secondNumber === "") return; // nothing to calculate yet
+      const result = calculate(firstNumber, operator, secondNumber);
+      expressionEl.textContent = (firstNumber + " " + operator + " " + secondNumber).trim();
+      if (result === "Error") {
+        resultEl.textContent = "Error";
+        reset();
+        return;
+      }
+      firstNumber = String(result);
+      operator = "";
+      secondNumber = "";
+      justEvaluated = true;
+      resultEl.textContent = firstNumber;
+    }
+  });
 });
