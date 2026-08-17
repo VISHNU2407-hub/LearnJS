@@ -431,7 +431,7 @@ function bindCardActions(container) {
     btn.addEventListener("click", () => {
       const slug = btn.getAttribute("data-slug");
       const action = btn.getAttribute("data-action");
-      if (action === "start") startProject(slug);
+      if (action === "start") startProject(slug); else if (action === "open") openProject(slug);
     });
   });
 }
@@ -451,8 +451,13 @@ function projectCardHTML(p) {
   const prog = progressMap[p.id] || { status: "none", percent: 0 };
   const { statusLabel, statusClass, diffBadge } = badgeParts(p);
   const catIcon = CATEGORY_ICON[p.category] || ICONS.folderOpen;
-  const actionIcon = prog.status === "completed" ? ICONS.check : prog.status === "started" ? ICONS.arrowRight : ICONS.play;
-  const actionLabel = prog.status === "completed" ? "Completed" : prog.status === "started" ? "Continue" : "Start Learning";
+  const percent = prog.percent || 0;
+  // CTA follows live progress: 0% → Start, 1–99% → Continue, 100% → Open Project.
+  // Completed projects stay openable — opening never touches their progress state.
+  const done = prog.status === "completed" || percent >= 100;
+  const inProgress = !done && percent > 0;
+  const actionIcon = done ? ICONS.check : inProgress ? ICONS.arrowRight : ICONS.play;
+  const actionLabel = done ? "Open Project" : inProgress ? "Continue" : "Start";
 
   return (
     '<article class="project-card">' +
@@ -480,8 +485,7 @@ function projectCardHTML(p) {
           '<span class="project-status ' + statusClass + '">' + statusLabel + "</span>" +
         "</div>" +
         '<div class="project-actions">' +
-          '<button class="btn btn-sm' + (prog.status === "started" ? " btn-continue" : " btn-primary") + '" data-action="start" data-slug="' + escapeHtml(p.id) + '" type="button"' +
-            (prog.status === "completed" ? " disabled" : "") + ">" +
+          '<button class="btn btn-sm' + (inProgress ? " btn-continue" : " btn-primary") + '" data-action="' + (done ? "open" : "start") + '" data-slug="' + escapeHtml(p.id) + '" type="button">' +
             actionIcon + actionLabel +
           "</button>" +
         "</div>" +
@@ -584,12 +588,9 @@ async function updateProgress(slug, status, percent) {
   }
 }
 
-/** Start Learning: mark progress started, then open the project. */
-function startProject(slug) {
-  const prog = progressMap[slug];
-  if (prog && prog.status === "completed") return;
+/** Open a project's normal project/learning page without touching progress. */
+function openProject(slug) {
   const project = allProjects.find((p) => p.id === slug);
-  updateProgress(slug, "started", Math.max((prog && prog.percent) || 0, 10));
   // Projects with a guided build workshop open the learning page instead of the raw entry.
   const workshop = (window.LEARNJS_WORKSHOPS || {})[slug];
   if (workshop) {
@@ -599,6 +600,14 @@ function startProject(slug) {
   } else {
     toast("This project has no entry file yet.", "error");
   }
+}
+
+/** Start Learning: mark progress started (unless already completed), then open the project. */
+function startProject(slug) {
+  const prog = progressMap[slug];
+  if (prog && prog.status === "completed") return;
+  updateProgress(slug, "started", Math.max((prog && prog.percent) || 0, 10));
+  openProject(slug);
 }
 
 /* ------------------------------------------------------------
