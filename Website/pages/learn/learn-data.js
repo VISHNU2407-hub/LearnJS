@@ -1343,53 +1343,56 @@ window.LEARNJS_WORKSHOPS = {
     folder: "calculator",
     title: "Calculator",
     difficulty: "Beginner",
-    time: "30 min",
+    time: "40 min",
     category: "Core JS",
     tags: ["DOM", "Events", "Calculations"],
-    intro: "Build a functional calculator using JavaScript that performs basic arithmetic operations and dynamically displays the result. You'll work with DOM manipulation, event handling, expressions, operators, and input validation.",
-    previewNote: "You'll build a working calculator with a live display and buttons for digits, operators and actions. Start with the starter files, then wire up the JavaScript step by step — every button updates the calculation on the screen.",
+    intro: "Build a fully functional calculator with a two-line display — the expression on top and the live result below — that handles chained operations like 12 + 7 × 2. You'll work with state variables, classList-based button dispatch, string building, parseFloat() conversion, and edge cases like division by zero.",
+    previewNote: "You'll build a working calculator with a two-line display and buttons for digits, operators and actions. Start with the starter files, then wire up the JavaScript step by step — every key press updates the screen, and chained operations stay in sync.",
     cover: "../../assets/project-covers/calculator.png",
     previewUrl: "../../../JS%20PROJECTS/calculator/index.html",
     githubUrl: "https://github.com/VISHNU2407-hub/LearnJS",
     communityUrl: "../community/",
     tips: [
-      "Use textContent to update the calculator display.",
-      "Handle number and operator buttons separately.",
-      "Keep the current expression organized.",
-      "Validate the expression before calculating.",
-      "Handle invalid operations such as division by zero.",
-      "Test decimals and different operator combinations."
+      "The display has two lines — #expression (the full calculation) and #result (the live number).",
+      "Every button knows its job from its class — number, operator, clear, sign, decimal or equal.",
+      "Keep the calculation in three state strings: firstNumber, operator and secondNumber.",
+      "Always go through render() to update the display — one place keeps it in sync.",
+      "Guard division by zero and NaN — show 'Error' instead of Infinity.",
+      "Round the result so 0.1 + 0.2 shows 0.3, not 0.30000000000000004."
     ],
     concepts: [
-      "DOM selection and manipulation",
-      "Event handling",
-      "Working with expressions",
-      "Operators and calculations",
-      "String and number conversion",
-      "Input validation"
+      "DOM selection (querySelectorAll, getElementById)",
+      "classList.contains() button dispatch",
+      "State variables (firstNumber, operator, secondNumber)",
+      "String building & parseFloat() conversion",
+      "Chained operations",
+      "Error handling (division by zero)",
+      "Floating-point rounding (Math.round)"
     ],
-    challenge: "Extra challenge: add keyboard support so you can type numbers and operators, or keep a history of your past calculations.",
+    challenge: "Extra challenge: add keyboard support so you can type numbers and operators, keep a history of your past calculations, or add a backspace key that deletes the last digit.",
     steps: [
       {
         title: "Project Setup",
-        tagline: "Understand the calculator HTML structure and starter files.",
-        goal: "Open the starter files and understand how index.html, style.css and script.js fit together.",
+        tagline: "Understand the calculator UI and the starter files.",
+        goal: "Open the starter files and see how index.html, style.css and script.js fit together — especially the two-line display and the button role classes.",
         logic: [
-          "Look at index.html — find the display (#expression and #result) and the calculator buttons.",
+          "Look at index.html — find the two-line display (#expression and #result) and the 19 buttons.",
+          "Notice each button carries a role class: number, operator, clear, sign, decimal or equal.",
           "Open style.css — the layout and colors are already styled for you.",
           "Open script.js — it only contains comments that mark the steps ahead.",
           "Open index.html in the browser — you'll see a static calculator showing 0."
         ],
         logicCode: [
-          "// 1. index.html — find the display (#expression, #result) and the calculator buttons",
-          "// 2. style.css — layout and colors are already styled for you",
-          "// 3. script.js — comments mark the steps ahead",
-          "// 4. Open index.html in the browser — you'll see a static calculator showing 0"
+          "// 1. index.html — the display has two lines: #expression (top) and #result (bottom)",
+          "// 2. Each button carries a role class: number, operator, clear, sign, decimal, equal",
+          "// 3. style.css — layout and colors are already styled for you",
+          "// 4. script.js — comments mark the steps ahead",
+          "// 5. Open index.html in the browser — you'll see a static calculator showing 0"
         ],
-        think: "Which element IDs and button classes in index.html will your JavaScript need to select?",
+        think: "Which element IDs and button classes will your JavaScript use to tell every key apart?",
         hints: [
-          "The display uses id=\"expression\" (the expression line) and id=\"result\" (the big number).",
-          "Every key is a <button class=\"btn\"> — numbers, operators, AC, ±, . and = are all there.",
+          "The display uses id=\"expression\" (the small gray line) and id=\"result\" (the big number).",
+          "Every key is a <button class=\"btn\"> with an extra class that says what it does — e.g. number, operator or clear.",
           "You'll only write JavaScript in this project — the HTML and CSS are done."
         ],
         check: {
@@ -1399,13 +1402,16 @@ window.LEARNJS_WORKSHOPS = {
         }
       },
       {
-        title: "Select Calculator Elements",
-        tagline: "Select the display, number buttons, operators, and action buttons.",
-        goal: "Select the display and the buttons so your script can read and update them.",
+        title: "Select Elements & Track State",
+        tagline: "Grab the display and buttons, then set up the calculation state.",
+        goal: "Select the two display lines and every button, and create the variables that hold the calculation as you type.",
         logic: [
-          "Grab the display elements (#expression and #result).",
+          "Grab the display elements with getElementById — #expression and #result.",
           "Grab every button with querySelectorAll('.btn').",
-          "Loop over the buttons and attach a click listener to each one."
+          "Create firstNumber — the number on the left (or the running result).",
+          "Create operator — the pending operation: +, −, ×, ÷ or %.",
+          "Create secondNumber — the number being typed on the right.",
+          "Create justEvaluated — true right after pressing =."
         ],
         logicCode: [
           "// 1. Grab the display elements",
@@ -1415,192 +1421,319 @@ window.LEARNJS_WORKSHOPS = {
           "// 2. Grab every button",
           "const buttons = document.querySelectorAll('.btn');",
           "",
-          "// 3. Attach a click listener to each one",
-          "buttons.forEach((button) => {",
-          "  button.addEventListener('click', () => {",
-          "    // decide what to do based on the button",
-          "  });",
-          "});"
+          "// 3. Track the calculation state",
+          "let firstNumber = '';     // the number on the left (or the running result)",
+          "let operator = '';        // the pending operation: +  −  ×  ÷  %",
+          "let secondNumber = '';    // the number being typed on the right",
+          "let justEvaluated = false; // true right after pressing ="
         ],
-        think: "Why is it better to select elements once at the top of the file instead of re-querying them on every click?",
+        think: "Why keep firstNumber, operator and secondNumber as three separate strings instead of one big expression?",
         hints: [
-          "Use document.getElementById('result') for the display and document.querySelectorAll('.btn') for the keys.",
-          "Give the display elements their own variables — e.g. expressionEl and resultEl.",
-          "Inside the click handler, button.textContent tells you which key was pressed."
+          "Numbers are built one digit at a time — '12' + '7' gives '127', exactly how typing works.",
+          "operator remembers which operation is pending: +, −, ×, ÷ or %.",
+          "justEvaluated is the flag that tells the calculator to start fresh after =."
         ],
         check: {
           requires: [
-            { pattern: "(getElementById|querySelector(?:All)?)\\s*\\([^)]*[\"'](result|expression)[\"']", hint: "Select the display — e.g. const resultEl = document.getElementById('result');" },
+            { pattern: "getElementById\\s*\\([^)]*[\"'](result|expression)[\"']", hint: "Select the display — e.g. const expressionEl = document.getElementById('expression');" },
             { pattern: "querySelectorAll\\s*\\([^)]*[\"']\\.btn[\"']", hint: "Select every button: const buttons = document.querySelectorAll('.btn');" },
-            { pattern: "addEventListener\\s*\\(\\s*[\"']click", hint: "Attach click listeners to the buttons — e.g. button.addEventListener('click', () => { ... })." }
+            { pattern: "firstNumber|secondNumber", hint: "Track the two numbers — let firstNumber = ''; and let secondNumber = '';" },
+            { pattern: "operator", hint: "Remember the pending operation — let operator = '';" }
           ]
         }
       },
       {
-        title: "Handle Number & Decimal Input",
-        tagline: "Display numbers and decimal values when the user interacts with the calculator.",
-        goal: "Make number keys append their digit to the display, and the decimal key add a . only once per number.",
+        title: "render() & reset() Helpers",
+        tagline: "Two small functions keep display and state in sync.",
+        goal: "Write render() to redraw both display lines from the state, and reset() to put every state variable back to its starting value.",
         logic: [
-          "Read the pressed key with button.textContent.",
-          "If the key is a number (0–9), append its digit to the current entry.",
-          "If the key is '.', add a decimal point — but only when the current number doesn't already have one.",
-          "Update the display with textContent."
+          "render() builds the expression text: firstNumber, operator and secondNumber joined with spaces.",
+          "It trims the extra spaces and writes the result into the #expression element.",
+          "It shows the number being typed (secondNumber), else firstNumber, else 0 in #result.",
+          "reset() sets firstNumber, operator and secondNumber back to '' and justEvaluated back to false.",
+          "Every button handler ends by calling render() so the screen always matches the state."
         ],
         logicCode: [
-          "// 1. Read the pressed key",
-          "const value = button.textContent;",
-          "",
-          "// 2. Number keys — append the digit",
-          "if (!isNaN(value) && value !== '.') {",
-          "  current += value;",
-          "  resultEl.textContent = current;",
+          "function render() {",
+          "  expressionEl.textContent = (firstNumber + ' ' + operator + ' ' + secondNumber).trim();",
+          "  resultEl.textContent = secondNumber !== '' ? secondNumber : firstNumber !== '' ? firstNumber : '0';",
           "}",
           "",
-          "// 3. Decimal key — only one '.' per number",
-          "if (value === '.' && !current.includes('.')) {",
-          "  current += '.';",
-          "  resultEl.textContent = current;",
+          "function reset() {",
+          "  firstNumber = '';",
+          "  operator = '';",
+          "  secondNumber = '';",
+          "  justEvaluated = false;",
           "}"
         ],
-        think: "button.textContent is a string — how can you tell a digit like '7' from an operator like '+'?",
+        think: "What does the expression line show right after reset() and render() run together?",
         hints: [
-          "isNaN('7') is false and isNaN('+') is true — an easy way to tell numbers from operators.",
-          "Check current.includes('.') before adding another decimal point.",
-          "Keep a variable (like current) that holds the number being typed."
+          "The expression line joins the three state strings with spaces — .trim() removes the leftovers.",
+          "The result line is a ternary chain: secondNumber wins, then firstNumber, then '0'.",
+          "reset() is the 'AC' action — it puts every state variable back to its starting value.",
+          "render() is the only place the display is updated — every button handler ends by calling it."
+        ],
+        check: {
+          requires: [
+            { pattern: "function\\s+render", hint: "Define the display update as a function — e.g. function render() { ... }" },
+            { pattern: "function\\s+reset", hint: "Define the clear helper — e.g. function reset() { ... }" },
+            { pattern: "textContent\\s*=", hint: "Write into the elements with .textContent — e.g. expressionEl.textContent = ...;" },
+            { pattern: "\\btrim\\s*\\(", hint: "Remove stray spaces with .trim() on the joined expression." }
+          ]
+        }
+      },
+      {
+        title: "Number & Decimal Keys",
+        tagline: "Dispatch keys by class, then append digits.",
+        goal: "Make number keys append their digit to the right state string, and the decimal key add a . only once per number.",
+        logic: [
+          "Attach a click listener to every button and read the pressed key with button.textContent.",
+          "If the button has the number class, append its digit — to secondNumber when an operator is pending, otherwise to firstNumber.",
+          "If justEvaluated is true, reset() first so a new calculation starts.",
+          "If the button has the decimal class, add '.' only when the current number doesn't already include one.",
+          "Call render() to update both display lines."
+        ],
+        logicCode: [
+          "buttons.forEach((button) => {",
+          "  button.addEventListener('click', () => {",
+          "    const value = button.textContent;",
+          "",
+          "    // Digits — append to the current number",
+          "    if (button.classList.contains('number')) {",
+          "      if (justEvaluated) reset();",
+          "      if (operator) secondNumber += value;",
+          "      else firstNumber += value;",
+          "      render();",
+          "      return;",
+          "    }",
+          "",
+          "    // Decimal point — only one '.' per number",
+          "    if (button.classList.contains('decimal')) {",
+          "      if (justEvaluated) reset();",
+          "      if (operator) {",
+          "        if (!secondNumber.includes('.')) secondNumber += '.';",
+          "      } else {",
+          "        if (!firstNumber.includes('.')) firstNumber += '.';",
+          "      }",
+          "      render();",
+          "      return;",
+          "    }",
+          "  });",
+          "});"
+        ],
+        think: "Why does the same number key append to secondNumber sometimes and firstNumber other times?",
+        hints: [
+          "The button's class tells you its job — classList.contains('number') means a digit.",
+          "Append to secondNumber while an operator is pending, otherwise to firstNumber.",
+          "Check .includes('.') before adding another decimal point — one '.' per number."
         ],
         check: {
           requires: [
             { pattern: "addEventListener\\s*\\(\\s*[\"']click", hint: "Listen for clicks on every button: button.addEventListener('click', () => { ... })." },
-            { pattern: "(textContent|innerText)\\s*=", hint: "Update the display with the new value — e.g. resultEl.textContent = current;" },
-            { pattern: "(isNaN|parseFloat|Number\\s*\\()", hint: "Detect number keys — e.g. if (!isNaN(button.textContent)) { ... }." },
-            { pattern: "(includes\\s*\\(\\s*[\"']\\.|indexOf\\s*\\(\\s*[\"']\\.)", hint: "Prevent double decimals — e.g. if (!current.includes('.')) { current += '.'; }." }
+            { pattern: "classList\\.contains\\s*\\(\\s*[\"']number[\"']", hint: "Detect digit keys with button.classList.contains('number')." },
+            { pattern: "classList\\.contains\\s*\\(\\s*[\"']decimal[\"']", hint: "Detect the decimal key with button.classList.contains('decimal')." },
+            { pattern: "(includes\\s*\\(\\s*[\"']\\.|indexOf\\s*\\(\\s*[\"']\\.)", hint: "Prevent double decimals — e.g. if (!secondNumber.includes('.')) { secondNumber += '.'; }." }
           ]
         }
       },
       {
-        title: "Handle Operators",
-        tagline: "Implement +, −, ×, ÷ and % operations.",
-        goal: "Make the operator keys (+ − × ÷ %) record which operation is pending and which number comes next.",
+        title: "Operator Keys & Chaining",
+        tagline: "Record the pending operation — and chain calculations.",
+        goal: "Make the operator keys (+ − × ÷ %) record which operation is pending, and finish the previous one first so chained expressions like 12 + 7 × 2 work.",
         logic: [
-          "Keep the calculation parts in variables — a first number, an operator, and a second number.",
-          "When an operator key is pressed, save the operator.",
-          "When a number is pressed after an operator, it belongs to the second number.",
-          "If an operator is pressed twice in a row, replace the pending operator."
+          "If the button has the operator class, it's one of +, −, ×, ÷ or %.",
+          "If justEvaluated is true, keep the result as the first number and just record the new operator.",
+          "If a second number is already typed, finish the pending operation first with calculate().",
+          "If calculate() returns 'Error', reset() and stop.",
+          "Otherwise promote the result to firstNumber, clear secondNumber, then record the new operator.",
+          "Call render() so the display shows the new pending state."
         ],
         logicCode: [
-          "// 1. Keep the parts of the calculation in variables",
-          "let firstNumber = '';",
-          "let operator = '';",
-          "let secondNumber = '';",
-          "",
-          "// 2. Operator keys — record the pending operation",
-          "if (value === '+' || value === '−' || value === '×' || value === '÷' || value === '%') {",
+          "// Operator keys — record the pending operation",
+          "if (button.classList.contains('operator')) {",
+          "  if (justEvaluated) {",
+          "    // keep the result as the first number and continue",
+          "    operator = value;",
+          "    justEvaluated = false;",
+          "    render();",
+          "    return;",
+          "  }",
+          "  if (secondNumber !== '') {",
+          "    // chain: finish the pending operation first, then keep going",
+          "    const result = calculate(firstNumber, operator, secondNumber);",
+          "    if (result === 'Error') {",
+          "      reset();",
+          "      render();",
+          "      return;",
+          "    }",
+          "    firstNumber = String(result);",
+          "    secondNumber = '';",
+          "  }",
           "  operator = value;",
-          "}",
-          "",
-          "// 3. Number keys — append to the right part",
-          "if (!isNaN(value) && value !== '.') {",
-          "  if (operator) secondNumber += value;",
-          "  else firstNumber += value;",
+          "  render();",
+          "  return;",
           "}"
         ],
-        think: "Why do you need three variables instead of one to handle an operation like 12 + 7?",
+        think: "Type 12 + 7 × — what does the calculator compute before it records the ×?",
         hints: [
-          "Keep three strings: firstNumber, operator and secondNumber.",
-          "Append digits to secondNumber while an operator is pending, otherwise to firstNumber.",
-          "The operator keys are +, −, ×, ÷ and % — compare button.textContent to find them."
+          "Chaining means '12 + 7 × 2' is read as (12 + 7) × 2 — each new operator finishes the previous one.",
+          "calculate() takes the stored firstNumber, operator and secondNumber and returns the answer.",
+          "String(result) turns the number back into a string so it can become the new firstNumber."
         ],
         check: {
           requires: [
-            { pattern: "addEventListener\\s*\\(\\s*[\"']click", hint: "Listen for clicks on every button." },
-            { pattern: "textContent\\s*===?\\s*[\"']", hint: "Compare the pressed key to the operator symbols — e.g. if (button.textContent === '+') { operator = value; }." },
-            { pattern: "[+−×÷%]", hint: "Handle all five operators — +, −, ×, ÷ and %." }
+            { pattern: "classList\\.contains\\s*\\(\\s*[\"']operator[\"']", hint: "Detect operator keys with button.classList.contains('operator')." },
+            { pattern: "calculate\\s*\\(", hint: "Finish pending operations by calling calculate(firstNumber, operator, secondNumber)." },
+            { pattern: "String\\s*\\(\\s*result", hint: "Turn the result back into a string — firstNumber = String(result);" },
+            { pattern: "justEvaluated", hint: "Use the justEvaluated flag to decide whether to keep the result and continue." }
           ]
         }
       },
       {
-        title: "Calculate & Display Result",
-        tagline: "Process the expression and display the correct result.",
-        goal: "Evaluate the two numbers with the chosen operator and write the answer to the display.",
+        title: "The calculate() Function",
+        tagline: "Do the math — safely.",
+        goal: "Write calculate(a, op, b) — the function that converts the strings to numbers, applies the operation, guards against division by zero, and rounds the answer.",
         logic: [
-          "Read the stored first number, operator and second number.",
-          "Convert the strings to numbers with parseFloat().",
-          "Apply the operation: + adds, − subtracts, × multiplies, ÷ divides and % takes a percentage.",
-          "Write the result to the display with textContent."
+          "Convert the two strings to numbers with parseFloat().",
+          "If either one isn't a number, return 'Error'.",
+          "Apply the operation: + adds, − subtracts, × multiplies, ÷ divides, and % means 'percent of': (a / 100) * b.",
+          "For ÷, if the second number is 0, return 'Error' instead of Infinity.",
+          "Round the result so 0.1 + 0.2 shows 0.3, not 0.30000000000000004.",
+          "Return the rounded result."
         ],
         logicCode: [
-          "// 1. Convert the stored strings to numbers",
-          "const a = parseFloat(firstNumber);",
-          "const b = parseFloat(secondNumber);",
-          "",
-          "// 2. Apply the operation",
-          "let result;",
-          "if (operator === '+') result = a + b;",
-          "else if (operator === '−') result = a - b;",
-          "else if (operator === '×') result = a * b;",
-          "else if (operator === '÷') result = a / b;",
-          "else if (operator === '%') result = (a / 100) * b;",
-          "",
-          "// 3. Display the result",
-          "resultEl.textContent = result;"
+          "function calculate(a, op, b) {",
+          "  const x = parseFloat(a);",
+          "  const y = parseFloat(b);",
+          "  if (isNaN(x) || isNaN(y)) return 'Error';",
+          "  let result;",
+          "  if (op === '+') result = x + y;",
+          "  else if (op === '−') result = x - y;",
+          "  else if (op === '×') result = x * y;",
+          "  else if (op === '÷') {",
+          "    if (y === 0) return 'Error';",
+          "    result = x / y;",
+          "  } else if (op === '%') result = (x / 100) * y;",
+          "  // Round away floating-point noise (0.1 + 0.2 → 0.3, not 0.30000000000000004)",
+          "  return Math.round(result * 1e10) / 1e10;",
+          "}"
         ],
-        think: "What does parseFloat('12') return — and why is converting the strings important?",
+        think: "What does 9 ÷ 0 give you in JavaScript — and how does this function turn that into 'Error'?",
         hints: [
-          "parseFloat(firstNumber) and parseFloat(secondNumber) turn the stored strings into real numbers.",
-          "Use if / else if (or a switch) to pick the operation from operator.",
-          "Write the answer with resultEl.textContent = result;"
+          "parseFloat('12') → 12 — the stored strings become real numbers here.",
+          "% in this project means 'percent of': 50 % 10 → (50 / 100) * 10 → 5.",
+          "Math.round(result * 1e10) / 1e10 rounds to 10 decimal places — killing 0.30000000000000004."
         ],
         check: {
           requires: [
-            { pattern: "(parseFloat|Number\\s*\\()", hint: "Convert the stored strings to numbers — e.g. const a = parseFloat(firstNumber);" },
-            { pattern: "\\b(if|else|switch)\\b", hint: "Use if / else if (or a switch) to apply the chosen operator." },
-            { pattern: "=.*[+\\-*/%]|result\\s*=|answer\\s*=", hint: "Apply the operation and store the result — e.g. result = a + b; or result = a * b;" },
-            { pattern: "(textContent|innerText)\\s*=", hint: "Write the result to the display — e.g. resultEl.textContent = result;" }
+            { pattern: "function\\s+calculate", hint: "Define the math helper — function calculate(a, op, b) { ... }." },
+            { pattern: "parseFloat", hint: "Convert the strings to numbers — const x = parseFloat(a);" },
+            { pattern: "isNaN", hint: "Guard invalid input — if (isNaN(x) || isNaN(y)) return 'Error';" },
+            { pattern: "Math\\.round", hint: "Round the result — Math.round(result * 1e10) / 1e10." },
+            { pattern: "[\"']Error[\"']", hint: "Return 'Error' for invalid operations like division by zero." }
+          ]
+        }
+      },
+      {
+        title: "Equals, AC & ±",
+        tagline: "Finish the calculation, clear it, flip the sign.",
+        goal: "Wire up = to evaluate and show the result, AC to clear everything, and ± to flip the sign of the number being typed.",
+        logic: [
+          "For =: if there's no operator or no second number, do nothing.",
+          "Otherwise calculate the result and show the full expression in the expression line.",
+          "If the result is 'Error', show it and reset().",
+          "Otherwise store the result as firstNumber, clear operator and secondNumber, and set justEvaluated = true.",
+          "For AC: call reset() and render() to clear everything.",
+          "For ±: flip the sign of the number being typed — toggleSign() adds a '-' in front or removes it."
+        ],
+        logicCode: [
+          "// ± needs a tiny helper — flip the sign of a string number",
+          "function toggleSign(num) {",
+          "  return num.startsWith('-') ? num.slice(1) : '-' + num;",
+          "}",
+          "",
+          "// Equals — evaluate and display the result",
+          "if (button.classList.contains('equal')) {",
+          "  if (!operator || secondNumber === '') return; // nothing to calculate yet",
+          "  const result = calculate(firstNumber, operator, secondNumber);",
+          "  expressionEl.textContent = (firstNumber + ' ' + operator + ' ' + secondNumber).trim();",
+          "  if (result === 'Error') {",
+          "    resultEl.textContent = 'Error';",
+          "    reset();",
+          "    return;",
+          "  }",
+          "  firstNumber = String(result);",
+          "  operator = '';",
+          "  secondNumber = '';",
+          "  justEvaluated = true;",
+          "  resultEl.textContent = firstNumber;",
+          "}",
+          "",
+          "// AC — clear everything",
+          "if (button.classList.contains('clear')) {",
+          "  reset();",
+          "  render();",
+          "  return;",
+          "}",
+          "",
+          "// ± — flip the sign of the number being typed",
+          "if (button.classList.contains('sign')) {",
+          "  if (secondNumber !== '') secondNumber = toggleSign(secondNumber);",
+          "  else if (firstNumber !== '') firstNumber = toggleSign(firstNumber);",
+          "  render();",
+          "  return;",
+          "}"
+        ],
+        think: "After 5 + 3 =, why does justEvaluated = true matter when you press 7 next?",
+        hints: [
+          "justEvaluated = true means the display shows a finished result — the next digit starts a brand-new calculation.",
+          "AC is the reset() + render() pair — it wipes all state and redraws the empty display.",
+          "toggleSign() returns num with a '-' added at the front if there isn't one, or removes it with slice(1) if there is.",
+          "± flips the number being typed — secondNumber first, and only if it's empty, firstNumber."
+        ],
+        check: {
+          requires: [
+            { pattern: "classList\\.contains\\s*\\(\\s*[\"']equal[\"']", hint: "Handle the = key with button.classList.contains('equal')." },
+            { pattern: "classList\\.contains\\s*\\(\\s*[\"']clear[\"']", hint: "Handle AC with button.classList.contains('clear') — call reset() and render()." },
+            { pattern: "classList\\.contains\\s*\\(\\s*[\"']sign[\"']", hint: "Handle ± with button.classList.contains('sign')." },
+            { pattern: "toggleSign", hint: "Define and call toggleSign() to flip the sign — e.g. secondNumber = toggleSign(secondNumber);" },
+            { pattern: "justEvaluated\\s*=\\s*true", hint: "Set justEvaluated = true after = so the next digit starts fresh." }
           ]
         }
       },
       {
         title: "Final Touch & Test",
-        tagline: "Validate inputs, handle edge cases and test your project.",
-        goal: "Guard against invalid input and division by zero, then test the calculator thoroughly.",
+        tagline: "Test decimals, negatives, chaining and edge cases.",
+        goal: "Check the calculator against real scenarios — chaining, decimals, sign flips and division by zero — then polish anything that breaks.",
         logic: [
-          "Before calculating, make sure the expression is complete and the numbers are valid.",
-          "If dividing by zero, show 'Error' instead of Infinity.",
-          "Round the result so long decimals don't overflow the display.",
-          "Test decimals, negatives (with ±) and different operator combinations."
+          "Open the page and try a simple sum: 12 + 7 = → 19.",
+          "Test decimals: 0.1 + 0.2 = → 0.3, not 0.30000000000000004.",
+          "Test the sign: type 5, press ± to get -5, then add 3 → -2.",
+          "Test chaining: 12 + 7 × 2 = → 38 (the × finishes the 12 + 7 first).",
+          "Test division by zero: 9 ÷ 0 = → Error.",
+          "Use console.log() to debug anything unexpected."
         ],
         logicCode: [
-          "// 1. Validate before calculating",
-          "if (isNaN(a) || isNaN(b)) {",
-          "  resultEl.textContent = 'Error';",
-          "  return;",
-          "}",
-          "",
-          "// 2. Division by zero → show Error",
-          "if (operator === '÷' && b === 0) {",
-          "  resultEl.textContent = 'Error';",
-          "  return;",
-          "}",
-          "",
-          "// 3. Round the result to avoid floating-point noise",
-          "resultEl.textContent = Math.round(result * 1e10) / 1e10;",
-          "",
-          "// 4. Test different calculations and edge cases",
-          "//    12 + 7 → 19      9 ÷ 0 → Error",
-          "//    0.1 + 0.2 → 0.3  50 % 10 → 5"
+          "// 1. Simple sum — 12 + 7 = → 19",
+          "// 2. Decimals — 0.1 + 0.2 = → 0.3 (rounding in calculate() hides the noise)",
+          "// 3. Sign flip — 5, ±, + 3, = → -2",
+          "// 4. Chaining — 12 + 7 × 2 = → 38",
+          "// 5. Division by zero — 9 ÷ 0 = → Error",
+          "// 6. Debug anything unexpected",
+          "console.log(firstNumber, operator, secondNumber);"
         ],
-        think: "What does 9 ÷ 0 give you in JavaScript — and how can you turn that into a friendly message?",
+        think: "What would your calculator show for 0.1 + 0.2 if the Math.round() line were missing?",
         hints: [
-          "9 / 0 returns Infinity — check b === 0 (or isFinite(result)) and show 'Error' instead.",
-          "Round the result so 0.1 + 0.2 doesn't display 0.30000000000000004.",
-          "Test with ±: type 5, press ± to get -5, then add 3 → -2."
+          "If a result looks like 0.30000000000000004, your rounding line isn't running — check calculate().",
+          "9 ÷ 0 must show 'Error', not Infinity — the division-by-zero guard lives inside calculate().",
+          "A stuck display usually means render() isn't being called after a state change."
         ],
         check: {
           requires: [
-            { pattern: "(isNaN|===|!==|isFinite|Infinity)", hint: "Validate the inputs before calculating — e.g. if (isNaN(a) || isNaN(b)) { resultEl.textContent = 'Error'; }." },
-            { pattern: "[\"']Error[\"']|isFinite|Infinity", hint: "Handle division by zero — check b === 0 and show 'Error' instead of Infinity." },
-            { pattern: "(Math\\.round|toFixed|toPrecision)", hint: "Round the result — e.g. Math.round(result * 1e10) / 1e10." },
-            { pattern: "(textContent|innerText)\\s*=", hint: "Display the result — e.g. resultEl.textContent = result;" }
+            { pattern: "calculate\\s*\\(", hint: "Keep routing all math through calculate(firstNumber, operator, secondNumber)." },
+            { pattern: "Math\\.round|toFixed", hint: "Round results — e.g. Math.round(result * 1e10) / 1e10." },
+            { pattern: "[\"']Error[\"']", hint: "Show 'Error' for invalid operations like division by zero." },
+            { pattern: "classList\\.contains", hint: "Keep dispatching buttons by class — number, operator, clear, sign, decimal, equal." }
           ]
         }
       }
@@ -1790,29 +1923,42 @@ window.LEARNJS_WORKSHOPS = {
       ].join("\n"),
       "script.js": [
         "// Step 1: Understand the starter files",
-        "//   index.html has the calculator UI — a display (#expression, #result) and",
-        "//   buttons for numbers, operators, AC, ±, . and =",
+        "//   index.html has the calculator UI — a two-line display (#expression, #result)",
+        "//   and buttons for numbers, operators, AC, ±, . and =",
         "//   style.css is complete — the layout and colors are done for you",
         "",
-        "// Step 2: Select the elements",
+        "// Step 2: Select the elements & track the state",
         "//   Grab #expression and #result with document.getElementById(),",
         "//   and every button with document.querySelectorAll('.btn')",
+        "//   Then create the state: firstNumber, operator, secondNumber, justEvaluated",
         "",
-        "// Step 3: Handle number & decimal input",
-        "//   Listen for clicks on every button, append digits to the current entry,",
-        "//   and add '.' only once per number (check current.includes('.'))",
+        "// Step 3: Write the render() & reset() helpers",
+        "//   render() writes the expression line and the result line from the state,",
+        "//   e.g. expressionEl.textContent = (firstNumber + ' ' + operator + ' ' + secondNumber).trim()",
+        "//   reset() clears all four state variables back to their starting values",
         "",
-        "// Step 4: Handle operators",
-        "//   Keep three variables — firstNumber, operator, secondNumber.",
-        "//   Record the operator when +, −, ×, ÷ or % is pressed",
+        "// Step 4: Handle number & decimal keys",
+        "//   Dispatch with button.classList.contains('number') / ('decimal'),",
+        "//   append digits to firstNumber or secondNumber,",
+        "//   and add '.' only once per number (check .includes('.'))",
         "",
-        "// Step 5: Calculate & display the result",
-        "//   Convert the strings with parseFloat(), apply the operation, and write",
-        "//   the answer to the display with textContent",
+        "// Step 5: Handle operator keys & chaining",
+        "//   Record the pending operator with button.classList.contains('operator'),",
+        "//   and when a second number is already typed, finish that operation",
+        "//   first with calculate() so chained expressions like 12 + 7 × 2 work",
         "",
-        "// Step 6: Final touch & test",
-        "//   Handle division by zero (show 'Error'), round the result, and test",
-        "//   decimals, negatives (with ±) and different operator combinations"
+        "// Step 6: Write the calculate() function",
+        "//   Convert the strings with parseFloat(), apply + − × ÷ %,",
+        "//   return 'Error' for division by zero or invalid input,",
+        "//   and round with Math.round(result * 1e10) / 1e10",
+        "",
+        "// Step 7: Handle =, AC & ±",
+        "//   = evaluates and shows the result (set justEvaluated = true),",
+        "//   AC calls reset() + render(), and ± flips the sign with toggleSign()",
+        "",
+        "// Step 8: Final touch & test",
+        "//   Test decimals, negatives (with ±), chaining (12 + 7 × 2 = → 38),",
+        "//   division by zero (9 ÷ 0 = → Error) and 0.1 + 0.2 → 0.3"
       ].join("\n")
     }
   },
