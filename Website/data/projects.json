@@ -478,14 +478,14 @@
     "id": "weather-app",
     "folder": "weather-app",
     "title": "Weather App",
-    "description": "Live weather with geolocation, a 5-day forecast and condition icons.",
+    "description": "Search any city for live weather — temperature, feels-like, humidity, wind, pressure, visibility and sunrise/sunset with condition icons.",
     "difficulty": "Intermediate",
     "estimatedTime": "4 hours",
     "category": "APIs & Data",
     "tags": [
       "API",
       "Fetch",
-      "Geolocation"
+      "DOM"
     ],
     "cover": "cover image.png",
     "entry": "index.html",
