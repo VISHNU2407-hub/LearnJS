@@ -11069,6 +11069,177 @@ window.LEARNJS_WORKSHOPS = {
             { pattern: "fetch\\s*\\(", hint: "The page should make an API request with fetch()." }
           ]
         }
+      },
+      {
+        title: "Navigation & History",
+        tagline: "Move between Pokémon with Previous, Next, and Random.",
+        goal: "Implement buttons that navigate the Pokédex by ID, wrapping at boundaries.",
+        logic: [
+          "Select the Prev, Next, and Random navigation buttons.",
+          "Write a function that adjusts the current Pokémon ID by the given direction.",
+          "Clamp the ID between 1 and MAX_POKEMON (1010).",
+          "Show an error if the user tries to go below 1 or above 1010.",
+          "Fetch the new Pokémon using the updated ID.",
+          "On load, restore the last-searched Pokémon from Local Storage."
+        ],
+        logicCode: [
+          "// 1. Navigation constants",
+          "const TIMER_SECONDS = 15;",
+          "",
+          "// 2. State variables",
+          "let timeLeft = TIMER_SECONDS;",
+          "let timerInterval = null;",
+          "",
+          "// 3. Start the timer",
+          "function startTimer() {",
+          "  if (timerInterval) return;",
+          "  timerInterval = setInterval(() => {",
+          "    timeLeft--;",
+          "    updateTimerDisplay();",
+          "    if (timeLeft <= 0) {",
+          "      clearTimer();",
+          "      handleTimeout();",
+          "    }",
+          "  }, 1000);",
+          "}",
+          "",
+          "// 4. Update the timer display",
+          "function updateTimerDisplay() {",
+          "  timerDisplay.textContent = `⏱ ${timeLeft}s`;",
+          "  if (timeLeft <= 5) {",
+          "    timerDisplay.classList.add('timer-warning');",
+          "  } else {",
+          "    timerDisplay.classList.remove('timer-warning');",
+          "  }",
+          "}",
+          "",
+          "// 5. Clear the timer interval",
+          "function clearTimer() {",
+          "  if (timerInterval) {",
+          "    clearInterval(timerInterval);",
+          "    timerInterval = null;",
+          "  }",
+          "}",
+          "",
+          "// 6. Handle time-out — treat as incorrect",
+          "function handleTimeout() {",
+          "  if (answered) return;",
+          "  answered = true;",
+          "  timerDisplay.textContent = '⏱ Time's up!';",
+          "  btns[q.correct].classList.add('correct');",
+          "  incorrect++;",
+          "  incorrectCount.textContent = incorrect;",
+          "  clearTimer();",
+          "  nextBtn.disabled = false;",
+          "}"
+        ],
+        think: "Why do we need to check `if (answered) return` in handleTimeout?",
+        hints: [
+          "The user may have answered the question before time ran out.",
+          "If already answered, we shouldn't count it as incorrect.",
+          "The guard prevents double-counting the same question."
+        ],
+        check: {
+          requires: [
+            { pattern: "setInterval", hint: "Use setInterval to create the countdown effect." },
+            { pattern: "timeLeft--", hint: "Decrease the time remaining each second." },
+            { pattern: "timerDisplay\\.textContent", hint: "Update the timer display in the UI." }
+          ]
+        }
+      },
+      {
+        title: "Error Handling",
+        tagline: "Show meaningful errors when a Pokémon isn't found.",
+        goal: "Display error messages when the API returns a 404 or other error, and auto-dismiss after a timeout.",
+        logic: [
+          "Write a showError() function that sets the error message text.",
+          "Remove the 'hidden' class from the error banner.",
+          "Auto-dismiss the error after 6 seconds with setTimeout.",
+          "Hide the error banner when the user clicks the close button."
+        ],
+        logicCode: [
+          "// 1. Show the error banner",
+          "function showError(message) {",
+          "  DOM.errorMessage.textContent = message;",
+          "  DOM.errorBanner.classList.remove('hidden');",
+          "}",
+          "",
+          "// 2. Auto-dismiss after 6 seconds",
+          "setTimeout(() => {",
+          "  DOM.errorBanner.classList.add('hidden');",
+          "}, 6000);",
+          "",
+          "// 3. Hide error on close button click",
+          "DOM.errorClose.addEventListener('click', () => {",
+          "  DOM.errorBanner.classList.add('hidden');",
+          "});"
+        ],
+        think: "Why do we use setTimeout to auto-dismiss the error?",
+        hints: [
+          "Users don't need to manually close every error — it disappears after 6 seconds.",
+          "The close button still works if the user wants to dismiss it early.",
+          "setTimeout(..., 6000) waits 6000 milliseconds (6 seconds) before hiding."
+        ],
+        check: {
+          requires: [
+            { pattern: "setTimeout", hint: "Use setTimeout to auto-hide the error after a delay." },
+            { pattern: "DOM.errorBanner\\.classList\\.remove\\('hidden'\\)", hint: "Show the error banner by removing the hidden class." },
+            { pattern: "DOM.errorClose\\.addEventListener", hint: "Attach a click listener to the close button." }
+          ]
+        }
+      },
+      {
+        title: "Local Storage Persistence",
+        tagline: "Save and restore the last searched Pokémon.",
+        goal: "Persist the last successful Pokémon ID to localStorage so it's remembered on page reload.",
+        logic: [
+          "Write a saveLastSearch() function that stores the Pokémon ID with localStorage.setItem.",
+          "Write a restoreLastSearch() function that reads the saved ID and fetches it on page load.",
+          "On page load, check localStorage first — if there's a saved ID, fetch that Pokémon.",
+          "If no saved ID exists, default to fetching Pokémon #1 (Bulbasaur)."
+        ],
+        logicCode: [
+          "// 1. Persist the last searched ID",
+          "function saveLastSearch(id) {",
+          "  try {",
+          "    localStorage.setItem(STORAGE_KEY, String(id));",
+          "  } catch {",
+          "    // Silently ignore quota exceeded errors in private browsing",
+          "  }",
+          "}",
+          "",
+          "// 2. Restore on page load",
+          "function restoreLastSearch() {",
+          "  try {",
+          "    const saved = localStorage.getItem(STORAGE_KEY);",
+          "    if (saved) {",
+          "      const id = parseInt(saved, 10);",
+          "      if (!isNaN(id) && id > 0 && id <= MAX_POKEMON) {",
+          "        getPokemon(id);",
+          "        return;",
+          "      }",
+          "    }",
+          "  } catch {",
+          "    // Ignore storage read errors",
+          "  }",
+          "",
+          "// 3. Default to Bulbasaur",
+          "getPokemon(1);",
+          "}"
+        ],
+        think: "Why do we use try/catch around localStorage operations?",
+        hints: [
+          "localStorage can throw errors in private browsing modes or when quota is exceeded.",
+          "The try/catch prevents the app from breaking if storage is unavailable.",
+          "If storage fails, the app gracefully defaults to Pokémon #1."
+        ],
+        check: {
+          requires: [
+            { pattern: "localStorage\\.setItem", hint: "Store data with localStorage.setItem(KEY, value)." },
+            { pattern: "localStorage\\.getItem", hint: "Read data with localStorage.getItem(KEY)." },
+            { pattern: "parseInt\\(saved, 10\\)", hint: "Convert the stored string back to a number." }
+          ]
+        }
       }
     ],
     files: {
