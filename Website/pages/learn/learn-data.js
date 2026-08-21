@@ -11497,6 +11497,84 @@ window.LEARNJS_WORKSHOPS = {
             { pattern: "(textContent|innerHTML)", hint: "Render question or score data into the page with textContent or innerHTML." }
           ]
         }
+      },
+      {
+        title: "Timer & Countdown",
+        tagline: "Manage the question timer.",
+        goal: "Implement the timer that counts down per question and handles time-out.",
+        logic: [
+          "Define TIMER_SECONDS constant (e.g. 15 seconds).",
+          "Create timeLeft variable to track remaining seconds.",
+          "Write startTimer() function using setInterval.",
+          "Write updateTimerDisplay() to show time in the UI.",
+          "Write clearTimer() to stop the interval.",
+          "Write handleTimeout() to treat time-out as incorrect answer.",
+          "Call resetTimer() at the start of each new question."
+        ],
+        logicCode: [
+          "// 1. Timer configuration",
+          "const TIMER_SECONDS = 15;",
+          "",
+          "// 2. State variables",
+          "let timeLeft = TIMER_SECONDS;",
+          "let timerInterval = null;",
+          "",
+          "// 3. Start the timer",
+          "function startTimer() {",
+          "  if (timerInterval) return;",
+          "  timerInterval = setInterval(() => {",
+          "    timeLeft--;",
+          "    updateTimerDisplay();",
+          "    if (timeLeft <= 0) {",
+          "      clearTimer();",
+          "      handleTimeout();",
+          "    }",
+          "  }, 1000);",
+          "}",
+          "",
+          "// 4. Update the timer display",
+          "function updateTimerDisplay() {",
+          "  timerDisplay.textContent = `⏱ ${timeLeft}s`;",
+          "  if (timeLeft <= 5) {",
+          "    timerDisplay.classList.add('timer-warning');",
+          "  } else {",
+          "    timerDisplay.classList.remove('timer-warning');",
+          "  }",
+          "}",
+          "",
+          "// 5. Clear the timer interval",
+          "function clearTimer() {",
+          "  if (timerInterval) {",
+          "    clearInterval(timerInterval);",
+          "    timerInterval = null;",
+          "  }",
+          "}",
+          "",
+          "// 6. Handle time-out — treat as incorrect",
+          "function handleTimeout() {",
+          "  if (answered) return;",
+          "  answered = true;",
+          "  timerDisplay.textContent = '⏱ Time's up!';",
+          "  btns[q.correct].classList.add('correct');",
+          "  incorrect++;",
+          "  incorrectCount.textContent = incorrect;",
+          "  clearTimer();",
+          "  nextBtn.disabled = false;",
+          "}"
+        ],
+        think: "Why do we need to check `if (answered) return` in handleTimeout?",
+        hints: [
+          "The user may have answered the question before time ran out.",
+          "If already answered, we shouldn't count it as incorrect.",
+          "The guard prevents double-counting the same question."
+        ],
+        check: {
+          requires: [
+            { pattern: "setInterval", hint: "Use setInterval to create the countdown effect." },
+            { pattern: "timeLeft--", hint: "Decrease the time remaining each second." },
+            { pattern: "timerDisplay\\.textContent", hint: "Update the timer display in the UI." }
+          ]
+        }
       }
     ],
     files: {
