@@ -11741,35 +11741,48 @@ window.LEARNJS_WORKSHOPS = {
         }
       },
       {
-        title: "Random Selection",
-        tagline: "Pick a random quote.",
-        goal: "Write a function that picks a random index from the quotes array.",
+        title: "Random Selection with No Duplicates",
+        tagline: "Pick a random quote, avoid repeats.",
+        goal: "Write a function that picks a random quote from the array — but never the same one twice in a row.",
         logic: [
-          "Write a function that returns a random quote.",
+          "Write a function named getRandomQuote.",
           "Generate a random number with Math.random().",
-          "Scale it by the array length.",
-          "Round it down with Math.floor() to get an index."
+          "Scale it by quotes.length to get a range of indices.",
+          "Round it down with Math.floor() to get an index.",
+          "Store the last shown index in a variable (previousIndex).",
+          "If the new index is the same as the last one, generate a new random index.",
+          "Update the stored index and return the quote."
         ],
         logicCode: [
-          "// 1. Pick a random quote",
+          "// 1. Create a variable to track the previous index",
+          "let previousIndex = -1;",
+          "",
+          "// 2. Write the function to get a random quote",
           "function getRandomQuote() {",
-          "  // 2. Random value scaled by the array length",
-          "  const randomIndex = Math.floor(Math.random() * quotes.length);",
-          "  // 3. Return the quote at that index",
+          "  // 3. Generate a random index",
+          "  let randomIndex = Math.floor(Math.random() * quotes.length);",
+          "",
+          "  // 4. Avoid showing the same quote twice in a row",
+          "  while (randomIndex === previousIndex) {",
+          "    randomIndex = Math.floor(Math.random() * quotes.length);",
+          "  }",
+          "",
+          "  // 5. Update the previous index and return the quote",
+          "  previousIndex = randomIndex;",
           "  return quotes[randomIndex];",
           "}"
         ],
-        think: "Why multiply Math.random() by quotes.length?",
+        think: "Why do we need to check if the new index equals the previous one?",
         hints: [
-          "Math.random() gives a value between 0 and 1.",
-          "Multiplying by quotes.length scales it to the array's size.",
-          "Math.floor() rounds down so the result is a valid index (0 to length - 1)."
+          "The previousIndex variable starts at -1 so the first random index will never match.",
+          "Math.random() can produce any number in the range, so there's a small chance of getting the same index.",
+          "The while loop keeps rolling the random dice until we get a different index than before."
         ],
         check: {
           requires: [
-            { pattern: "Math\\.random\\s*\\(", hint: "Generate randomness with Math.random()." },
-            { pattern: "Math\\.floor\\s*\\(", hint: "Round down with Math.floor() to get a valid array index." },
-            { pattern: "quotes\\.length", hint: "Scale the random value by quotes.length." }
+            { pattern: "let\\s+previousIndex", hint: "Declare a variable to remember the last shown quote index." },
+            { pattern: "Math\\.random\\s*\\*", hint: "Scale randomness by quotes.length." },
+            { pattern: "while\\s*\\(randomIndex === previousIndex\\)", hint: "Loop until we get a different index than the previous one." }
           ]
         }
       },
@@ -13616,9 +13629,9 @@ window.LEARNJS_WORKSHOPS = {
         goal: "Test adding, completing, deleting, empty input and persistence — then polish anything that feels off.",
         logic: [
           "Add a few tasks — do they appear in the list?",
-          "Tick one off — does it strike through and update the stats?",
-          "Delete a task — does it disappear and update the counters?",
-          "Type only spaces — does the app reject it?",
+          "Tick one off — does the stats bar update?",
+          "Delete a task — do the counters update?",
+          "Type only spaces — is it rejected?",
           "Refresh the page — are the tasks still there?"
         ],
         logicCode: [
@@ -13638,6 +13651,52 @@ window.LEARNJS_WORKSHOPS = {
           requires: [
             { pattern: "addEventListener", hint: "At least one listener should drive adding or completing tasks." },
             { pattern: "localStorage", hint: "The app should persist tasks with localStorage." }
+          ]
+        }
+      },
+      {
+        title: "Edit Tasks",
+        tagline: "Update existing task text.",
+        goal: "Allow users to edit a task's text by clicking an Edit button and entering new text.",
+        logic: [
+          "Listen for clicks on the Edit button of each task.",
+          "Show a prompt with the current task text.",
+          "If the user enters new text, update the task object and the display.",
+          "If the user cancels or enters empty text, revert the change.",
+          "Save the updated tasks to localStorage."
+        ],
+        logicCode: [
+          "// 1. Edit button click",
+          "editBtn.addEventListener('click', () => {",
+          "  // 2. Prompt for new text",
+          "  let newTask = prompt('Edit Task', taskContent.innerText);",
+          "  if (newTask === null) {",
+          "    return;",
+          "  }",
+          "  newTask = newTask.trim();",
+          "  if (newTask.length === 0) {",
+          "    alert('Task cannot be empty.');",
+          "    return;",
+          "  }",
+          "  // 3. Update the task object and display",
+          "  task.text = newTask;",
+          "  taskContent.innerText = newTask;",
+          "  // 4. Save and update counters",
+          "  saveTasks();",
+          "  updateCounters();",
+          "});"
+        ],
+        think: "Why do we need to trim the new task text and check for empty input?",
+        hints: [
+          "prompt() returns null if the user clicks Cancel.",
+          "trim() removes whitespace — a string of only spaces is not a valid task.",
+          "We must check the length before saving, otherwise empty tasks would be added."
+        ],
+        check: {
+          requires: [
+            { pattern: "addEventListener", hint: "Attach a click listener to the Edit button." },
+            { pattern: "prompt\\s*\\(\\s*['\"].*['\"].*\\s*\\)", hint: "Use prompt() to ask the user for new text." },
+            { pattern: "(newTask\\.trim\\s*===|newTask\\s*=.*)", hint: "Trim and validate the new task text before saving." }
           ]
         }
       }
