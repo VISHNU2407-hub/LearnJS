@@ -178,14 +178,25 @@
             </div>
           </div>
 
-          <!-- Overall progress -->
+          <!-- Overall progress — circular indicator pinned top-right -->
           <div class="roadmap-progress" aria-label="Overall progress">
-            <div class="roadmap-progress-head">
+            <div class="roadmap-progress-meta">
               <h2 class="roadmap-progress-label">Overall Progress</h2>
+              <p class="roadmap-progress-sub" id="roadmapOverallSub">Loading progress&hellip;</p>
+            </div>
+            <div class="roadmap-ring">
+              <svg viewBox="0 0 48 48" focusable="false" aria-hidden="true">
+                <defs>
+                  <linearGradient id="roadmapRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#16a34a" />
+                    <stop offset="100%" stop-color="#4ade80" />
+                  </linearGradient>
+                </defs>
+                <circle class="roadmap-ring-track" cx="24" cy="24" r="20"></circle>
+                <circle class="roadmap-ring-fill" id="roadmapOverallRing" cx="24" cy="24" r="20" pathLength="100"></circle>
+              </svg>
               <b class="roadmap-progress-pct" id="roadmapOverallPct">0%</b>
             </div>
-            <p class="roadmap-progress-sub" id="roadmapOverallSub">Loading progress&hellip;</p>
-            <div class="roadmap-progress-track" aria-hidden="true"><div class="roadmap-progress-fill" id="roadmapOverallBar"></div></div>
           </div>
 
           <!-- Level filters -->

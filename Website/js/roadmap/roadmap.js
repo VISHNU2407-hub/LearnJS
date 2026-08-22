@@ -51,7 +51,6 @@ const ICON = {
 let data = { levels: [], tracks: {} };
 let activeTrack = "all";
 let expandedNodes = new Set(); // ids of expanded nodes (levels, topics, ...) — each toggles independently
-let seededInitial = false;    // levels are expanded on first paint, then left alone
 let previewTopicId = null;    // topic shown in the right-side preview
 
 const TRACKS = ["Beginner", "Intermediate", "Advanced", "Expert"];
@@ -90,10 +89,12 @@ function renderOverall() {
     0
   );
 
-  const bar = document.getElementById("roadmapOverallBar");
+  const ring = document.getElementById("roadmapOverallRing");
   const pctEl = document.getElementById("roadmapOverallPct");
   const sub = document.getElementById("roadmapOverallSub");
-  if (bar) bar.style.width = pct + "%";
+  /* pathLength="100" on the SVG circle → dash units are percentages,
+     so the offset is simply 100 − overall% (same pct as before). */
+  if (ring) ring.style.strokeDashoffset = String(100 - pct);
   if (pctEl) pctEl.textContent = pct + "%";
   if (sub) {
     sub.innerHTML =
@@ -317,12 +318,9 @@ function renderTree() {
   }
 
   const nodes = buildTree(levels);
-  // First paint (or after a filter reset): levels start expanded so their
-  // topics are visible; topics/subtopics stay collapsed until clicked.
-  if (!seededInitial) {
-    seededInitial = true;
-    nodes.forEach((n) => { if (n.hasChildren) expandedNodes.add(n.id); });
-  }
+  // Everything starts COLLAPSED — only the top-level (main topic) rows are
+  // visible on first paint. No node is ever auto-expanded; each one opens
+  // only when the user clicks it, and expandedNodes starts empty.
   // Expanded nodes hidden by the active filter collapse automatically.
   const visibleIds = collectNodeIds(nodes, new Set());
   expandedNodes.forEach((id) => {
@@ -379,7 +377,6 @@ function bindEvents() {
       if (!btn) return;
       activeTrack = btn.getAttribute("data-track");
       expandedNodes.clear();
-      seededInitial = false;
       renderRoadmap();
     });
   }
@@ -410,20 +407,29 @@ function bindEvents() {
         return;
       }
 
+      // Expand/collapse toggles happen IN PLACE (class flip only, like the
+      // course sidebar). A full re-render here would recreate the row
+      // already in its final state, so the smooth grid-template-rows
+      // expand/collapse animation could never play. expandedNodes stays in
+      // sync so later full renders (progress updates, filter changes)
+      // rebuild with exactly the same open/closed state.
       let changed = false;
-      // Every level of the hierarchy toggles independently — clicking
-      // again collapses that node's children.
       if (hasChildren) {
         changed = true;
-        if (expandedNodes.has(id)) expandedNodes.delete(id);
-        else expandedNodes.add(id);
+        const open = !expandedNodes.has(id);
+        if (open) expandedNodes.add(id);
+        else expandedNodes.delete(id);
+        row.classList.toggle("open", open);
+        const head = row.querySelector("[aria-expanded]");
+        if (head) head.setAttribute("aria-expanded", String(open));
       }
       // Topics still drive the right-side preview + Start Learning.
-      if (type === "topic") previewTopicId = id;
-      if (changed || type === "topic") {
-        renderTree();
-        renderPreview();
+      if (type === "topic") {
+        previewTopicId = id;
+        tree.querySelectorAll(".roadmap-topic.selected").forEach((el) => el.classList.remove("selected"));
+        row.classList.add("selected");
       }
+      if (changed || type === "topic") renderPreview();
     });
   }
 

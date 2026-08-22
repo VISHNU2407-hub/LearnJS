@@ -220,6 +220,10 @@
 
 .dash-panel { display: none; }
 .dash-panel.active { display: block; animation: fadeUp 0.45s var(--ease) both; }
+/* Roadmap only: a column flex box lets the overall-progress widget claim the
+   TOP-RIGHT corner above the panel title via order:-1 (normal flow, so it can
+   never overlap the title). */
+#panel-roadmap.active { display: flex; flex-direction: column; }
 
 .dash-panel-head { margin-bottom: 1.9rem; }
 .dash-hello {
@@ -880,58 +884,88 @@ body.dash-open .dash-backdrop { opacity: 1; visibility: visible; }
    as the rest of the dashboard.
    ============================================================ */
 
-/* ---------- Overall progress ---------- */
+/* ---------- Overall progress (circular, top-right) ---------- */
 .roadmap-progress {
-  /* Aligns with the roadmap content column (.roadmap-layout tree):
-     full width minus the 320px preview rail and the 1.6rem grid gap. */
-  width: calc(100% - 320px - 1.6rem);
-  margin: 1.25rem 0 2rem;
-}
-.roadmap-progress-head {
+  /* TOP-RIGHT of the Roadmap panel: #panel-roadmap is a flex column, so
+     order:-1 lifts this widget above .dash-panel-head (page title) and
+     align-self:flex-end hugs the right edge — the RING ends up in the very
+     corner. Same ids/inputs as before; only the visual changed from a
+     horizontal bar to a circle. Normal flow ⇒ never overlaps the title. */
+  order: -1;
+  align-self: flex-end;
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
+  align-items: center;
+  justify-content: flex-end; /* meta text left, ring hugging the corner */
+  gap: 0.9rem;
+  width: min(420px, 100%);
+  margin: 0.2rem 0 0.6rem;
 }
+.roadmap-progress-meta { min-width: 0; text-align: right; }
 .roadmap-progress-label {
   margin: 0;
   font-size: 0.92rem;
   font-weight: 700;
   color: var(--ink);
 }
-.roadmap-progress-pct {
-  flex-shrink: 0;
-  font-size: 1.125rem;   /* ~18px, semibold - in line with the filter labels */
-  font-weight: 600;
-  color: var(--ink-2);
-}
 .roadmap-progress-sub {
-  margin: 0.2rem 0 0.65rem;
+  margin: 0.2rem 0 0;
   font-size: 0.8rem;
   line-height: 1.4;
   color: var(--muted);
 }
 .roadmap-progress-sub b { font-weight: 700; color: var(--ink-2); }
-.roadmap-progress-track {
-  /* Fills the section, which is already aligned to the content column -
-     so the bar starts and ends exactly with the accordion cards below. */
+
+/* The ring itself — same technique as the homepage scroll ring:
+   pathLength="100" makes dash units percentages of the circle, so
+   stroke-dashoffset = 100 − overall% . */
+.roadmap-ring {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+.roadmap-ring svg {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--line-soft);
-  overflow: hidden;
-}
-@media (max-width: 1100px) {
-  /* Below the two-column breakpoint the preview drops under the tree,
-     so the section (and bar) return to full width. */
-  .roadmap-progress { width: 100%; }
-}
-.roadmap-progress-fill {
-  width: 0;
   height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--brand-strong), var(--brand));
-  transition: width 0.6s var(--ease);
+}
+.roadmap-ring-track,
+.roadmap-ring-fill {
+  fill: none;
+  stroke-width: 4.5;
+}
+.roadmap-ring-track { stroke: var(--line-soft); }
+.roadmap-ring-fill {
+  stroke: url(#roadmapRingGrad);
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100; /* 0% → empty ring */
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 0.6s var(--ease);
+}
+/* Percentage label centered inside the circle. */
+.roadmap-progress-pct {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 768px) {
+  .roadmap-ring { width: 54px; height: 54px; }
+  .roadmap-ring-track,
+  .roadmap-ring-fill { stroke-width: 5; }
+  .roadmap-progress-pct { font-size: 0.68rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .roadmap-ring-fill { transition: none; }
 }
 
 /* ---------- Level filters ---------- */
@@ -1486,7 +1520,6 @@ button.learn-crumb:hover { color: var(--brand-strong); background: var(--brand-m
   .roadmap-topic-progress { order: 3; }
   .lesson-nav { flex-direction: column-reverse; }
   .lesson-nav .btn { width: 100%; }
-  .roadmap-progress-pct { font-size: 1.5rem; }
 }
 /* ---------- Roadmap sync banner (offline indicator) ----------
    Fixed, top-centered alert that appears only when the roadmap progress

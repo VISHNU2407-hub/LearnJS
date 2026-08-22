@@ -206,15 +206,32 @@
   function initScrollChrome() {
     var progress = document.querySelector(".scroll-progress");
     var topBtn = document.querySelector(".back-to-top");
-    if (!progress && !topBtn) return;
+    // Optional circular variant (homepage): same percentage, ring shape.
+    var ringFill = document.querySelector(".scroll-ring-fill");
+    var ringLabel = document.querySelector(".scroll-ring-label");
+    if (!progress && !topBtn && !ringFill) return;
 
-    window.addEventListener("scroll", function () {
+    function apply(pct) {
+      if (progress) progress.style.width = pct + "%";
+      if (ringFill) {
+        var clamped = Math.max(0, Math.min(100, pct));
+        ringFill.style.strokeDashoffset = String(100 - clamped);
+      }
+      if (ringLabel) {
+        ringLabel.textContent = Math.round(Math.max(0, Math.min(100, pct))) + "%";
+      }
+    }
+
+    function onScroll() {
       var doc = document.documentElement;
       var max = doc.scrollHeight - window.innerHeight;
       var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
-      if (progress) progress.style.width = pct + "%";
+      apply(pct);
       if (topBtn) topBtn.classList.toggle("visible", window.scrollY > 600);
-    }, { passive: true });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    apply(0); // initial state without waiting for the first scroll event
 
     if (topBtn) {
       topBtn.addEventListener("click", function () {
