@@ -1,19 +1,23 @@
 /* ============================================================
    LearnJS — learning.js (js/roadmap)
    Learning panel renderer — the dedicated page opened by
-   "Start Learning" (never a popup). Demonstrates the final lesson
-   UI while lesson content is still being prepared:
+   "Start Learning" (never a popup):
      - breadcrumb navigation (Home / Roadmap / Level / Topic)
      - topic title + lesson progress
      - Previous / Next lesson navigation (flows across topics)
-     - Mark Complete (persisted per lesson)
+     - Mark Complete (persisted per lesson via roadmap-progress)
      - right-side "On this page" navigation
      - Personal Notes (persisted per topic)
-   Lesson content itself is a professional placeholder — no
-   theory, examples or code is generated here.
+
+   Authored lessons: when the current lesson number has an entry in
+   data/lesson-content.js (LESSON_CONTENT), its rich teaching content
+   is rendered here through a generic renderer. Lessons without an
+   entry keep the professional placeholder until they are written —
+   adding a new lesson never requires touching this file.
    ============================================================ */
 
 import { loadRoadmap } from "./roadmap-loader.js";
+import { LESSON_CONTENT } from "../../data/lesson-content.js";
 import {
   toggleLesson,
   isLessonDone,
@@ -41,7 +45,10 @@ const ICON = {
   list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/></svg>',
   note: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></svg>',
   circle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>',
-  arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>'
+  arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>',
+  chevronDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+  terminal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6"/><path d="M12 19h8"/></svg>',
+  pencil: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>'
 };
 
 /* ---------- state ---------- */
@@ -83,18 +90,50 @@ function resolveCurrent() {
   return first || { level: null, topic: null, lessonIndex: 0 };
 }
 
+/* ---------- authored lesson content (data/lesson-content.js) ---------- */
+const LEAD_NUM_RE = /^(\d+(?:\.\d+)*)\s+/;
+
+/** Strip the leading "1.1.1 " style number prefix from a curriculum title. */
+function stripNumber(text) {
+  return String(text || "").replace(LEAD_NUM_RE, "");
+}
+
+/**
+ * Authored content for the current lesson, matched by the number that
+ * prefixes its subtopic title ("1.1.1 What JavaScript…" → key "1.1.1").
+ * Returns null for lessons without an entry (they keep the placeholder).
+ */
+function authoredLessonFor(topic, lessonIndex) {
+  const raw = (topic.subtopics || [])[lessonIndex] || "";
+  const match = String(raw).match(LEAD_NUM_RE);
+  return match ? LESSON_CONTENT[match[1]] || null : null;
+}
+
 /* ---------- rendering ---------- */
-function renderBreadcrumb(level, topic) {
+function renderBreadcrumb(level, topic, authored) {
   const wrap = document.getElementById("learnBreadcrumb");
   if (!wrap) return;
+  if (!authored) {
+    wrap.innerHTML =
+      '<button class="learn-crumb" data-crumb="home" type="button">Home</button>' +
+      '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>" +
+      '<button class="learn-crumb" data-crumb="roadmap" type="button">Roadmap</button>' +
+      '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>" +
+      '<span class="learn-crumb learn-crumb-static">Level ' + level.level + "</span>" +
+      '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>" +
+      '<span class="learn-crumb learn-crumb-current">' + escapeHtml(topic.title) + "</span>";
+    return;
+  }
+  // Authored lessons get the full trail: Roadmap › Level › Topic › Lesson.
+  const sep = '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>";
   wrap.innerHTML =
-    '<button class="learn-crumb" data-crumb="home" type="button">Home</button>' +
-    '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>" +
     '<button class="learn-crumb" data-crumb="roadmap" type="button">Roadmap</button>' +
-    '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>" +
-    '<span class="learn-crumb learn-crumb-static">Level ' + level.level + "</span>" +
-    '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>" +
-    '<span class="learn-crumb learn-crumb-current">' + escapeHtml(topic.title) + "</span>";
+    sep +
+    '<span class="learn-crumb learn-crumb-static">' + escapeHtml(level.title) + "</span>" +
+    sep +
+    '<span class="learn-crumb learn-crumb-static">' + escapeHtml(stripNumber(topic.title)) + "</span>" +
+    sep +
+    '<span class="learn-crumb learn-crumb-current">' + escapeHtml(authored.title) + "</span>";
 }
 
 function renderLessonHeader(topic, lessonIndex) {
@@ -133,6 +172,129 @@ function renderPlaceholder(topic) {
         escapeHtml(topic.title) + "</b> is being written by the LearnJS team " +
         "&mdash; the layout is ready, the lessons are on the way.</p>" +
     "</div>";
+}
+
+/* ---------- authored lesson renderer (generic — driven by LESSON_CONTENT) ---------- */
+function renderSection(sec) {
+  let body = "";
+  (sec.paragraphs || []).forEach((p) => { body += "<p>" + p + "</p>"; });
+  if (sec.list && sec.list.length) {
+    body +=
+      '<ul class="lesson-list">' +
+        sec.list.map((li) => "<li><span>" + li + "</span></li>").join("") +
+      "</ul>";
+  }
+  return '<section class="lesson-section"><h2>' + escapeHtml(sec.heading) + "</h2>" + body + "</section>";
+}
+
+function renderCodeExample(ex) {
+  let body =
+    '<div class="code-block">' +
+      '<div class="code-head">' +
+        "<span>" + escapeHtml(ex.file || "script.js") + "</span>" +
+        '<span class="code-lang">' + escapeHtml(ex.language || "JavaScript") + "</span>" +
+      "</div>" +
+      "<pre><code>" + escapeHtml(ex.code) + "</code></pre>" +
+    "</div>";
+  if (ex.output) {
+    body +=
+      '<div class="code-output">' +
+        '<div class="code-output-head">' + ICON.terminal + "What you\u2019ll see</div>" +
+        "<pre>" + escapeHtml(ex.output) + "</pre>" +
+      "</div>";
+  }
+  if (ex.explanation && ex.explanation.length) {
+    body +=
+      '<p class="code-explain-label">How it works</p>' +
+      '<ul class="lesson-list code-explain">' +
+        ex.explanation.map((x) => "<li><span>" + x + "</span></li>").join("") +
+      "</ul>";
+  }
+  return '<section class="lesson-section"><h2>' + escapeHtml(ex.heading || "Code example") + "</h2>" + body + "</section>";
+}
+
+function renderVisualExplanation(visual) {
+  if (!visual || !visual.items || !visual.items.length) return "";
+  return (
+    '<section class="lesson-section"><h2>' + escapeHtml(visual.heading) + "</h2>" +
+      '<div class="lesson-visual">' +
+        visual.items.map((item, i) =>
+          '<div class="lv-row">' +
+            '<span class="lv-lang">' + escapeHtml(item.lang) + "</span>" +
+            '<div class="lv-body"><b>' + escapeHtml(item.result) + "</b>" +
+              (item.note ? "<span>" + item.note + "</span>" : "") +
+            "</div>" +
+          "</div>" +
+          (i < visual.items.length - 1 ? '<div class="lv-arrow">' + ICON.chevronDown + "</div>" : "")
+        ).join("") +
+      "</div>" +
+    "</section>"
+  );
+}
+
+function renderTakeaways(items) {
+  return (
+    '<section class="lesson-section"><h2>Key takeaways</h2>' +
+      '<ul class="takeaways">' +
+        items.map((t) =>
+          '<li><span class="tk-ico">' + ICON.check + "</span><span>" + t + "</span></li>"
+        ).join("") +
+      "</ul>" +
+    "</section>"
+  );
+}
+
+function renderPractice(practice) {
+  let body = "";
+  if (practice.tasks && practice.tasks.length) {
+    // Multi-task form: numbered tasks with optional expected output.
+    if (practice.intro) body += '<p class="lp-task">' + practice.intro + "</p>";
+    body +=
+      '<div class="lp-hints">' +
+        practice.tasks.map((t, i) =>
+          "<span><b>" + (i + 1) + ".</b> " + t.text +
+            (t.expected ? ' <i>Expected: ' + t.expected + "</i>" : "") +
+          "</span>"
+        ).join("") +
+      "</div>";
+  } else {
+    body += '<p class="lp-task">' + practice.task + "</p>";
+    if (practice.hints && practice.hints.length) {
+      body +=
+        '<div class="lp-hints">' +
+          practice.hints.map((hint, i) =>
+            "<span><b>" + (i + 1) + ".</b> " + hint + "</span>"
+          ).join("") +
+        "</div>";
+    }
+  }
+  if (practice.note) body += '<p class="lp-note">' + practice.note + "</p>";
+  return (
+    '<section class="lesson-section"><h2>Practice</h2>' +
+      '<div class="lesson-practice-card">' +
+        '<div class="lp-head">' + ICON.pencil + "Your turn</div>" +
+        body +
+      "</div>" +
+    "</section>"
+  );
+}
+
+/** Render an authored lesson into the lesson body area. */
+function renderLessonContent(content) {
+  const wrap = document.getElementById("learnPlaceholder");
+  if (!wrap) return;
+  wrap.innerHTML =
+    '<article class="lesson-content">' +
+      '<p class="lesson-lead">' + content.description + "</p>" +
+      (content.sections || []).map(renderSection).join("") +
+      (content.codeExamples || []).map(renderCodeExample).join("") +
+      (content.sectionsAfterCode || []).map(renderSection).join("") +
+      renderVisualExplanation(content.visualExplanation) +
+      (content.keyTakeaways && content.keyTakeaways.length
+        ? renderTakeaways(content.keyTakeaways)
+        : "") +
+      (content.practice ? renderPractice(content.practice) : "") +
+    "</article>";
 }
 
 function renderNav(flat, index) {
@@ -179,16 +341,18 @@ export function renderLearning() {
     return;
   }
   const { level, topic, lessonIndex } = resolved;
+  const authored = authoredLessonFor(topic, lessonIndex);
 
   const title = document.getElementById("learnTitle");
   if (title) title.textContent = topic.title;
   const eyebrow = document.getElementById("learnEyebrow");
   if (eyebrow) eyebrow.textContent = "Level " + level.level + " \u00b7 " + level.track;
 
-  renderBreadcrumb(level, topic);
+  renderBreadcrumb(level, topic, authored);
   renderLessonHeader(topic, lessonIndex);
   renderLessonBody(topic, lessonIndex);
-  renderPlaceholder(topic);
+  if (authored) renderLessonContent(authored);
+  else renderPlaceholder(topic);
 
   const flat = flatLessons();
   const index = flat.findIndex((f) => f.topic.id === topic.id && f.lessonIndex === lessonIndex);

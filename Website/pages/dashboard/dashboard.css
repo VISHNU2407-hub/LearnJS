@@ -1458,6 +1458,210 @@ button.learn-crumb:hover { color: var(--brand-strong); background: var(--brand-m
 .lesson-placeholder p { max-width: 480px; font-size: 0.92rem; color: var(--muted); line-height: 1.65; }
 .lesson-placeholder p b { color: var(--ink-2); font-weight: 600; }
 
+/* ---------- Authored lesson content (data/lesson-content.js) ---------- */
+.lesson-content { font-size: 0.95rem; color: var(--ink-2); }
+.lesson-content p { line-height: 1.72; margin-bottom: 0.8rem; }
+.lesson-content p:last-child { margin-bottom: 0; }
+.lesson-content code {
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+  padding: 0.08em 0.38em;
+  border-radius: 6px;
+  color: var(--brand-strong);
+}
+.lesson-lead {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  background: var(--brand-mist);
+  border: 1px solid color-mix(in srgb, var(--brand) 20%, transparent);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.15rem;
+  margin-bottom: 1.6rem;
+}
+.lesson-section { margin-bottom: 1.8rem; }
+.lesson-section:last-child { margin-bottom: 0; }
+.lesson-section h2 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.lesson-list { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.35rem; }
+.lesson-list li { display: flex; align-items: flex-start; gap: 0.65rem; line-height: 1.62; }
+.lesson-list li::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand);
+  opacity: 0.85;
+  margin-top: 0.52em;
+}
+
+/* Code example */
+.code-block {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0d1526; /* fixed dark editor surface — reads well in both themes */
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: var(--shadow-sm);
+}
+.code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0.95rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: #93a4bd;
+}
+.code-lang {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-size: 0.68rem;
+  color: #7dd3fc;
+}
+.code-block pre {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: #e2e8f0;
+}
+.code-output {
+  margin-top: 0.8rem;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px dashed var(--line);
+  overflow: hidden;
+}
+.code-output-head {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--muted);
+  border-bottom: 1px dashed var(--line);
+}
+.code-output-head svg { width: 13px; height: 13px; color: var(--brand-strong); }
+.code-output pre {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  white-space: pre-wrap;
+}
+.lesson-content .code-explain-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 1.1rem 0 0.55rem;
+}
+.code-explain li::before {
+  background: transparent;
+  border: 2px solid var(--brand);
+  width: 6px;
+  height: 6px;
+}
+
+/* HTML / CSS / JS layered diagram */
+.lesson-visual { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.25rem; }
+.lv-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+}
+.lv-lang {
+  flex: none;
+  width: 64px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--brand-strong);
+  background: var(--brand-mist);
+  border: 1px solid color-mix(in srgb, var(--brand) 24%, transparent);
+  border-radius: 9px;
+  padding: 0.42rem 0;
+}
+.lv-body { display: flex; flex-direction: column; gap: 0.12rem; min-width: 0; }
+.lv-body b { color: var(--ink); font-size: 0.92rem; letter-spacing: -0.01em; }
+.lv-body > span { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+.lv-arrow { display: flex; justify-content: center; color: var(--faint); }
+.lv-arrow svg { width: 16px; height: 16px; }
+
+/* Key takeaways */
+.takeaways { display: flex; flex-direction: column; gap: 0.7rem; }
+.takeaways li { display: flex; align-items: flex-start; gap: 0.7rem; line-height: 1.6; }
+.tk-ico {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-mist);
+  border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent);
+  color: var(--brand-strong);
+  margin-top: 0.1em;
+}
+.tk-ico svg { width: 12px; height: 12px; }
+
+/* Practice card */
+.lesson-practice-card {
+  border: 1.5px solid color-mix(in srgb, var(--brand) 30%, transparent);
+  background: linear-gradient(160deg, var(--brand-mist), transparent 60%), var(--card);
+  border-radius: var(--radius-md);
+  padding: 1.15rem 1.25rem;
+}
+.lp-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--brand-strong);
+  margin-bottom: 0.6rem;
+}
+.lp-head svg { width: 15px; height: 15px; }
+.lp-task { font-weight: 600; color: var(--ink); line-height: 1.6; margin-bottom: 0.85rem; }
+.lp-hints {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  border-top: 1px dashed var(--line);
+  padding-top: 0.85rem;
+}
+.lp-hints span { font-size: 0.87rem; color: var(--muted); line-height: 1.6; }
+.lp-note { margin-top: 0.8rem; font-size: 0.8rem; color: var(--faint); font-style: italic; }
+
+@media (max-width: 480px) {
+  .lv-row { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+}
+
 .lesson-nav {
   display: flex;
   align-items: center;
