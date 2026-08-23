@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JS Playground — Run JavaScript Online</title>
-  <meta name="description" content="A fast, modern JavaScript playground. Write, run and debug JavaScript code in your browser with a built-in console and live preview." />
+  <title>JS Playground — LearnJS</title>
+  <meta name="description" content="A frontend coding playground for LearnJS learners. Write HTML, CSS, and JavaScript with a live preview." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%235B5CEB'/%3E%3Cstop%20offset='1'%20stop-color='%238B5CF6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width='100'%20height='100'%20rx='22'%20fill='url(%23g)'/%3E%3Ctext%20x='50'%20y='68'%20font-family='Arial,%20sans-serif'%20font-size='44'%20font-weight='700'%20fill='white'%20text-anchor='middle'%3EJS%3C/text%3E%3C/svg%3E" />
 
   <!-- Apply the saved theme before first paint (no flash) -->
   <script>
     try {
-      if (localStorage.getItem('jspg:theme') === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
+      if (localStorage.getItem('jspg:theme') === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
       }
     } catch (e) {}
   </script>
@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- CodeMirror 5 (vendored locally — the app works fully offline) -->
+  <!-- CodeMirror 5 (vendored locally) -->
   <link rel="stylesheet" href="lib/codemirror/codemirror.min.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -32,7 +32,7 @@
       <span class="brand-logo" aria-hidden="true">JS</span>
       <div class="brand-text">
         <h1>JS Playground</h1>
-        <p>Run JavaScript Online</p>
+        <p>Frontend Coding Environment</p>
       </div>
     </div>
 
@@ -45,26 +45,16 @@
 
       <span class="toolbar-divider" aria-hidden="true"></span>
 
-      <button id="btn-clear" class="btn" aria-label="Clear editor and console" title="Clear editor and console">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-        <span class="btn-label">Clear</span>
-      </button>
-
-      <button id="btn-reset" class="btn" aria-label="Reset to default example code" title="Reset to default example">
+      <button id="btn-reset" class="btn" aria-label="Reset to default code" title="Reset to default starter code">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
         <span class="btn-label">Reset</span>
       </button>
 
       <span class="toolbar-divider" aria-hidden="true"></span>
 
-      <button id="btn-copy" class="btn" aria-label="Copy code to clipboard" title="Copy code">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        <span class="btn-label">Copy</span>
-      </button>
-
-      <button id="btn-download" class="btn" aria-label="Download code as script.js" title="Download as script.js">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg>
-        <span class="btn-label">Download</span>
+      <button id="btn-console-clear" class="btn" aria-label="Clear console" title="Clear console output">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        <span class="btn-label">Clear</span>
       </button>
 
       <button id="btn-theme" class="btn btn-theme" aria-label="Toggle color theme" title="Toggle light / dark theme">
@@ -74,49 +64,55 @@
     </nav>
   </header>
 
-  <!-- ======================= Editor + Console + Preview ======================= -->
+  <!-- ======================= Main IDE layout ======================= -->
   <main id="main">
+    <!-- File Explorer Sidebar -->
+    <aside id="file-explorer" class="file-explorer" aria-label="File explorer">
+      <div class="explorer-header">
+        <span class="explorer-title">EXPLORER</span>
+      </div>
+      <nav class="file-list" role="tablist" aria-label="Files">
+        <button class="file-item active" role="tab" aria-selected="true" data-file="html" tabindex="0">
+          <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-2 20"/><path d="m19 9-7 7-7-7"/></svg>
+          <span class="file-name">index.html</span>
+        </button>
+        <button class="file-item" role="tab" aria-selected="false" data-file="css" tabindex="-1">
+          <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l3 1 2 12 4-16 3 12"/><circle cx="18" cy="8" r="3"/></svg>
+          <span class="file-name">style.css</span>
+        </button>
+        <button class="file-item" role="tab" aria-selected="false" data-file="js" tabindex="-1">
+          <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12h6M12 9v6"/></svg>
+          <span class="file-name">script.js</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Editor Pane -->
     <section id="editor-pane" class="pane editor-pane" aria-label="Code editor">
       <div class="pane-header editor-header">
-        <span class="file-tab" title="script.js">
-          <span class="file-dot" aria-hidden="true"></span>
-          script.js
+        <span class="file-tab" id="editor-file-tab">
+          <span class="file-dot" id="editor-file-dot" aria-hidden="true"></span>
+          <span id="editor-file-name">index.html</span>
         </span>
         <span class="pane-spacer"></span>
         <span id="editor-pos" class="editor-pos" aria-label="Cursor position">Ln 1, Col 1</span>
       </div>
       <div class="editor-wrap">
-        <textarea id="code-input" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="JavaScript code editor" placeholder="// Write your JavaScript here…"></textarea>
+        <!-- Three separate textareas, only one visible at a time -->
+        <textarea id="code-html" class="code-textarea" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="HTML code editor" placeholder="<!-- Write your HTML here… -->"></textarea>
+        <textarea id="code-css" class="code-textarea" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="CSS code editor" placeholder="/* Write your CSS here… */" style="display:none"></textarea>
+        <textarea id="code-js" class="code-textarea" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="JavaScript code editor" placeholder="// Write your JavaScript here…" style="display:none"></textarea>
       </div>
     </section>
 
-    <div id="splitter" class="splitter" role="separator" aria-orientation="horizontal" aria-label="Resize editor and console" tabindex="0" title="Drag to resize (or use Arrow Up / Arrow Down)">
-      <span class="splitter-grip" aria-hidden="true"></span>
+    <!-- Vertical Splitter (editor <-> preview+console) -->
+    <div id="splitter-v" class="splitter splitter-v" role="separator" aria-orientation="vertical" aria-label="Resize editor and preview" tabindex="0">
+      <span class="splitter-grip-v" aria-hidden="true"></span>
     </div>
 
-    <div id="bottom" class="bottom-section">
-      <section id="console-pane" class="pane console-pane" aria-label="Console output">
-        <div class="pane-header">
-          <span class="pane-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6"/><path d="M12 19h8"/></svg>
-          </span>
-          <span class="pane-title">Console</span>
-          <span id="console-count" class="count" aria-label="Number of output entries">0</span>
-          <span class="pane-spacer"></span>
-          <button id="btn-console-clear" class="icon-btn" aria-label="Clear console output only" title="Clear console">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-          </button>
-        </div>
-        <div id="console-output" class="console-output" role="log" aria-live="polite" aria-label="Program output">
-          <div id="console-empty" class="console-empty">
-            <span class="ce-caret" aria-hidden="true">&rsaquo;</span>
-            Output will appear here when you run your code.
-            <code>Try: console.log("Hello")</code>
-          </div>
-        </div>
-        <div id="exec-footer" class="exec-footer" hidden></div>
-      </section>
-
+    <!-- Right side: Preview + Console stacked -->
+    <div id="right-panel" class="right-panel">
+      <!-- Live Preview -->
       <section id="preview-pane" class="pane preview-pane" aria-label="Live preview">
         <div class="pane-header">
           <span class="traffic-lights" aria-hidden="true">
@@ -125,17 +121,44 @@
           <span class="pane-title">Live Preview</span>
           <span class="pane-spacer"></span>
           <button id="btn-preview-refresh" class="icon-btn" aria-label="Re-run code in the preview" title="Re-run code">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           </button>
           <button id="btn-preview-expand" class="icon-btn" aria-label="Expand preview" title="Expand preview">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
           </button>
         </div>
         <div id="preview-frame" class="preview-frame">
           <div id="preview-empty" class="preview-empty">
             <span class="ce-caret" aria-hidden="true">&rsaquo;</span>
-            DOM output will appear here when you run your code.
-            <code>Try: document.body.innerHTML = "&lt;h1&gt;Hello&lt;/h1&gt;"</code>
+            Click <strong>Run</strong> to preview your code.
+            <code>HTML + CSS + JS will render together</code>
+          </div>
+        </div>
+      </section>
+
+      <!-- Horizontal Splitter (preview <-> console) -->
+      <div id="splitter-h" class="splitter splitter-h" role="separator" aria-orientation="horizontal" aria-label="Resize preview and console" tabindex="0">
+        <span class="splitter-grip-h" aria-hidden="true"></span>
+      </div>
+
+      <!-- Console -->
+      <section id="console-pane" class="pane console-pane" aria-label="Console output">
+        <div class="pane-header">
+          <span class="pane-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6"/><path d="M12 19h8"/></svg>
+          </span>
+          <span class="pane-title">Console</span>
+          <span id="console-count" class="count" aria-label="Number of output entries">0</span>
+          <span class="pane-spacer"></span>
+          <button id="btn-console-clear-inline" class="icon-btn" aria-label="Clear console output only" title="Clear console">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          </button>
+        </div>
+        <div id="console-output" class="console-output" role="log" aria-live="polite" aria-label="Program output">
+          <div id="console-empty" class="console-empty">
+            <span class="ce-caret" aria-hidden="true">&rsaquo;</span>
+            Output will appear here when you run your code.
+            <code>Try: console.log("Hello")</code>
           </div>
         </div>
       </section>
@@ -161,7 +184,7 @@
       <div class="preview-overlay-header">
         <span class="pane-title">Live Preview</span>
         <button id="btn-preview-close" class="icon-btn" aria-label="Close expanded preview" title="Close (Esc)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
       </div>
       <div id="preview-overlay-frame" class="preview-overlay-frame"></div>
@@ -175,9 +198,16 @@
     <div class="noscript">JS Playground requires JavaScript to be enabled in your browser.</div>
   </noscript>
 
-  <!-- CodeMirror 5: core + JavaScript mode + editor add-ons -->
+  <!-- CodeMirror 5: core + modes + add-ons -->
   <script src="lib/codemirror/codemirror.min.js"></script>
+  <!-- JS mode -->
   <script src="lib/codemirror/mode/javascript/javascript.min.js"></script>
+  <!-- CSS mode -->
+  <script src="lib/codemirror/mode/css/css.min.js"></script>
+  <!-- HTML modes (xml provides the base, htmlmixed mixes xml+css+js) -->
+  <script src="lib/codemirror/mode/html/xml.min.js"></script>
+  <script src="lib/codemirror/mode/html/htmlmixed.min.js"></script>
+  <!-- Add-ons -->
   <script src="lib/codemirror/addon/edit/matchbrackets.min.js"></script>
   <script src="lib/codemirror/addon/edit/closebrackets.min.js"></script>
   <script src="lib/codemirror/addon/selection/active-line.min.js"></script>
