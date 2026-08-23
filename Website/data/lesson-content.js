@@ -1206,4 +1206,469 @@ export const LESSON_CONTENT = {
       note: "GitHub.com is a website where you can push your repository online. You will learn that later \u2014 for now, local Git is enough."
     }
   }
+,
+  /* ------------------------------------------------------------------
+     2.2.1 — Concise Arrow Function Syntax (() => {})
+     ------------------------------------------------------------------ */
+  "2.2.1": {
+    id: "concise-arrow-function-syntax",
+    number: "2.2.1",
+    title: "Concise Arrow Function Syntax (() => {})",
+    description:
+      "Write shorter functions using the modern arrow syntax introduced in ES6.",
+    sections: [
+      {
+        heading: "Arrow functions in one glance",
+        paragraphs: [
+          "Arrow functions are a shorter way to write functions. They were introduced in ES6 (2015) and are now the most common style in modern JavaScript."
+        ],
+        list: [
+          "Regular: <code>function add(a, b) { return a + b; }</code>",
+          "Arrow: <code>const add = (a, b) => a + b;</code>",
+          "Both do the same thing — the arrow version is just shorter."
+        ]
+      }
+    ],
+    codeExamples: [
+      {
+        heading: "Arrow function syntax",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "const sayHi = () => \"Hi!\";\nconsole.log(sayHi());  // Hi!\n\nconst double = x => x * 2;\nconsole.log(double(5));  // 10\n\nconst add = (a, b) => a + b;\nconsole.log(add(3, 7));  // 10",
+        output: "Hi!\n10\n10",
+        explanation: [
+          "<code>() =></code> means no parameters. One parameter can skip parentheses: <code>x =></code>.",
+          "If the body is a single expression, you can omit curly braces and <code>return</code> — the result is returned automatically."
+        ]
+      }
+    ],
+    sectionsAfterCode: [
+      {
+        heading: "When to use braces",
+        paragraphs: [
+          "Use curly braces when the function body has multiple statements:"
+        ],
+        list: [
+          "<code>const greet = (name) => { console.log(\"Hi\"); return name; };</code>",
+          "With braces you must write <code>return</code> explicitly"
+        ]
+      },
+      {
+        heading: "Common beginner mistakes",
+        list: [
+          "<b>Forgetting <code>return</code> with braces.</b> <code>() => { x + 1 }</code> returns <code>undefined</code> — you need <code>return x + 1</code>.",
+          "<b>Returning an object literal.</b> <code>() => { name: \"hi\" }</code> is a syntax error. Wrap in parentheses: <code>() => ({ name: \"hi\" })</code>.",
+          "<b>Using arrow functions as object methods.</b> Arrows don't have their own <code>this</code> — use regular functions or shorthand methods for objects."
+        ]
+      }
+    ],
+    keyTakeaways: [
+      "Arrow functions are a shorter syntax: <code>const fn = (a, b) => a + b;</code>",
+      "Single expressions return automatically — no <code>return</code> needed.",
+      "Use parentheses for zero or multiple parameters; skip them for one parameter."
+    ],
+    practice: {
+      task: "Convert these to arrow functions: (1) <code>function square(n) { return n * n; }</code>, (2) <code>function greet(name) { return \"Hello, \" + name; }</code>, (3) <code>function isValid(str) { return str.length > 0; }</code>.",
+      hints: [
+        "<code>const square = n => n * n;</code>",
+        "<code>const greet = name => \"Hello, \" + name;</code>",
+        "<code>const isValid = str => str.length > 0;</code>"
+      ],
+      note: "Verify each works by calling it in the console."
+    }
+  },
+
+  /* ------------------------------------------------------------------
+     2.2.2 — Implicit Returns for Single-Line Expressions
+     ------------------------------------------------------------------ */
+  "2.2.2": {
+    id: "implicit-returns",
+    number: "2.2.2",
+    title: "Implicit Returns for Single-Line Expressions",
+    description:
+      "Understand when arrow functions automatically return a value and when you need return explicitly.",
+    sections: [
+      {
+        heading: "Implicit vs explicit return",
+        paragraphs: [
+          "Arrow functions have two body styles. The choice determines whether <code>return</code> is needed."
+        ],
+        list: [
+          "<b>Concise body</b> (no braces): the expression's value is returned automatically — this is <b>implicit return</b>.",
+          "<b>Block body</b> (with braces): you must write <code>return</code> explicitly — without it, the function returns <code>undefined</code>."
+        ]
+      }
+    ],
+    codeExamples: [
+      {
+        heading: "Implicit vs explicit return",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "const add = (a, b) => a + b;\nconst subtract = (a, b) => { return a - b; };\nconst doNothing = () => { let x = 1; };\n\nconsole.log(add(5, 3));       // 8\nconsole.log(subtract(5, 3));  // 2\nconsole.log(doNothing());     // undefined",
+        output: "8\n2\nundefined",
+        explanation: [
+          "<code>add</code> uses implicit return — no braces, no <code>return</code>.",
+          "<code>subtract</code> uses explicit return — braces mean you must write <code>return</code>.",
+          "<code>doNothing</code> has braces but no return — it returns <code>undefined</code>."
+        ]
+      },
+      {
+        heading: "Returning objects implicitly",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "const wrong = () => { name: \"Vishnu\" };\nconsole.log(wrong());  // undefined\n\nconst right = () => ({ name: \"Vishnu\" });\nconsole.log(right());  // { name: \"Vishnu\" }",
+        output: "undefined\n{ name: \"Vishnu\" }",
+        explanation: [
+          "JavaScript sees <code>{ name: \"Vishnu\" }</code> as a block statement, not an object.",
+          "Wrapping in parentheses <code>({})</code> tells JavaScript it's an expression — an object literal."
+        ]
+      }
+    ],
+    keyTakeaways: [
+      "No braces = implicit return (the expression is returned automatically).",
+      "Braces = you must write <code>return</code> explicitly.",
+      "To return an object from an arrow function, wrap it in parentheses: <code>() => ({...})</code>."
+    ],
+    practice: {
+      task: "Write an arrow function <code>createUser</code> that takes a name and returns an object <code>{ name, active: true }</code> using implicit return.",
+      hints: [
+        "Remember to wrap the object in parentheses: <code>() => ({...})</code>.",
+        "<code>const createUser = name => ({ name, active: true });</code>"
+      ],
+      note: "This pattern is very common for creating data objects concisely."
+    }
+  },
+
+  /* ------------------------------------------------------------------
+     2.2.3 — Arrow Functions as Callbacks
+     ------------------------------------------------------------------ */
+  "2.2.3": {
+    id: "arrow-functions-as-callbacks",
+    number: "2.2.3",
+    title: "Arrow Functions as Callbacks",
+    description:
+      "Use arrow functions where other functions expect a callback — event listeners, array methods, and timers become cleaner.",
+    sections: [
+      {
+        heading: "What is a callback?",
+        paragraphs: [
+          "A callback is a function you pass to another function to be called later. Arrow functions make callbacks short and readable."
+        ]
+      }
+    ],
+    codeExamples: [
+      {
+        heading: "Arrow functions with array methods",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "const nums = [1, 2, 3, 4, 5];\n\nconst doubled = nums.map(n => n * 2);\nconsole.log(doubled);  // [2, 4, 6, 8, 10]\n\nconst evens = nums.filter(n => n % 2 === 0);\nconsole.log(evens);    // [2, 4]\n\nconst total = nums.reduce((sum, n) => sum + n, 0);\nconsole.log(total);    // 15",
+        output: "[2, 4, 6, 8, 10]\n[2, 4]\n15",
+        explanation: [
+          "<code>n => n * 2</code> is a callback passed to <code>.map()</code>. It runs once per element.",
+          "Arrow callbacks are so common that most developers write them inline rather than naming them."
+        ]
+      },
+      {
+        heading: "Arrow functions with event listeners and timers",
+        file: "app.js",
+        language: "JavaScript",
+        code: "document.querySelector(\"button\").addEventListener(\"click\", () => {\n  console.log(\"Clicked!\");\n});\n\nsetTimeout(() => {\n  console.log(\"3 seconds passed\");\n}, 3000);",
+        explanation: [
+          "The arrow function <code>() => { ... }</code> is the callback — it runs when the event fires.",
+          "This is much shorter than writing a full <code>function</code> keyword for a one-off handler."
+        ]
+      }
+    ],
+    keyTakeaways: [
+      "A callback is a function passed to another function to run later.",
+      "Arrow functions make callbacks short: <code>.map(n => n * 2)</code>.",
+      "They're commonly used with array methods, event listeners, and timers."
+    ],
+    practice: {
+      task: "Given <code>const words = [\"hello\", \"world\", \"js\"]</code>, use <code>.map()</code> with an arrow function to create an array of uppercase strings.",
+      hints: [
+        "<code>.map(w => w.toUpperCase())</code>",
+        "Result: <code>[\"HELLO\", \"WORLD\", \"JS\"]</code>"
+      ],
+      note: "Try the same with <code>.filter()</code> to keep only words longer than 3 characters."
+    }
+  }
+,
+  /* ------------------------------------------------------------------
+     2.3.1 — Imperative Iteration with for Loops
+     ------------------------------------------------------------------ */
+  "2.3.1": {
+    id: "imperative-for-loops",
+    number: "2.3.1",
+    title: "Imperative Iteration with for Loops",
+    description:
+      "Repeat code a specific number of times using the classic for loop.",
+    sections: [
+      {
+        heading: "The for loop anatomy",
+        paragraphs: [
+          "A for loop runs a block of code repeatedly. It has three parts in the parentheses:"
+        ],
+        list: [
+          "<b>Initialization:</b> <code>let i = 0</code> — runs once before the loop starts",
+          "<b>Condition:</b> <code>i < 5</code> — checked before each iteration; loop stops when false",
+          "<b>Update:</b> <code>i++</code> — runs after each iteration"
+        ]
+      }
+    ],
+    codeExamples: [
+      {
+        heading: "Basic for loop",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "for (let i = 0; i < 5; i++) {\n  console.log(i);\n}",
+        output: "0\n1\n2\n3\n4",
+        explanation: [
+          "Starts at 0, runs while <code>i < 5</code>, increments <code>i</code> after each iteration.",
+          "The loop body runs 5 times with i = 0, 1, 2, 3, 4."
+        ]
+      },
+      {
+        heading: "Looping through an array",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "const fruits = [\"apple\", \"banana\", \"cherry\"];\n\nfor (let i = 0; i < fruits.length; i++) {\n  console.log(fruits[i]);\n}",
+        output: "apple\nbanana\ncherry",
+        explanation: [
+          "<code>fruits[i]</code> accesses each element by its index (0, 1, 2).",
+          "<code>fruits.length</code> is 3, so the loop runs while <code>i < 3</code>."
+        ]
+      }
+    ],
+    keyTakeaways: [
+      "A for loop has three parts: initialization, condition, and update.",
+      "Use <code>let i = 0</code> for the counter — <code>let</code> scopes it to the loop.",
+      "Access array elements with <code>array[i]</code> inside the loop."
+    ],
+    practice: {
+      task: "Write a for loop that prints the numbers 1 through 10.",
+      hints: [
+        "Start at 1: <code>let i = 1</code>",
+        "End at 10: <code>i <= 10</code>"
+      ],
+      note: "Try changing the start and end values to print even numbers only."
+    }
+  },
+
+  /* ------------------------------------------------------------------
+     2.3.2 — Condition-Based Iteration with while & do...while Loops
+     ------------------------------------------------------------------ */
+  "2.3.2": {
+    id: "while-and-do-while-loops",
+    number: "2.3.2",
+    title: "Condition-Based Iteration with while & do...while Loops",
+    description:
+      "Repeat code while a condition is true — useful when you don't know the exact count.",
+    sections: [
+      {
+        heading: "while vs do...while",
+        list: [
+          "<code>while</code> checks the condition <b>before</b> each iteration — may run zero times.",
+          "<code>do...while</code> checks <b>after</b> each iteration — always runs at least once."
+        ]
+      }
+    ],
+    codeExamples: [
+      {
+        heading: "while loop",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "let count = 0;\nwhile (count < 3) {\n  console.log(count);\n  count++;\n}",
+        output: "0\n1\n2",
+        explanation: [
+          "The loop checks <code>count < 3</code> before each run.",
+          "When count reaches 3, the condition is false and the loop stops."
+        ]
+      },
+      {
+        heading: "do...while loop",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "let input;\ndo {\n  input = \"yes\";\n  console.log(\"Processing:\", input);\n} while (input !== \"no\");",
+        output: "Processing: yes",
+        explanation: [
+          "The code inside <code>do</code> runs first, then the condition is checked.",
+          "Useful when you need to run something at least once — like a menu or prompt."
+        ]
+      }
+    ],
+    keyTakeaways: [
+      "<code>while</code> checks before running; <code>do...while</code> checks after — guaranteeing one run.",
+      "Both loops run as long as the condition is <code>true</code>.",
+      "Always update a variable inside the loop to avoid infinite loops."
+    ],
+    practice: {
+      task: "Write a while loop that counts down from 5 to 1, then prints \"Go!\".",
+      hints: [
+        "Start: <code>let i = 5</code>",
+        "Condition: <code>while (i > 0)</code>",
+        "Decrement: <code>i--</code>"
+      ],
+      note: "What happens if you forget <code>i--</code>? The loop runs forever."
+    }
+  },
+
+  /* ------------------------------------------------------------------
+     2.3.3 — Controlling Loop Flow: break and continue
+     ------------------------------------------------------------------ */
+  "2.3.3": {
+    id: "break-and-continue",
+    number: "2.3.3",
+    title: "Controlling Loop Flow: break and continue",
+    description:
+      "Exit a loop early with break, or skip an iteration with continue.",
+    sections: [
+      {
+        heading: "break and continue",
+        list: [
+          "<code>break</code> — exits the loop entirely, jumping to the code after it.",
+          "<code>continue</code> — skips the current iteration and jumps to the next one."
+        ]
+      }
+    ],
+    codeExamples: [
+      {
+        heading: "break — stop early",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "for (let i = 0; i < 10; i++) {\n  if (i === 5) break;\n  console.log(i);\n}",
+        output: "0\n1\n2\n3\n4",
+        explanation: [
+          "When <code>i === 5</code>, <code>break</code> exits the loop immediately.",
+          "The loop would have run to 9, but break stops it at 5."
+        ]
+      },
+      {
+        heading: "continue — skip an iteration",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "for (let i = 0; i < 6; i++) {\n  if (i === 3) continue;\n  console.log(i);\n}",
+        output: "0\n1\n2\n4\n5",
+        explanation: [
+          "When <code>i === 3</code>, <code>continue</code> skips the <code>console.log</code> and moves to the next iteration.",
+          "The loop still runs for all other values — only 3 is skipped."
+        ]
+      }
+    ],
+    keyTakeaways: [
+      "<code>break</code> exits the loop completely.",
+      "<code>continue</code> skips the current iteration and moves to the next.",
+      "Both work in for, while, and do...while loops."
+    ],
+    practice: {
+      task: "Write a for loop from 1 to 10 that skips multiples of 3 and stops when it reaches 8.",
+      hints: [
+        "Use <code>continue</code> when <code>i % 3 === 0</code>.",
+        "Use <code>break</code> when <code>i === 8</code>."
+      ],
+      note: "Expected output: 1, 2, 4, 5, 7."
+    }
+  },
+
+  /* ------------------------------------------------------------------
+     2.3.4 — Iterating Array Values with for...of Loops
+     ------------------------------------------------------------------ */
+  "2.3.4": {
+    id: "for-of-loops",
+    number: "2.3.4",
+    title: "Iterating Array Values with for...of Loops",
+    description:
+      "Loop through array values directly — cleaner than index-based for loops.",
+    sections: [
+      {
+        heading: "for...of vs traditional for",
+        paragraphs: [
+          "<code>for...of</code> gives you each value directly — no index, no <code>array[i]</code>. It's cleaner and less error-prone for simply reading values."
+        ]
+      }
+    ],
+    codeExamples: [
+      {
+        heading: "for...of basics",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "const colors = [\"red\", \"green\", \"blue\"];\n\nfor (const color of colors) {\n  console.log(color);\n}",
+        output: "red\ngreen\nblue",
+        explanation: [
+          "<code>color</code> receives each value in the array, one at a time.",
+          "No index needed — the loop handles the iteration internally."
+        ]
+      },
+      {
+        heading: "When you need the index",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "const nums = [10, 20, 30];\n\nfor (const [i, val] of nums.entries()) {\n  console.log(i, val);\n}",
+        output: "0 10\n1 20\n2 30",
+        explanation: [
+          "<code>.entries()</code> returns <code>[index, value]</code> pairs.",
+          "Destructuring <code>[i, val]</code> unpacks each pair — gives you both index and value."
+        ]
+      }
+    ],
+    keyTakeaways: [
+      "<code>for...of</code> loops through values directly: <code>for (const x of array)</code>.",
+      "Use it when you only need the values, not the index.",
+      "Use <code>.entries()</code> if you need both index and value."
+    ],
+    practice: {
+      task: "Use <code>for...of</code> to loop through <code>[\"a\", \"b\", \"c\"]</code> and print each letter with its position (1, 2, 3).",
+      hints: [
+        "Use <code>.entries()</code> to get index-value pairs.",
+        "Add 1 to the index since it starts at 0."
+      ],
+      note: "for...of also works on strings, Maps, and Sets — not just arrays."
+    }
+  },
+
+  /* ------------------------------------------------------------------
+     2.3.5 — Enumerating Object Keys with for...in Loops
+     ------------------------------------------------------------------ */
+  "2.3.5": {
+    id: "for-in-loops",
+    number: "2.3.5",
+    title: "Enumerating Object Keys with for...in Loops",
+    description:
+      "Loop through the properties of an object using for...in.",
+    sections: [
+      {
+        heading: "for...in iterates over keys",
+        paragraphs: [
+          "<code>for...in</code> loops through the <b>enumerable property names</b> (keys) of an object. Use it when you need to access both the key and the value."
+        ]
+      }
+    ],
+    codeExamples: [
+      {
+        heading: "Looping through object keys",
+        file: "Developer Console",
+        language: "JavaScript",
+        code: "const user = { name: \"Vishnu\", age: 25, city: \"Hyderabad\" };\n\nfor (const key in user) {\n  console.log(key + \":\", user[key]);\n}",
+        output: "name: Vishnu\nage: 25\ncity: Hyderabad",
+        explanation: [
+          "<code>key</code> receives each property name: <code>\"name\"</code>, <code>\"age\"</code>, <code>\"city\"</code>.",
+          "<code>user[key]</code> accesses the value using bracket notation (since the key is a variable)."
+        ]
+      }
+    ],
+    keyTakeaways: [
+      "<code>for...in</code> iterates over object keys (property names).",
+      "Access values with <code>obj[key]</code> using bracket notation.",
+      "Prefer <code>Object.entries()</code> for modern code — it gives you both key and value directly."
+    ],
+    practice: {
+      task: "Given <code>const scores = { math: 95, science: 88, english: 92 }</code>, use <code>for...in</code> to print each subject and its score.",
+      hints: [
+        "<code>for (const subject in scores)</code>",
+        "Print: <code>console.log(subject + \":\", scores[subject])</code>"
+      ],
+      note: "Try the same with <code>Object.entries(scores)</code> to compare the syntax."
+    }
+  }
+
 };
