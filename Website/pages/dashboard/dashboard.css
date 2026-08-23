@@ -885,22 +885,40 @@ body.dash-open .dash-backdrop { opacity: 1; visibility: visible; }
    ============================================================ */
 
 /* ---------- Overall progress (circular, top-right) ---------- */
-.roadmap-progress {
-  /* TOP-RIGHT of the Roadmap panel: #panel-roadmap is a flex column, so
-     order:-1 lifts this widget above .dash-panel-head (page title) and
-     align-self:flex-end hugs the right edge — the RING ends up in the very
-     corner. Same ids/inputs as before; only the visual changed from a
-     horizontal bar to a circle. Normal flow ⇒ never overlaps the title. */
-  order: -1;
-  align-self: flex-end;
+
+/* Roadmap-only header tightening: "JAVASCRIPT ROADMAP" sits closer to the
+   "YOUR LEARNING PATH" eyebrow. Scoped to #panel-roadmap so no other panel
+   heading spacing changes. */
+#panel-roadmap .dash-hello-eyebrow { margin-bottom: 0.15rem; }
+
+/* Header area: title block LEFT, compact overall-progress block RIGHT.
+   Both share one flex row, so the progress block lives beside the title
+   instead of reserving its own full-width band — the filters/topics now
+   follow immediately after the header with no blank gap. flex-wrap lets
+   the block stack naturally under the heading on small screens. */
+.roadmap-header {
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* meta text left, ring hugging the corner */
-  gap: 0.9rem;
-  width: min(420px, 100%);
-  margin: 0.2rem 0 0.6rem;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.4rem;
 }
-.roadmap-progress-meta { min-width: 0; text-align: right; }
+/* The wrapper owns the header→filters spacing now. */
+#panel-roadmap .dash-panel-head { margin-bottom: 0; }
+
+/* Compact progress block: ring on top, "Overall Progress" + lesson stats
+   directly beneath it — one centered group that only occupies its own
+   space at the top-right of the header. */
+.roadmap-progress {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  text-align: center;
+}
+.roadmap-progress-meta { min-width: 0; }
 .roadmap-progress-label {
   margin: 0;
   font-size: 0.92rem;
@@ -920,8 +938,8 @@ body.dash-open .dash-backdrop { opacity: 1; visibility: visible; }
    stroke-dashoffset = 100 − overall% . */
 .roadmap-ring {
   position: relative;
-  width: 64px;
-  height: 64px;
+  width: 132px;   /* enlarged dashboard element (was 64px) */
+  height: 132px;
   flex-shrink: 0;
 }
 .roadmap-ring svg {
@@ -933,7 +951,9 @@ body.dash-open .dash-backdrop { opacity: 1; visibility: visible; }
 .roadmap-ring-track,
 .roadmap-ring-fill {
   fill: none;
-  stroke-width: 4.5;
+  /* viewBox is 48 units rendered at 132px — a thinner stroke keeps the
+     enlarged ring from looking heavy. */
+  stroke-width: 3.25;
 }
 .roadmap-ring-track { stroke: var(--line-soft); }
 .roadmap-ring-fill {
@@ -945,24 +965,32 @@ body.dash-open .dash-backdrop { opacity: 1; visibility: visible; }
   transform-origin: center;
   transition: stroke-dashoffset 0.6s var(--ease);
 }
-/* Percentage label centered inside the circle. */
+/* Percentage label centered inside the circle — scaled up with the ring. */
 .roadmap-progress-pct {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.78rem;
+  font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.01em;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 @media (max-width: 768px) {
-  .roadmap-ring { width: 54px; height: 54px; }
+  /* Stack the header: heading first, compact progress block centered below. */
+  .roadmap-header { flex-direction: column; align-items: flex-start; }
+  .roadmap-progress { align-self: center; margin-top: 0.25rem; }
+  .roadmap-ring { width: 96px; height: 96px; }
   .roadmap-ring-track,
-  .roadmap-ring-fill { stroke-width: 5; }
-  .roadmap-progress-pct { font-size: 0.68rem; }
+  .roadmap-ring-fill { stroke-width: 4; }
+  .roadmap-progress-pct { font-size: 1.05rem; }
+}
+@media (max-width: 480px) {
+  .roadmap-progress { gap: 1rem; }
+  .roadmap-ring { width: 82px; height: 82px; }
+  .roadmap-progress-pct { font-size: 0.95rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .roadmap-ring-fill { transition: none; }

@@ -170,32 +170,36 @@
 
         <!-- ========== ROADMAP ========== -->
         <section class="dash-panel" id="panel-roadmap" data-panel-body="roadmap">
-          <div class="dash-panel-head">
-            <div>
-              <p class="dash-hello-eyebrow">Your learning path</p>
-              <h1 class="dash-panel-title">JavaScript Roadmap</h1>
-              <p class="dash-hello-sub">From your first variable to expert-level systems &mdash; ten levels, one path at a time.</p>
+          <!-- Roadmap header — title block (left) + overall progress block (right)
+               share one header area, so the filters/topics are never pushed down. -->
+          <div class="roadmap-header">
+            <div class="dash-panel-head">
+              <div>
+                <p class="dash-hello-eyebrow">Your learning path</p>
+                <h1 class="dash-panel-title">JavaScript Roadmap</h1>
+                <p class="dash-hello-sub">From your first variable to expert-level systems &mdash; ten levels, one path at a time.</p>
+              </div>
             </div>
-          </div>
 
-          <!-- Overall progress — circular indicator pinned top-right -->
-          <div class="roadmap-progress" aria-label="Overall progress">
-            <div class="roadmap-progress-meta">
-              <h2 class="roadmap-progress-label">Overall Progress</h2>
-              <p class="roadmap-progress-sub" id="roadmapOverallSub">Loading progress&hellip;</p>
-            </div>
-            <div class="roadmap-ring">
-              <svg viewBox="0 0 48 48" focusable="false" aria-hidden="true">
-                <defs>
-                  <linearGradient id="roadmapRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#16a34a" />
-                    <stop offset="100%" stop-color="#4ade80" />
-                  </linearGradient>
-                </defs>
-                <circle class="roadmap-ring-track" cx="24" cy="24" r="20"></circle>
-                <circle class="roadmap-ring-fill" id="roadmapOverallRing" cx="24" cy="24" r="20" pathLength="100"></circle>
-              </svg>
-              <b class="roadmap-progress-pct" id="roadmapOverallPct">0%</b>
+            <!-- Overall progress — circular indicator pinned top-right -->
+            <div class="roadmap-progress" aria-label="Overall progress">
+              <div class="roadmap-ring">
+                <svg viewBox="0 0 48 48" focusable="false" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="roadmapRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#16a34a" />
+                      <stop offset="100%" stop-color="#4ade80" />
+                    </linearGradient>
+                  </defs>
+                  <circle class="roadmap-ring-track" cx="24" cy="24" r="20"></circle>
+                  <circle class="roadmap-ring-fill" id="roadmapOverallRing" cx="24" cy="24" r="20" pathLength="100"></circle>
+                </svg>
+                <b class="roadmap-progress-pct" id="roadmapOverallPct">0%</b>
+              </div>
+              <div class="roadmap-progress-meta">
+                <h2 class="roadmap-progress-label">Overall Progress</h2>
+                <p class="roadmap-progress-sub" id="roadmapOverallSub">Loading progress&hellip;</p>
+              </div>
             </div>
           </div>
 
