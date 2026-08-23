@@ -232,22 +232,21 @@ function renderTopicNode(node, open) {
   const pct = topicProgress(topic);
   const done = pct === 100;
   const selected = previewTopicId === topic.id;
+  // Topics are navigation links, not expandable accordions.
+  // Clicking a topic opens the learning page for that topic's first lesson.
   return (
-    '<div class="roadmap-topic' + (open ? " open" : "") + (selected ? " selected" : "") +
-      '" data-node="' + escapeHtml(topic.id) + '" data-node-type="topic" data-has-children="' + (node.hasChildren ? "1" : "0") + '">' +
-      '<button class="roadmap-topic-head" type="button" aria-expanded="' + (open ? "true" : "false") + '">' +
+    '<div class="roadmap-topic' + (selected ? " selected" : "") +
+      '" data-node="' + escapeHtml(topic.id) + '" data-node-type="topic"' +
+      ' data-topic="' + escapeHtml(topic.id) + '" data-index="0"' +
+      ' data-has-children="0">' +
+      '<button class="roadmap-topic-head" type="button"' +
+        ' data-topic="' + escapeHtml(topic.id) + '" data-index="0">' +
         '<span class="roadmap-topic-num">' + escapeHtml(topic.id) + "</span>" +
         '<span class="roadmap-topic-name">' + escapeHtml(topic.title) + "</span>" +
         '<span class="roadmap-topic-progress' + (done ? " done" : "") + '">' +
           (done ? ICON.check : "") + pct + "%" +
         "</span>" +
-        (node.hasChildren ? '<span class="roadmap-topic-arrow">' + ICON.chevron + "</span>" : "") +
       "</button>" +
-      '<div class="roadmap-topic-body"><div class="roadmap-topic-inner">' +
-        '<ul class="roadmap-subtopics">' +
-          node.children.map(renderNode).join("") +
-        "</ul>" +
-      "</div></div>" +
     "</div>"
   );
 }
@@ -392,12 +391,10 @@ function bindEvents() {
       const type = row.getAttribute("data-node-type");
       const hasChildren = row.getAttribute("data-has-children") === "1";
 
-      // Real lesson rows (leaf subtopics under a topic) open the SAME
-      // Learning page as "Start Learning" — reuse the shared
-      // learnjs:open-topic event so the existing navigation/loading logic
-      // in dashboard.js + learning.js handles the rest. Parent topics and
-      // subtopics (rows with children) still expand/collapse below.
-      if (type === "subtopic" && !hasChildren && row.hasAttribute("data-topic")) {
+      // Topics are now navigation links — clicking a topic immediately
+      // opens the learning page for that topic's first lesson.
+      // Subtopics (leaf lessons) also navigate directly.
+      if ((type === "topic" || type === "subtopic") && row.hasAttribute("data-topic")) {
         window.dispatchEvent(new CustomEvent("learnjs:open-topic", {
           detail: {
             topicId: row.getAttribute("data-topic"),
@@ -407,12 +404,10 @@ function bindEvents() {
         return;
       }
 
-      // Expand/collapse toggles happen IN PLACE (class flip only, like the
-      // course sidebar). A full re-render here would recreate the row
-      // already in its final state, so the smooth grid-template-rows
-      // expand/collapse animation could never play. expandedNodes stays in
-      // sync so later full renders (progress updates, filter changes)
-      // rebuild with exactly the same open/closed state.
+      // Level expand/collapse toggles happen IN PLACE (class flip only,
+      // like the course sidebar). expandedNodes stays in sync so later
+      // full renders (progress updates, filter changes) rebuild with
+      // exactly the same open/closed state.
       let changed = false;
       if (hasChildren) {
         changed = true;
@@ -423,13 +418,7 @@ function bindEvents() {
         const head = row.querySelector("[aria-expanded]");
         if (head) head.setAttribute("aria-expanded", String(open));
       }
-      // Topics still drive the right-side preview + Start Learning.
-      if (type === "topic") {
-        previewTopicId = id;
-        tree.querySelectorAll(".roadmap-topic.selected").forEach((el) => el.classList.remove("selected"));
-        row.classList.add("selected");
-      }
-      if (changed || type === "topic") renderPreview();
+      if (changed) renderPreview();
     });
   }
 

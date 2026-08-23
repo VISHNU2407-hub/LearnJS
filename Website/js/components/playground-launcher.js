@@ -4,12 +4,12 @@
 
    Shows a small circular `</>` button in the bottom-right corner
    ONLY while a user is signed in. Clicking it opens the existing
-   JS Playground (Js-compiler/) in a new tab — the compiler itself
+   JS Playground (Js-compiler/) in a new tab — the playground itself
    is NOT rebuilt or embedded here, it is reused as-is.
 
-   The compiler lives in the sibling Js-compiler/ folder at the
+   The playground lives in the sibling Js-compiler/ folder at the
    repository root (next to Website/). Before opening, the button
-   verifies the compiler is actually being served; if the site is
+   verifies the playground is actually being served; if the site is
    served from the wrong root (e.g. the Website/ folder instead of
    the repository root) it shows a helpful toast instead of opening
    a dead 404 tab.
@@ -141,7 +141,7 @@ const FAB_CSS = `
 /* ---------- Helpers ---------- */
 
 /* ---------- Playground URL ----------
-   The compiler sits in Js-compiler/ at the repository root, three
+   The playground sits in Js-compiler/ at the repository root, three
    levels above this module (Website/js/components/). Resolving against
    import.meta.url therefore yields the correct URL no matter how the
    page itself was reached (file vs directory form, query strings, page
