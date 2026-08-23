@@ -3,14 +3,16 @@
     "id": "blog-website",
     "folder": "blog website",
     "title": "Blog Website",
-    "description": "A static blog website with article data, build scripts and generated pages.",
+    "description": "A full-featured SPA blog with article cards, categories, search, bookmarks, comments, and local persistence.",
     "difficulty": "Intermediate",
-    "estimatedTime": "4 hours",
-    "category": "Full-Stack",
+    "estimatedTime": "5 hours",
+    "category": "Core JS",
     "tags": [
-      "HTML",
-      "CSS",
-      "Generator"
+      "DOM",
+      "Events",
+      "LocalStorage",
+      "SPA",
+      "Search"
     ],
     "cover": "cover image.png",
     "entry": "index.html",
