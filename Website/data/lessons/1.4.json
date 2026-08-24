@@ -1,0 +1,266 @@
+{
+  "topicId": "1.4",
+  "topicTitle": "Primitive Data Types & Numeric Formatting",
+  "lessons": [
+    {
+      "id": "1.4.1",
+      "title": "Working with Primitives: string, number, boolean, null, undefined, symbol, bigint",
+      "description": "Explore every primitive data type in JavaScript — the building blocks that hold all your data before you get to objects and arrays.",
+      "sections": [
+        {
+          "heading": "What are primitives?",
+          "paragraphs": ["Primitives are the most basic data types in JavaScript. They are <b>immutable</b> — once you create one, you cannot change it. You can only create a new value and reassign the variable. There are seven primitive types in total."]
+        },
+        {
+          "heading": "The seven primitives",
+          "list": [
+            "<b>string</b> — text, always wrapped in quotes: <code>\"hello\"</code>, <code>'hello'</code>, or <code>`hello`</code>",
+            "<b>number</b> — integers and decimals: <code>42</code>, <code>3.14</code>, <code>-7</code>, also <code>Infinity</code> and <code>NaN</code>",
+            "<b>boolean</b> — true or false: <code>true</code>, <code>false</code>",
+            "<b>null</b> — an intentional empty value: <code>null</code>",
+            "<b>undefined</b> — a variable with no assigned value",
+            "<b>symbol</b> — a unique identifier (we will explore this in topic 7.2)",
+            "<b>bigint</b> — integers larger than <code>Number.MAX_SAFE_INTEGER</code>: <code>9007199254740991n</code>"
+          ]
+        },
+        {
+          "heading": "Strings",
+          "paragraphs": ["A string is a sequence of characters wrapped in quotes. JavaScript does not care which quote style you use — single, double, or backticks — as long as you are consistent. Strings can hold any text: names, sentences, even entire HTML pages."]
+        },
+        {
+          "heading": "Numbers",
+          "paragraphs": ["JavaScript has one number type that covers integers, decimals, positive, negative, and special values like <code>Infinity</code> and <code>NaN</code> (Not a Number). There is no separate type for whole numbers vs. decimals — they are all just <code>number</code>."]
+        },
+        {
+          "heading": "Booleans",
+          "paragraphs": ["A boolean is either <code>true</code> or <code>false</code>. They are the result of comparisons and the backbone of conditional logic. When you write <code>age > 18</code>, the result is a boolean."]
+        },
+        {
+          "heading": "null and undefined",
+          "paragraphs": ["<code>null</code> means \"intentionally empty\" — you set it deliberately. <code>undefined</code> means \"not yet assigned\" — JavaScript gives this automatically when a variable has no value. They look similar but serve different purposes."]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Creating each primitive type",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let name = \"Vishnu\";           // string\nlet age = 25;                   // number\nlet score = 98.5;               // number (decimal)\nlet isLoggedIn = true;          // boolean\nlet nothing = null;             // null\nlet mystery;                    // undefined\nlet big = 9007199254740991n;    // bigint\n\nconsole.log(typeof name);      // \"string\"\nconsole.log(typeof age);       // \"number\"\nconsole.log(typeof isLoggedIn);// \"boolean\"\nconsole.log(typeof nothing);   // \"object\" (a known JS bug!)\nconsole.log(typeof mystery);   // \"undefined\"",
+          "explanation": [
+            "Each variable holds a different primitive type. Notice <code>typeof null</code> returns <code>\"object\"</code> — this is a long-standing bug in JavaScript, not something you did wrong.",
+            "A variable declared without a value (<code>let mystery;</code>) automatically gets <code>undefined</code>.",
+            "<code>bigint</code> uses the <code>n</code> suffix to distinguish it from regular numbers."
+          ]
+        },
+        {
+          "heading": "String basics",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let single = 'Hello';\nlet double = \"Hello\";\nlet backtick = `Hello`;\n\nconsole.log(single === double);       // true\nconsole.log(single === backtick);     // true\n\nlet length = \"JavaScript\".length;\nconsole.log(length);                  // 10",
+          "explanation": [
+            "All three quote styles create the exact same string. Use whichever you prefer — backticks are the most flexible because they also support template literals (covered in 1.4.4).",
+            "Strings have a <code>.length</code> property that tells you how many characters they contain."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create one variable for each of the seven primitive types. Use <code>typeof</code> on each and print the result.",
+        "hints": [
+          "For bigint: <code>let big = 123n;</code>",
+          "For null: <code>let empty = null;</code>",
+          "For undefined: just declare <code>let x;</code> without assigning a value."
+        ],
+        "note": "Notice that <code>typeof null</code> returns <code>\"object\"</code>. This is a famous JavaScript quirk."
+      },
+      "keyTakeaways": [
+        "JavaScript has seven primitive types: string, number, boolean, null, undefined, symbol, and bigint.",
+        "Primitives are immutable — you create new values, you never mutate them.",
+        "Strings can use single, double, or backtick quotes — they all produce the same type.",
+        "<code>typeof</code> reveals a value's type, but watch out: <code>typeof null</code> returns <code>\"object\"</code> (a bug in JS)."
+      ],
+      "challenge": "Create a variable with a string, then try to change a single character in it (e.g. <code>name[0] = \"X\"</code>). What happens? Why?"
+    },
+    {
+      "id": "1.4.2",
+      "title": "Checking Types using the typeof Operator",
+      "description": "Use the typeof operator to inspect what type of data a variable holds — and learn the one famous gotcha that catches everyone.",
+      "sections": [
+        {
+          "heading": "What is typeof?",
+          "paragraphs": ["<code>typeof</code> is a unary operator that returns a string describing the type of its operand. It works on variables, literals, and expressions. It is the primary way to check data types at runtime in JavaScript."]
+        },
+        {
+          "heading": "What typeof returns",
+          "list": [
+            "<code>\"string\"</code> for any string value",
+            "<code>\"number\"</code> for numbers (including <code>NaN</code> and <code>Infinity</code>)",
+            "<code>\"boolean\"</code> for <code>true</code> and <code>false</code>",
+            "<code>\"undefined\"</code> for undefined variables",
+            "<code>\"function\"</code> for functions (even though functions are technically objects)",
+            "<code>\"object\"</code> for objects, arrays, <b>and null</b> (the famous gotcha)"
+          ]
+        },
+        {
+          "heading": "When typeof is useful",
+          "paragraphs": ["You will use <code>typeof</code> to validate user input, debug unexpected values, and write defensive code that handles different types gracefully. For example, before doing math on a value, you can check that it is actually a number."]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "typeof with different values",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "console.log(typeof \"hello\");     // \"string\"\nconsole.log(typeof 42);          // \"number\"\nconsole.log(typeof true);        // \"boolean\"\nconsole.log(typeof undefined);   // \"undefined\"\nconsole.log(typeof null);        // \"object\" (gotcha!)\nconsole.log(typeof [1, 2, 3]);   // \"object\" (arrays are objects)\nconsole.log(typeof {});          // \"object\"\nconsole.log(typeof function(){});// \"function\"",
+          "explanation": [
+            "Notice <code>typeof null</code> returns <code>\"object\"</code>. This is a bug from the earliest days of JavaScript that was never fixed for backward compatibility. Remember it — you will be asked about it in interviews.",
+            "Arrays also return <code>\"object\"</code>. To specifically check for arrays, use <code>Array.isArray(value)</code>.",
+            "Functions are the only \"object-like\" value that <code>typeof</code> identifies correctly."
+          ]
+        },
+        {
+          "heading": "Using typeof to validate input",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function doubleIfNumber(value) {\n  if (typeof value !== \"number\") {\n    return \"Please provide a number\";\n  }\n  return value * 2;\n}\n\nconsole.log(doubleIfNumber(5));       // 10\nconsole.log(doubleIfNumber(\"hello\")); // \"Please provide a number\"\nconsole.log(doubleIfNumber(null));    // \"Please provide a number\"",
+          "explanation": [
+            "This function checks the type before doing any math. If the input is not a number, it returns a helpful message instead of producing <code>NaN</code>.",
+            "This pattern — <b>check first, act second</b> — is called defensive programming and prevents many bugs."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a function <code>checkType(value)</code> that prints <code>\"Number!\"</code> if the value is a number, <code>\"String!\"</code> if it is a string, and <code>\"Something else\"</code> for anything else. Test it with five different values.",
+        "hints": [
+          "Use <code>typeof value === \"number\"</code> to check for numbers.",
+          "Chain with <code>else if (typeof value === \"string\")</code> for strings.",
+          "Use a final <code>else</code> for everything else."
+        ],
+        "note": "What does your function return for <code>null</code>? Remember the typeof gotcha."
+      },
+      "keyTakeaways": [
+        "<code>typeof</code> returns a string: <code>\"string\"</code>, <code>\"number\"</code>, <code>\"boolean\"</code>, <code>\"undefined\"</code>, <code>\"object\"</code>, or <code>\"function\"</code>.",
+        "<code>typeof null</code> returns <code>\"object\"</code> — this is a historical bug, not correct behavior.",
+        "Arrays return <code>\"object\"</code> too. Use <code>Array.isArray()</code> to check for arrays specifically.",
+        "Use <code>typeof</code> to write defensive code that validates input types before acting on them."
+      ],
+      "challenge": "Write a function that accepts any value and returns a formatted string like: <code>\"Value: 42, Type: number\"</code>. Test it with a string, number, boolean, null, undefined, and an array."
+    },
+    {
+      "id": "1.4.3",
+      "title": "Using Numeric Separators for Readability (1_000_000)",
+      "description": "Make large numbers easy to read by inserting underscores as visual separators — a small feature that makes a big difference.",
+      "sections": [
+        {
+          "heading": "Why numeric separators?",
+          "paragraphs": ["Large numbers are hard to read at a glance. Is <code>1000000</code> one million or ten million? Numeric separators let you insert underscores to group digits, making numbers as readable as <code>1_000_000</code>. The underscores are purely visual — they do not affect the value."]
+        },
+        {
+          "heading": "The syntax",
+          "paragraphs": ["Place underscores between digits wherever it helps readability. Common patterns: every three digits for thousands (<code>1_000</code>), or every group of four for hex colors (<code>0xFF_FF_FF</code>). You can even use them in decimal numbers: <code>3.141_592_653</code>."]
+        },
+        {
+          "heading": "Where they work",
+          "paragraphs": ["Numeric separators work in integer literals and decimal literals. They do <b>not</b> work inside strings — <code>\"1_000\"</code> is the string <code>\"1_000\"</code>, not the number 1000. They also work with hex (<code>0xFF_FF</code>), binary (<code>0b1000_0001</code>), and octal (<code>0o77_77</code>) literals."]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Readable large numbers",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "const population = 7_900_000_000;\nconst speedOfLight = 299_792_458;\nconst pi = 3.141_592_653;\n\nconsole.log(population);     // 7900000000\nconsole.log(speedOfLight);   // 299792458\nconsole.log(pi);             // 3.141592653\n\n// The value is identical — underscores are just visual\nconsole.log(1_000 === 1000); // true",
+          "explanation": [
+            "The underscores make these numbers instantly readable. <code>7_900_000_000</code> is clearly 7.9 billion; <code>7900000000</code> takes effort to parse.",
+            "The runtime ignores the underscores entirely. <code>1_000 === 1000</code> is <code>true</code> because they are the exact same number.",
+            "You can place them anywhere between digits — there is no strict rule, just whatever helps you read."
+          ]
+        },
+        {
+          "heading": "Hex and binary with separators",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "const white = 0xFF_FF_FF;\nconst mask = 0b1111_0000_1010;\nconst octal = 0o77_77;\n\nconsole.log(white);    // 16777215\nconsole.log(mask);     // 3850\nconsole.log(octal);    // 4095",
+          "explanation": [
+            "Hex colors become much clearer with separators: <code>0xFF_FF_FF</code> is obviously white (255, 255, 255).",
+            "Binary masks group nicely in fours, matching the nibble structure of bytes.",
+            "Octal values also benefit from grouping."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Rewrite these numbers using numeric separators: 100000, 5000000, 3.141592653589793, and 0xDEADBEEF. Verify each equals the original using <code>===</code>.",
+        "hints": [
+          "Use underscores every three digits: <code>100_000</code>.",
+          "For hex: <code>0xDEAD_BEEF</code>.",
+          "Check: <code>100_000 === 100000</code> should be <code>true</code>."
+        ],
+        "note": "Try typing a number with two underscores in a row (<code>1__000</code>). What happens?"
+      },
+      "keyTakeaways": [
+        "Numeric separators are underscores (<code>_</code>) placed between digits to improve readability.",
+        "They are purely visual — <code>1_000_000</code> is exactly the same value as <code>1000000</code>.",
+        "They work in integers, decimals, hex, binary, and octal literals.",
+        "They do not work inside strings — <code>\"1_000\"</code> is a three-character string, not a number."
+      ],
+      "challenge": "Create variables for these real-world values using numeric separators: the US national debt (~31 trillion), the distance from Earth to the Sun in km (~150 million), and the speed of light in m/s (~300 million). Print each."
+    },
+    {
+      "id": "1.4.4",
+      "title": "Modern Template Literals (`Hello ${name}`)",
+      "description": "Build strings dynamically using backtick syntax and embedded expressions — a cleaner alternative to string concatenation.",
+      "sections": [
+        {
+          "heading": "What are template literals?",
+          "paragraphs": ["Template literals are strings wrapped in backticks (`` ` ``) instead of single or double quotes. They let you embed variables and expressions directly inside the string using <code>${expression}</code>. This replaces messy <code>+</code> concatenation with clean, readable syntax."]
+        },
+        {
+          "heading": "Embedding values",
+          "paragraphs": ["Inside backticks, anything between <code>${</code> and <code>}</code> is evaluated as a JavaScript expression. The result is converted to a string and inserted. You can put any expression inside: variables, math, function calls, even ternary operators."]
+        },
+        {
+          "heading": "Multi-line strings",
+          "paragraphs": ["Regular strings require <code>\\n</code> for newlines. Template literals let you just press Enter — the string spans multiple lines exactly as you type it. This is especially useful for building HTML or long text blocks."]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Embedding variables in template literals",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let name = \"Vishnu\";\nlet age = 25;\n\nlet greeting = `Hello, ${name}!`;\nlet info = `${name} is ${age} years old.`;\n\nconsole.log(greeting);  // \"Hello, Vishnu!\"\nconsole.log(info);      // \"Vishnu is 25 years old.\"\n\n// With concatenation (the old way):\nlet old = \"Hello, \" + name + \"!\";\nconsole.log(old);       // \"Hello, Vishnu!\"",
+          "explanation": [
+            "The <code>${name}</code> syntax embeds the variable's value directly. No quotes around <code>name</code> — JavaScript evaluates the expression and inserts the result.",
+            "The old concatenation with <code>+</code> works but gets messy fast. Template literals are cleaner, especially with multiple variables."
+          ]
+        },
+        {
+          "heading": "Expressions and multi-line strings",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let price = 49;\nlet quantity = 3;\nlet total = `Total: $${price * quantity}`;\nconsole.log(total);  // \"Total: $147\"\n\nlet html = `\n  <div class=\"card\">\n    <h2>${\"User Profile\"}</h2>\n    <p>Age: ${age}</p>\n  </div>\n`;\nconsole.log(html);",
+          "explanation": [
+            "<code>${price * quantity}</code> evaluates the math expression and inserts the result (147). Any valid JS expression works inside <code>${}</code>.",
+            "The multi-line string spans multiple lines naturally — no <code>\\n</code> needed. This makes building HTML templates much cleaner.",
+            "Notice the string includes a literal <code>$</code> sign before the expression — it is not special, only <code>${</code> triggers evaluation."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a template literal that says: <code>\"I am [name] and I am [age] years old. In 10 years I will be [age + 10].\"</code> Use your actual name and age. Print the result.",
+        "hints": [
+          "Wrap in backticks: <code>`I am ${name}...`</code>.",
+          "For the math: <code>${age + 10}</code> — expressions work inside <code>${}</code>.",
+          "You can nest anything: functions, ternaries, even other template literals."
+        ],
+        "note": "Try building a small HTML snippet with a template literal. Notice how much cleaner it is than string concatenation."
+      },
+      "keyTakeaways": [
+        "Template literals use backticks (<code>`</code>) and <code>${expression}</code> to embed values directly.",
+        "Any JavaScript expression works inside <code>${}</code> — variables, math, function calls, ternaries.",
+        "Template literals span multiple lines naturally — no <code>\\n</code> required.",
+        "They replace messy <code>+</code> concatenation with clean, readable syntax."
+      ],
+      "challenge": "Build a receipt generator: create variables for item name, price, quantity, and tax rate. Use a template literal to print a formatted receipt with the subtotal, tax, and total. Example: <code>\"Coffee\\nQty: 2 × $4.50 = $9.00\\nTax: $0.72\\nTotal: $9.72\"</code>"
+    }
+  ]
+}

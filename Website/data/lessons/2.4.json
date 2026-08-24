@@ -1,0 +1,257 @@
+{
+  "topicId": "2.4",
+  "topicTitle": "Lists of Data: Arrays & Index Operations",
+  "lessons": [
+    {
+      "id": "2.4.1",
+      "title": "Creating Arrays & Zero-Indexed Access",
+      "description": "Learn how to create arrays — ordered collections of values — and access items using their position number (index).",
+      "sections": [
+        {
+          "heading": "What is an array?",
+          "paragraphs": ["An <b>array</b> is a list-like data structure that holds multiple values in a single variable. Think of it as a row of boxes, each with a numbered slot. Arrays can store any combination of types — numbers, strings, booleans, even other arrays."]
+        },
+        {
+          "heading": "Creating arrays",
+          "paragraphs": ["You create an array using square brackets <code>[]</code>. Separate each item with a comma. You can also use the <code>Array()</code> constructor, but the literal syntax <code>[]</code> is more common and preferred."]
+        },
+        {
+          "heading": "Zero-based indexing",
+          "paragraphs": ["Array positions start at <b>0</b>, not 1. The first element is at index <code>0</code>, the second at index <code>1</code>, and so on. This is called <b>zero-based indexing</b> and is one of the most important concepts for beginners to grasp."],
+          "list": [
+            "<code>arr[0]</code> — first element",
+            "<code>arr[1]</code> — second element",
+            "<code>arr[arr.length - 1]</code> — last element"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Creating and accessing arrays",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let fruits = [\"apple\", \"banana\", \"cherry\"];\n\nconsole.log(fruits[0]);  // \"apple\"\nconsole.log(fruits[1]);  // \"banana\"\nconsole.log(fruits[2]);  // \"cherry\"\nconsole.log(fruits.length);  // 3",
+          "explanation": [
+            "The array <code>fruits</code> holds three string values.",
+            "Indices start at 0, so <code>fruits[0]</code> gives the first item, not <code>fruits[1]</code>.",
+            "<code>.length</code> tells you how many items are in the array."
+          ]
+        },
+        {
+          "heading": "Mixed types and out-of-bounds access",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let mixed = [42, \"hello\", true, null];\n\nconsole.log(mixed[0]);  // 42\nconsole.log(mixed[2]);  // true\n\nconsole.log(mixed[10]); // undefined (no error!)",
+          "explanation": [
+            "Arrays can hold different types — numbers, strings, booleans, null.",
+            "Accessing an index that doesn't exist returns <code>undefined</code> instead of throwing an error.",
+            "This is different from many other languages, which would throw an error for out-of-bounds access."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create an array of your three favorite movies. Log the second movie using its index. Then log the total number of movies using <code>.length</code>.",
+        "hints": [
+          "Start with <code>let movies = [\"Movie 1\", \"Movie 2\", \"Movie 3\"];</code>",
+          "Access the second movie with <code>movies[1]</code> (remember, indices start at 0!)",
+          "Use <code>movies.length</code> to get the count."
+        ],
+        "note": "Try accessing <code>movies[3]</code> — what does it return?"
+      },
+      "keyTakeaways": [
+        "Arrays store multiple values in a single variable using square brackets <code>[]</code>.",
+        "Indices start at <b>0</b>, not 1 — <code>arr[0]</code> is the first element.",
+        "Accessing a nonexistent index returns <code>undefined</code>, not an error."
+      ],
+      "challenge": "Create an array of 5 numbers. Write a loop that prints each number along with its index, like: <code>Index 0: 10</code>, <code>Index 1: 20</code>, etc."
+    },
+    {
+      "id": "2.4.2",
+      "title": "Adding/Removing Elements (push, pop, shift, unshift)",
+      "description": "Master the four fundamental methods for adding and removing items from the beginning or end of an array.",
+      "sections": [
+        {
+          "heading": "Four essential array methods",
+          "paragraphs": ["Arrays are <b>dynamic</b> — you can add or remove elements at any time. JavaScript gives you four core methods that modify arrays in place:"],
+          "list": [
+            "<code>push()</code> — adds to the <b>end</b> of the array",
+            "<code>pop()</code> — removes from the <b>end</b> of the array",
+            "<code>unshift()</code> — adds to the <b>beginning</b> of the array",
+            "<code>shift()</code> — removes from the <b>beginning</b> of the array"
+          ]
+        },
+        {
+          "heading": "Return values",
+          "paragraphs": ["<code>push()</code> and <code>unshift()</code> return the new length of the array. <code>pop()</code> and <code>shift()</code> return the removed element. Knowing these return values helps you chain operations or store results."]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "push and pop — working from the end",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let stack = [10, 20, 30];\n\nstack.push(40);          // [10, 20, 30, 40]\nconsole.log(stack);\n\nlet removed = stack.pop(); // removes 40\nconsole.log(removed);     // 40\nconsole.log(stack);       // [10, 20, 30]",
+          "explanation": [
+            "<code>push(40)</code> adds 40 to the end of the array.",
+            "<code>pop()</code> removes and returns the last element (40).",
+            "The array is modified in place — the original variable changes."
+          ]
+        },
+        {
+          "heading": "shift and unshift — working from the front",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let queue = [\"a\", \"b\", \"c\"];\n\nqueue.unshift(\"z\");       // [\"z\", \"a\", \"b\", \"c\"]\nconsole.log(queue);\n\nlet first = queue.shift(); // removes \"z\"\nconsole.log(first);        // \"z\"\nconsole.log(queue);        // [\"a\", \"b\", \"c\"]",
+          "explanation": [
+            "<code>unshift(\"z\")</code> adds \"z\" to the beginning, shifting everything else right.",
+            "<code>shift()</code> removes and returns the first element (\"z\").",
+            "These are the mirror operations of <code>push</code> and <code>pop</code>, but at the front."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create an empty array called <code>todoList</code>. Use <code>push()</code> to add three tasks. Then use <code>pop()</code> to remove one. Finally, use <code>unshift()</code> to add an urgent task to the front.",
+        "hints": [
+          "Start with <code>let todoList = [];</code>",
+          "Add tasks: <code>todoList.push(\"Buy groceries\")</code>, etc.",
+          "Remove: <code>todoList.pop()</code> — it returns the removed task."
+        ],
+        "note": "Try chaining: <code>console.log(todoList.push(\"new\"))</code> — what does it return?"
+      },
+      "keyTakeaways": [
+        "<code>push()</code> adds to the end; <code>pop()</code> removes from the end.",
+        "<code>unshift()</code> adds to the beginning; <code>shift()</code> removes from the beginning.",
+        "All four methods modify the array <b>in place</b> and return useful values."
+      ],
+      "challenge": "Simulate a playlist: start with <code>[\"Song A\", \"Song B\"]</code>. Add \"Song C\" to the end, add \"Song Z\" to the front, remove the last song, then remove the first song. Print the array after each operation."
+    },
+    {
+      "id": "2.4.3",
+      "title": "Splicing & Slicing Arrays (splice, slice)",
+      "description": "Learn the difference between splice (which modifies the original array) and slice (which creates a copy) — two essential but easily confused methods.",
+      "sections": [
+        {
+          "heading": "slice — creates a copy",
+          "paragraphs": ["<code>slice()</code> extracts a portion of an array into a <b>new array</b> without changing the original. It takes two arguments: a start index and an optional end index (exclusive)."]
+        },
+        {
+          "heading": "splice — modifies in place",
+          "paragraphs": ["<code>splice()</code> changes the original array by removing, replacing, or adding elements. It takes a start index, an optional delete count, and optional items to insert. It returns an array of removed elements."]
+        },
+        {
+          "heading": "Key difference",
+          "list": [
+            "<code>slice()</code> — non-destructive, returns a new array",
+            "<code>splice()</code> — destructive, modifies the original array",
+            "Use <code>slice()</code> when you want to preserve the original",
+            "Use <code>splice()</code> when you intentionally want to change the array"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "slice — extracting without modifying",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let colors = [\"red\", \"green\", \"blue\", \"yellow\"];\n\nlet middle = colors.slice(1, 3);\nconsole.log(middle);   // [\"green\", \"blue\"]\nconsole.log(colors);   // [\"red\", \"green\", \"blue\", \"yellow\"] — unchanged!\n\nlet fromIndex2 = colors.slice(2);\nconsole.log(fromIndex2); // [\"blue\", \"yellow\"]",
+          "explanation": [
+            "<code>slice(1, 3)</code> copies elements at index 1 and 2 (not 3 — the end is exclusive).",
+            "The original <code>colors</code> array remains completely unchanged.",
+            "Omitting the end index slices from start to the end of the array."
+          ]
+        },
+        {
+          "heading": "splice — modifying the original",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let items = [\"a\", \"b\", \"c\", \"d\"];\n\n// Remove 2 elements starting at index 1\nlet removed = items.splice(1, 2);\nconsole.log(removed);  // [\"b\", \"c\"]\nconsole.log(items);    // [\"a\", \"d\"]\n\n// Insert at index 1 (remove 0)\nitems.splice(1, 0, \"x\", \"y\");\nconsole.log(items);    // [\"a\", \"x\", \"y\", \"d\"]",
+          "explanation": [
+            "<code>splice(1, 2)</code> removes 2 elements starting at index 1 and returns them.",
+            "The original array is modified — \"b\" and \"c\" are gone.",
+            "<code>splice(1, 0, \"x\", \"y\")</code> inserts \"x\" and \"y\" at index 1 without removing anything."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Given <code>let nums = [10, 20, 30, 40, 50]</code>, use <code>slice()</code> to get <code>[20, 30, 40]</code> and store it in a new variable. Then use <code>splice()</code> to remove the first element from the original array. Log both arrays.",
+        "hints": [
+          "<code>nums.slice(1, 4)</code> gives you elements at indices 1, 2, 3.",
+          "<code>nums.splice(0, 1)</code> removes the first element (index 0, count 1).",
+          "After splice, <code>nums</code> should be <code>[20, 30, 40, 50]</code>."
+        ],
+        "note": "Always double-check: did you mean <code>slice</code> (copy) or <code>splice</code> (modify)?"
+      },
+      "keyTakeaways": [
+        "<code>slice(start, end)</code> copies a portion into a new array — the original stays unchanged.",
+        "<code>splice(start, deleteCount, ...items)</code> modifies the original array in place.",
+        "The end index in <code>slice()</code> is <b>exclusive</b> — it stops before that position.",
+        "If you want to keep the original array, use <code>slice()</code>; if you want to change it, use <code>splice()</code>."
+      ],
+      "challenge": "Given <code>let data = [1, 2, 3, 4, 5, 6]</code>, use <code>slice()</code> to create three separate copies: one with the first half, one with the second half, and one with just the middle two elements. Then use <code>splice()</code> to remove all even numbers from the original."
+    },
+    {
+      "id": "2.4.4",
+      "title": "Array Destructuring & Spread Operator Syntax (...)",
+      "description": "Use modern ES6+ syntax to unpack arrays into variables and merge arrays effortlessly — cleaner, shorter, and more expressive code.",
+      "sections": [
+        {
+          "heading": "Array destructuring",
+          "paragraphs": ["Destructuring lets you <b>unpack array values into individual variables</b> in one line. Instead of accessing each element by index, you assign them all at once using the same square bracket syntax."]
+        },
+        {
+          "heading": "The spread operator (...)",
+          "paragraphs": ["The spread operator <code>...</code> expands an array into its individual elements. It's useful for copying arrays, merging arrays, and passing elements as function arguments."]
+        },
+        {
+          "heading": "Common patterns",
+          "list": [
+            "<code>const [a, b] = arr;</code> — unpack first two elements",
+            "<code>const [first, ...rest] = arr;</code> — first element + everything else as a new array",
+            "<code>const [...copy] = arr;</code> — shallow copy of an array",
+            "<code>const merged = [...arr1, ...arr2];</code> — merge two arrays"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Destructuring in action",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let rgb = [255, 128, 0];\n\nlet [red, green, blue] = rgb;\n\nconsole.log(red);    // 255\nconsole.log(green);  // 128\nconsole.log(blue);   // 0\n\n// Skip elements with commas\nlet [r, , b] = rgb;\nconsole.log(r);  // 255\nconsole.log(b);  // 0",
+          "explanation": [
+            "Destructuring assigns each element to a variable by position.",
+            "You can skip elements by leaving the position empty between commas.",
+            "This is much cleaner than writing <code>let red = rgb[0];</code> for each one."
+          ]
+        },
+        {
+          "heading": "Spread operator for copying and merging",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let arr1 = [1, 2, 3];\nlet arr2 = [4, 5, 6];\n\n// Copy an array\nlet copy = [...arr1];\nconsole.log(copy);  // [1, 2, 3]\n\n// Merge arrays\nlet merged = [...arr1, ...arr2];\nconsole.log(merged);  // [1, 2, 3, 4, 5, 6]\n\n// Add elements while copying\nlet extended = [...arr1, 99, ...arr2];\nconsole.log(extended);  // [1, 2, 3, 99, 4, 5, 6]",
+          "explanation": [
+            "<code>[...arr1]</code> expands <code>arr1</code> into individual elements, creating a shallow copy.",
+            "Spreading multiple arrays combines them into one — cleaner than <code>concat()</code>.",
+            "You can mix spread elements with individual values in the same array literal."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Given <code>let scores = [85, 92, 78, 95, 88]</code>, use destructuring to get the first and last scores into separate variables. Then use spread to create a new array that has all scores plus a new score of 100 at the end.",
+        "hints": [
+          "Destructure: <code>let [first, , , , last] = scores;</code> or use <code>scores[0]</code> and <code>scores[scores.length - 1]</code>.",
+          "Spread: <code>let newScores = [...scores, 100];</code>",
+          "Try the rest pattern: <code>let [firstScore, ...rest] = scores;</code>"
+        ],
+        "note": "Destructuring also works with objects (covered in topic 2.6) — the syntax is similar but uses <code>{}</code>."
+      },
+      "keyTakeaways": [
+        "Array destructuring unpacks values into variables: <code>const [a, b] = arr;</code>",
+        "Use commas to skip positions: <code>const [first, , third] = arr;</code>",
+        "The spread operator <code>...</code> expands arrays for copying (<code>[...arr]</code>) or merging (<code>[...a, ...b]</code>).",
+        "Both features make code shorter, cleaner, and easier to read."
+      ],
+      "challenge": "Write a function <code>getMinMax(arr)</code> that uses destructuring with <code>Math.min()</code> and <code>Math.max()</code> to return an object with the smallest and largest values. Test with <code>[5, 2, 8, 1, 9]</code>."
+    }
+  ]
+}

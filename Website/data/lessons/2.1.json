@@ -1,0 +1,325 @@
+{
+  "topicId": "2.1",
+  "topicTitle": "Reusable Code: Functions & Parameters",
+  "lessons": [
+    {
+      "id": "2.1.1",
+      "title": "Defining & Calling Function Declarations",
+      "description": "Learn how to create reusable blocks of code using function declarations — the most basic building block of organized JavaScript.",
+      "sections": [
+        {
+          "heading": "What is a function?",
+          "paragraphs": ["A function is a <b>named block of code</b> that you can run whenever you want. Instead of writing the same logic multiple times, you write it once inside a function and call it by name whenever you need it. Functions are the foundation of reusable, organized code."]
+        },
+        {
+          "heading": "Declaring a function",
+          "paragraphs": ["To create a function, use the <code>function</code> keyword followed by a name, parentheses, and curly braces. The code inside the braces only runs when you <b>call</b> the function."],
+          "list": [
+            "<b>function</b> — the keyword that starts the declaration",
+            "<b>name</b> — follows camelCase rules (e.g. <code>sayHello</code>)",
+            "<b>()</b> — parentheses hold parameters (empty for now)",
+            "<b>{}</b> — curly braces contain the function's code"
+          ]
+        },
+        {
+          "heading": "Calling a function",
+          "paragraphs": ["To run a function, write its name followed by parentheses: <code>sayHello()</code>. This is called <b>calling</b> or <b>invoking</b> the function. The code inside executes, and then the program continues after the call."]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Your first function",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function sayHello() {\n  console.log(\"Hello, world!\");\n  console.log(\"Welcome to JavaScript!\");\n}\n\nsayHello();  // Call the function\nsayHello();  // Call it again — same output",
+          "explanation": [
+            "The function <code>sayHello</code> is defined once but called twice.",
+            "Each call runs both <code>console.log</code> lines inside the function.",
+            "Notice the function is defined <b>before</b> it is called — this matters for function declarations."
+          ]
+        },
+        {
+          "heading": "Functions that do different things",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function greetUser() {\n  console.log(\"Hi there!\");\n}\n\nfunction calculateArea() {\n  let width = 5;\n  let height = 3;\n  let area = width * height;\n  console.log(\"Area:\", area);  // Area: 15\n}\n\ngreetUser();      // Hi there!\ncalculateArea(); // Area: 15",
+          "explanation": [
+            "Each function has its own code block that runs independently.",
+            "<code>calculateArea</code> declares its own variables inside — they only exist while the function runs.",
+            "Functions can do anything: calculate values, print messages, or perform complex tasks."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a function called <code>printDate</code> that logs today's date to the console using <code>new Date()</code>. Call it three times.",
+        "hints": [
+          "Start with <code>function printDate() {</code>",
+          "Inside, use <code>console.log(new Date());</code>",
+          "Close with <code>}</code> and then call <code>printDate();</code> three times."
+        ],
+        "note": "Try adding a second function that prints a different message, then alternate calling both."
+      },
+      "keyTakeaways": [
+        "A function is a reusable block of code defined with <code>function name() { }</code>.",
+        "Defining a function does not run it — you must <b>call</b> it with <code>name()</code>.",
+        "Functions can be called as many times as you want, and each call runs the code inside independently."
+      ],
+      "challenge": "Write a function <code>logUserInfo</code> that declares a <code>name</code> variable and an <code>age</code> variable inside it, then logs a message like \"Name: Alex, Age: 25\". Call it with different values by changing the variables inside the function."
+    },
+    {
+      "id": "2.1.2",
+      "title": "Function Expressions vs Declarations",
+      "description": "Understand the two ways to create functions in JavaScript — declarations and expressions — and when each one is appropriate.",
+      "sections": [
+        {
+          "heading": "Two ways to make a function",
+          "paragraphs": ["JavaScript gives you two syntaxes for creating functions: <b>declarations</b> and <b>expressions</b>. Both produce the same kind of function, but they behave differently in one important way — <b>hoisting</b>."]
+        },
+        {
+          "heading": "Function declarations",
+          "paragraphs": ["A function declaration starts with <code>function</code> followed by a name. Declarations are <b>hoisted</b>, meaning you can call the function before the line where it is defined. JavaScript moves declarations to the top of their scope behind the scenes."],
+          "list": [
+            "Starts with <code>function</code> keyword and a name",
+            "Hoisted — can be called before the definition line",
+            "Best for named, reusable functions"
+          ]
+        },
+        {
+          "heading": "Function expressions",
+          "paragraphs": ["A function expression assigns an anonymous (or named) function to a variable. They are <b>not</b> hoisted — you must define them before you call them. Function expressions are often used for short, one-time callbacks."],
+          "list": [
+            "Stored in a variable like <code>const fn = function() { }</code>",
+            "Not hoisted — must be defined before use",
+            "Common for callbacks and short, throwaway functions"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Declaration vs expression — hoisting difference",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Function DECLARATION — hoisted\ngreet();  // Works! Output: \"Hello!\"\n\nfunction greet() {\n  console.log(\"Hello!\");\n}\n\n// Function EXPRESSION — not hoisted\nfarewell();  // Error: Cannot access 'farewell' before initialization\n\nconst farewell = function() {\n  console.log(\"Goodbye!\");\n};",
+          "explanation": [
+            "<code>greet()</code> works before its definition because declarations are hoisted.",
+            "<code>farewell()</code> throws an error because the variable exists but has not been assigned yet.",
+            "With <code>const</code>, the variable is in the <b>temporal dead zone</b> until the assignment line."
+          ]
+        },
+        {
+          "heading": "When to use each one",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Use DECLARATIONS for reusable, named functions\nfunction double(number) {\n  return number * 2;\n}\n\n// Use EXPRESSIONS for short, one-time callbacks\nconst numbers = [1, 2, 3];\nconst doubled = numbers.map(function(n) {\n  return n * 2;\n});\n\nconsole.log(doubled);  // [2, 4, 6]",
+          "explanation": [
+            "<code>double</code> is a declaration — it is named, reusable, and can be called anywhere in its scope.",
+            "The anonymous function inside <code>.map()</code> is an expression — it is short, unnamed, and used once.",
+            "In modern code, arrow functions (covered in topic 2.2) are usually preferred for expressions."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a function declaration called <code>add</code> that logs <code>a + b</code>. Then create a function expression called <code>multiply</code> that does the same with <code>*</code>. Call both.",
+        "hints": [
+          "Declaration: <code>function add(a, b) { console.log(a + b); }</code>",
+          "Expression: <code>const multiply = function(a, b) { console.log(a * b); };</code>",
+          "Call them: <code>add(2, 3);</code> and <code>multiply(4, 5);</code>"
+        ],
+        "note": "Try calling the function expression before you define it — what error do you get?"
+      },
+      "keyTakeaways": [
+        "Function <b>declarations</b> (<code>function name() { }</code>) are hoisted — you can call them before the definition line.",
+        "Function <b>expressions</b> (<code>const name = function() { }</code>) are not hoisted — define them before calling.",
+        "Use declarations for named, reusable functions; use expressions for short callbacks."
+      ],
+      "challenge": "Write a function declaration that logs \"I am hoisted\" and call it before the definition. Then write a function expression and try to call it before defining it. Compare the two results."
+    },
+    {
+      "id": "2.1.3",
+      "title": "Passing Arguments & Setting Default Parameters",
+      "description": "Make functions flexible by accepting input values — and set sensible defaults so callers can skip optional arguments.",
+      "sections": [
+        {
+          "heading": "Parameters vs arguments",
+          "paragraphs": ["A <b>parameter</b> is a variable listed in the function definition: <code>function greet(name)</code>. An <b>argument</b> is the actual value you pass when calling: <code>greet(\"Alex\")</code>. The parameter <code>name</code> receives the argument <code>\"Alex\"</code> inside the function."]
+        },
+        {
+          "heading": "Multiple parameters",
+          "paragraphs": ["Separate parameters with commas. The order matters — the first argument goes to the first parameter, the second to the second, and so on. If you pass fewer arguments than parameters, the missing ones become <code>undefined</code>."]
+        },
+        {
+          "heading": "Default parameters",
+          "paragraphs": ["You can give parameters default values using <code>=</code>. If the caller does not provide that argument, the default is used. This makes functions easier to call and prevents <code>undefined</code> bugs."],
+          "list": [
+            "<code>function greet(name = \"Guest\")</code> — defaults to \"Guest\" if no argument is passed",
+            "Defaults apply when the argument is <code>undefined</code> (not when it is <code>null</code> or <code>0</code>)",
+            "Defaults work from left to right — you can skip trailing parameters"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Parameters and arguments in action",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function greet(name, timeOfDay) {\n  console.log(\"Good \" + timeOfDay + \", \" + name + \"!\");\n}\n\ngreet(\"Alex\", \"morning\");   // \"Good morning, Alex!\"\ngreet(\"Vishnu\", \"evening\"); // \"Good evening, Vishnu!\"\n\ngreet(\"Sam\");  // \"Good undefined, Sam!\"\n// Missing argument results in 'undefined'",
+          "explanation": [
+            "The first argument <code>\"Alex\"</code> goes to the first parameter <code>name</code>.",
+            "When <code>timeOfDay</code> is not provided, it becomes <code>undefined</code>.",
+            "This is why default parameters are useful — they fill in missing values automatically."
+          ]
+        },
+        {
+          "heading": "Default parameters prevent undefined",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function greet(name = \"Guest\", timeOfDay = \"morning\") {\n  console.log(\"Good \" + timeOfDay + \", \" + name + \"!\");\n}\n\ngreet(\"Alex\", \"evening\");  // \"Good evening, Alex!\"\ngreet(\"Sam\");              // \"Good morning, Sam!\"\ngreet();                   // \"Good morning, Guest!\"\n\ngreet(undefined, \"night\"); // \"Good night, Guest!\"\n// undefined triggers the default",
+          "explanation": [
+            "When <code>\"Sam\"</code> is passed, only <code>name</code> gets a value — <code>timeOfDay</code> uses its default.",
+            "With no arguments, both parameters use their defaults.",
+            "<code>undefined</code> as an argument also triggers the default — useful for skipping middle parameters."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a function <code>calculateTotal(price, taxRate = 0.1)</code> that logs the total price including tax. Test with different values: <code>calculateTotal(100)</code>, <code>calculateTotal(50, 0.2)</code>, and <code>calculateTotal(200, 0.05)</code>.",
+        "hints": [
+          "Inside the function, calculate: <code>let total = price + price * taxRate;</code>",
+          "Then log it: <code>console.log(\"Total: $\" + total);</code>",
+          "The default <code>taxRate = 0.1</code> means 10% tax when no second argument is passed."
+        ],
+        "note": "What happens if you call <code>calculateTotal(\"100\")</code>? JavaScript will try to add a string and a number."
+      },
+      "keyTakeaways": [
+        "Parameters are in the definition; arguments are what you pass when calling.",
+        "If you pass fewer arguments than parameters, the missing ones are <code>undefined</code>.",
+        "Default parameters (<code>param = value</code>) fill in missing arguments automatically.",
+        "Default values trigger when the argument is <code>undefined</code> or not provided at all."
+      ],
+      "challenge": "Write a function <code>createUser(name, role = \"user\", isActive = true)</code> that logs an object with all three properties. Call it three ways: with all arguments, with just a name, and with name and role."
+    },
+    {
+      "id": "2.1.4",
+      "title": "Rest Parameters (...args) for Variable Arguments",
+      "description": "Write functions that accept any number of arguments using the rest parameter syntax — perfect for flexible, future-proof functions.",
+      "sections": [
+        {
+          "heading": "Why rest parameters?",
+          "paragraphs": ["Sometimes you do not know how many arguments a function will receive. A function that adds two numbers is easy — but what about one that adds five, or ten, or a hundred? Rest parameters let you collect <b>any number of arguments</b> into a single array."]
+        },
+        {
+          "heading": "The syntax",
+          "paragraphs": ["Put <code>...</code> before the last parameter name. That parameter becomes an <b>array</b> containing all remaining arguments. It must be the last parameter — you cannot have anything after it."],
+          "list": [
+            "<code>function sum(...numbers)</code> — <code>numbers</code> is an array of all arguments",
+            "<code>function log(first, ...rest)</code> — <code>first</code> gets the first argument, <code>rest</code> gets the rest as an array",
+            "The rest parameter must be the <b>last</b> parameter in the list"
+          ]
+        },
+        {
+          "heading": "Rest vs arguments object",
+          "paragraphs": ["JavaScript also has an old <code>arguments</code> object inside every function. Rest parameters are better: they give you a real array (with <code>.map()</code>, <code>.filter()</code>, etc.), they work with arrow functions, and their intent is clearer. Always prefer rest parameters over <code>arguments</code>."]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Sum any number of values",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function sum(...numbers) {\n  let total = 0;\n  for (let num of numbers) {\n    total += num;\n  }\n  return total;\n}\n\nconsole.log(sum(1, 2));       // 3\nconsole.log(sum(1, 2, 3, 4)); // 10\nconsole.log(sum(5));          // 5\nconsole.log(sum());           // 0",
+          "explanation": [
+            "<code>...numbers</code> collects all arguments into an array — <code>sum(1, 2, 3)</code> gives <code>numbers = [1, 2, 3]</code>.",
+            "The <code>for...of</code> loop iterates over every number in the array.",
+            "With no arguments, <code>numbers</code> is an empty array, so the sum is 0."
+          ]
+        },
+        {
+          "heading": "Combining named and rest parameters",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function logWithPrefix(prefix, ...messages) {\n  for (let msg of messages) {\n    console.log(prefix + \": \" + msg);\n  }\n}\n\nlogWithPrefix(\"INFO\", \"Server started\", \"Listening on port 3000\");\n// INFO: Server started\n// INFO: Listening on port 3000\n\nlogWithPrefix(\"ERROR\", \"File not found\");\n// ERROR: File not found",
+          "explanation": [
+            "<code>prefix</code> captures the first argument — it is a regular named parameter.",
+            "<code>...messages</code> captures all remaining arguments as an array.",
+            "This pattern is common in logging utilities — a category label plus any number of messages."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a function <code>findMax(...nums)</code> that returns the largest number from any number of arguments. Test with <code>findMax(3, 7, 2, 9, 1)</code> and <code>findMax(42)</code>.",
+        "hints": [
+          "Start with <code>function findMax(...nums) {</code>",
+          "Use <code>Math.max(...nums)</code> to find the maximum — the spread operator passes the array as individual arguments.",
+          "Alternatively, loop through <code>nums</code> and track the largest value manually."
+        ],
+        "note": "Try passing strings like <code>findMax(\"3\", \"7\", \"2\")</code> — what does <code>Math.max</code> return?"
+      },
+      "keyTakeaways": [
+        "Rest parameters (<code>...param</code>) collect any number of arguments into a real array.",
+        "They must be the last parameter in the function definition.",
+        "Rest parameters are preferred over the old <code>arguments</code> object — they work with arrays and arrow functions.",
+        "Use rest parameters when a function needs to handle a variable number of inputs."
+      ],
+      "challenge": "Write a function <code>concatenate(separator, ...words)</code> that joins all the word arguments using the separator. Example: <code>concatenate(\" - \", \"hello\", \"world\", \"js\")</code> should return <code>\"hello - world - js\"</code>."
+    },
+    {
+      "id": "2.1.5",
+      "title": "Returning Values with return (vs Implicit undefined)",
+      "description": "Make functions produce results you can use — and understand what happens when a function has no return statement.",
+      "sections": [
+        {
+          "heading": "Why return values?",
+          "paragraphs": ["A function that only logs to the console is limited. To reuse a calculation or transformation, the function must <b>send the result back</b> to wherever it was called. The <code>return</code> keyword does this — it stops the function and gives back a value."]
+        },
+        {
+          "heading": "How return works",
+          "paragraphs": ["When JavaScript hits a <code>return</code> statement, it immediately exits the function and produces the given value. Any code after <code>return</code> is never reached. If <code>return</code> is used without a value (or not used at all), the function returns <code>undefined</code>."]
+        },
+        {
+          "heading": "Implicit undefined",
+          "paragraphs": ["Every function that does not explicitly return a value gives back <code>undefined</code>. This is not an error — it just means the function was written for its <b>side effects</b> (like logging or modifying the DOM) rather than producing a result. Knowing when to return and when to just execute is a key skill."]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Returning a calculated value",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function add(a, b) {\n  return a + b;\n}\n\nlet result = add(3, 7);\nconsole.log(result);  // 10\n\n// You can use the return value directly\nconsole.log(add(5, 5));  // 10\n\n// Return stops the function early\nfunction checkAge(age) {\n  if (age < 0) {\n    return \"Invalid age\";  // Exits here if negative\n  }\n  return age >= 18 ? \"Adult\" : \"Minor\";\n}\n\nconsole.log(checkAge(-1));   // \"Invalid age\"\nconsole.log(checkAge(20));   // \"Adult\"\nconsole.log(checkAge(15));   // \"Minor\"",
+          "explanation": [
+            "<code>return a + b;</code> sends the result back to wherever the function was called.",
+            "The returned value can be stored in a variable or used directly in expressions.",
+            "The first <code>return</code> in <code>checkAge</code> exits early — the second <code>return</code> is never reached when age is negative."
+          ]
+        },
+        {
+          "heading": "Functions without return return undefined",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function sayHello() {\n  console.log(\"Hello!\");\n  // No return statement\n}\n\nlet value = sayHello();\nconsole.log(value);  // undefined\n\nfunction multiply(a, b) {\n  let product = a * b;\n  // Forgot the return statement!\n}\n\nconsole.log(multiply(3, 4));  // undefined (not 12!)",
+          "explanation": [
+            "<code>sayHello()</code> prints \"Hello!\" but returns <code>undefined</code> because there is no return.",
+            "<code>multiply</code> calculates the product but never returns it — the result is lost.",
+            "This is a common beginner mistake. If a function should produce a result, always use <code>return</code>."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a function <code>isEven(number)</code> that returns <code>true</code> if the number is even, <code>false</code> otherwise. Store the result in a variable and log it. Then write a function <code>doubleAll(arr)</code> that returns a new array with every number doubled.",
+        "hints": [
+          "For <code>isEven</code>: <code>return number % 2 === 0;</code>",
+          "For <code>doubleAll</code>: create an empty array, loop through the input, push doubled values, and <code>return</code> the new array.",
+          "Remember: if you forget the return, the function gives back <code>undefined</code>."
+        ],
+        "note": "Test <code>isEven(0)</code> — zero is even! <code>0 % 2 === 0</code> is <code>true</code>."
+      },
+      "keyTakeaways": [
+        "<code>return</code> sends a value back from the function and immediately exits it.",
+        "Functions without a return statement return <code>undefined</code> implicitly.",
+        "Always use <code>return</code> when a function should produce a result — not just log it.",
+        "Code after <code>return</code> is unreachable and will never execute."
+      ],
+      "challenge": "Write a function <code>calculateAverage(...numbers)</code> that uses rest parameters to accept any number of values and returns their average. Test with <code>calculateAverage(10, 20, 30)</code> — it should return <code>20</code>."
+    }
+  ]
+}

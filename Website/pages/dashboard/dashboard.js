@@ -878,6 +878,22 @@ window.addEventListener("learnjs:open-topic", (e) => {
 });
 window.addEventListener("learnjs:goto-roadmap", () => goToPanel("roadmap"));
 window.addEventListener("learnjs:goto-home", () => goToPanel("home"));
+window.addEventListener("learnjs:goto-level", (e) => {
+  goToPanel("roadmap");
+  const levelId = e.detail && e.detail.levelId;
+  if (levelId) {
+    setTimeout(() => {
+      const levelEl = document.querySelector('.roadmap-level[data-node="' + levelId + '"]');
+      if (levelEl) {
+        levelEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (!levelEl.classList.contains("open")) {
+          const head = levelEl.querySelector(".roadmap-level-head");
+          if (head) head.click();
+        }
+      }
+    }, 100);
+  }
+});
 
 /* ---------- Sidebar (mobile) ---------- */
 function closeSidebar() { document.body.classList.remove("dash-open"); el("dashMenuToggle").setAttribute("aria-expanded", "false"); }

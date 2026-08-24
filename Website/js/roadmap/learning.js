@@ -18,6 +18,7 @@
 
 import { loadRoadmap } from "./roadmap-loader.js";
 import { LESSON_CONTENT } from "../../data/lesson-content.js";
+import { prefetchTopic, getLessonByNumber, isJsonLesson } from "./lesson-file-loader.js";
 import {
   toggleLesson,
   isLessonDone,
@@ -102,38 +103,39 @@ function stripNumber(text) {
  * Authored content for the current lesson, matched by the number that
  * prefixes its subtopic title ("1.1.1 What JavaScript…" → key "1.1.1").
  * Returns null for lessons without an entry (they keep the placeholder).
+ *
+ * For topics 1.3+, content is loaded from JSON files in
+ * data/lessons/{topicId}.json. The JSON cache is checked first;
+ * if not found there, falls back to the static LESSON_CONTENT map
+ * (which holds 1.1 and 1.2 lessons).
  */
 function authoredLessonFor(topic, lessonIndex) {
   const raw = (topic.subtopics || [])[lessonIndex] || "";
   const match = String(raw).match(LEAD_NUM_RE);
-  return match ? LESSON_CONTENT[match[1]] || null : null;
+  if (!match) return null;
+  const lessonNumber = match[1];
+
+  // Check JSON file cache first (topics 1.3+)
+  if (isJsonLesson(lessonNumber)) {
+    const jsonLesson = getLessonByNumber(lessonNumber);
+    if (jsonLesson) return jsonLesson;
+  }
+
+  // Fall back to static LESSON_CONTENT (topics 1.1, 1.2)
+  return LESSON_CONTENT[lessonNumber] || null;
 }
 
 /* ---------- rendering ---------- */
 function renderBreadcrumb(level, topic, authored) {
   const wrap = document.getElementById("learnBreadcrumb");
   if (!wrap) return;
-  if (!authored) {
-    wrap.innerHTML =
-      '<button class="learn-crumb" data-crumb="home" type="button">Home</button>' +
-      '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>" +
-      '<button class="learn-crumb" data-crumb="roadmap" type="button">Roadmap</button>' +
-      '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>" +
-      '<span class="learn-crumb learn-crumb-static">Level ' + level.level + "</span>" +
-      '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>" +
-      '<span class="learn-crumb learn-crumb-current">' + escapeHtml(topic.title) + "</span>";
-    return;
-  }
-  // Authored lessons get the full trail: Roadmap › Level › Topic › Lesson.
   const sep = '<span class="learn-crumb-sep">' + ICON.chevronRight + "</span>";
   wrap.innerHTML =
+    '<button class="learn-crumb" data-crumb="home" type="button">Home</button>' +
+    sep +
     '<button class="learn-crumb" data-crumb="roadmap" type="button">Roadmap</button>' +
     sep +
-    '<span class="learn-crumb learn-crumb-static">' + escapeHtml(level.title) + "</span>" +
-    sep +
-    '<span class="learn-crumb learn-crumb-static">' + escapeHtml(stripNumber(topic.title)) + "</span>" +
-    sep +
-    '<span class="learn-crumb learn-crumb-current">' + escapeHtml(authored.title) + "</span>";
+    '<button class="learn-crumb" data-crumb="level" type="button">Level</button>';
 }
 
 function renderLessonHeader(topic, lessonIndex) {
@@ -376,7 +378,12 @@ function goToLesson(delta) {
   if (target < 0 || target >= flat.length) return;
   const next = flat[target];
   current = { levelId: next.level.id, topicId: next.topic.id, lessonIndex: next.lessonIndex };
+  // Prefetch JSON lesson file if navigating to a new topic.
+  if (next.topic.id !== resolved.topic.id) {
+    prefetchTopic(next.topic.id).then(() => renderLearning());
+  }
   renderLearning();
+  window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 function openLesson(topicId, lessonIndex) {
@@ -384,7 +391,10 @@ function openLesson(topicId, lessonIndex) {
   const level = (data.levels || []).find((l) => (l.topics || []).some((t) => t.id === topicId));
   if (!level) return;
   current = { levelId: level.id, topicId, lessonIndex: lessonIndex || 0 };
+  // Prefetch JSON lesson file for this topic (non-blocking).
+  prefetchTopic(topicId).then(() => renderLearning());
   renderLearning();
+  window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 /* ---------- actions ---------- */
@@ -412,6 +422,14 @@ function bindEvents() {
       const dest = crumb.getAttribute("data-crumb");
       if (dest === "home") window.dispatchEvent(new CustomEvent("learnjs:goto-home"));
       else if (dest === "roadmap") window.dispatchEvent(new CustomEvent("learnjs:goto-roadmap"));
+      else if (dest === "level") {
+        const resolved = resolveCurrent();
+        if (resolved.level) {
+          window.dispatchEvent(new CustomEvent("learnjs:goto-level", {
+            detail: { levelId: resolved.level.id }
+          }));
+        }
+      }
       return;
     }
     const toc = e.target.closest("[data-toc]");
@@ -453,6 +471,10 @@ export async function initLearning() {
   }
   bindEvents();
   subscribe(renderLearning);
+  // Prefetch JSON lesson file for the current topic (non-blocking).
+  if (current.topicId) {
+    prefetchTopic(current.topicId).then(() => renderLearning());
+  }
   renderLearning();
 }
 
