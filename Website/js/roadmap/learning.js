@@ -37,6 +37,137 @@ function escapeHtml(value) {
   return div.innerHTML;
 }
 
+/* ---------- professional JS syntax highlighter ----------
+   Tokenises JavaScript source into coloured <span> wrappers.
+   Runs entirely in the browser — zero dependencies.
+   Token categories: comment, string, number, keyword, builtin,
+   fn (function call / method), prop (property access),
+   op (operator), punct (punctuation), plain.
+
+   Context-aware: . after an identifier marks the NEXT identifier
+   as a property access.  An identifier followed by ( is a call.
+   Built-in objects keep their own colour even when called. */
+const JS_KEYWORDS = new Set([
+  "const","let","var","function","return","if","else","for","while",
+  "do","switch","case","break","continue","new","this","class",
+  "extends","super","import","export","from","default","async",
+  "await","try","catch","finally","throw","typeof","instanceof",
+  "in","of","delete","void","yield","static","get","set",
+  "null","undefined","true","false"
+]);
+const JS_BUILTINS = new Set([
+  "console","document","window","Math","JSON","Array","Object",
+  "String","Number","Boolean","Promise","Map","Set","Date",
+  "RegExp","Error","Symbol","parseInt","parseFloat","isNaN",
+  "setTimeout","setInterval","clearTimeout","clearInterval",
+  "fetch","alert","prompt","confirm","URL","URLSearchParams",
+  "localStorage","sessionStorage","navigator","history",
+  "requestAnimationFrame","cancelAnimationFrame","queueMicrotask",
+  "WeakMap","WeakSet","Proxy","Reflect","Intl"
+]);
+const JS_OPERATORS = new Set([
+  "+","-","*","/","%","=","==","===","!=","!==",
+  ">","<",">=","<=","&&","||","!","&","|","^","~",
+  "<<",">>",">>>","++","--","+=","-=","*=","/=","%=",
+  "?.","??","..."
+]);
+const JS_PUNCT = new Set([
+  "(",")","{","}","[","]",";",":",",","."
+]);
+
+function highlightJS(code) {
+  const tokens = [];
+  let i = 0;
+  const len = code.length;
+  while (i < len) {
+    /* --- Single-line comment --- */
+    if (code[i] === "/" && code[i + 1] === "/") {
+      const end = code.indexOf("\n", i);
+      const finish = end === -1 ? len : end;
+      tokens.push({ text: code.slice(i, finish), type: "comment" });
+      i = finish;
+    /* --- Multi-line comment --- */
+    } else if (code[i] === "/" && code[i + 1] === "*") {
+      const end = code.indexOf("*/", i + 2);
+      const finish = end === -1 ? len : end + 2;
+      tokens.push({ text: code.slice(i, finish), type: "comment" });
+      i = finish;
+    /* --- Strings (double, single, template) --- */
+    } else if (code[i] === '"' || code[i] === "'" || code[i] === "`") {
+      const q = code[i];
+      let j = i + 1;
+      while (j < len && code[j] !== q) {
+        if (code[j] === "\\") j++;
+        j++;
+      }
+      tokens.push({ text: code.slice(i, j + 1), type: "string" });
+      i = j + 1;
+    /* --- Numbers --- */
+    } else if (/\d/.test(code[i]) && (i === 0 || /[\s(,=:+\-*/<>!&|^~%\[{;?]/.test(code[i - 1]))) {
+      let j = i;
+      while (j < len && /[\d.xXa-fA-FeEn_]/.test(code[j])) j++;
+      tokens.push({ text: code.slice(i, j), type: "number" });
+      i = j;
+    /* --- Identifiers / keywords / builtins --- */
+    } else if (/[a-zA-Z_$]/.test(code[i])) {
+      let j = i;
+      while (j < len && /[a-zA-Z0-9_$]/.test(code[j])) j++;
+      const word = code.slice(i, j);
+      // Look ahead: skip whitespace then check for (
+      let k = j;
+      while (k < len && code[k] === " ") k++;
+      const isCall = code[k] === "(";
+      // Look behind: is previous meaningful char a dot?
+      const prevChar = i > 0 ? code[i - 1] : "";
+      const isAfterDot = prevChar === ".";
+      if (JS_KEYWORDS.has(word)) {
+        tokens.push({ text: word, type: "keyword" });
+      } else if (JS_BUILTINS.has(word)) {
+        tokens.push({ text: word, type: "builtin" });
+      } else if (isAfterDot) {
+        tokens.push({ text: word, type: isCall ? "fn" : "prop" });
+      } else if (isCall) {
+        tokens.push({ text: word, type: "fn" });
+      } else {
+        tokens.push({ text: word, type: "plain" });
+      }
+      i = j;
+    /* --- Multi-char operators (===, !==, =>, >=, <=, &&, ||, etc.) --- */
+    } else if (/[+\-*/%=!<>&|^~?]/.test(code[i])) {
+      // Try 3-char, then 2-char operators
+      const three = code.slice(i, i + 3);
+      const two = code.slice(i, i + 2);
+      if (JS_OPERATORS.has(three)) {
+        tokens.push({ text: three, type: "op" });
+        i += 3;
+      } else if (JS_OPERATORS.has(two)) {
+        tokens.push({ text: two, type: "op" });
+        i += 2;
+      } else if (JS_OPERATORS.has(code[i])) {
+        tokens.push({ text: code[i], type: "op" });
+        i++;
+      } else {
+        tokens.push({ text: code[i], type: "plain" });
+        i++;
+      }
+    /* --- Punctuation --- */
+    } else if (JS_PUNCT.has(code[i])) {
+      tokens.push({ text: code[i], type: "punct" });
+      i++;
+    /* --- Everything else --- */
+    } else {
+      tokens.push({ text: code[i], type: "plain" });
+      i++;
+    }
+  }
+  // Render tokens to HTML — only wrap non-plain tokens
+  return tokens.map((t) => {
+    const safe = escapeHtml(t.text);
+    if (t.type === "plain") return safe;
+    return '<span class="tk-' + t.type + '">' + safe + "</span>";
+  }).join("");
+}
+
 const ICON = {
   chevronLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
   chevronRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
@@ -139,18 +270,8 @@ function renderBreadcrumb(level, topic, authored) {
 }
 
 function renderLessonHeader(topic, lessonIndex) {
-  const total = topic.subtopics.length;
-  const pct = topicProgress(topic);
   const done = isLessonDone(topic.id, lessonIndex);
-
-  const label = document.getElementById("learnLessonLabel");
-  const bar = document.getElementById("learnLessonBar");
   const btn = document.getElementById("learnCompleteBtn");
-  const topicPct = document.getElementById("learnTopicPct");
-
-  if (label) label.textContent = "Lesson " + (lessonIndex + 1) + " of " + total;
-  if (bar) bar.style.width = Math.round(((lessonIndex + 1) / total) * 100) + "%";
-  if (topicPct) topicPct.textContent = "Topic " + pct + "% complete";
   if (btn) {
     btn.classList.toggle("done", done);
     btn.setAttribute("aria-pressed", String(done));
@@ -190,18 +311,46 @@ function renderSection(sec) {
 }
 
 function renderCodeExample(ex) {
+  const filename = escapeHtml(ex.file || "script.js");
+  const lang = escapeHtml(ex.language || "JavaScript");
+  const rawCode = ex.code || "";
+  const highlighted = highlightJS(rawCode);
+  const lines = rawCode.split("\n");
+  const lineCount = lines.length;
+  const lineNums = Array.from({ length: lineCount }, (_, i) =>
+    '<span class="line-num">' + (i + 1) + "</span>"
+  ).join("");
+
   let body =
     '<div class="code-block">' +
       '<div class="code-head">' +
-        "<span>" + escapeHtml(ex.file || "script.js") + "</span>" +
-        '<span class="code-lang">' + escapeHtml(ex.language || "JavaScript") + "</span>" +
+        '<div class="code-head-left">' +
+          '<span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>' +
+          '<span class="code-filename">' + filename + "</span>" +
+        "</div>" +
+        '<div class="code-head-right">' +
+          '<span class="code-lang">' + lang + "</span>" +
+          '<button class="code-copy-btn" type="button" data-code="' +
+            escapeHtml(rawCode).replace(/"/g, "&quot;") +
+          '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span></button>' +
+        "</div>" +
       "</div>" +
-      "<pre><code>" + escapeHtml(ex.code) + "</code></pre>" +
+      '<div class="code-body">' +
+        '<div class="code-line-nums" aria-hidden="true">' + lineNums + "</div>" +
+        '<pre class="code-pre"><code>' + highlighted + "</code></pre>" +
+      "</div>" +
     "</div>";
+
   if (ex.output) {
     body +=
       '<div class="code-output">' +
-        '<div class="code-output-head">' + ICON.terminal + "What you\u2019ll see</div>" +
+        '<div class="code-output-head">' +
+          ICON.terminal +
+          "<span>Output</span>" +
+          '<button class="code-copy-btn code-copy-output" type="button" data-code="' +
+            escapeHtml(ex.output).replace(/"/g, "&quot;") +
+          '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span></button>' +
+        "</div>" +
         "<pre>" + escapeHtml(ex.output) + "</pre>" +
       "</div>";
   }
@@ -302,6 +451,7 @@ function renderLessonContent(content) {
 function renderNav(flat, index) {
   const prevBtn = document.getElementById("learnPrevBtn");
   const nextBtn = document.getElementById("learnNextBtn");
+  const completeBtn = document.getElementById("learnCompleteBtn");
   if (prevBtn) {
     const hasPrev = index > 0;
     prevBtn.disabled = !hasPrev;
@@ -311,6 +461,11 @@ function renderNav(flat, index) {
     const hasNext = index !== -1 && index < flat.length - 1;
     nextBtn.disabled = !hasNext;
     nextBtn.setAttribute("aria-disabled", String(!hasNext));
+  }
+  // Hide the complete button when there's no valid lesson context
+  if (completeBtn) {
+    const hasLesson = index !== -1 && index >= 0;
+    completeBtn.style.display = hasLesson ? "" : "none";
   }
 }
 
@@ -383,6 +538,9 @@ function goToLesson(delta) {
     prefetchTopic(next.topic.id).then(() => renderLearning());
   }
   renderLearning();
+  // Always scroll to the top of the learning panel after navigation
+  const panel = document.getElementById("panel-learning");
+  if (panel) panel.scrollTop = 0;
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 
@@ -394,6 +552,7 @@ function openLesson(topicId, lessonIndex) {
   // Prefetch JSON lesson file for this topic (non-blocking).
   prefetchTopic(topicId).then(() => renderLearning());
   renderLearning();
+  // Scroll to top when opening a new lesson from the sidebar/TOC
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 
@@ -443,6 +602,22 @@ function bindEvents() {
     if (next && !next.disabled) { goToLesson(1); return; }
     const complete = e.target.closest("#learnCompleteBtn");
     if (complete) toggleComplete();
+    /* Copy button inside code blocks */
+    const copyBtn = e.target.closest(".code-copy-btn");
+    if (copyBtn) {
+      const codeText = copyBtn.getAttribute("data-code") || "";
+      const label = copyBtn.querySelector("span");
+      const prevHTML = copyBtn.innerHTML;
+      navigator.clipboard.writeText(codeText).then(() => {
+        copyBtn.classList.add("copied");
+        if (label) label.textContent = "Copied!";
+        setTimeout(() => {
+          copyBtn.classList.remove("copied");
+          copyBtn.innerHTML = prevHTML;
+        }, 2000);
+      }).catch(() => {});
+      return;
+    }
   });
 
   const ta = document.getElementById("learnNotesInput");

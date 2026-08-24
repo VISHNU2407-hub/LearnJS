@@ -311,9 +311,10 @@ function init() {
   // NOTE: only fire on the FIRST auth state so the signup/login submit flows
   // (which redirect after finishing profile setup) are never interrupted.
   let authChecked = false;
-  onAuthStateChanged(auth, (user) => {
+  const unsubAuth = onAuthStateChanged(auth, (user) => {
     if (authChecked) return;
     authChecked = true;
+    unsubAuth();
     if (user) window.location.href = nextPath();
   });
 
