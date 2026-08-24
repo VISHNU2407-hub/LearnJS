@@ -171,36 +171,46 @@ initSidebarTooltips();
    Auth guard + boot
    ------------------------------------------------------------ */
 async function init() {
-  const user = await requireAuth("../dashboard/");
-  currentUser = user;
-  document.body.classList.add("authenticated");
-  el("homeUserName").textContent = user.displayName ? user.displayName.split(" ")[0] : "Learner";
-  el("dashAvatarSpan").textContent = initials(user.displayName || user.email || "U");
-  el("profileAvatar").textContent = initials(user.displayName || user.email || "U");
-  el("profileName").textContent = user.displayName || "Learner";
-  el("profileEmail").textContent = user.email || "";
-  el("profileMemberSince").textContent = formatDate(user.metadata && user.metadata.creationTime);
+  try {
+    const user = await requireAuth("../dashboard/");
+    currentUser = user;
+    document.body.classList.add("authenticated");
+    el("homeUserName").textContent = user.displayName ? user.displayName.split(" ")[0] : "Learner";
+    el("dashAvatarSpan").textContent = initials(user.displayName || user.email || "U");
+    el("profileAvatar").textContent = initials(user.displayName || user.email || "U");
+    el("profileName").textContent = user.displayName || "Learner";
+    el("profileEmail").textContent = user.email || "";
+    el("profileMemberSince").textContent = formatDate(user.metadata && user.metadata.creationTime);
 
-  // Personal/account actions live behind the top-right avatar.
-  buildAccountMenu(user);
+    // Personal/account actions live behind the top-right avatar.
+    buildAccountMenu(user);
 
-  // Account-menu deep links from other pages (e.g. ../dashboard/#settings), the
-  // legacy interview page redirect (../dashboard/#interview), and the sidebar
-  // links on the project learning page (../dashboard/#projects etc.).
-  const targetPanel = (location.hash || "").replace(/^#/, "");
-  if (["profile", "settings", "interview", "projects", "roadmap", "progress"].indexOf(targetPanel) !== -1) {
-    goToPanel(targetPanel);
-    history.replaceState(null, "", location.pathname + location.search);
-  } else {
-    // Default load — Home panel, render its breadcrumb.
-    renderPanelBreadcrumb(activePanel);
+    // Read the URL hash to restore the correct panel on load / refresh.
+    // The hash stays in the address bar so the URL is always shareable.
+    const initialPanel = panelFromHash();
+    goToPanel(initialPanel, true);
+
+    // Browser back / forward — navigate between panels.
+    // popstate covers pushState-based navigation (sidebar clicks).
+    // hashchange covers direct URL bar edits.
+    window.addEventListener("popstate", () => {
+      const panel = panelFromHash();
+      goToPanel(panel, true);
+    });
+    window.addEventListener("hashchange", () => {
+      const panel = panelFromHash();
+      if (panel !== activePanel) goToPanel(panel, true);
+    });
+
+    boot().catch((err) => console.error("[LearnJS] Boot error:", err));
+  } catch (err) {
+    console.error("[LearnJS] Auth/init error:", err);
   }
-
-  boot();
 }
 init();
 
 async function boot() {
+  try {
   // Roadmap module — the curriculum is LOCAL (data/roadmap.json + embedded
   // fallback), so the roadmap + learning panels render FIRST and never wait
   // on Firebase. Progress syncs in the background below.
@@ -239,6 +249,9 @@ async function boot() {
     });
   } catch (err) {
     console.warn("[LearnJS] Progress listener error:", err.message);
+  }
+  } catch (err) {
+    console.error("[LearnJS] Boot error:", err);
   }
 }
 
@@ -659,11 +672,25 @@ const PANEL_LABELS = {
   home: "Dashboard",
   projects: "Projects",
   roadmap: "Roadmap",
+  learning: "Learning",
   interview: "Interview Prep",
   progress: "Progress",
   profile: "Profile",
   settings: "Settings"
 };
+/* Panels that appear in the sidebar — used for URL routing.
+   "learning" is excluded because it requires a topic context and can only
+   be reached through the roadmap → topic → lesson flow. */
+const VALID_PANELS = Object.keys(PANEL_LABELS).filter((p) => p !== "learning");
+
+/**
+ * Read the current hash and return a valid panel name, or "home" as default.
+ * Accepts formats like #projects, #roadmap, etc.
+ */
+function panelFromHash() {
+  const raw = (location.hash || "").replace(/^#\/?/, "");
+  return VALID_PANELS.indexOf(raw) !== -1 ? raw : "home";
+}
 
 /* Global breadcrumb — top of the content area, directly below the navbar.
    Shows the current panel context; "Dashboard" links back to Home. The
@@ -690,8 +717,20 @@ function renderPanelBreadcrumb(name) {
   if (homeBtn) homeBtn.addEventListener("click", () => goToPanel("home"));
 }
 
-function goToPanel(name) {
+function goToPanel(name, _fromPopState) {
   activePanel = name;
+  // Update the URL hash so the address bar reflects the current section.
+  // Skip when called from a popstate/hashchange handler (the hash is
+  // already correct) to avoid pushing a duplicate history entry.
+  if (!_fromPopState) {
+    // "learning" is a sub-view of roadmap — map to #roadmap in the URL.
+    const urlName = name === "learning" ? "roadmap" : name;
+    const hash = urlName === "home" ? "" : "#" + urlName;
+    const target = location.hash.replace(/^#\/?/, "");
+    if (target !== (urlName === "home" ? "" : urlName)) {
+      history.pushState({ panel: name }, "", hash ? location.pathname + hash : location.pathname);
+    }
+  }
   document.querySelectorAll(".dash-nav-item").forEach((btn) => {
     // The Learning page belongs to the Roadmap flow — keep Roadmap highlighted.
     const target = name === "learning" ? "roadmap" : name;
@@ -713,6 +752,9 @@ function goToPanel(name) {
   // Refresh live progress every time the roadmap panel is opened.
   if (name === "roadmap") renderRoadmap();
   renderPanelBreadcrumb(name);
+  // Update the page title to match the active panel.
+  const panelLabel = PANEL_LABELS[name] || name;
+  document.title = name === "home" ? "Dashboard \u2014 LearnJS" : panelLabel + " \u2014 LearnJS";
   closeSidebar();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }

@@ -221,17 +221,6 @@
               <p class="dash-hello-eyebrow" id="learnEyebrow"></p>
               <h1 class="dash-panel-title learning-title" id="learnTitle"></h1>
 
-              <div class="lesson-progress">
-                <div class="lesson-progress-head">
-                  <span id="learnLessonLabel">Lesson 1 of 1</span>
-                  <span id="learnTopicPct">Topic 0% complete</span>
-                </div>
-                <div class="bar"><div class="bar-fill" id="learnLessonBar" style="width:0%"></div></div>
-                <div class="lesson-actions">
-                  <button class="btn btn-primary learn-complete" id="learnCompleteBtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Mark Complete</button>
-                </div>
-              </div>
-
               <article class="lesson-body">
                 <h2 class="lesson-name" id="learnLessonName"></h2>
                 <div id="learnPlaceholder"></div>
@@ -239,7 +228,10 @@
 
               <div class="lesson-nav">
                 <button class="btn btn-outline lesson-nav-btn" id="learnPrevBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Previous Lesson</button>
-                <button class="btn btn-primary lesson-nav-btn" id="learnNextBtn" type="button">Next Lesson<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+                <div class="lesson-nav-right">
+                  <button class="btn btn-primary lesson-nav-btn lesson-nav-complete" id="learnCompleteBtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Mark Complete</button>
+                  <button class="btn btn-primary lesson-nav-btn" id="learnNextBtn" type="button">Next Lesson<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+                </div>
               </div>
             </div>
 

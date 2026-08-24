@@ -15,12 +15,18 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/fi
  */
 export function requireAuth(next) {
   return new Promise((resolve) => {
-    onAuthStateChanged(auth, (user) => {
+    let resolved = false;
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (resolved) return;
       if (!user) {
+        resolved = true;
+        unsub();
         const target = next || "../dashboard/";
         window.location.href = "../authentication/login.html?next=" + encodeURIComponent(target);
         return;
       }
+      resolved = true;
+      unsub();
       resolve(user);
     });
   });
