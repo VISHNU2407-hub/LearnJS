@@ -1,0 +1,191 @@
+{
+  "topicId": "6.1",
+  "topicTitle": "JavaScript Module Systems (CJS vs ES Modules)",
+  "lessons": [
+    {
+      "id": "6.1.1",
+      "title": "Code Encapsulation History: Script Tags & IIFEs",
+      "description": "Before modules, JavaScript used script tags and IIFEs to organize code and avoid global pollution.",
+      "sections": [
+        {
+          "heading": "The global scope problem",
+          "paragraphs": ["Early JavaScript had no module system — all scripts shared the global scope. This led to naming conflicts, hard-to-debug dependencies and tangled code."],
+          "list": [
+            "Every variable and function declared in a script becomes global",
+            "Script loading order matters — later scripts depend on earlier ones",
+            "IIFEs (Immediately Invoked Function Expressions) create isolated scopes",
+            "Modules were invented to solve these problems properly"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "IIFE for scope isolation",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// IIFE — creates a private scope\n(function() {\n  let secret = \"hidden\";\n  console.log(secret);  // \"hidden\"\n})();\n\n// console.log(secret);  // ReferenceError!\n\n// Module pattern (IIFE returning an object)\nlet counter = (function() {\n  let count = 0;\n  return {\n    increment() { count++; },\n    getCount() { return count; }\n  };\n})();\n\ncounter.increment();\nconsole.log(counter.getCount());  // 1",
+          "explanation": [
+            "IIFEs run immediately and create a private scope.",
+            "Variables inside are invisible to the outside — a makeshift module.",
+            "The module pattern returns an object with public methods.",
+            "This was the standard before official module systems existed."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create an IIFE that defines a private variable and returns an object with getter/setter methods. Verify the variable is inaccessible from outside.",
+        "hints": [
+          "Wrap code in <code>(function() { ... })()</code>.",
+          "Return an object with methods that close over the private variable.",
+          "Try accessing the variable directly from outside — it should fail."
+        ]
+      },
+      "keyTakeaways": [
+        "Before modules, all JavaScript shared the global scope — causing naming conflicts.",
+        "IIFEs created isolated scopes as a workaround for the module problem.",
+        "The module pattern (IIFE returning an object) was the first encapsulation technique.",
+        "Official module systems (CommonJS, ES Modules) replaced these hacks."
+      ],
+      "challenge": "Refactor a multi-script page that uses global variables into an IIFE-based module pattern."
+    },
+    {
+      "id": "6.1.2",
+      "title": "CommonJS Modules (require, module.exports)",
+      "description": "The original Node.js module system — synchronous loading with require() and module.exports.",
+      "sections": [
+        {
+          "heading": "How CommonJS works",
+          "paragraphs": ["CommonJS was designed for Node.js server-side JavaScript. It uses <code>require()</code> to import and <code>module.exports</code> to export. Loading is synchronous."],
+          "list": [
+            "<code>require(\"./module\")</code> — imports a module synchronously",
+            "<code>module.exports = value</code> — exports from a module",
+            "Each file is a module with its own scope",
+            "Modules are cached after first load"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "CommonJS basics",
+          "file": "math.js + app.js",
+          "language": "JavaScript",
+          "code": "// math.js\nfunction add(a, b) { return a + b; }\nfunction multiply(a, b) { return a * b; }\nmodule.exports = { add, multiply };\n\n// app.js\nconst math = require(\"./math\");\nconsole.log(math.add(2, 3));       // 5\nconsole.log(math.multiply(2, 3));  // 6\n\n// Destructuring on import\nconst { add, multiply } = require(\"./math\");",
+          "explanation": [
+            "<code>module.exports</code> defines what the module exposes.",
+            "<code>require()</code> loads and returns the exported value.",
+            "You can import the whole module or destructure specific exports.",
+            "CommonJS is synchronous — it blocks until the module is loaded."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a utility module with 3 functions and export them using module.exports. Import and use them in another file.",
+        "hints": [
+          "Export: <code>module.exports = { fn1, fn2, fn3 }</code>.",
+          "Import: <code>const { fn1 } = require(\"./utils\")</code>.",
+          "Test each function in the importing file."
+        ]
+      },
+      "keyTakeaways": [
+        "CommonJS uses <code>require()</code> for imports and <code>module.exports</code> for exports.",
+        "Each file is a module with its own scope — no global pollution.",
+        "Loading is synchronous — suitable for server-side but not ideal for browsers.",
+        "CommonJS is the standard for Node.js projects (pre-type:module)."
+      ],
+      "challenge": "Create a CommonJS module that exports a class and test instantiating it in another file."
+    },
+    {
+      "id": "6.1.3",
+      "title": "Native ES Modules (import, export, Named/Default)",
+      "description": "The official JavaScript module system — static imports, exports, and browser support.",
+      "sections": [
+        {
+          "heading": "ES Modules syntax",
+          "paragraphs": ["ES Modules (ESM) are the official standard for JavaScript modules. They use static import/export syntax that enables tree-shaking and browser support."],
+          "list": [
+            "<code>export const name = value</code> — named export",
+            "<code>export default value</code> — default export (one per module)",
+            "<code>import { name } from \"./module\"</code> — named import",
+            "<code>import name from \"./module\"</code> — default import",
+            "Imports are static — analyzed at parse time"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "ES Modules import and export",
+          "file": "math.js + app.js",
+          "language": "JavaScript",
+          "code": "// math.js — named exports\nexport function add(a, b) { return a + b; }\nexport function multiply(a, b) { return a * b; }\nexport const PI = 3.14159;\n\n// app.js — named imports\nimport { add, multiply, PI } from \"./math.js\";\nconsole.log(add(2, 3));  // 5\n\n// Renaming imports\nimport { add as sum } from \"./math.js\";\n\n// Import everything\nimport * as math from \"./math.js\";\nconsole.log(math.add(2, 3));",
+          "explanation": [
+            "Named exports let you export multiple values from one module.",
+            "Named imports let you cherry-pick what you need.",
+            "Import all with <code>import * as name</code>.",
+            "File extension is required in browser ESM: <code>./math.js</code>."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a module with named exports and a default export. Import both in another file using different import syntaxes.",
+        "hints": [
+          "Export: <code>export function fn1() {}</code> and <code>export default class MyClass {}</code>.",
+          "Import: <code>import MyClass, { fn1 } from \"./module.js\"</code>.",
+          "Remember to add <code>type=\"module\"</code> to the script tag."
+        ]
+      },
+      "keyTakeaways": [
+        "ES Modules use <code>import</code>/<code>export</code> — the official JavaScript standard.",
+        "Named exports allow multiple exports per module.",
+        "Default exports allow one convenient import per module.",
+        "ESM is static — imports are resolved at parse time, enabling tree-shaking."
+      ],
+      "challenge": "Convert a CommonJS module to ES Modules. Note all syntax differences."
+    },
+    {
+      "id": "6.1.4",
+      "title": "Dynamic Imports using import() Expressions",
+      "description": "Load modules on demand with dynamic import() — only fetch code when you actually need it.",
+      "sections": [
+        {
+          "heading": "Dynamic import()",
+          "paragraphs": ["Static imports load everything upfront. Dynamic <code>import()</code> loads a module on demand — it returns a Promise that resolves to the module's exports."],
+          "list": [
+            "<code>import(\"./module.js\")</code> — returns a Promise",
+            "Useful for code splitting and lazy loading",
+            "Works in both browser and Node.js",
+            "The module is loaded only when the import() call executes"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Dynamic import for lazy loading",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Load a module only when needed\nlet button = document.querySelector(\"#loadChart\");\n\nbutton.addEventListener(\"click\", async () => {\n  // Chart library loads only when clicked!\n  const { Chart } = await import(\"./chart-library.js\");\n  let chart = new Chart(\"#canvas\");\n  chart.render(data);\n});\n\n// Conditional loading\nasync function getFormatter(locale) {\n  if (locale === \"en-US\") {\n    return await import(\"./formats/en.js\");\n  }\n  return await import(\"./formats/default.js\");\n}",
+          "explanation": [
+            "Dynamic import() loads the module only when the code runs.",
+            "It's async — returns a Promise that resolves to the module namespace.",
+            "Perfect for code splitting: load heavy code only when needed.",
+            "The browser downloads the module file on demand."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use dynamic import() to lazily load a module only when a button is clicked. Log a message when the module loads.",
+        "hints": [
+          "Use <code>import(\"./module.js\")</code> inside an async click handler.",
+          "The module loads only when the button is clicked.",
+          "Log a confirmation message after the import resolves."
+        ]
+      },
+      "keyTakeaways": [
+        "Dynamic <code>import()</code> loads modules on demand — returns a Promise.",
+        "Use it for code splitting: load heavy code only when needed.",
+        "It's async — use await or .then() to access the module's exports.",
+        "The browser downloads the module file only when import() is called."
+      ],
+      "challenge": "Build a page that lazily loads a syntax highlighting library only when a code block enters the viewport."
+    }
+  ]
+}

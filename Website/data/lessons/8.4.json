@@ -1,0 +1,141 @@
+{
+  "topicId": "8.4",
+  "topicTitle": "Memory Lifecycle & Garbage Collection Mechanics",
+  "lessons": [
+    {
+      "id": "8.4.1",
+      "title": "Stack vs Heap Allocation Rules",
+      "description": "Primitive values live on the stack; objects live on the heap. Understanding allocation helps prevent memory issues.",
+      "sections": [
+        {
+          "heading": "Stack vs Heap",
+          "list": [
+            "<b>Stack</b> — fixed-size, fast, stores primitives and references",
+            "<b>Heap</b> — dynamic-size, stores objects, arrays and functions",
+            "Stack allocation is automatic and very fast",
+            "Heap allocation requires garbage collection to free memory"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Allocation in action",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Stack: primitives\nlet a = 5;          // stack: a → 5\nlet b = a;          // stack: b → 5 (copy)\na = 10;             // stack: a → 10 (b is still 5)\n\n// Heap: objects\nlet obj1 = { x: 1 }; // heap: {x:1}, stack: obj1 → reference\nlet obj2 = obj1;      // stack: obj2 → same reference\nobj1.x = 2;\nconsole.log(obj2.x);  // 2 (both point to same object!)",
+          "explanation": [
+            "Primitives are copied by value — changing one doesn't affect the other.",
+            "Objects are referenced — both variables point to the same heap object.",
+            "Stack is fast but limited; heap is flexible but needs garbage collection.",
+            "References on the stack point to objects on the heap."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a primitive and an object. Copy both to new variables. Modify the originals and explain why the primitive copy is unaffected but the object copy is.",
+        "hints": [
+          "Primitives: <code>let a = 5; let b = a; a = 10;</code> — b is still 5.",
+          "Objects: <code>let o1 = {x:1}; let o2 = o1; o1.x = 2;</code> — o2.x is 2.",
+          "Stack vs heap explains the difference."
+        ]
+      },
+      "keyTakeaways": [
+        "Primitives live on the stack and are copied by value.",
+        "Objects live on the heap and are accessed by reference.",
+        "Stack allocation is automatic and fast; heap needs garbage collection.",
+        "Understanding this prevents subtle bugs with object mutations."
+      ],
+      "challenge": "Draw a memory diagram showing stack and heap allocation for a code snippet with variables, objects and arrays."
+    },
+    {
+      "id": "8.4.2",
+      "title": "Mark-and-Sweep Garbage Collection Algorithm",
+      "description": "V8's garbage collector frees memory by marking reachable objects and sweeping unreachable ones.",
+      "sections": [
+        {
+          "heading": "How mark-and-sweep works",
+          "list": [
+            "<b>Mark phase</b> — starts from root objects (global, call stack) and marks all reachable objects",
+            "<b>Sweep phase</b> — frees all unmarked (unreachable) objects",
+            "Runs automatically — you don't call it manually",
+            "Objects with zero references are candidates for collection"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Reachability and garbage collection",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function createObjects() {\n  let obj1 = { name: \"reachable\" };  // reachable from this function\n  let obj2 = { name: \"also reachable\" };\n  return obj1;  // only obj1 is returned\n  // obj2 is unreachable after this function returns\n}\n\nlet result = createObjects();\n// result → obj1 (reachable)\n// obj2 is unreachable → garbage collected\n\n// Break reference to free memory\nresult = null;  // now obj1 is also unreachable → collected",
+          "explanation": [
+            "Objects reachable from roots (global, active functions) survive collection.",
+            "obj2 is not returned and goes out of scope — it becomes unreachable.",
+            "Setting result = null breaks the reference — obj1 is now collectable.",
+            "Garbage collection runs automatically when memory pressure is detected."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a function that allocates many objects and returns only one. Use Chrome DevTools Memory profiler to observe garbage collection.",
+        "hints": [
+          "Create 1000 objects in a loop, return only the last one.",
+          "Open DevTools → Memory → take a heap snapshot.",
+          "Observe the object count before and after garbage collection."
+        ]
+      },
+      "keyTakeaways": [
+        "Mark-and-sweep marks reachable objects and frees unreachable ones.",
+        "Objects become eligible for collection when no references point to them.",
+        "Setting variables to null breaks references and allows collection.",
+        "Garbage collection runs automatically — you don't call it manually."
+      ],
+      "challenge": "Profile a web application's memory usage over time using Chrome DevTools Memory tab."
+    },
+    {
+      "id": "8.4.3",
+      "title": "Generational GC: Scavenger (Young) vs Mark-Compact (Old)",
+      "description": "V8 uses generational garbage collection — different strategies for young and old objects.",
+      "sections": [
+        {
+          "heading": "Generational collection",
+          "list": [
+            "<b>Young generation (Scavenger)</b> — short-lived objects collected frequently and quickly",
+            "<b>Old generation (Mark-Compact)</b> — long-lived objects collected less frequently",
+            "Most objects die young — the Scavenger handles them efficiently",
+            "Objects that survive multiple Scavenger cycles are promoted to the old generation"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Generational collection in practice",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Short-lived objects → young generation\nfunction processRequests() {\n  for (let i = 0; i < 1000; i++) {\n    let temp = { data: i };  // created and destroyed each iteration\n    // temp becomes unreachable → Scavenger collects it\n  }\n}\n\n// Long-lived objects → old generation\nlet cache = {};\nfunction addToCache(key, value) {\n  cache[key] = value;  // lives until explicitly deleted\n}\n// cache grows over time → eventually Mark-Compact collects dead entries",
+          "explanation": [
+            "Short-lived objects in loops are collected quickly by the Scavenger.",
+            "Long-lived objects like caches are promoted to the old generation.",
+            "The Scavenger runs frequently and is very fast.",
+            "Mark-Compact runs less frequently but handles larger memory spaces."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Explain why V8 uses generational collection instead of collecting all objects at once.",
+        "hints": [
+          "Most objects die young — collecting them is cheap.",
+            "Long-lived objects need different collection strategies.",
+            "Separating them optimizes for both cases."
+        ]
+      },
+      "keyTakeaways": [
+        "V8 separates objects into young and old generations.",
+        "The Scavenger quickly collects short-lived objects.",
+        "Mark-Compact handles long-lived objects less frequently.",
+        "Objects are promoted from young to old after surviving multiple collections."
+      ],
+      "challenge": "Use Chrome DevTools to observe generational garbage collection in real time during a page interaction."
+    }
+  ]
+}

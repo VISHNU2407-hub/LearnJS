@@ -1,0 +1,142 @@
+{
+  "topicId": "10.3",
+  "topicTitle": "Native Web Components & Shadow DOM Encapsulation",
+  "lessons": [
+    {
+      "id": "10.3.1",
+      "title": "Custom Elements API & Lifecycle Callback Handlers",
+      "description": "Create reusable HTML elements with custom behavior using the Custom Elements API.",
+      "sections": [
+        {
+          "heading": "What are Custom Elements?",
+          "paragraphs": ["Custom Elements let you define new HTML tags with their own behavior. They follow the same lifecycle as built-in elements: creation, connection, updates and disconnection."],
+          "list": [
+            "<code>customElements.define(\"tag-name\", Class)</code> — registers a custom element",
+            "Must contain a hyphen: <code>my-button</code> (not <code>mybutton</code>)",
+            "Lifecycle callbacks: connectedCallback, disconnectedCallback, attributeChangedCallback",
+            "Extends HTMLElement to get full DOM element capabilities"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Custom element with lifecycle",
+          "file": "my-counter.js",
+          "language": "JavaScript",
+          "code": "class MyCounter extends HTMLElement {\n  constructor() {\n    super();\n    this.count = 0;\n    this.attachShadow({ mode: \"open\" });\n    this.shadowRoot.innerHTML = `\n      <style>button { font-size: 1.2em; }</style>\n      <button>Count: 0</button>\n    `;\n    this.shadowRoot.querySelector(\"button\")\n      .addEventListener(\"click\", () => this.increment());\n  }\n\n  increment() {\n    this.count++;\n    this.shadowRoot.querySelector(\"button\")\n      .textContent = `Count: ${this.count}`;\n  }\n\n  connectedCallback() {\n    console.log(\"Counter added to page\");\n  }\n\n  disconnectedCallback() {\n    console.log(\"Counter removed from page\");\n  }\n}\n\ncustomElements.define(\"my-counter\", MyCounter);",
+          "explanation": [
+            "Extend HTMLElement to create a custom element class.",
+            "Constructor sets up the shadow DOM and initial state.",
+            "connectedCallback runs when the element is added to the page.",
+            "disconnectedCallback runs when it's removed."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a custom <code>&lt;my-clock&gt;</code> element that displays the current time and updates every second.",
+        "hints": [
+          "Use setInterval in connectedCallback, clearInterval in disconnectedCallback.",
+          "Display time in the shadow DOM.",
+          "Register with <code>customElements.define(\"my-clock\", MyClock)</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Custom Elements let you create reusable HTML tags with custom behavior.",
+        "Lifecycle callbacks handle creation, connection and disconnection.",
+        "Custom element names must contain a hyphen.",
+        "They work with standard DOM APIs and frameworks."
+      ],
+      "challenge": "Build a <code>&lt;my-tabs&gt;</code> custom element with tab switching and keyboard navigation."
+    },
+    {
+      "id": "10.3.2",
+      "title": "DOM Encapsulation via Shadow DOM (open vs closed)",
+      "description": "Shadow DOM isolates your component's internal DOM and styles from the rest of the page.",
+      "sections": [
+        {
+          "heading": "Shadow DOM basics",
+          "list": [
+            "<code>this.attachShadow({ mode: \"open\" })</code> — external code can access the shadow root",
+            "<code>this.attachShadow({ mode: \"closed\" })</code> — shadow root is hidden",
+            "Styles inside shadow DOM don't leak out — complete isolation",
+            "External styles don't affect the shadow DOM"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Shadow DOM style isolation",
+          "file": "my-card.js",
+          "language": "JavaScript",
+          "code": "class MyCard extends HTMLElement {\n  constructor() {\n    super();\n    this.attachShadow({ mode: \"open\" });\n    this.shadowRoot.innerHTML = `\n      <style>\n        /* This CSS only affects THIS component! */\n        .card { border: 1px solid #ccc; padding: 16px; border-radius: 8px; }\n        .card h2 { color: navy; margin: 0; }\n      </style>\n      <div class=\"card\">\n        <h2><slot name=\"title\"></slot></h2>\n        <p><slot></slot></p>\n      </div>\n    `;\n  }\n}\n\ncustomElements.define(\"my-card\", MyCard);\n\n// Usage:\n// <my-card>\n//   <span slot=\"title\">Hello</span>\n//   This is the card content.\n// </my-card>",
+          "explanation": [
+            "Shadow DOM creates an isolated DOM tree inside your component.",
+            "CSS inside the shadow root doesn't affect or get affected by the outside page.",
+            "slot elements project external content into the shadow DOM.",
+            "This gives you true style encapsulation — no CSS conflicts."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a <code>&lt;my-button&gt;</code> component with Shadow DOM that has its own styles, unaffected by external CSS.",
+        "hints": [
+          "Use <code>this.attachShadow({ mode: \"open\" })</code>.",
+          "Define styles inside the shadow root.",
+          "Test by adding conflicting global CSS — the component should be unaffected."
+        ]
+      },
+      "keyTakeaways": [
+        "Shadow DOM isolates a component's DOM and styles from the page.",
+        "open mode lets external code access the shadow root; closed hides it.",
+        "slot elements project external content into the shadow DOM.",
+        "Shadow DOM provides true style encapsulation — no CSS conflicts."
+      ],
+      "challenge": "Build a complete UI component library using Shadow DOM with a button, input, card and modal."
+    },
+    {
+      "id": "10.3.3",
+      "title": "Reusable UI Components using <template> & <slot> Elements",
+      "description": "HTML templates and slots let you define reusable component structures with customizable content areas.",
+      "sections": [
+        {
+          "heading": "Templates and slots",
+          "list": [
+            "<code>&lt;template&gt;</code> — defines reusable HTML that isn't rendered until activated",
+            "<code>&lt;slot&gt;</code> — placeholder for external content in Shadow DOM",
+            "<code>&lt;slot name=\"x\"&gt;</code> — named slots for specific content areas",
+            "Default content appears when no slot content is provided"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Template and slot usage",
+          "file": "my-modal.js",
+          "language": "JavaScript",
+          "code": "class MyModal extends HTMLElement {\n  constructor() {\n    super();\n    this.attachShadow({ mode: \"open\" });\n    this.shadowRoot.innerHTML = `\n      <style>\n        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5);\n                   display: flex; align-items: center; justify-content: center; }\n        .modal { background: white; padding: 24px; border-radius: 8px;\n                 min-width: 300px; max-width: 90vw; }\n        ::slotted(h2) { margin: 0 0 16px; }\n      </style>\n      <div class=\"overlay\" id=\"overlay\">\n        <div class=\"modal\">\n          <slot name=\"header\"><h2>Default Title</h2></slot>\n          <slot>Default content</slot>\n          <slot name=\"footer\"></slot>\n        </div>\n      </div>\n    `;\n  }\n}\n\ncustomElements.define(\"my-modal\", MyModal);\n\n// <my-modal>\n//   <h2 slot=\"header\">Custom Title</h2>\n//   <p>This is the body content.</p>\n//   <button slot=\"footer\">Close</button>\n// </my-modal>",
+          "explanation": [
+            "Named slots let you project content to specific locations.",
+            "Default slot content appears when no matching slot is provided.",
+            "::slotted() styles projected content from outside the shadow DOM.",
+            "Templates and slots make components truly reusable."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Build a <code>&lt;my-card&gt;</code> component with named slots for header, body and footer. Provide default content for each slot.",
+        "hints": [
+          "Use <code>&lt;slot name=\"header\"&gt;Default Header&lt;/slot&gt;</code>.",
+          "Test with and without slot content to verify defaults work.",
+          "Style the card with Shadow DOM styles."
+        ]
+      },
+      "keyTakeaways": [
+        "Templates define reusable HTML structures that aren't rendered until activated.",
+        "Slots project external content into specific locations in the shadow DOM.",
+        "Named slots target specific content areas; default slots handle the rest.",
+        "These APIs make Web Components truly reusable and composable."
+      ],
+      "challenge": "Build a complete component library with a button, input, card and modal — all using slots for content projection."
+    }
+  ]
+}

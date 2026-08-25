@@ -1,0 +1,142 @@
+{
+  "topicId": "10.2",
+  "topicTitle": "Parallel Web Concurrency (Web Workers, SharedArrayBuffer)",
+  "lessons": [
+    {
+      "id": "10.2.1",
+      "title": "Multi-Threaded Task Offloading via Web Workers",
+      "description": "Move heavy computation off the main thread using Web Workers — keep your UI responsive.",
+      "sections": [
+        {
+          "heading": "What are Web Workers?",
+          "paragraphs": ["Web Workers run JavaScript in a separate thread, keeping the main thread free for UI updates. They communicate with the main thread via messages."],
+          "list": [
+            "Runs in a separate thread — doesn't block the UI",
+            "No access to the DOM — only communicates via messages",
+            "Created with <code>new Worker(\"script.js\")</code>",
+            "Communicates with <code>postMessage()</code> and <code>onmessage</code>"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Basic Web Worker",
+          "file": "main.js + worker.js",
+          "language": "JavaScript",
+          "code": "// main.js\nlet worker = new Worker(\"worker.js\");\n\nworker.postMessage({ numbers: [1, 2, 3, 4, 5] });\n\nworker.onmessage = (e) => {\n  console.log(\"Result:\", e.data.sum);  // 15\n};\n\n// worker.js\nself.onmessage = (e) => {\n  let sum = e.data.numbers.reduce((a, b) => a + b, 0);\n  self.postMessage({ sum });\n};",
+          "explanation": [
+            "new Worker() creates a separate thread for the script.",
+            "postMessage() sends data to the worker.",
+            "onmessage receives the worker's response.",
+            "The worker runs independently — the UI stays responsive."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Offload a heavy computation (summing 10 million numbers) to a Web Worker. Compare the UI responsiveness with and without the worker.",
+        "hints": [
+          "Create worker.js that sums the numbers.",
+          "Send the range via postMessage.",
+          "Log the time taken and verify the UI stays responsive."
+        ]
+      },
+      "keyTakeaways": [
+        "Web Workers run JavaScript in a separate thread — no UI blocking.",
+        "Communication happens via postMessage/onmessage — no shared state.",
+        "Workers have no DOM access — they're pure computation threads.",
+        "Perfect for heavy calculations, data processing and image manipulation."
+      ],
+      "challenge": "Build a search engine that indexes documents using a Web Worker, keeping the UI responsive during indexing."
+    },
+    {
+      "id": "10.2.2",
+      "title": "Message Passing & Structured Clone Algorithm",
+      "description": "Data sent between workers is cloned using the structured clone algorithm — understand what can and can't be transferred.",
+      "sections": [
+        {
+          "heading": "Structured clone",
+          "list": [
+            "Objects sent via postMessage are deep-cloned automatically",
+            "Supports: objects, arrays, Map, Set, Date, RegExp, Blob, ArrayBuffer",
+            "Does NOT support: functions, DOM nodes, class instances (loses prototype)",
+            "Transferable objects (ArrayBuffer) can be moved instead of cloned — zero-copy"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Structured clone and transferables",
+          "file": "main.js + worker.js",
+          "language": "JavaScript",
+          "code": "// main.js — sending structured data\nlet worker = new Worker(\"worker.js\");\nlet data = {\n  users: [{ name: \"Alex\" }, { name: \"Sam\" }],\n  config: new Map([[\"theme\", \"dark\"]])\n};\n\n// Deep clone automatically\nworker.postMessage(data);\n\n// Transferable: zero-copy transfer of ArrayBuffer\nlet buffer = new ArrayBuffer(1024 * 1024);  // 1MB\nworker.postMessage(buffer, [buffer]);  // buffer is now unusable in main!\nconsole.log(buffer.byteLength);  // 0 — transferred!\n\n// worker.js\nself.onmessage = (e) => {\n  console.log(e.data.users[0].name);  // \"Alex\"\n  // e.data.config is a real Map!\n};",
+          "explanation": [
+            "Structured clone creates a deep copy of complex objects.",
+            "Maps, Sets and Dates survive the clone — they're real instances.",
+            "Functions and DOM nodes cannot be cloned.",
+            "Transferable objects are moved (zero-copy) instead of cloned."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Send a complex object with nested arrays and a Map to a Web Worker. Verify the worker receives a deep copy, not a reference.",
+        "hints": [
+          "Create an object with nested structures and a Map.",
+          "Send via postMessage.",
+          "In the worker, modify the data and verify the original is unchanged."
+        ]
+      },
+      "keyTakeaways": [
+        "Structured clone creates deep copies of complex objects for postMessage.",
+        "Maps, Sets and Dates survive cloning; functions and DOM nodes don't.",
+        "Transferable objects (ArrayBuffer) are moved, not cloned — zero-copy.",
+        "Choose structured clone for complex data, transferables for large buffers."
+      ],
+      "challenge": "Compare performance of structured clone vs transfer for a 10MB ArrayBuffer."
+    },
+    {
+      "id": "10.2.3",
+      "title": "Shared Memory Access with SharedArrayBuffer & Atomics Operations",
+      "description": "Share memory between workers for true parallel data access — use Atomics for synchronization.",
+      "sections": [
+        {
+          "heading": "SharedArrayBuffer",
+          "list": [
+            "<code>new SharedArrayBuffer(length)</code> — shared memory between threads",
+            "Both main thread and workers can read/write the same memory",
+            "<code>Atomics</code> API provides atomic operations for synchronization",
+            "Requires specific HTTP headers: Cross-Origin-Opener-Policy, Cross-Origin-Embedder-Policy"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "SharedArrayBuffer basics",
+          "file": "main.js + worker.js",
+          "language": "JavaScript",
+          "code": "// main.js\nlet sharedBuffer = new SharedArrayBuffer(4);\nlet view = new Int32Array(sharedBuffer);\n\nlet worker = new Worker(\"worker.js\");\nworker.postMessage(sharedBuffer);\n\n// Atomically increment\nAtomics.add(view, 0, 1);\nconsole.log(Atomics.load(view, 0));  // value in shared memory\n\n// worker.js\nself.onmessage = (e) => {\n  let view = new Int32Array(e.data);\n  // Wait for main thread to write\n  Atomics.wait(view, 0, 0);  // blocks until value !== 0\n  console.log(\"Worker saw:\", Atomics.load(view, 0));\n};",
+          "explanation": [
+            "SharedArrayBuffer allows multiple threads to access the same memory.",
+            "Atomics operations are thread-safe — they can't be interrupted.",
+            "Atomics.wait() blocks a thread until a condition is met.",
+            "Atomics.add() atomically increments a value — no race conditions."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a SharedArrayBuffer that both the main thread and a worker can write to. Use Atomics to safely coordinate access.",
+        "hints": [
+          "Create: <code>new SharedArrayBuffer(4)</code>.",
+          "Use <code>Atomics.add()</code> for thread-safe increments.",
+          "Use <code>Atomics.wait()</code> and <code>Atomics.notify()</code> for coordination."
+        ]
+      },
+      "keyTakeaways": [
+        "SharedArrayBuffer enables true shared memory between threads.",
+        "Atomics API provides thread-safe operations: add, load, store, wait, notify.",
+        "Requires specific security headers for browser support.",
+        "Use SharedArrayBuffer for high-performance parallel computing."
+      ],
+      "challenge": "Implement a parallel array sum using SharedArrayBuffer where multiple workers process different chunks simultaneously."
+    }
+  ]
+}

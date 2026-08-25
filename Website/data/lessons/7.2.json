@@ -1,0 +1,144 @@
+{
+  "topicId": "7.2",
+  "topicTitle": "Symbols & Primitive Uniqueness",
+  "lessons": [
+    {
+      "id": "7.2.1",
+      "title": "Generating Unique Symbols with Symbol()",
+      "description": "Symbols are unique, immutable primitive values — perfect for hidden object keys and metadata.",
+      "sections": [
+        {
+          "heading": "What is a Symbol?",
+          "paragraphs": ["A Symbol is a unique, immutable primitive value. Every Symbol() call creates a new, distinct value — even with the same description. They're primarily used as object property keys."],
+          "list": [
+            "<code>Symbol()</code> — creates a unique symbol",
+            "<code>Symbol(\"description\")</code> — creates a symbol with a helpful label",
+            "Two symbols with the same description are still different",
+            "Symbols are never equal: <code>Symbol() !== Symbol()</code>"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Creating and using symbols",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let sym1 = Symbol(\"id\");\nlet sym2 = Symbol(\"id\");\n\nconsole.log(sym1 === sym2);  // false — always unique!\n\n// Symbols as object keys\nlet user = {\n  [Symbol(\"id\")]: 123,\n  name: \"Alex\"\n};\n\n// Symbol keys are invisible to normal iteration\nconsole.log(Object.keys(user));  // [\"name\"]\nconsole.log(user[Symbol(\"id\")]);  // undefined (different symbol!)\n\n// Store the symbol to access the value\nlet id = Symbol(\"id\");\nuser[id] = 123;\nconsole.log(user[id]);  // 123",
+          "explanation": [
+            "Every Symbol() call creates a truly unique value.",
+            "Symbols as object keys are hidden from normal iteration (for...in, Object.keys).",
+            "You must store the symbol reference to access symbol-keyed properties.",
+            "This creates truly private properties without #private syntax."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create two symbols with the same description and verify they're different. Then use one as an object key and access its value.",
+        "hints": [
+          "Create: <code>let a = Symbol(\"test\"); let b = Symbol(\"test\")</code>.",
+          "Compare: <code>a === b</code> should be false.",
+          "Use as key: <code>obj[a] = \"value\"</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Every Symbol() call creates a unique value — even with the same description.",
+        "Symbols as object keys are hidden from normal enumeration.",
+        "You must store the symbol reference to access its properties.",
+        "Symbols are useful for metadata, hidden properties and protocol methods."
+      ],
+      "challenge": "Use symbols to add hidden metadata to objects that can't be accidentally overwritten or accessed by external code."
+    },
+    {
+      "id": "7.2.2",
+      "title": "Global Symbol Registry: Symbol.for() & Symbol.keyFor()",
+      "description": "Create shared symbols across different parts of your application using the global registry.",
+      "sections": [
+        {
+          "heading": "The global symbol registry",
+          "paragraphs": ["Sometimes you need the same symbol in different files or modules. <code>Symbol.for()</code> creates or retrieves symbols from a global registry."],
+          "list": [
+            "<code>Symbol.for(\"key\")</code> — creates or returns a shared symbol",
+            "<code>Symbol.keyFor(symbol)</code> — returns the registry key for a symbol",
+            "Same key always returns the same symbol",
+            "Perfect for cross-module protocols"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Global symbol registry",
+          "file": "module-a.js + module-b.js",
+          "language": "JavaScript",
+          "code": "// module-a.js\nlet sym = Symbol.for(\"app.shared\");\nlet obj = { [sym]: \"data from A\" };\n\n// module-b.js (different file!)\nlet sameSym = Symbol.for(\"app.shared\");\nconsole.log(sym === sameSym);  // true!\nconsole.log(obj[sameSym]);     // \"data from A\"\n\n// Look up the key\nconsole.log(Symbol.keyFor(sameSym));  // \"app.shared\"",
+          "explanation": [
+            "Symbol.for() looks up the global registry — same key returns the same symbol.",
+            "This lets different modules share symbols for cross-module communication.",
+            "Symbol.keyFor() returns the registry key, useful for debugging.",
+            "Regular Symbol() doesn't use the registry — only Symbol.for() does."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a shared symbol using Symbol.for() in two different script sections. Verify they're the same symbol and can be used to share data.",
+        "hints": [
+          "In section 1: <code>let sym = Symbol.for(\"shared\")</code>.",
+          "In section 2: <code>let same = Symbol.for(\"shared\")</code>.",
+          "Compare: <code>sym === same</code> should be true."
+        ]
+      },
+      "keyTakeaways": [
+        "Symbol.for() creates or retrieves symbols from a global registry.",
+        "Same key always returns the same symbol — enables cross-module sharing.",
+        "Symbol.keyFor() returns the registry key for a given symbol.",
+        "Use global symbols when different parts of your app need to share a symbol."
+      ],
+      "challenge": "Build a plugin system where plugins register themselves using a shared Symbol.for() key."
+    },
+    {
+      "id": "7.2.3",
+      "title": "Customizing Engine Hooks via Well-Known Symbols (Symbol.iterator)",
+      "description": "Well-known Symbols let you customize how JavaScript engines interact with your objects.",
+      "sections": [
+        {
+          "heading": "Well-known Symbols",
+          "paragraphs": ["JavaScript has built-in Symbol constants that control engine behavior. Implementing them on your objects hooks into language features like iteration, string conversion and matching."],
+          "list": [
+            "<code>Symbol.iterator</code> — makes an object iterable with for...of",
+            "<code>Symbol.toPrimitive</code> — customizes type conversion",
+            "<code>Symbol.toStringTag</code> — customizes Object.prototype.toString()",
+            "<code>Symbol.hasInstance</code> — customizes instanceof behavior"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Custom iteration with Symbol.iterator",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "class Range {\n  constructor(start, end) {\n    this.start = start;\n    this.end = end;\n  }\n\n  [Symbol.iterator]() {\n    let current = this.start;\n    let end = this.end;\n    return {\n      next() {\n        if (current <= end) {\n          return { value: current++, done: false };\n        }\n        return { done: true };\n      }\n    };\n  }\n}\n\nlet range = new Range(1, 5);\nfor (let num of range) {\n  console.log(num);  // 1, 2, 3, 4, 5\n}\n\nlet doubled = [...range].map(n => n * 2);\nconsole.log(doubled);  // [2, 4, 6, 8, 10]",
+          "explanation": [
+            "Implementing Symbol.iterator makes your object work with for...of.",
+            "The iterator must return an object with a next() method.",
+            "next() returns { value, done } — done is true when iteration is complete.",
+            "This also enables spread operator and destructuring."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a Fibonacci class that implements Symbol.iterator to yield the first N Fibonacci numbers when used with for...of.",
+        "hints": [
+          "Implement <code>[Symbol.iterator]()</code> that returns a <code>next()</code> method.",
+          "Track the current and next Fibonacci numbers.",
+          "Return <code>{ value, done: false }</code> for each number."
+        ]
+      },
+      "keyTakeaways": [
+        "Well-known Symbols hook into JavaScript engine behavior.",
+        "Symbol.iterator makes objects work with for...of, spread and destructuring.",
+        "The iterator protocol requires a next() method returning { value, done }.",
+        "These hooks let you make custom objects behave like built-in types."
+      ],
+      "challenge": "Create a Range class that supports for...of, spread, destructuring and .map() by implementing Symbol.iterator."
+    }
+  ]
+}

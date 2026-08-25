@@ -1,0 +1,143 @@
+{
+  "topicId": "10.1",
+  "topicTitle": "Web Security Architecture (XSS, CSRF, CORS, CSP)",
+  "lessons": [
+    {
+      "id": "10.1.1",
+      "title": "Cross-Site Scripting (XSS) Prevention & DOM Sanitization (DOMPurify)",
+      "description": "XSS attacks inject malicious scripts into your pages — learn to prevent them with input sanitization and output encoding.",
+      "sections": [
+        {
+          "heading": "What is XSS?",
+          "paragraphs": ["Cross-Site Scripting (XSS) allows attackers to inject malicious scripts into web pages viewed by other users. It's one of the most common web vulnerabilities."],
+          "list": [
+            "<b>Stored XSS</b> — malicious script saved on the server (e.g., in comments)",
+            "<b>Reflected XSS</b> — script reflected in URL parameters",
+            "<b>DOM-based XSS</b> — script injected via client-side DOM manipulation",
+            "Prevention: never use innerHTML with user input, sanitize everything"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "XSS prevention techniques",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ Vulnerable to XSS\nlet userInput = '<img src=x onerror=alert(\"XSS\")>';\nelement.innerHTML = userInput;  // executes the script!\n\n// ✅ Safe: use textContent\nelement.textContent = userInput;  // displays as plain text\n\n// ✅ Sanitize with DOMPurify\nimport DOMPurify from \"dompurify\";\nlet clean = DOMPurify.sanitize(userInput);\nelement.innerHTML = clean;  // safe HTML\n\n// ✅ Escape HTML entities manually\nfunction escapeHtml(str) {\n  return str.replace(/[&<>\"']/g, (m) => ({\n    \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\",\n    '\"': \"&quot;\", \"'\": \"&#39;\"\n  }[m]));\n}",
+          "explanation": [
+            "innerHTML with user input is the #1 cause of XSS vulnerabilities.",
+            "textContent is always safe — it escapes HTML automatically.",
+            "DOMPurify removes dangerous elements and attributes from HTML.",
+            "Always sanitize before using innerHTML with untrusted content."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a comment system that safely displays user input. Test with malicious HTML input and verify it's sanitized.",
+        "hints": [
+          "Use <code>textContent</code> or DOMPurify to sanitize input.",
+          "Test with <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> as input.",
+          "Verify the script doesn't execute."
+        ]
+      },
+      "keyTakeaways": [
+        "XSS injects malicious scripts into your pages through user input.",
+        "Never use innerHTML with unsanitized user input.",
+        "Use textContent for plain text, DOMPurify for HTML.",
+        "Always validate and sanitize input on both client and server."
+      ],
+      "challenge": "Build a rich text editor that allows safe HTML formatting while preventing XSS attacks."
+    },
+    {
+      "id": "10.1.2",
+      "title": "Cross-Site Request Forgery (CSRF) Mitigation Strategies",
+      "description": "CSRF tricks authenticated users into performing unwanted actions — defend with tokens and SameSite cookies.",
+      "sections": [
+        {
+          "heading": "What is CSRF?",
+          "paragraphs": ["CSRF forces an authenticated user's browser to send requests to a site where they're logged in. The browser automatically includes cookies, so the request appears legitimate."],
+          "list": [
+            "Attacker creates a form that submits to your site",
+            "User's browser sends cookies automatically with the request",
+            "Server can't tell the difference between legitimate and forged requests",
+            "Defense: CSRF tokens, SameSite cookies, checking Origin/Referer"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "CSRF prevention",
+          "file": "server.js",
+          "language": "JavaScript",
+          "code": "// 1. CSRF Token approach\napp.get(\"/form\", (req, res) => {\n  let token = generateCSRFToken();\n  res.render(\"form\", { csrfToken: token });\n});\n\napp.post(\"/transfer\", (req, res) => {\n  if (req.body.csrfToken !== req.session.csrfToken) {\n    return res.status(403).send(\"Invalid CSRF token\");\n  }\n  // Process the transfer...\n});\n\n// 2. SameSite cookie (defense in depth)\napp.use(session({\n  cookie: { sameSite: \"strict\", httpOnly: true, secure: true }\n}));\n\n// 3. Check Origin header\napp.use((req, res, next) => {\n  let origin = req.headers.origin || req.headers.referer;\n  if (!origin?.startsWith(\"https://yoursite.com\")) {\n    return res.status(403).send(\"Forbidden\");\n  }\n  next();\n});",
+          "explanation": [
+            "CSRF tokens are unique per session — embedded in forms and verified on submission.",
+            "SameSite cookies prevent the browser from sending cookies on cross-site requests.",
+            "Checking Origin/Referer headers verifies the request came from your site.",
+            "Use multiple defenses together for robust protection."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Implement CSRF protection on a POST endpoint using a random token embedded in a form and verified on submission.",
+        "hints": [
+          "Generate a token: <code>crypto.randomBytes(32).toString(\"hex\")</code>.",
+          "Store in session and embed in a hidden form field.",
+          "Verify on submission: <code>if (token !== sessionToken) reject</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "CSRF tricks authenticated users into performing unwanted actions.",
+        "CSRF tokens verify that requests originate from your own forms.",
+        "SameSite cookies prevent cross-site cookie transmission.",
+        "Always combine multiple defense strategies."
+      ],
+      "challenge": "Build a complete CSRF protection system with token generation, form embedding and server-side verification."
+    },
+    {
+      "id": "10.1.3",
+      "title": "Configuring CORS Headers & Content Security Policy (CSP) Directives",
+      "description": "Control which origins can access your API and what resources your pages can load.",
+      "sections": [
+        {
+          "heading": "CORS and CSP",
+          "list": [
+            "<b>CORS</b> — controls which origins can make requests to your API",
+            "<b>CSP</b> — controls which resources (scripts, styles, images) your pages can load",
+            "CORS headers: Access-Control-Allow-Origin, Access-Control-Allow-Methods",
+            "CSP headers: Content-Security-Policy with directives"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "CORS and CSP configuration",
+          "file": "server.js",
+          "language": "JavaScript",
+          "code": "// CORS configuration\nconst cors = require(\"cors\");\n\napp.use(cors({\n  origin: \"https://yourapp.com\",\n  methods: [\"GET\", \"POST\", \"PUT\", \"DELETE\"],\n  credentials: true\n}));\n\n// CSP headers\napp.use((req, res, next) => {\n  res.setHeader(\"Content-Security-Policy\",\n    \"default-src 'self'; \" +\n    \"script-src 'self' https://cdn.example.com; \" +\n    \"style-src 'self' 'unsafe-inline'; \" +\n    \"img-src 'self' data: https:; \" +\n    \"connect-src 'self' https://api.example.com;\"\n  );\n  next();\n});",
+          "explanation": [
+            "CORS restricts which origins can access your API.",
+            "Allow specific origins — never use * in production.",
+            "CSP restricts what resources pages can load.",
+            "CSP prevents XSS by blocking unauthorized script sources."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Configure CORS to allow requests from a specific origin and set a CSP header that only allows scripts from your own domain.",
+        "hints": [
+          "CORS: <code>origin: \"https://yourapp.com\"</code>.",
+          "CSP: <code>script-src 'self'</code> blocks inline and external scripts.",
+          "Test with a script from a different origin — it should be blocked."
+        ]
+      },
+      "keyTakeaways": [
+        "CORS controls which origins can access your API.",
+        "CSP controls which resources your pages can load.",
+        "Never use Access-Control-Allow-Origin: * in production.",
+        "CSP is a powerful defense against XSS — configure it carefully."
+      ],
+      "challenge": "Set up a complete security headers configuration including CORS, CSP, HSTS and X-Frame-Options."
+    }
+  ]
+}

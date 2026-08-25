@@ -1,0 +1,189 @@
+{
+  "topicId": "8.3",
+  "topicTitle": "The Event Loop In-Depth: Microtasks vs Macrotasks",
+  "lessons": [
+    {
+      "id": "8.3.1",
+      "title": "Call Stack & Event Loop Coordination",
+      "description": "The event loop coordinates between the call stack and task queues — understanding this explains async execution order.",
+      "sections": [
+        {
+          "heading": "How the event loop works",
+          "paragraphs": ["The event loop is a continuously running process that checks if the call stack is empty, then processes tasks from the microtask queue, then the macrotask queue."],
+          "list": [
+            "The call stack runs synchronous code one at a time",
+            "When the stack is empty, the event loop checks the microtask queue",
+            "Microtasks run to completion before any macrotask",
+            "Then one macrotask runs, and the cycle repeats"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Execution order demonstration",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "console.log(\"1 — sync\");\n\nsetTimeout(() => console.log(\"2 — macrotask\"), 0);\n\nPromise.resolve().then(() => console.log(\"3 — microtask\"));\n\nconsole.log(\"4 — sync\");\n\n// Output: 1, 4, 3, 2\n// Sync → Microtask → Macrotask",
+          "explanation": [
+            "Synchronous code runs first: \"1\" and \"4\".",
+            "Microtasks (Promise.then) run before macrotasks (setTimeout).",
+            "Macrotasks run after all microtasks are cleared.",
+            "This order is guaranteed by the event loop specification."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Predict the exact output order of a code snippet with sync, microtask, and macrotask operations. Then run it to verify.",
+        "hints": [
+          "Synchronous code always runs first.",
+          "Promise.then and queueMicrotask are microtasks.",
+          "setTimeout and setInterval are macrotasks.",
+          "Microtasks always clear before the next macrotask."
+        ]
+      },
+      "keyTakeaways": [
+        "The event loop coordinates between the call stack and task queues.",
+        "Microtasks (Promises, queueMicrotask) always run before macrotasks.",
+        "All microtasks clear before the next macrotask runs.",
+        "This explains the guaranteed execution order of async JavaScript."
+      ],
+      "challenge": "Write code with 5 different async operations and predict their exact execution order."
+    },
+    {
+      "id": "8.3.2",
+      "title": "Microtask Queue Execution (Promises, queueMicrotask)",
+      "description": "Microtasks run after the current task and before any macrotask — they have the highest priority.",
+      "sections": [
+        {
+          "heading": "Microtask priority",
+          "list": [
+            "Promise.then/catch/finally callbacks are microtasks",
+            "<code>queueMicrotask(fn)</code> explicitly queues a microtask",
+            "All microtasks run to completion before the next macrotask",
+            "Microtasks can add more microtasks — they all run first"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Microtask chaining",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "console.log(\"start\");\n\nPromise.resolve()\n  .then(() => {\n    console.log(\"micro 1\");\n    return Promise.resolve();\n  })\n  .then(() => {\n    console.log(\"micro 2\");\n  });\n\nqueueMicrotask(() => console.log(\"micro 3\"));\n\nsetTimeout(() => console.log(\"macrotask\"), 0);\n\nconsole.log(\"end\");\n\n// Output: start, end, micro 1, micro 3, micro 2, macrotask",
+          "explanation": [
+            "All microtasks (micro 1, micro 3, micro 2) run before the macrotask.",
+            "queueMicrotask adds to the same microtask queue as Promises.",
+            "Microtasks are processed in FIFO order until the queue is empty.",
+            "Only then does the event loop pick up the next macrotask."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write code that creates a chain of 3 microtasks using queueMicrotask. Verify they all run before any setTimeout callback.",
+        "hints": [
+          "Use <code>queueMicrotask(() => { ...; queueMicrotask(() => { ... }) })</code>.",
+          "Add a setTimeout to show when the macrotask runs.",
+          "All microtasks should appear before the macrotask."
+        ]
+      },
+      "keyTakeaways": [
+        "Microtasks include Promise callbacks and queueMicrotask() calls.",
+        "All microtasks run to completion before the next macrotask.",
+        "Microtasks can enqueue more microtasks — they all run first.",
+        "This is why Promise.then chains run before setTimeout."
+      ],
+      "challenge": "Explain why queueMicrotask is preferred over Promise.resolve().then() for simple microtask scheduling."
+    },
+    {
+      "id": "8.3.3",
+      "title": "Macrotask Queue Execution (Timers, I/O Events)",
+      "description": "Macrotasks include setTimeout, setInterval, I/O callbacks and UI rendering events.",
+      "sections": [
+        {
+          "heading": "What are macrotasks?",
+          "list": [
+            "setTimeout and setInterval callbacks",
+            "I/O callbacks (network, file system)",
+            "UI rendering events (click, input)",
+            "requestAnimationFrame callbacks",
+            "One macrotask runs per event loop iteration"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Macrotask scheduling",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "console.log(\"sync\");\n\n// Macrotasks — one runs per iteration\nsetTimeout(() => console.log(\"timer 1\"), 0);\nsetTimeout(() => console.log(\"timer 2\"), 0);\nsetTimeout(() => console.log(\"timer 3\"), 0);\n\nPromise.resolve().then(() => console.log(\"micro\"));\n\n// Output: sync, micro, timer 1, timer 2, timer 3\n// All microtasks first, then one macrotask at a time",
+          "explanation": [
+            "All three timers are macrotasks queued in order.",
+            "The microtask runs first because microtasks have higher priority.",
+            "Macrotasks run one at a time, with microtask checks between each.",
+            "Each timer callback is a separate macrotask."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create 3 setTimeouts with 0ms delay and 1 Promise. Predict and verify the execution order.",
+        "hints": [
+          "Promise.then is a microtask — runs before all setTimeouts.",
+          "setTimeouts are macrotasks — run in FIFO order after microtasks.",
+          "Output: micro → timer 1 → timer 2 → timer 3."
+        ]
+      },
+      "keyTakeaways": [
+        "Macrotasks include setTimeout, setInterval, I/O and UI events.",
+        "One macrotask runs per event loop iteration.",
+        "Microtasks always clear before the next macrotask.",
+        "This is why setTimeout(fn, 0) doesn't run immediately."
+      ],
+      "challenge": "Build a task scheduler that prioritizes microtasks over macrotasks for critical updates."
+    },
+    {
+      "id": "8.3.4",
+      "title": "Frame Rendering Synchronization & Task Starvation",
+      "description": "Understand how the event loop coordinates with frame rendering and what happens when tasks block the loop.",
+      "sections": [
+        {
+          "heading": "Frame rendering and task starvation",
+          "list": [
+            "Browsers target 60fps — each frame has a 16.6ms budget",
+            "The event loop must process tasks AND render within each frame",
+            "Long-running tasks starve rendering — causing jank",
+            "requestIdleCallback runs tasks during idle time between frames"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Task starvation example",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ Task starvation — blocks rendering\nfunction heavyWork() {\n  let start = performance.now();\n  while (performance.now() - start < 100) {\n    // busy for 100ms — blocks rendering!\n  }\n  console.log(\"done\");\n}\n\n// ✅ Chunked work with rAF\nfunction chunkedWork(items, chunkSize = 100) {\n  let index = 0;\n  function processChunk() {\n    let end = Math.min(index + chunkSize, items.length);\n    for (; index < end; index++) {\n      // process item\n    }\n    if (index < items.length) {\n      requestAnimationFrame(processChunk);  // yield to rendering\n    }\n  }\n  requestAnimationFrame(processChunk);\n}",
+          "explanation": [
+            "A 100ms busy loop blocks rendering — the page becomes unresponsive.",
+            "Chunked work processes items in batches, yielding between chunks.",
+            "requestAnimationFrame ensures each chunk runs before the next paint.",
+            "This keeps the page responsive during heavy computation."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a function that processes 10000 items without blocking the UI. Use chunking with requestAnimationFrame.",
+        "hints": [
+          "Process items in chunks of 100-200.",
+          "Use <code>requestAnimationFrame(processChunk)</code> between chunks.",
+          "Each chunk takes less than 16ms — the page stays responsive."
+        ]
+      },
+      "keyTakeaways": [
+        "Each frame has a 16.6ms budget at 60fps.",
+            "Long tasks block rendering — causing jank and unresponsiveness.",
+            "Chunk heavy work with requestAnimationFrame to stay within frame budgets.",
+            "requestIdleCallback runs tasks during idle time between frames."
+      ],
+      "challenge": "Profile a page with heavy computation and use chunking to eliminate frame drops."
+    }
+  ]
+}

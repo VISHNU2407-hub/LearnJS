@@ -1,0 +1,198 @@
+{
+  "topicId": "6.3",
+  "topicTitle": "Automated Unit Testing & TDD (Vitest / Jest)",
+  "lessons": [
+    {
+      "id": "6.3.1",
+      "title": "Test-Driven Development (TDD) Core Cycles",
+      "description": "Write tests before code — the Red-Green-Refactor cycle produces cleaner, more reliable software.",
+      "sections": [
+        {
+          "heading": "The TDD cycle",
+          "paragraphs": ["Test-Driven Development flips the normal workflow: you write a failing test first, write the minimum code to make it pass, then refactor. This cycle repeats for every feature."],
+          "list": [
+            "<b>Red</b> — write a test that fails (no implementation yet)",
+            "<b>Green</b> — write the simplest code that makes the test pass",
+            "<b>Refactor</b> — clean up the code while keeping tests green",
+            "Repeat for each new feature or edge case"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "TDD in action",
+          "file": "math.js + math.test.js",
+          "language": "JavaScript",
+          "code": "// Step 1: Write the test first (RED)\n// math.test.js\ntest(\"add(2, 3) returns 5\", () => {\n  expect(add(2, 3)).toBe(5);\n});\n\n// Step 2: Write minimal code (GREEN)\n// math.js\nfunction add(a, b) {\n  return a + b;\n}\n\n// Step 3: Refactor if needed\n// The code is already clean — move on!",
+          "explanation": [
+            "Write the test first — it describes exactly what you want.",
+            "The test fails initially because the function doesn't exist.",
+            "Write just enough code to pass the test.",
+            "Refactor only if the code needs improvement."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "TDD a multiply function: write the test first, watch it fail, then write the function to pass it.",
+        "hints": [
+          "Test: <code>expect(multiply(3, 4)).toBe(12)</code>.",
+          "Implement: <code>function multiply(a, b) { return a * b; }</code>.",
+          "Add more test cases for edge cases: 0, negative numbers."
+        ]
+      },
+      "keyTakeaways": [
+        "TDD: Red (failing test) → Green (passing code) → Refactor (clean up).",
+        "Write tests first — they define the desired behavior.",
+        "Write the minimum code to pass — don't over-engineer.",
+        "Refactor only when tests are passing — safety net catches regressions."
+      ],
+      "challenge": "TDD a divide function that handles division by zero, returning Infinity for 0 denominator."
+    },
+    {
+      "id": "6.3.2",
+      "title": "Writing Test Suites: describe, it, expect Assertions",
+      "description": "Organize tests with describe blocks and verify behavior with expect assertions.",
+      "sections": [
+        {
+          "heading": "Test structure",
+          "list": [
+            "<code>describe(\"name\", () => {})</code> — groups related tests",
+            "<code>it(\"description\", () => {})</code> — defines a single test case",
+            "<code>expect(value).toBe(expected)</code> — checks equality",
+            "Vitest/Jest provide the testing framework and assertion library"
+          ]
+        },
+        {
+          "heading": "Common matchers",
+          "list": [
+            "<code>toBe()</code> — strict equality (===)",
+            "<code>toEqual()</code> — deep equality for objects/arrays",
+            "<code>toBeTruthy()</code> / <code>toBeFalsy()</code> — truthiness checks",
+            "<code>toContain()</code> — checks if array/string contains a value",
+            "<code>toThrow()</code> — checks if a function throws an error"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Test suite with assertions",
+          "file": "user.test.js",
+          "language": "JavaScript",
+          "code": "describe(\"User\", () => {\n  it(\"creates a user with name and age\", () => {\n    let user = new User(\"Alex\", 25);\n    expect(user.name).toBe(\"Alex\");\n    expect(user.age).toBe(25);\n  });\n\n  it(\"throws error for negative age\", () => {\n    expect(() => new User(\"Alex\", -1)).toThrow(\"Invalid age\");\n  });\n\n  it(\"returns correct greeting\", () => {\n    let user = new User(\"Alex\", 25);\n    expect(user.greet()).toContain(\"Alex\");\n  });\n\n  it(\"defaults to guest name\", () => {\n    let user = new User();\n    expect(user.name).toBe(\"Guest\");\n  });\n});",
+          "explanation": [
+            "describe groups tests for a specific class or feature.",
+            "it defines individual test cases with descriptive names.",
+            "expect().toBe() checks for exact value equality.",
+            "expect().toThrow() verifies error handling."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a test suite for a Calculator class with add, subtract, multiply and divide methods. Include at least 3 test cases per method.",
+        "hints": [
+          "Use describe(\"Calculator\", () => { ... }).",
+          "Each method gets its own describe block.",
+          "Test normal cases, edge cases and error cases."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>describe</code> groups related tests; <code>it</code> defines individual test cases.",
+        "Use descriptive test names that explain the expected behavior.",
+        "matchers like toBe, toEqual and toThrow verify different aspects of behavior.",
+        "A good test suite covers normal cases, edge cases and error conditions."
+      ],
+      "challenge": "Write a complete test suite for a shopping cart with addItem, removeItem, getTotal and applyDiscount methods."
+    },
+    {
+      "id": "6.3.3",
+      "title": "Testing Asynchronous Logic & Promise Rejections",
+      "description": "Test async functions, Promises and error handling in asynchronous code.",
+      "sections": [
+        {
+          "heading": "Testing async code",
+          "list": [
+            "Use async/await in test functions for clean async tests",
+            "Test Promise rejections with <code>rejects</code>",
+            "Mock timers with <code>vi.useFakeTimers()</code> for setTimeout/setInterval",
+            "Test fetch with mock servers or interceptors"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Async testing patterns",
+          "file": "api.test.js",
+          "language": "JavaScript",
+          "code": "import { test, expect, vi } from \"vitest\";\n\n// Test async function\ntest(\"fetchUser returns user data\", async () => {\n  let user = await fetchUser(1);\n  expect(user).toHaveProperty(\"name\");\n  expect(user.id).toBe(1);\n});\n\n// Test Promise rejection\ntest(\"fetchUser rejects for invalid ID\", async () => {\n  await expect(fetchUser(-1)).rejects.toThrow(\"Invalid ID\");\n});\n\n// Test with fake timers\ntest(\"delay resolves after specified time\", async () => {\n  vi.useFakeTimers();\n  let promise = delay(1000);\n  vi.advanceTimersByTime(1000);\n  await expect(promise).resolves.toBeUndefined();\n  vi.useRealTimers();\n});",
+          "explanation": [
+            "Use <code>async</code> in the test function to await async operations.",
+            "<code>.rejects.toThrow()</code> verifies that a Promise rejects with a specific error.",
+            "Fake timers let you control setTimeout/setInterval without waiting.",
+            "Always restore real timers after using fake ones."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write tests for an async function that fetches data, including tests for success, network failure, and timeout scenarios.",
+        "hints": [
+          "Mock fetch with <code>vi.fn()</code> to simulate responses.",
+          "Test success: mock returns { ok: true, json: () => data }.",
+          "Test failure: mock returns { ok: false }."
+        ]
+      },
+      "keyTakeaways": [
+        "Use async/await in test functions for clean async test code.",
+        "Test Promise rejections with <code>.rejects.toThrow()</code>.",
+        "Fake timers let you control time-dependent code in tests.",
+        "Mock external dependencies to test in isolation."
+      ],
+      "challenge": "Write tests for a retry function that attempts an operation up to 3 times before failing."
+    },
+    {
+      "id": "6.3.4",
+      "title": "DOM Testing using JSDOM / HappyDOM Environments",
+      "description": "Test DOM manipulation code without a real browser using lightweight DOM implementations.",
+      "sections": [
+        {
+          "heading": "DOM testing environments",
+          "paragraphs": ["JSDOM and HappyDOM provide a lightweight implementation of the DOM in Node.js. This lets you test code that manipulates HTML elements without opening a browser."],
+          "list": [
+            "JSDOM — full DOM implementation in JavaScript, slower but complete",
+            "HappyDOM — lighter and faster alternative to JSDOM",
+            "Both provide document, window, and DOM APIs in Node.js",
+            "Configure via your test framework's environment setting"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Testing DOM manipulation",
+          "file": "dom.test.js",
+          "language": "JavaScript",
+          "code": "// @vitest-environment happydom\nimport { test, expect, beforeEach } from \"vitest\";\nimport { createApp } from \"./app.js\";\n\nbeforeEach(() => {\n  document.body.innerHTML = \"\";\n});\n\ntest(\"app adds a greeting to the page\", () => {\n  createApp();\n  let heading = document.querySelector(\"h1\");\n  expect(heading).not.toBeNull();\n  expect(heading.textContent).toContain(\"Hello\");\n});\n\ntest(\"button click increments counter\", () => {\n  createApp();\n  let btn = document.querySelector(\"#increment\");\n  let display = document.querySelector(\"#count\");\n  btn.click();\n  expect(display.textContent).toBe(\"1\");\n});",
+          "explanation": [
+            "The <code>@vitest-environment</code> comment sets the DOM environment.",
+            "beforeEach clears the DOM between tests for isolation.",
+            "Create DOM elements and interact with them just like in a browser.",
+            "Verify element content with expect and standard matchers."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write DOM tests for a toggle button that adds/removes a 'dark' class on the body when clicked.",
+        "hints": [
+          "Clear the DOM in beforeEach: <code>document.body.innerHTML = \"\"</code>.",
+          "Create the button programmatically or set innerHTML.",
+          "Simulate click and check body.classList."
+        ]
+      },
+      "keyTakeaways": [
+        "JSDOM and HappyDOM let you test DOM code without a real browser.",
+        "Always clear the DOM between tests for isolation.",
+        "Simulate user interactions by calling methods like .click() directly.",
+        "DOM tests verify that your code correctly creates and manipulates elements."
+      ],
+      "challenge": "Write tests for a todo list app that creates, completes, and deletes items — all using DOM testing."
+    }
+  ]
+}

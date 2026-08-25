@@ -1,0 +1,192 @@
+{
+  "topicId": "4.2",
+  "topicTitle": "Scope Chains, Hoisting & The Temporal Dead Zone (TDZ)",
+  "lessons": [
+    {
+      "id": "4.2.1",
+      "title": "Scope Levels: Global, Function, and Block Scope",
+      "description": "Variables exist in specific scopes — understanding scope determines where your variables can be accessed.",
+      "sections": [
+        {
+          "heading": "What is scope?",
+          "paragraphs": ["Scope determines where a variable can be accessed in your code. Think of it as boundaries — a variable lives in its scope and can be reached from nested scopes, but not from outside."],
+          "list": [
+            "<b>Global scope</b> — variables declared outside any function or block; accessible everywhere",
+            "<b>Function scope</b> — variables declared inside a function; only accessible within that function",
+            "<b>Block scope</b> — variables declared with let/const inside {}; only accessible within that block",
+            "var creates function scope, not block scope — a common source of bugs"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Scope in action",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let global = \"I'm global\";\n\nfunction outer() {\n  let outerVar = \"I'm in outer\";\n\n  if (true) {\n    let blockVar = \"I'm in a block\";\n    var funcVar = \"I'm function-scoped\";\n    console.log(global);     // ✓ accessible\n    console.log(outerVar);   // ✓ accessible\n    console.log(blockVar);   // ✓ accessible\n  }\n\n  console.log(funcVar);  // ✓ accessible (var is function-scoped)\n  // console.log(blockVar); // ✗ ReferenceError (block scope)\n}",
+          "explanation": [
+            "let and const are block-scoped — they only exist inside the nearest {}.",
+            "var is function-scoped — it leaks out of blocks into the function.",
+            "Global variables are accessible from any scope.",
+            "Inner scopes can access outer scopes, but not the reverse."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create variables at global, function, and block scope levels. Try accessing each from different locations and document which accesses succeed and which fail.",
+        "hints": [
+          "Declare a global variable outside any function.",
+          "Declare a function-scoped variable with let inside a function.",
+          "Declare a block-scoped variable inside an if statement.",
+          "Try accessing each from the others."
+        ]
+      },
+      "keyTakeaways": [
+        "Global scope variables are accessible everywhere in your code.",
+        "Function scope (var) means the variable is available throughout the function.",
+        "Block scope (let/const) means the variable is only available within the nearest {}.",
+        "Inner scopes can see outer scope variables, but outer scopes cannot see inner ones."
+      ],
+      "challenge": "Predict the output of a code snippet with nested scopes before running it, then verify in the console."
+    },
+    {
+      "id": "4.2.2",
+      "title": "Lexical Scope Lookup Chains",
+      "description": "When a variable isn't found in the current scope, JavaScript looks up the chain to outer scopes.",
+      "sections": [
+        {
+          "heading": "How scope lookup works",
+          "paragraphs": ["When JavaScript encounters a variable, it searches from the current scope outward. If the variable isn't found in any scope up to the global scope, it throws a ReferenceError. This chain is called the <b>scope chain</b>."],
+          "list": [
+            "JavaScript searches inward-to-outward: current scope → parent → grandparent → global",
+            "Once found, the search stops — inner scopes can shadow outer variables",
+            "The scope chain is determined at function creation time (lexical scoping)",
+            "Each function remembers the scope where it was defined, not where it's called"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Scope chain traversal",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let a = 1;\n\nfunction outer() {\n  let b = 2;\n\n  function inner() {\n    let c = 3;\n    console.log(a + b + c);  // 6 — looks up the chain\n  }\n\n  inner();\n}\n\nouter();",
+          "explanation": [
+            "<code>inner</code> can't find <code>a</code> or <code>b</code> locally, so it looks outward.",
+            "It finds <code>b</code> in <code>outer</code>'s scope and <code>a</code> in global scope.",
+            "The scope chain is: inner → outer → global.",
+            "JavaScript resolves variables by walking up this chain until it finds a match."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create 3 nested scopes with a variable in each. Log a variable from the outermost scope inside the innermost function to see the full scope chain traversal.",
+        "hints": [
+          "Create global, function, and inner function with variables at each level.",
+          "From the innermost function, log the global variable.",
+          "JavaScript walks up: inner → outer → global to find it."
+        ]
+      },
+      "keyTakeaways": [
+        "Scope lookup goes from inner to outer until the variable is found or a ReferenceError is thrown.",
+        "Lexical scoping means a function's scope is determined by where it's written, not where it's called.",
+        "Inner variables can shadow (hide) outer variables with the same name.",
+        "The scope chain is fixed at function creation time and never changes."
+      ],
+      "challenge": "Write code where an inner function shadows a global variable name. Verify which value the inner function sees."
+    },
+    {
+      "id": "4.2.3",
+      "title": "Function & Variable Hoisting Mechanics (var vs let/const)",
+      "description": "Hoisting moves declarations to the top — but let/const and function expressions behave differently.",
+      "sections": [
+        {
+          "heading": "What is hoisting?",
+          "paragraphs": ["Hoisting is JavaScript's behavior of moving declarations to the top of their scope during the creation phase. But not all declarations are hoisted the same way."],
+          "list": [
+            "Function declarations are fully hoisted — name and body are available immediately",
+            "var is hoisted but initialized as <code>undefined</code>",
+            "let and const are hoisted but NOT initialized — they're in the TDZ",
+            "Function expressions and arrow functions follow their variable's hoisting rules"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Hoisting differences",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ✅ Function declaration — fully hoisted\ngreet();  // works!\nfunction greet() { console.log(\"Hi!\"); }\n\n// ⚠️ var — hoisted but undefined\nconsole.log(x);  // undefined (not an error)\nvar x = 5;\n\n// ❌ let/const — TDZ, not accessible\n// console.log(y);  // ReferenceError!\nlet y = 10;\n\n// ⚠️ Function expression — same as var\n// sayHi();  // TypeError: sayHi is not a function\nlet sayHi = function() { console.log(\"Hi!\"); };",
+          "explanation": [
+            "Function declarations are available everywhere in their scope.",
+            "var variables are hoisted but start as <code>undefined</code> — confusing but not an error.",
+            "let/const are in the TDZ — accessing them throws a ReferenceError.",
+            "Function expressions follow their variable type — a let function expression is in TDZ."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write code that demonstrates all three hoisting behaviors: function declaration, var, and let. Show which ones work before their declaration line and which don't.",
+        "hints": [
+          "Call a function declaration before its definition line.",
+          "Log a var before its declaration — gets undefined.",
+          "Log a let before its declaration — throws ReferenceError."
+        ]
+      },
+      "keyTakeaways": [
+        "Function declarations are fully hoisted — you can call them before they appear in the code.",
+        "var is hoisted but initialized as <code>undefined</code>, leading to confusing behavior.",
+        "let and const are in the Temporal Dead Zone — reading them before declaration throws an error.",
+        "Always declare variables at the top of their scope to avoid hoisting surprises."
+      ],
+      "challenge": "Refactor a snippet that uses var to use let instead. Explain every difference in behavior before and after the refactor."
+    },
+    {
+      "id": "4.2.4",
+      "title": "The Temporal Dead Zone (TDZ) & Reference Errors",
+      "description": "The TDZ is the period between a variable's creation and its declaration — accessing it throws a ReferenceError.",
+      "sections": [
+        {
+          "heading": "What is the TDZ?",
+          "paragraphs": ["When JavaScript creates a let or const variable during the creation phase, it reserves the name but doesn't initialize it. From that moment until the declaration line executes, the variable is in the <b>Temporal Dead Zone</b> — reading it throws a ReferenceError."],
+          "list": [
+            "TDZ starts when the scope is entered (creation phase)",
+            "TDZ ends when the declaration line is executed",
+            "Only affects let, const and class declarations",
+            "var doesn't have a TDZ — it's initialized as <code>undefined</code> instead",
+            "The TDZ is a safety feature that prevents using uninitialized variables"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "TDZ in different scenarios",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// TDZ ends at the declaration line\nconsole.log(a);  // ReferenceError!\nlet a = 5;\n\n// TDZ in if blocks\nif (true) {\n  console.log(b);  // ReferenceError!\n  let b = 10;\n}\n\n// TDZ with typeof\nconsole.log(typeof c);  // undefined (typeof is safe for undeclared vars)\n// But for let/const it's still a ReferenceError:\n// console.log(typeof d); // ReferenceError!\nlet d = 20;\n\n// No TDZ with var\nconsole.log(e);  // undefined (not an error)\nvar e = 30;",
+          "explanation": [
+            "The TDZ error occurs because <code>a</code> exists in scope but hasn't been initialized yet.",
+            "Block-scoped let/const variables have their own TDZ within their block.",
+            "typeof is safe for truly undeclared variables but still fails in the TDZ.",
+            "var avoids the TDZ entirely by initializing as <code>undefined</code>."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a function with a let variable and try to access it before the declaration in at least 3 different scenarios (normal access, typeof, and inside an if block).",
+        "hints": [
+          "Try <code>console.log(x)</code> before <code>let x = 5</code>.",
+          "Try <code>typeof x</code> before the declaration.",
+          "Try accessing a block-scoped let inside its block before the declaration line."
+        ]
+      },
+      "keyTakeaways": [
+        "The TDZ prevents accessing let/const variables before they're initialized.",
+        "This is a safety feature that catches bugs early — use it to your advantage.",
+        "var doesn't have a TDZ — it starts as <code>undefined</code>, which can hide bugs.",
+        "Always declare variables at the top of their scope to avoid TDZ errors."
+      ],
+      "challenge": "Explain the TDZ to a beginner using a real-world analogy (e.g., a gift box that hasn't been opened yet)."
+    }
+  ]
+}

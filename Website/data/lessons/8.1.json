@@ -1,0 +1,190 @@
+{
+  "topicId": "8.1",
+  "topicTitle": "V8 Engine Architecture: AST, Ignition & TurboFan",
+  "lessons": [
+    {
+      "id": "8.1.1",
+      "title": "Source Code Parsing & Abstract Syntax Tree (AST) Generation",
+      "description": "V8 first parses your JavaScript into a tree structure — the AST — before executing anything.",
+      "sections": [
+        {
+          "heading": "How parsing works",
+          "paragraphs": ["When V8 receives your JavaScript code, the first step is parsing: it reads the source code and builds an Abstract Syntax Tree (AST). The AST is a structured representation of your code that the engine can understand and optimize."],
+          "list": [
+            "<b>Lexical analysis</b> — tokenizes the source into keywords, identifiers and operators",
+            "<b>Syntactic analysis</b> — organizes tokens into a tree structure (AST)",
+            "The AST represents the code's structure without syntax details",
+            "Parsing happens before any code executes"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "AST representation",
+          "file": "Conceptual",
+          "language": "JavaScript",
+          "code": "// Source code:\nlet x = 2 + 3;\n\n// AST structure (simplified):\n// VariableDeclaration\n//   name: \"x\"\n//   init: BinaryExpression\n//     operator: \"+\"\n//     left: NumericLiteral(2)\n//     right: NumericLiteral(3)",
+          "explanation": [
+            "The parser converts human-readable code into a structured tree.",
+            "Each node in the tree represents a code construct: declaration, expression, etc.",
+            "The AST is the bridge between source code and the engine's execution.",
+            "Parsing is fast — V8 uses lazy parsing for functions not yet called."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use an online AST explorer (astexplorer.net) to visualize the AST for a simple function. Identify the different node types.",
+        "hints": [
+          "Go to astexplorer.net and select JavaScript.",
+          "Type a function: <code>function add(a, b) { return a + b; }</code>.",
+          "Explore the tree structure and node types."
+        ]
+      },
+      "keyTakeaways": [
+        "V8 parses source code into an Abstract Syntax Tree (AST) before execution.",
+        "Lexical analysis tokenizes the code; syntactic analysis builds the tree.",
+        "The AST is a structured representation that the engine can optimize.",
+        "Lazy parsing skips parsing functions until they're actually called."
+      ],
+      "challenge": "Compare the AST for <code>let x = 1</code> vs <code>const x = 1</code> and explain the differences."
+    },
+    {
+      "id": "8.1.2",
+      "title": "Ignition Interpreter Bytecode Compilation",
+      "description": "V8's Ignition interpreter converts the AST into compact bytecode for fast initial execution.",
+      "sections": [
+        {
+          "heading": "The Ignition interpreter",
+          "paragraphs": ["After parsing, V8's Ignition interpreter compiles the AST into bytecode — a compact, machine-efficient representation. This bytecode runs immediately without waiting for full optimization."],
+          "list": [
+            "AST → bytecode compilation is fast",
+            "Bytecode is more compact than machine code",
+            "Ignition interprets bytecode using a register-based architecture",
+            "Collects type feedback during execution for optimization"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Bytecode interpretation",
+          "file": "Conceptual",
+          "language": "JavaScript",
+          "code": "// Source: let x = 2 + 3;\n// Ignition bytecode (simplified):\n// Star r0, 2        // Load 2 into register 0\n// Star r1, 3        // Load 3 into register 1\n// Add r0, r0, r1    // r0 = r0 + r1\n// Star r2, r0       // Store result in r2 (x)",
+          "explanation": [
+            "Ignition compiles AST to register-based bytecode.",
+            "Bytecode executes quickly on the register machine.",
+            "While executing, Ignition collects type information (feedback).",
+            "This feedback tells TurboFan what types to optimize for."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Explain why V8 uses bytecode instead of compiling directly to machine code. What are the tradeoffs?",
+        "hints": [
+          "Consider startup time vs execution speed.",
+          "Bytecode compiles faster than machine code.",
+          "Type feedback during execution helps optimize later."
+        ]
+      },
+      "keyTakeaways": [
+        "Ignition compiles AST to compact bytecode for fast startup.",
+        "Bytecode executes immediately — no waiting for full compilation.",
+        "Type feedback collected during execution guides optimization.",
+        "This two-tier approach balances startup speed with execution performance."
+      ],
+      "challenge": "Use <code>--print-bytecode</code> flag in Node.js to see the actual bytecode V8 generates for a simple function."
+    },
+    {
+      "id": "8.1.3",
+      "title": "TurboFan JIT Optimizing Compiler & Inline Caching (IC)",
+      "description": "TurboFan compiles hot functions to optimized machine code for maximum performance.",
+      "sections": [
+        {
+          "heading": "How TurboFan optimizes",
+          "list": [
+            "Identifies 'hot' functions (frequently called)",
+            "Uses type feedback from Ignition to generate optimized machine code",
+            "Inline caching (IC) speeds up property lookups",
+            "Speculative optimization assumes types stay consistent",
+            "Deoptimization occurs if assumptions are violated"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "TurboFan optimization and deoptimization",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// TurboFan optimizes this (consistent types)\nfunction add(a, b) {\n  return a + b;\n}\n\n// Called many times with numbers → optimized\nfor (let i = 0; i < 10000; i++) {\n  add(i, i + 1);  // TurboFan: \"both args are integers\"\n}\n\n// Now call with strings → DEOPTIMIZATION!\nadd(\"hello\", \"world\");  // TurboFan: \"wrong types!\"\n// Engine falls back to Ignition bytecode",
+          "explanation": [
+            "TurboFan monitors type feedback from Ignition execution.",
+            "When a function is called repeatedly with the same types, TurboFan optimizes.",
+            "It generates machine code assuming specific types.",
+            "If types change unexpectedly, it deoptimizes back to bytecode."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a function that's called 10000 times with numbers, then once with a string. Explain what happens to V8's optimization at each step.",
+        "hints": [
+          "First 10000 calls: V8 collects type feedback (numbers).",
+          "TurboFan optimizes: generates integer-specific machine code.",
+          "String call: deoptimization — falls back to bytecode."
+        ]
+      },
+      "keyTakeaways": [
+        "TurboFan compiles hot functions to optimized machine code.",
+        "Inline caching speeds up repeated property lookups.",
+        "Speculative optimization assumes types stay consistent.",
+        "Deoptimization occurs when assumptions are violated — the engine falls back to bytecode."
+      ],
+      "challenge": "Explain why keeping function argument types consistent is important for V8 performance."
+    },
+    {
+      "id": "8.1.4",
+      "title": "Identifying Engine De-optimization Anti-Patterns",
+      "description": "Avoid coding patterns that cause V8 to deoptimize your code — maintain consistent types for peak performance.",
+      "sections": [
+        {
+          "heading": "Common de-optimization patterns",
+          "list": [
+            "Changing an object's shape (adding/removing properties dynamically)",
+            "Mixing types in arrays (numbers then strings)",
+            "Using arguments object instead of rest parameters",
+            "try-catch in hot functions (older V8 versions)",
+            "eval() and with statements prevent optimization entirely"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Anti-patterns to avoid",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ Changing object shape\nlet obj = { x: 1 };\nobj.y = 2;  // new shape → deoptimization\n\n// ❌ Mixed-type arrays\nlet arr = [1, 2, 3];\narr.push(\"four\");  // now mixed types\n\n// ✅ Consistent types\nlet arr2 = [1, 2, 3];\narr2.push(4);  // still all numbers ✓\n\n// ✅ Consistent object shape\nlet obj2 = { x: 1, y: undefined };\nobj2.y = 2;  // same shape ✓",
+          "explanation": [
+            "V8 optimizes based on object 'shapes' — the structure of properties.",
+            "Adding new properties changes the shape and triggers deoptimization.",
+            "Mixed-type arrays prevent V8 from using optimized numeric representations.",
+            "Define all properties upfront to maintain consistent shapes."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Identify 3 de-optimization patterns in a codebase and refactor them to maintain consistent types and shapes.",
+        "hints": [
+          "Look for dynamic property addition on objects.",
+          "Check for mixed-type arrays.",
+          "Find try-catch blocks inside frequently-called functions."
+        ]
+      },
+      "keyTakeaways": [
+        "V8 deoptimizes when it encounters unexpected types or object shapes.",
+        "Keep object shapes consistent — define all properties upfront.",
+        "Keep array types uniform — don't mix numbers and strings.",
+        "Avoid eval(), with statements and the arguments object in hot paths."
+      ],
+      "challenge": "Profile a small application using Chrome DevTools Performance panel and identify de-optimization events."
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "topicId": "4.1",
+  "topicTitle": "How Code Executes: Call Stack & Execution Context",
+  "lessons": [
+    {
+      "id": "4.1.1",
+      "title": "Creation Phase vs Execution Phase in JavaScript Engines",
+      "description": "JavaScript doesn't just run code line by line — it first scans for declarations before executing anything.",
+      "sections": [
+        {
+          "heading": "Two distinct phases",
+          "paragraphs": ["When JavaScript runs your code, it goes through two phases before any code actually executes. Understanding this explains why some things work even before they're defined."],
+          "list": [
+            "<b>Creation phase</b> — the engine scans for declarations (variables, functions) and sets up memory",
+            "<b>Execution phase</b> — the engine runs the code line by line",
+            "Functions are fully stored during creation — variables get <code>undefined</code>",
+            "This is why you can call a function before its declaration but not read a variable"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Function hoisting in action",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Works! Function declarations are hoisted\nsayHello();  // \"Hello!\"\n\nfunction sayHello() {\n  console.log(\"Hello!\");\n}\n\n// Does NOT work: let/const are in TDZ\n// console.log(x);  // ReferenceError!\nlet x = 5;",
+          "explanation": [
+            "During creation, the engine stores the function body — so it's available before the line.",
+            "Variables declared with let/const are created but not initialized — reading them throws an error.",
+            "This two-phase behavior is the engine's way of preparing memory before running code."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write code that calls a function before it's declared. Then try the same with a variable declared with let and observe the different behavior.",
+        "hints": [
+          "Define a function declaration and call it above the definition.",
+          "Define a let variable and try to log it above the declaration.",
+          "Note the function works but the variable throws an error."
+        ]
+      },
+      "keyTakeaways": [
+        "JavaScript has a creation phase (memory setup) and an execution phase (line-by-line running).",
+        "Function declarations are fully hoisted — you can call them before they appear in the code.",
+        "Variables with let/const are in the Temporal Dead Zone during creation — reading them early throws an error.",
+        "Understanding these phases explains seemingly strange JavaScript behavior."
+      ],
+      "challenge": "Explain why <code>typeof</code> works on undeclared variables but <code>console.log</code> doesn't."
+    },
+    {
+      "id": "4.1.2",
+      "title": "Global Execution Context vs Function Execution Context",
+      "description": "Every piece of JavaScript runs inside an execution context — global or function.",
+      "sections": [
+        {
+          "heading": "What is an execution context?",
+          "paragraphs": ["An execution context is like a box that holds everything needed to run a piece of code: the variables, the scope, and the <code>this</code> value. There are three types."],
+          "list": [
+            "<b>Global execution context</b> — created when the script starts; one per program",
+            "<b>Function execution context</b> — created each time a function is called",
+            "<b>Eval execution context</b> — created inside eval() (avoid using eval)",
+            "Each context has its own variable environment and scope chain"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "How contexts are created",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Global context\nlet globalVar = \"I'm global\";\n\nfunction outer() {\n  let outerVar = \"I'm in outer\";\n\n  function inner() {\n    let innerVar = \"I'm in inner\";\n    console.log(globalVar);  // ✓ accessible\n    console.log(outerVar);   // ✓ accessible\n    console.log(innerVar);   // ✓ accessible\n  }\n\n  inner();\n  // inner's context is destroyed after this line\n}\n\nouter();\n// outer's context is destroyed after this line",
+          "explanation": [
+            "The global context runs first — creating <code>globalVar</code> and the functions.",
+            "Calling <code>outer()</code> creates a new execution context for that function.",
+            "Calling <code>inner()</code> inside outer creates a third context.",
+            "When each function returns, its context is destroyed and its local variables are freed."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a nested function structure with 3 levels. Log a variable from each level inside the innermost function to see how context nesting works.",
+        "hints": [
+          "Create global, outer and inner functions with variables at each level.",
+          "Call the inner function from outer, and outer from global.",
+          "Inside inner, log variables from all three levels."
+        ]
+      },
+      "keyTakeaways": [
+        "The global execution context is created once when the script starts.",
+        "A new function execution context is created every time a function is called.",
+        "Inner functions can access variables from outer contexts (scope chain).",
+        "Execution contexts are destroyed when the function finishes executing."
+      ],
+      "challenge": "Trace the execution context creation order for a program with a global variable, a function call, and a nested function call."
+    },
+    {
+      "id": "4.1.3",
+      "title": "Stack Frames & Call Stack Execution Tracing",
+      "description": "JavaScript uses a call stack to track which function is currently running and in what order.",
+      "sections": [
+        {
+          "heading": "The call stack",
+          "paragraphs": ["The call stack is a data structure that tracks function calls. Each time a function is called, a new frame is pushed on top. When it returns, the frame is popped off."],
+          "list": [
+            "Stacks are LIFO — Last In, First Out",
+            "The function on top is the one currently executing",
+            "When a function calls another, a new frame is added on top",
+            "When a function returns, its frame is removed"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Tracing the call stack",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function first() {\n  console.log(\"first start\");\n  second();\n  console.log(\"first end\");\n}\n\nfunction second() {\n  console.log(\"second start\");\n  third();\n  console.log(\"second end\");\n}\n\nfunction third() {\n  console.log(\"third\");\n}\n\nfirst();\n// Output:\n// first start\n// second start\n// third\n// second end\n// first end",
+          "explanation": [
+            "<code>first()</code> is pushed onto the stack and starts executing.",
+            "It calls <code>second()</code> — pushed on top of first.",
+            "<code>second()</code> calls <code>third()</code> — pushed on top.",
+            "When <code>third()</code> returns, it's popped. Then second returns, then first."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create three functions where A calls B and B calls C. Log a message at the start and end of each function. Predict and verify the output order.",
+        "hints": [
+          "Log \"A start\" then call B, then log \"A end\".",
+          "Do the same for B calling C.",
+          "The output should nest: A start → B start → C → B end → A end."
+        ]
+      },
+      "keyTakeaways": [
+        "The call stack tracks function execution using LIFO order (Last In, First Out).",
+        "Each function call pushes a new frame onto the stack.",
+        "When a function returns, its frame is popped and execution resumes in the caller.",
+        "The output of nested function calls reveals the stack's LIFO behavior."
+      ],
+      "challenge": "Use <code>console.trace()</code> inside a deeply nested function to see the actual call stack printed in the console."
+    },
+    {
+      "id": "4.1.4",
+      "title": "Stack Overflow Errors & Recursion Limits",
+      "description": "Infinite or deep recursion fills the call stack until it overflows — understand how to avoid it.",
+      "sections": [
+        {
+          "heading": "What causes a stack overflow?",
+          "paragraphs": ["Every call stack has a fixed size. If a function keeps calling itself without stopping, the stack grows until it exceeds the limit and throws a <b>RangeError: Maximum call stack size exceeded</b>."],
+          "list": [
+            "Infinite recursion: a function that calls itself without a base case",
+            "Deep recursion: a function calling itself thousands of times",
+            "The limit varies by browser but is usually around 10,000–25,000 frames",
+            "Stack overflow crashes the current script execution"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Stack overflow and base cases",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ Infinite recursion — causes stack overflow\nfunction countDown(n) {\n  console.log(n);\n  countDown(n - 1);  // no stopping condition!\n}\n// countDown(5);  // RangeError!\n\n// ✅ Correct: with a base case\nfunction countDownSafe(n) {\n  if (n <= 0) return;  // base case stops recursion\n  console.log(n);\n  countDownSafe(n - 1);\n}\ncountDownSafe(5);  // 5, 4, 3, 2, 1",
+          "explanation": [
+            "The first function never stops calling itself — the stack grows infinitely.",
+            "The second function checks <code>n <= 0</code> before recursing — this is the base case.",
+            "Every recursive function needs a base case to prevent stack overflow.",
+            "Think of it as: \"When should I stop?\" — that's your base case."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a recursive function that calculates factorial (n!). Include a base case for n = 0 or n = 1. Test with n = 5 and n = 10.",
+        "hints": [
+          "Base case: <code>if (n <= 1) return 1</code>.",
+          "Recursive case: <code>return n * factorial(n - 1)</code>.",
+          "factorial(5) = 5 × 4 × 3 × 2 × 1 = 120."
+        ]
+      },
+      "keyTakeaways": [
+        "The call stack has a fixed size — infinite recursion causes a stack overflow.",
+        "Every recursive function needs a <b>base case</b> to stop calling itself.",
+        "Stack overflow throws a RangeError and crashes the current script.",
+        "When debugging recursion, always verify the base case is reachable."
+      ],
+      "challenge": "Write a recursive function that flattens a nested array. Include a base case for non-array elements and test with arrays nested 3+ levels deep."
+    }
+  ]
+}

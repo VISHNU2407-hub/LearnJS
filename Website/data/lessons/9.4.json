@@ -1,0 +1,144 @@
+{
+  "topicId": "9.4",
+  "topicTitle": "End-to-End Automation with Playwright",
+  "lessons": [
+    {
+      "id": "9.4.1",
+      "title": "E2E Test Suite Setup with Playwright",
+      "description": "Playwright automates real browsers to test your application end-to-end — from click to network to assertion.",
+      "sections": [
+        {
+          "heading": "What is Playwright?",
+          "paragraphs": ["Playwright is a browser automation framework that tests your application in real browsers. It simulates user interactions and verifies the complete user experience."],
+          "list": [
+            "Automates Chromium, Firefox and WebKit",
+            "Auto-waits for elements — no manual waits or sleeps",
+            "Built-in assertions and test generators",
+            "Runs headless (CI) or headed (debugging)"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Playwright test setup",
+          "file": "tests/app.spec.js",
+          "language": "JavaScript",
+          "code": "import { test, expect } from \"@playwright/test\";\n\ntest(\"homepage loads correctly\", async ({ page }) => {\n  await page.goto(\"http://localhost:3000\");\n  await expect(page).toHaveTitle(\"My App\");\n  await expect(page.locator(\"h1\")).toContainText(\"Welcome\");\n});\n\ntest(\"user can login\", async ({ page }) => {\n  await page.goto(\"http://localhost:3000/login\");\n  await page.fill(\"#email\", \"test@example.com\");\n  await page.fill(\"#password\", \"password123\");\n  await page.click(\"button[type=submit]\");\n  await expect(page).toHaveURL(\"/dashboard\");\n});",
+          "explanation": [
+            "page.goto() navigates to the URL.",
+            "page.fill() types into input fields.",
+            "page.click() clicks elements.",
+            "expect() with page matchers verifies the state.",
+            "Auto-waiting means Playwright waits for elements before interacting."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a Playwright test that navigates to a page, fills a form and submits it. Verify the result appears on the page.",
+        "hints": [
+          "Use <code>page.goto()</code> to navigate.",
+          "Fill inputs with <code>page.fill(\"selector\", value)</code>.",
+          "Submit with <code>page.click(\"button\")</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Playwright tests run in real browsers — testing the complete user experience.",
+        "Auto-waiting eliminates flaky tests from timing issues.",
+        "Use page methods for navigation, interaction and assertions.",
+        "Tests run headless in CI and headed for debugging."
+      ],
+      "challenge": "Write a test that logs in, navigates to a dashboard, and verifies the user's name appears."
+    },
+    {
+      "id": "9.4.2",
+      "title": "Page Navigation, Input Automation & Auto-Waiting Selectors",
+      "description": "Master Playwright's interaction methods — navigation, form filling, clicking and automatic waiting.",
+      "sections": [
+        {
+          "heading": "Core Playwright APIs",
+          "list": [
+            "<code>page.goto(url)</code> — navigate to a URL",
+            "<code>page.fill(selector, value)</code> — type into an input",
+            "<code>page.click(selector)</code> — click an element",
+            "<code>page.textContent(selector)</code> — read element text",
+            "<code>page.waitForSelector(selector)</code> — wait for element to appear"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Complete interaction test",
+          "file": "tests/interactions.spec.js",
+          "language": "JavaScript",
+          "code": "test(\"complete user flow\", async ({ page }) => {\n  // Navigate\n  await page.goto(\"/products\");\n\n  // Search\n  await page.fill(\"#search\", \"laptop\");\n  await page.click(\"#search-btn\");\n\n  // Wait for results\n  await page.waitForSelector(\".product-card\");\n\n  // Click first product\n  await page.click(\".product-card:first-child\");\n\n  // Add to cart\n  await page.click(\"#add-to-cart\");\n\n  // Verify cart count\n  await expect(page.locator(\"#cart-count\")).toHaveText(\"1\");\n\n  // Take a screenshot\n  await page.screenshot({ path: \"cart.png\" });\n});",
+          "explanation": [
+            "Each interaction waits for the element to be ready before acting.",
+            "waitForSelector explicitly waits for dynamic content.",
+            "Locator syntax supports CSS selectors, text and roles.",
+            "Screenshots capture the state for debugging."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a test that searches for a product, adds it to the cart and verifies the cart total updates correctly.",
+        "hints": [
+          "Fill the search input and click search.",
+          "Click the first result's add-to-cart button.",
+          "Assert the cart total contains the expected price."
+        ]
+      },
+      "keyTakeaways": [
+        "Playwright auto-waits for elements before interacting — no manual waits.",
+        "fill() clears the input first, then types the value.",
+        "waitForSelector() explicitly waits for dynamic content.",
+        "Screenshots capture page state for debugging failed tests."
+      ],
+      "challenge": "Test a multi-step form wizard from start to finish, verifying each step's validation."
+    },
+    {
+      "id": "9.4.3",
+      "title": "Integrating E2E Automation into CI/CD Pipelines",
+      "description": "Run Playwright tests automatically in your CI/CD pipeline — catch regressions before they reach production.",
+      "sections": [
+        {
+          "heading": "CI/CD integration",
+          "list": [
+            "Playwright runs in headless mode in CI environments",
+            "Install browsers in CI with <code>npx playwright install --with-deps</code>",
+            "Generate HTML reports for test results",
+            "Parallel execution for faster CI runs"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "GitHub Actions CI setup",
+          "file": ".github/workflows/test.yml",
+          "language": "YAML",
+          "code": "name: E2E Tests\non: [push, pull_request]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 20\n      - run: npm ci\n      - run: npx playwright install --with-deps\n      - run: npm run build\n      - run: npm run test:e2e\n      - uses: actions/upload-artifact@v4\n        if: always()\n        with:\n          name: playwright-report\n          path: playwright-report/",
+          "explanation": [
+            "GitHub Actions runs Playwright tests on every push and PR.",
+            "install --with-deps installs browser binaries in CI.",
+            "Upload the HTML report as an artifact for debugging failures.",
+            "Tests run headless by default — no display needed."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Set up a GitHub Actions workflow that runs Playwright tests on every push.",
+        "hints": [
+          "Create <code>.github/workflows/test.yml</code>.",
+          "Use actions/checkout, setup-node and playwright install.",
+          "Run <code>npx playwright test</code> as the test step."
+        ]
+      },
+      "keyTakeaways": [
+        "Playwright runs headless in CI — no display server needed.",
+        "Always install browsers with <code>--with-deps</code> in CI.",
+        "Upload test reports as artifacts for debugging failures.",
+        "Run E2E tests on every push and PR to catch regressions early."
+      ],
+      "challenge": "Set up a complete CI pipeline with unit tests, linting and E2E tests running in parallel."
+    }
+  ]
+}

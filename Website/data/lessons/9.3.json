@@ -1,0 +1,144 @@
+{
+  "topicId": "9.3",
+  "topicTitle": "Advanced Test Isolation: Mocks, Spies & MSW",
+  "lessons": [
+    {
+      "id": "9.3.1",
+      "title": "Mocking Functions & Modules (vi.fn, vi.mock)",
+      "description": "Replace real dependencies with controlled fakes to test code in isolation.",
+      "sections": [
+        {
+          "heading": "Why mock?",
+          "paragraphs": ["Unit tests should test your code, not its dependencies. Mocks replace external services, APIs and modules with controlled fakes that behave predictably."],
+          "list": [
+            "<code>vi.fn()</code> — creates a mock function you can configure",
+            "<code>vi.mock(\"module\")</code> — replaces an entire module",
+            "Mock functions track calls, arguments and return values",
+            "Essential for testing code with side effects"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Mocking functions and modules",
+          "file": "test.js",
+          "language": "JavaScript",
+          "code": "import { test, expect, vi } from \"vitest\";\n\n// Mock a function\nlet mockFn = vi.fn();\nmockFn(\"hello\");\nexpect(mockFn).toHaveBeenCalledWith(\"hello\");\nexpect(mockFn).toHaveBeenCalledTimes(1);\n\n// Configure mock behavior\nmockFn.mockReturnValue(42);\nconsole.log(mockFn());  // 42\n\n// Mock an entire module\nvi.mock(\"./api.js\", () => ({\n  fetchUser: vi.fn().mockResolvedValue({ id: 1, name: \"Test\" })\n}));\n\nimport { fetchUser } from \"./api.js\";\ntest(\"fetchUser returns test user\", async () => {\n  let user = await fetchUser(1);\n  expect(user.name).toBe(\"Test\");\n});",
+          "explanation": [
+            "vi.fn() creates a function that tracks calls and arguments.",
+            "mockReturnValue/configure return values for testing.",
+            "vi.mock() replaces entire modules with controlled fakes.",
+            "This ensures tests are isolated and predictable."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Mock a fetch function and test a function that calls it. Verify the mock was called with the correct arguments.",
+        "hints": [
+          "Create: <code>vi.fn().mockResolvedValue({ ok: true, json: () => ({}) })</code>.",
+          "Pass the mock to your function.",
+          "Assert: <code>expect(mockFetch).toHaveBeenCalledWith(expectedUrl)</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Mocks replace real dependencies with controlled fakes.",
+        "vi.fn() creates trackable mock functions.",
+        "vi.mock() replaces entire modules for isolated testing.",
+        "Always assert that mocks were called with expected arguments."
+      ],
+      "challenge": "Test a payment processing function by mocking the payment gateway, email service and database."
+    },
+    {
+      "id": "9.3.2",
+      "title": "Spying on Methods (vi.spyOn) & Manipulating Timers",
+      "description": "Observe method calls without replacing them, and control time in tests for predictable results.",
+      "sections": [
+        {
+          "heading": "Spies and fake timers",
+          "list": [
+            "<code>vi.spyOn(obj, \"method\")</code> — watches calls without replacing the method",
+            "<code>vi.useFakeTimers()</code> — controls setTimeout/setInterval in tests",
+            "<code>vi.advanceTimersByTime(ms)</code> — fast-forward time instantly",
+            "Essential for testing time-dependent code"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Spies and fake timers",
+          "file": "test.js",
+          "language": "JavaScript",
+          "code": "// Spy on a method\nlet user = { name: \"Alex\", greet() { return \"Hi!\"; } };\nlet spy = vi.spyOn(user, \"greet\");\nuser.greet();\nexpect(spy).toHaveBeenCalled();\nspy.mockRestore();  // restore original method\n\n// Fake timers\nvi.useFakeTimers();\n\nlet callback = vi.fn();\nsetTimeout(callback, 1000);\n\nvi.advanceTimersByTime(1000);\nexpect(callback).toHaveBeenCalled();  // true!\n\nvi.useRealTimers();",
+          "explanation": [
+            "Spies observe method calls without changing behavior.",
+            "Fake timers let you fast-forward time in tests.",
+            "advanceTimersByTime() runs all timers scheduled within that period.",
+            "Always restore real timers after using fake ones."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Test a debounce function using fake timers. Verify it waits the specified delay before calling the callback.",
+        "hints": [
+          "Use <code>vi.useFakeTimers()</code> before the test.",
+          "Call the debounced function.",
+          "Advance time: <code>vi.advanceTimersByTime(300)</code>.",
+          "Assert the callback was called."
+        ]
+      },
+      "keyTakeaways": [
+        "Spies observe method calls without replacing the original behavior.",
+        "Fake timers let you control time in tests — no real waiting.",
+        "advanceTimersByTime() fast-forwards all pending timers.",
+        "Always restore real timers and spies after each test."
+      ],
+      "challenge": "Test an interval that increments a counter every second — verify 10 increments after advancing 10 seconds."
+    },
+    {
+      "id": "9.3.3",
+      "title": "Intercepting Network Requests via Mock Service Worker (MSW)",
+      "description": "Intercept real network requests at the network level — no code changes needed in your application.",
+      "sections": [
+        {
+          "heading": "What is MSW?",
+          "paragraphs": ["Mock Service Worker intercepts requests at the network level using a Service Worker. Your application makes real fetch calls — MSW intercepts them and returns fake responses."],
+          "list": [
+            "Intercepts requests at the network level — no code changes needed",
+            "Works in both browser and Node.js",
+            "Define request handlers for specific URLs and methods",
+            "Supports JSON, images, errors and delayed responses"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "MSW setup and handlers",
+          "file": "mocks/handlers.js",
+          "language": "JavaScript",
+          "code": "import { http, HttpResponse } from \"msw\";\n\nexport const handlers = [\n  http.get(\"/api/users\", () => {\n    return HttpResponse.json([\n      { id: 1, name: \"Alex\" },\n      { id: 2, name: \"Sam\" }\n    ]);\n  }),\n\n  http.get(\"/api/users/:id\", ({ params }) => {\n    return HttpResponse.json({ id: params.id, name: \"User\" });\n  }),\n\n  http.post(\"/api/users\", async ({ request }) => {\n    let body = await request.json();\n    return HttpResponse.json({ id: 3, ...body }, { status: 201 });\n  })\n];",
+          "explanation": [
+            "MSW intercepts fetch requests before they leave the browser.",
+            "Handlers match URL patterns and return fake responses.",
+            "Your application code doesn't change — MSW works transparently.",
+            "Supports all HTTP methods and status codes."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Set up MSW to intercept a fetch call and return mock data. Test that your application displays the mocked data correctly.",
+        "hints": [
+          "Install: <code>npm install -D msw</code>.",
+          "Define handlers for your API endpoints.",
+          "Start MSW in your test setup or browser."
+        ]
+      },
+      "keyTakeaways": [
+        "MSW intercepts network requests at the network level — no code changes needed.",
+        "Define handlers for specific URL patterns and HTTP methods.",
+        "Works transparently — your application makes real fetch calls.",
+        "Perfect for testing API-dependent code without hitting real servers."
+      ],
+      "challenge": "Build a complete test suite for a data-fetching component using MSW to mock all API endpoints."
+    }
+  ]
+}

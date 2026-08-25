@@ -1,0 +1,165 @@
+{
+  "topicId": "3.4",
+  "topicTitle": "Event Propagation: Bubbling, Capturing & Delegation",
+  "lessons": [
+    {
+      "id": "3.4.1",
+      "title": "Understanding Event Propagation: Capturing vs Bubbling",
+      "description": "Events travel through the DOM in two phases — understand how and why they propagate.",
+      "sections": [
+        {
+          "heading": "The three phases of event propagation",
+          "paragraphs": ["When you click an element, the event doesn't just fire on that element — it travels through the entire DOM tree. Understanding these phases prevents confusing bugs."],
+          "list": [
+            "<b>Capturing phase</b> — the event travels down from the document root to the target element",
+            "<b>Target phase</b> — the event reaches the element you actually clicked",
+            "<b>Bubbling phase</b> — the event travels back up from the target to the document root",
+            "By default, listeners fire during the <b>bubbling</b> phase"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Bubbling in action",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let outer = document.querySelector(\".outer\");\nlet inner = document.querySelector(\".inner\");\n\nouter.addEventListener(\"click\", () => {\n  console.log(\"Outer clicked\");\n});\n\ninner.addEventListener(\"click\", () => {\n  console.log(\"Inner clicked\");\n});\n\n// Click on .inner:\n// → \"Inner clicked\"\n// → \"Outer clicked\" (event bubbles up!)",
+          "explanation": [
+            "Clicking the inner element fires the click event on it first.",
+            "Then the event bubbles up to the parent, firing its listener too.",
+            "This is why both messages appear — the parent's listener also catches the event."
+          ]
+        },
+        {
+          "heading": "Capturing phase listeners",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let outer = document.querySelector(\".outer\");\nlet inner = document.querySelector(\".inner\");\n\n// Third argument = true → capturing phase\nouter.addEventListener(\"click\", () => {\n  console.log(\"Outer captured\");\n}, true);\n\ninner.addEventListener(\"click\", () => {\n  console.log(\"Inner clicked\");\n});\n\n// Click on .inner:\n// → \"Outer captured\" (capturing goes down first)\n// → \"Inner clicked\" (target reached)",
+          "explanation": [
+            "Pass <code>true</code> as the third argument to listen during the capturing phase.",
+            "Capturing fires top-down: parent before child.",
+            "Bubbling fires bottom-up: child before parent.",
+            "Almost all code uses bubbling — capturing is rarely needed."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a nested <code>div</code> structure (grandparent → parent → child). Add click listeners to all three. Click the innermost div and observe the order of log messages to see bubbling in action.",
+        "hints": [
+          "Create three nested divs with different classes.",
+          "Add click listeners to each div.",
+          "Click the innermost div and note the console output order."
+        ]
+      },
+      "keyTakeaways": [
+        "Events propagate in three phases: capturing (down), target, then bubbling (up).",
+        "By default, event listeners fire during the bubbling phase.",
+        "Bubbling causes parent elements to receive events from their children.",
+        "Pass <code>true</code> as the third argument to listen during the capturing phase."
+      ],
+      "challenge": "Add both capturing and bubbling listeners on a parent and child. Log the phase in each handler to see the exact order events fire."
+    },
+    {
+      "id": "3.4.2",
+      "title": "Stopping Event Propagation (stopPropagation)",
+      "description": "Use stopPropagation() to prevent an event from reaching parent or child elements.",
+      "sections": [
+        {
+          "heading": "When bubbling causes problems",
+          "paragraphs": ["Sometimes you don't want an event to bubble up. For example, a modal overlay might have its own click handler, but clicking inside the modal content should not trigger the overlay's close handler."],
+          "list": [
+            "<code>event.stopPropagation()</code> — stops the event from bubbling further",
+            "<code>event.stopImmediatePropagation()</code> — stops all remaining listeners on the same element",
+            "Use sparingly — it can break other code that relies on bubbling"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Using stopPropagation",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let outer = document.querySelector(\".outer\");\nlet inner = document.querySelector(\".inner\");\n\nouter.addEventListener(\"click\", () => {\n  console.log(\"Outer clicked\");\n});\n\ninner.addEventListener(\"click\", (e) => {\n  e.stopPropagation();\n  console.log(\"Inner clicked — stopped!\");\n});\n\n// Click on .inner:\n// → \"Inner clicked — stopped!\" (no bubbling to outer)",
+          "explanation": [
+            "<code>stopPropagation()</code> prevents the event from reaching parent elements.",
+            "The inner handler fires normally, but the outer handler never gets called.",
+            "The event is stopped at the point where <code>stopPropagation()</code> is called."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a parent and child div with click listeners. Add stopPropagation to the child's listener so clicking the child doesn't trigger the parent's handler.",
+        "hints": [
+          "In the child's handler: <code>e.stopPropagation()</code>.",
+          "Click the child — only the child's message should appear.",
+          "Click the parent — the parent's message should still work."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>stopPropagation()</code> prevents the event from reaching parent elements.",
+        "It stops the event at the current handler — earlier handlers in the same phase still fire.",
+        "Use it only when bubbling would cause unintended side effects.",
+        "<code>stopImmediatePropagation()</code> also prevents other listeners on the same element from firing."
+      ],
+      "challenge": "Build a modal that closes when you click the backdrop, but stays open when you click inside the modal content. Use stopPropagation on the content."
+    },
+    {
+      "id": "3.4.3",
+      "title": "Implementing the Event Delegation Pattern for Dynamic Lists",
+      "description": "Attach one listener to a parent instead of many listeners to children — essential for dynamic content.",
+      "sections": [
+        {
+          "heading": "Why event delegation?",
+          "paragraphs": ["If you have a list with 100 items, adding a click listener to each one is inefficient. Worse, if you add new items dynamically, they won't have listeners. Event delegation solves both problems by using a single listener on the parent."],
+          "list": [
+            "Attach one listener to a parent element",
+            "Use <code>e.target</code> to detect which child was clicked",
+            "New dynamically-added children are automatically handled",
+            "Uses event bubbling — the parent receives all child events"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Delegating click events on a list",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ONE listener on the parent handles ALL items\ndocument.querySelector(\"ul\").addEventListener(\"click\", (e) => {\n  if (e.target.tagName === \"LI\") {\n    console.log(\"Clicked: \" + e.target.textContent);\n    e.target.classList.toggle(\"selected\");\n  }\n});\n\n// Dynamically added items work automatically!\nlet newItem = document.createElement(\"li\");\nnewItem.textContent = \"New item\";\ndocument.querySelector(\"ul\").appendChild(newItem);\n// Clicking the new item triggers the same handler",
+          "explanation": [
+            "One listener on the <code>&lt;ul&gt;</code> handles clicks on all <code>&lt;li&gt;</code> elements.",
+            "<code>e.target</code> identifies which specific <code>&lt;li&gt;</code> was clicked.",
+            "No need to add listeners to each item — even dynamically created ones work.",
+            "This is the standard pattern for handling events on lists and tables."
+          ]
+        },
+        {
+          "heading": "Delegation with data attributes",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// HTML: <div id=\"menu\">\n//   <button data-action=\"save\">Save</button>\n//   <button data-action=\"delete\">Delete</button>\n//   <button data-action=\"cancel\">Cancel</button>\n// </div>\n\ndocument.querySelector(\"#menu\").addEventListener(\"click\", (e) => {\n  let action = e.target.dataset.action;\n  if (!action) return;\n\n  switch (action) {\n    case \"save\": console.log(\"Saving...\"); break;\n    case \"delete\": console.log(\"Deleting...\"); break;\n    case \"cancel\": console.log(\"Cancelling...\"); break;\n  }\n});",
+          "explanation": [
+            "Use <code>data-*</code> attributes to identify what each element should do.",
+            "The switch statement routes to the appropriate action.",
+            "One listener handles the entire menu — clean and maintainable.",
+            "New buttons with <code>data-action</code> are handled automatically."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a to-do list with a \"delete\" button on each item. Use event delegation on the list container instead of adding individual listeners to each button.",
+        "hints": [
+          "Attach the listener to the <code>&lt;ul&gt;</code>, not individual <code>&lt;li&gt;</code> elements.",
+          "Check <code>e.target.classList.contains(\"delete-btn\")</code> inside the handler.",
+          "Use <code>e.target.closest(\"li\").remove()</code> to find and remove the parent item."
+        ]
+      },
+      "keyTakeaways": [
+        "Event delegation uses one parent listener instead of many child listeners.",
+        "Use <code>e.target</code> to identify which child triggered the event.",
+        "Dynamically added elements are handled automatically — no re-attaching listeners.",
+        "Combine with <code>data-*</code> attributes for clean, scalable event handling."
+      ],
+      "challenge": "Build a shopping cart with add/remove buttons for each item. Use event delegation so newly added items work without extra listeners."
+    }
+  ]
+}

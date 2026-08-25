@@ -1,0 +1,152 @@
+{
+  "topicId": "4.3",
+  "topicTitle": "Closures & Encapsulated State",
+  "lessons": [
+    {
+      "id": "4.3.1",
+      "title": "Retaining Lexical Scope via Function Closures",
+      "description": "A closure is a function that remembers the variables from the scope where it was created.",
+      "sections": [
+        {
+          "heading": "What is a closure?",
+          "paragraphs": ["A closure is formed when a function is defined inside another function and the inner function references variables from the outer function's scope. Even after the outer function has returned, the inner function retains access to those variables."],
+          "list": [
+            "A closure = function + its lexical environment",
+            "The inner function 'closes over' the outer variables",
+            "Closures work because functions remember where they were created",
+            "This is not a special syntax — it's a natural consequence of lexical scoping"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Basic closure example",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function createGreeting(greeting) {\n  return function(name) {\n    return greeting + \", \" + name + \"!\";\n  };\n}\n\nlet sayHello = createGreeting(\"Hello\");\nlet sayHi = createGreeting(\"Hi\");\n\nconsole.log(sayHello(\"Alex\"));  // \"Hello, Alex!\"\nconsole.log(sayHi(\"Sam\"));      // \"Hi, Sam!\"\n\n// sayHello still has access to 'greeting' even though\n// createGreeting() has already finished executing!",
+          "explanation": [
+            "<code>createGreeting</code> returns a function that closes over the <code>greeting</code> variable.",
+            "Even after <code>createGreeting</code> returns, the inner function remembers <code>greeting</code>.",
+            "Each call to <code>createGreeting</code> creates a new closure with its own <code>greeting</code> value.",
+            "This is the power of closures — they preserve state across function calls."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a function <code>createMultiplier(factor)</code> that returns a function which multiplies any number by the factor. Test with createMultiplier(2) and createMultiplier(3).",
+        "hints": [
+          "Return a function that takes a number and returns <code>number * factor</code>.",
+          "The factor is captured via closure.",
+          "createMultiplier(2)(5) should return 10."
+        ]
+      },
+      "keyTakeaways": [
+        "A closure is a function that remembers the variables from its creation scope.",
+        "Closures persist even after the outer function has returned.",
+        "Each invocation of the outer function creates a separate closure.",
+        "Closures are the foundation for many JavaScript patterns."
+      ],
+      "challenge": "Write a function <code>createCounter()</code> that returns an object with increment, decrement and getCount methods — all sharing a private count variable via closure."
+    },
+    {
+      "id": "4.3.2",
+      "title": "Data Encapsulation & Simulating Private State",
+      "description": "Use closures to hide variables from the outside world — true private state in JavaScript.",
+      "sections": [
+        {
+          "heading": "Private variables with closures",
+          "paragraphs": ["JavaScript objects don't have built-in private properties. Closures solve this by keeping variables in the outer function's scope — completely inaccessible from outside."],
+          "list": [
+            "Variables in the outer function are invisible to external code",
+            "Only the returned functions can access them",
+            "This creates true encapsulation — controlled access to internal state",
+            "This pattern predates the #private field syntax in classes"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Encapsulated bank account",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function createAccount(initialBalance) {\n  let balance = initialBalance;  // private!\n\n  return {\n    deposit(amount) {\n      if (amount > 0) balance += amount;\n      return balance;\n    },\n    withdraw(amount) {\n      if (amount > 0 && amount <= balance) balance -= amount;\n      return balance;\n    },\n    getBalance() {\n      return balance;\n    }\n  };\n}\n\nlet account = createAccount(100);\nconsole.log(account.getBalance());  // 100\naccount.deposit(50);\nconsole.log(account.getBalance());  // 150\n// account.balance → undefined (can't access directly!)",
+          "explanation": [
+            "<code>balance</code> is trapped in the closure — it's private by design.",
+            "The returned object provides controlled access via methods.",
+            "External code cannot modify <code>balance</code> directly — only through the methods.",
+            "This is true data encapsulation without class syntax."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a <code>createPasswordValidator(minLength)</code> function that returns an object with <code>validate(password)</code> and <code>getMinLength()</code> methods. The minLength should be private.",
+        "hints": [
+          "Store minLength in the outer function scope.",
+          "Return an object with methods that close over minLength.",
+          "The <code>validate</code> method should return true if password.length >= minLength."
+        ]
+      },
+      "keyTakeaways": [
+        "Closures create true private variables — external code cannot access them.",
+        "Returned methods provide controlled access to the encapsulated state.",
+        "This pattern is used for validation, state management, and data protection.",
+        "Modern classes use #private fields, but closures work everywhere including older environments."
+      ],
+      "challenge": "Build a rate limiter using closures: <code>createRateLimiter(maxCalls, timeWindow)</code> that returns a function which tracks calls and throws an error if the limit is exceeded."
+    },
+    {
+      "id": "4.3.3",
+      "title": "Practical Closure Use Cases: Factory Functions & Memoization",
+      "description": "Closures power common patterns — factories that produce customized objects and memoization that caches results.",
+      "sections": [
+        {
+          "heading": "Factory functions",
+          "paragraphs": ["A factory function creates and returns new objects each time it's called. Closures let each object maintain its own private state."],
+          "list": [
+            "Each call creates a fresh set of private variables",
+            "Returned objects are independent of each other",
+            "Useful for creating multiple instances with different configurations"
+          ]
+        },
+        {
+          "heading": "Memoization",
+          "paragraphs": ["Memoization caches the results of expensive function calls. Closures store the cache between calls."],
+          "list": [
+            "The cache lives in the closure — invisible to external code",
+            "Subsequent calls with the same arguments return the cached result",
+            "Huge performance boost for recursive and expensive computations"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Factory function and memoization",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Factory function with private state\nfunction createLogger(prefix) {\n  let count = 0;\n  return function(message) {\n    count++;\n    console.log(`[${prefix} #${count}] ${message}`);\n  };\n}\n\nlet appLog = createLogger(\"APP\");\nlet errLog = createLogger(\"ERR\");\nappLog(\"started\");    // [APP #1] started\nerrLog(\"failed\");     // [ERR #1] failed\nappLog(\"running\");    // [APP #2] running\n\n// Memoization with closure\nfunction memoize(fn) {\n  let cache = {};\n  return function(...args) {\n    let key = JSON.stringify(args);\n    if (cache[key] !== undefined) return cache[key];\n    cache[key] = fn(...args);\n    return cache[key];\n  };\n}\n\nlet slowSquare = memoize(n => n * n);\nconsole.log(slowSquare(5));  // 25 (computed)\nconsole.log(slowSquare(5));  // 25 (cached!)",
+          "explanation": [
+            "Each logger has its own private <code>count</code> variable via closure.",
+            "The memoize function wraps any function with a cache stored in its closure.",
+            "Second call with the same args returns the cached result instantly.",
+            "Both patterns rely on closures to maintain private state."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a memoized version of a factorial function using the memoize pattern. Test it with factorial(10) called twice to verify caching works.",
+        "hints": [
+          "Wrap the factorial function with <code>memoize()</code>.",
+          "Add a console.log inside the factorial to see if it's actually computing.",
+          "The second call should not log anything — it's cached."
+        ]
+      },
+      "keyTakeaways": [
+        "Factory functions use closures to create objects with independent private state.",
+        "Memoization uses closures to cache function results between calls.",
+        "Both patterns are fundamental JavaScript techniques powered by closures.",
+        "Closures make encapsulation and state management possible without special syntax."
+      ],
+      "challenge": "Build a memoized async function that fetches data from a URL. Cache the result so the second call to the same URL returns immediately."
+    }
+  ]
+}

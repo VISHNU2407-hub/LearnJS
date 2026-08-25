@@ -1,0 +1,220 @@
+{
+  "topicId": "3.1",
+  "topicTitle": "The DOM Tree & Selecting Elements",
+  "lessons": [
+    {
+      "id": "3.1.1",
+      "title": "Understanding Document Object Model (DOM) Architecture",
+      "description": "The DOM is a tree-shaped representation of your HTML that JavaScript can read and manipulate.",
+      "sections": [
+        {
+          "heading": "What is the DOM?",
+          "paragraphs": ["When the browser loads an HTML file, it converts every tag into a JavaScript object arranged in a tree. That tree is the <b>Document Object Model (DOM)</b> — your JavaScript's live view of the page."],
+          "list": [
+            "Every HTML element becomes a node object in the tree",
+            "The document node sits at the root — the entry point to everything",
+            "Parent-child relationships mirror your HTML nesting",
+            "You can read, create, modify or remove any node at any time"
+          ]
+        },
+        {
+          "heading": "Why the DOM matters",
+          "paragraphs": ["Without the DOM, JavaScript would have no way to interact with the page. The DOM bridges your code and the visual elements the user sees. Every button click handler, every dynamic text update, every animation triggers through DOM manipulation."]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Exploring the DOM in the console",
+          "file": "Developer Console",
+          "language": "JavaScript",
+          "code": "// The root node\ndocument;\n// → #document\n\n// First child (the html tag)\ndocument.documentElement;\n// → <html>…</html>\n\n// Direct access to common elements\ndocument.head;\ndocument.body;\nconsole.log(document.body.children);",
+          "explanation": [
+            "<code>document</code> is the root — the entire page lives inside it.",
+            "<code>documentElement</code> gives you the <code>&lt;html&gt;</code> element.",
+            "<code>head</code> and <code>body</code> are direct shortcuts to those sections."
+          ]
+        },
+        {
+          "heading": "Traversing the tree",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let list = document.querySelector(\"ul\");\n\nconsole.log(list.parentElement);   // the <ul>'s parent\nconsole.log(list.children);         // all direct child <li>s\nconsole.log(list.firstElementChild); // first <li>\nconsole.log(list.lastElementChild);  // last <li>",
+          "explanation": [
+            "<code>parentElement</code> goes up one level.",
+            "<code>children</code> returns all direct child elements.",
+            "<code>firstElementChild</code> and <code>lastElementChild</code> grab the first and last children.",
+            "These properties work in all directions — you can walk the tree freely."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Open any web page, open the console, and use <code>document.body.children</code> to see what elements sit directly inside the body. Then try <code>document.body.children[0]</code> to access the first one.",
+        "hints": [
+          "Press F12 to open DevTools, then click the Console tab.",
+          "Type <code>document.body.children</code> and press Enter.",
+          "Try <code>document.body.children[0].tagName</code> to see the tag name."
+        ]
+      },
+      "keyTakeaways": [
+        "The DOM is a tree of JavaScript objects representing your HTML elements.",
+        "<code>document</code> is the root — everything else is accessed through it.",
+        "You can traverse the tree with parent, child and sibling properties.",
+        "JavaScript can read, modify, create or delete any node in the DOM."
+      ],
+      "challenge": "Write code that finds the first <code>&lt;p&gt;</code> on a page, then logs its parent element's tag name and its own text content."
+    },
+    {
+      "id": "3.1.2",
+      "title": "Selecting Elements with querySelector & querySelectorAll",
+      "description": "Use CSS-style selectors to find one or many elements on the page with querySelector and querySelectorAll.",
+      "sections": [
+        {
+          "heading": "querySelector — find one element",
+          "paragraphs": ["<code>document.querySelector(selector)</code> returns the <b>first</b> element that matches a CSS selector. If nothing matches, it returns <code>null</code>. This is the most flexible and modern way to grab elements."],
+          "list": [
+            "Pass any CSS selector: tag names, classes, IDs, attributes, combinators",
+            "Returns a single Element or null",
+            "Searches the entire document — or call it on a specific element to search within it"
+          ]
+        },
+        {
+          "heading": "querySelectorAll — find all matches",
+          "paragraphs": ["<code>document.querySelectorAll(selector)</code> returns <b>all</b> matching elements as a static NodeList. Unlike HTMLCollections, NodeLists are snapshots — they won't change if the DOM changes after selection."],
+          "list": [
+            "Returns a NodeList (array-like collection)",
+            "Use <code>.forEach()</code> or convert with <code>[...nodeList]</code> for array methods",
+            "A NodeList is a snapshot — adding/removing elements later doesn't affect it"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Selecting by ID, class and tag",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// By ID\nlet header = document.querySelector(\"#header\");\n\n// By class\nlet card = document.querySelector(\".card\");\n\n// By tag\nlet firstParagraph = document.querySelector(\"p\");\n\n// By attribute\nlet link = document.querySelector(\"a[href='https://example.com']\");\n\nconsole.log(header);  // the #header element",
+          "explanation": [
+            "Use <code>#id</code> for ID selectors, <code>.class</code> for class selectors.",
+            "The selector syntax is identical to what you'd write in CSS.",
+            "Only the first match is returned — even if multiple elements match."
+          ]
+        },
+        {
+          "heading": "Scoping and querying all matches",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Scoped: search within a specific element\nlet sidebar = document.querySelector(\".sidebar\");\nlet link = sidebar.querySelector(\"a\");  // first <a> inside .sidebar\n\n// All matches\nlet allCards = document.querySelectorAll(\".card\");\nconsole.log(allCards.length);  // total number of cards\n\nallCards.forEach((card, i) => {\n  console.log(i + \": \" + card.textContent);\n});",
+          "explanation": [
+            "Calling <code>querySelector</code> on an element scopes the search to its descendants.",
+            "<code>querySelectorAll</code> gives you a NodeList with all matches.",
+            "NodeList supports <code>.forEach()</code> — no conversion needed for simple loops."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Select all <code>&lt;li&gt;</code> elements on a page using querySelectorAll, then use forEach to log each one's text content to the console.",
+        "hints": [
+          "Use <code>document.querySelectorAll(\"li\")</code>.",
+          "Call <code>.forEach()</code> on the result.",
+          "Inside forEach, use <code>li.textContent</code> to get the text."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>querySelector()</code> returns the first matching element using CSS selectors.",
+        "<code>querySelectorAll()</code> returns all matches as a static NodeList.",
+        "You can scope queries by calling these methods on a specific element.",
+        "NodeList supports <code>.forEach()</code> but not <code>.map()</code> directly — spread to convert if needed."
+      ],
+      "challenge": "Write a function that finds all elements with the class <code>.highlight</code> and changes their background color to yellow using <code>.style.backgroundColor</code>."
+    },
+    {
+      "id": "3.1.3",
+      "title": "Legacy Selectors: getElementById, getElementsByClassName",
+      "description": "Older selector methods still appear in codebases — understand how they differ from querySelector.",
+      "sections": [
+        {
+          "heading": "Legacy methods",
+          "paragraphs": ["Before <code>querySelector</code> existed, developers used these methods to find elements. They still work and you'll encounter them in older code and tutorials."],
+          "list": [
+            "<code>getElementById(\"id\")</code> — returns a single element by its ID",
+            "<code>getElementsByClassName(\"class\")</code> — returns a live HTMLCollection",
+            "<code>getElementsByTagName(\"tag\")</code> — returns a live HTMLCollection",
+            "<code>getElementsByName(\"name\")</code> — returns elements by their name attribute"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Legacy selector examples",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// getElementById — fastest, most specific\nlet nav = document.getElementById(\"main-nav\");\n\n// getElementsByClassName — returns a LIVE collection\nlet items = document.getElementsByClassName(\"item\");\nconsole.log(items.length);  // number of .item elements\n\n// getElementsByTagName\nlet paragraphs = document.getElementsByTagName(\"p\");\nconsole.log(paragraphs.length);",
+          "explanation": [
+            "<code>getElementById</code> is the fastest method — browsers optimize ID lookups.",
+            "<code>getElementsByClassName</code> returns a live HTMLCollection that updates when the DOM changes.",
+            "HTMLCollection is not an array — use <code>[...collection]</code> to convert for map/filter."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use <code>getElementById</code> to select an element with a specific ID, then use <code>getElementsByClassName</code> to get all elements with a class name and log the count.",
+        "hints": [
+          "You need an HTML page with at least one element that has an ID and several elements with the same class.",
+          "Use <code>document.getElementById(\"myId\")</code>.",
+          "Use <code>document.getElementsByClassName(\"myClass\").length</code> to count."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>getElementById</code> is the fastest legacy method — one element by ID.",
+        "<code>getElementsByClassName</code> and <code>getElementsByTagName</code> return live HTMLCollections.",
+        "Prefer <code>querySelector</code> and <code>querySelectorAll</code> for new code — they're more flexible and return stable NodeLists."
+      ],
+      "challenge": "Replace all <code>getElementById</code> calls in a small HTML page with equivalent <code>querySelector(\"#id\")</code> calls. Verify the behavior is identical."
+    },
+    {
+      "id": "3.1.4",
+      "title": "Static NodeLists vs Live HTMLCollections",
+      "description": "Understand the difference between static and live element collections and why it matters.",
+      "sections": [
+        {
+          "heading": "Live vs static collections",
+          "paragraphs": ["Some DOM methods return collections that update automatically when the DOM changes (live), while others return snapshots (static). This difference causes surprising bugs if you don't understand it."],
+          "list": [
+            "<b>Live HTMLCollection</b> — updates automatically when elements are added or removed",
+            "<b>Static NodeList</b> — a snapshot that doesn't change after creation",
+            "<code>getElementsByClassName</code> returns live collections",
+            "<code>querySelectorAll</code> returns static NodeLists"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Live HTMLCollection behavior",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let liveItems = document.getElementsByClassName(\"item\");\nlet staticItems = document.querySelectorAll(\".item\");\n\nconsole.log(\"Before: \" + liveItems.length);    // 3\nconsole.log(\"Before: \" + staticItems.length);  // 3\n\n// Add a new element dynamically\nlet newItem = document.createElement(\"li\");\nnewItem.className = \"item\";\nnewItem.textContent = \"New\";\ndocument.querySelector(\"ul\").appendChild(newItem);\n\nconsole.log(\"After live: \" + liveItems.length);    // 4 (updated!)\nconsole.log(\"After static: \" + staticItems.length);  // 3 (same snapshot)",
+          "explanation": [
+            "The live HTMLCollection automatically picks up the newly added <code>.item</code> element.",
+            "The static NodeList is a snapshot from the moment of selection — it stays at 3.",
+            "Live collections are convenient but can cause surprises in loops if elements change during iteration."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a page with 3 <code>.item</code> elements. Select them with both <code>getElementsByClassName</code> and <code>querySelectorAll</code>. Add a 4th item dynamically and log both collection lengths to see the difference.",
+        "hints": [
+          "Use <code>document.createElement(\"li\")</code> to create a new element.",
+          "Add a class with <code>newItem.className = \"item\"</code>.",
+          "Append with <code>document.querySelector(\"ul\").appendChild(newItem)</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Live HTMLCollections update automatically when the DOM changes.",
+        "Static NodeLists are snapshots that don't change.",
+        "Prefer <code>querySelectorAll</code> for predictable behavior — static snapshots avoid loop surprises.",
+        "If you need an array from a NodeList, use <code>Array.from()</code> or the spread operator <code>[...nodeList]</code>."
+      ],
+      "challenge": "Write a loop that removes all <code>.item</code> elements one by one. Test with a live collection vs a static collection and explain the different behavior."
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "topicId": "10.4",
+  "topicTitle": "ECMAScript Standards & TC39 Proposals (ES2024–ES2026+)",
+  "lessons": [
+    {
+      "id": "10.4.1",
+      "title": "TC39 Governance & Stage 0 through Stage 4 Proposal Pipelines",
+      "description": "JavaScript evolves through a formal proposal process — understand how new features go from idea to standard.",
+      "sections": [
+        {
+          "heading": "TC39 proposal stages",
+          "list": [
+            "<b>Stage 0</b> — idea stage: just a strawperson proposal",
+            "<b>Stage 1</b> — draft: formal proposal with examples and initial spec text",
+            "<b>Stage 2</b> — candidate: complete spec text, experimental implementations",
+            "<b>Stage 3</b> — candidate: spec is complete, implementations being built",
+            "<b>Stage 4</b> — finished: ready for inclusion in the standard"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Stage progression example",
+          "file": "Conceptual",
+          "language": "JavaScript",
+          "code": "// Array.groupBy (Stage 4 → ES2024)\nlet items = [\n  { name: \"apple\", type: \"fruit\" },\n  { name: \"carrot\", type: \"vegetable\" },\n  { name: \"banana\", type: \"fruit\" }\n];\n\nlet grouped = Object.groupBy(items, item => item.type);\n// { fruit: [{...}, {...}], vegetable: [{...}] }\n\n// Temporal API (Stage 3 → coming soon)\n// let now = Temporal.Now.zonedDateTime();\n// let tomorrow = now.add({ days: 1 });",
+          "explanation": [
+            "TC39 is the committee that governs JavaScript's evolution.",
+            "Each stage requires demonstrated implementation and community feedback.",
+            "Stage 4 features are guaranteed to be in the next ECMAScript release.",
+            "Stage 3 features are implemented in engines but not yet standardized."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Look up the current TC39 proposals at tc39.es. Find 3 proposals at Stage 3 or Stage 4 and explain what they do.",
+        "hints": [
+          "Visit tc39.es/ecma262 for the main spec.",
+          "Look at tc39.es/proposals for active proposals.",
+          "Stage 4 proposals are the most likely to be available soon."
+        ]
+      },
+      "keyTakeaways": [
+        "TC39 is the committee that governs JavaScript's evolution.",
+            "Proposals go through 5 stages: idea → draft → candidate → finished.",
+            "Stage 4 features are guaranteed to be in the next ECMAScript release.",
+            "Understanding the process helps you prepare for upcoming language features."
+      ],
+      "challenge": "Track a Stage 2 proposal over 6 months and document its progress through the stages."
+    },
+    {
+      "id": "10.4.2",
+      "title": "Explicit Resource Management (using/Disposal Keyword)",
+      "description": "The 'using' keyword automatically cleans up resources when they go out of scope — like try/finally made automatic.",
+      "sections": [
+        {
+          "heading": "What is explicit resource management?",
+          "list": [
+            "<code>using resource = getResource()</code> — declares a resource that auto-disposes",
+            "Resources implement <code>[Symbol.dispose]()</code> for cleanup",
+            "Automatically called when the variable goes out of scope",
+            "Also: <code>await using</code> for async disposal"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "using keyword basics",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// A disposable resource\nclass FileHandle {\n  constructor(path) {\n    this.path = path;\n    console.log(\"Opened: \" + path);\n  }\n\n  [Symbol.dispose]() {\n    console.log(\"Closed: \" + this.path);\n  }\n}\n\nfunction processFile() {\n  using file = new FileHandle(\"data.txt\");\n  console.log(\"Processing...\");\n  // file is automatically disposed when function ends!\n}\n\nprocessFile();\n// Output:\n// Opened: data.txt\n// Processing...\n// Closed: data.txt",
+          "explanation": [
+            "The 'using' keyword declares a resource that auto-disposes on scope exit.",
+            "The resource implements [Symbol.dispose]() for cleanup logic.",
+            "Disposal happens automatically — no need for try/finally.",
+            "await using handles async cleanup (e.g., closing database connections)."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a disposable resource class that logs 'acquired' on creation and 'released' on disposal. Use 'using' to verify automatic cleanup.",
+        "hints": [
+          "Implement <code>[Symbol.dispose]()</code> for cleanup.",
+          "Use <code>using resource = new MyResource()</code> inside a function.",
+          "Verify the cleanup log appears when the function ends."
+        ]
+      },
+      "keyTakeaways": [
+        "The 'using' keyword automatically cleans up resources on scope exit.",
+        "Resources implement [Symbol.dispose]() for cleanup logic.",
+        "await using handles async disposal for database connections and file handles.",
+        "This eliminates the need for manual try/finally cleanup patterns."
+      ],
+      "challenge": "Build a database connection pool that uses 'using' to automatically return connections when done."
+    },
+    {
+      "id": "10.4.3",
+      "title": "Modern Temporal API for Date/Time Operations",
+      "description": "The Temporal API replaces the problematic Date object with a modern, immutable, timezone-aware date/time library.",
+      "sections": [
+        {
+          "heading": "Why Temporal?",
+          "list": [
+            "Date is mutable and timezone-unaware — a source of countless bugs",
+            "Temporal is immutable — operations return new instances",
+            "Full timezone support with IANA timezone names",
+            "Built-in duration, calendar and range operations"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Temporal API basics",
+          "file": "script.js (future)",
+          "language": "JavaScript",
+          "code": "// Create a ZonedDateTime\nlet now = Temporal.Now.zonedDateTime();\nconsole.log(now.toString());\n// 2026-08-25T10:30:00+05:30[Asia/Kolkata]\n\n// Add duration\nlet tomorrow = now.add({ days: 1 });\nlet nextWeek = now.add({ weeks: 1 });\n\n// Timezone conversion\nlet tokyo = now.withTimeZone(\"Asia/Tokyo\");\nconsole.log(tokyo.hour);  // different hour!\n\n// Plain date and time (no timezone)\nlet birthday = Temporal.PlainDate.from(\"1995-06-15\");\nlet time = Temporal.PlainTime.from(\"14:30:00\");\n\n// Duration\nlet duration = Temporal.Duration.from({ hours: 1, minutes: 30 });\nlet later = now.add(duration);",
+          "explanation": [
+            "Temporal provides immutable date/time objects — no mutation bugs.",
+            "Full timezone support with IANA names (Asia/Kolkata, America/New_York).",
+            "Plain types (PlainDate, PlainTime) handle dates without timezones.",
+            "Duration objects represent spans of time for calculations."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Using the Temporal API, calculate the number of days between two dates and convert a timestamp to a different timezone.",
+        "hints": [
+          "Create dates: <code>Temporal.PlainDate.from(\"2024-01-01\")</code>.",
+          "Calculate: <code>date1.until(date2).days</code>.",
+          "Convert: <code>zonedDateTime.withTimeZone(\"America/New_York\")</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Temporal replaces Date with immutable, timezone-aware date/time objects.",
+        "Operations return new instances — no mutation bugs.",
+        "Full timezone support with IANA timezone names.",
+        "Duration, calendar and range operations are built-in."
+      ],
+      "challenge": "Build a scheduling app that handles events across multiple timezones using the Temporal API."
+    }
+  ]
+}

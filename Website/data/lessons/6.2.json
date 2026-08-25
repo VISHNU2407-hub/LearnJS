@@ -1,0 +1,198 @@
+{
+  "topicId": "6.2",
+  "topicTitle": "Package Management & Monorepo Basics (npm, pnpm)",
+  "lessons": [
+    {
+      "id": "6.2.1",
+      "title": "Dependency Management via package.json & Lockfiles",
+      "description": "package.json defines your project's dependencies and scripts — the manifest of any Node.js project.",
+      "sections": [
+        {
+          "heading": "What is package.json?",
+          "paragraphs": ["Every Node.js project starts with a package.json file. It defines your project name, version, dependencies, scripts, and configuration. It's the control center for your project."],
+          "list": [
+            "<code>npm init</code> — creates a new package.json",
+            "<code>dependencies</code> — packages needed in production",
+            "<code>devDependencies</code> — packages only needed during development",
+            "<code>scripts</code> — custom commands you can run with npm"
+          ]
+        },
+        {
+          "heading": "Lockfiles",
+          "list": [
+            "<code>package-lock.json</code> (npm) — pins exact versions of every dependency",
+            "<code>pnpm-lock.yaml</code> (pnpm) — same purpose, different format",
+            "Lockfiles ensure everyone on your team uses the same versions",
+            "Always commit lockfiles to version control"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "package.json basics",
+          "file": "package.json",
+          "language": "JSON",
+          "code": "{\n  \"name\": \"my-app\",\n  \"version\": \"1.0.0\",\n  \"scripts\": {\n    \"start\": \"node server.js\",\n    \"dev\": \"nodemon server.js\",\n    \"test\": \"jest\",\n    \"build\": \"webpack --mode production\"\n  },\n  \"dependencies\": {\n    \"express\": \"^4.18.0\"\n  },\n  \"devDependencies\": {\n    \"jest\": \"^29.0.0\",\n    \"nodemon\": \"^3.0.0\"\n  }\n}",
+          "explanation": [
+            "scripts define custom commands: <code>npm run dev</code> runs the dev script.",
+            "dependencies are production packages — installed with <code>npm install</code>.",
+            "devDependencies are development-only tools.",
+            "The ^ prefix means compatible with the version (allows minor updates)."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Initialize a new npm project and add a script that logs \"Hello\" when you run <code>npm run hello</code>.",
+        "hints": [
+          "Run <code>npm init -y</code> for defaults.",
+          "Add to scripts: <code>\"hello\": \"node -e \\\"console.log('Hello')\\\"\"</code>.",
+          "Run with <code>npm run hello</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "package.json is the manifest for every Node.js project.",
+        "Use <code>npm install package-name</code> to add dependencies.",
+        "Always commit lockfiles — they ensure consistent installs across environments.",
+        "Scripts define reusable commands for your project."
+      ],
+      "challenge": "Set up a project with express as a dependency and nodemon as a devDependency. Add a dev script that auto-restarts the server."
+    },
+    {
+      "id": "6.2.2",
+      "title": "Semantic Versioning Rules (SemVer)",
+      "description": "Version numbers follow MAJOR.MINOR.PATCH — understanding them prevents breaking changes.",
+      "sections": [
+        {
+          "heading": "SemVer explained",
+          "paragraphs": ["Semantic Versioning (SemVer) uses three numbers: MAJOR.MINOR.PATCH. Each number has a specific meaning about the type of changes in the release."],
+          "list": [
+            "<b>MAJOR</b> — breaking changes (API incompatible with previous version)",
+            "<b>MINOR</b> — new features (backward compatible)",
+            "<b>PATCH</b> — bug fixes (backward compatible)",
+            "Prefixes: <code>^</code> (allow minor), <code>~</code> (allow patch only)"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "SemVer in practice",
+          "file": "package.json",
+          "language": "JSON",
+          "code": "{\n  \"dependencies\": {\n    \"express\": \"^4.18.0\",\n    \"lodash\": \"~4.17.21\",\n    \"react\": \"18.2.0\"\n  }\n}\n\n// ^4.18.0 → allows 4.18.x, 4.19.x, but NOT 5.0.0\n// ~4.17.21 → allows 4.17.21, 4.17.22, but NOT 4.18.0\n// 18.2.0 → exact version only",
+          "explanation": [
+            "<code>^</code> (caret) allows MINOR and PATCH updates: <code>^4.18.0</code> → 4.x.x.",
+            "<code>~</code> (tilde) allows only PATCH updates: <code>~4.17.21</code> → 4.17.x.",
+            "No prefix means exact version: <code>18.2.0</code> → only 18.2.0.",
+            "Lockfiles pin the exact installed version regardless of these ranges."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Look at a package-lock.json and identify 3 packages with different version ranges. Explain what updates each range would allow.",
+        "hints": [
+          "Search for ^, ~, and exact versions in the lockfile.",
+          "^4.18.0 means 4.18.0 to <5.0.0.",
+          "~4.17.21 means 4.17.21 to <4.18.0."
+        ]
+      },
+      "keyTakeaways": [
+        "MAJOR.MINOR.PATCH: breaking, features, fixes.",
+        "Use <code>^</code> for safe minor updates and <code>~</code> for patch-only updates.",
+        "Lockfiles override version ranges with exact installed versions.",
+        "Always check a package's changelog before updating major versions."
+      ],
+      "challenge": "Explain why a lockfile is essential even with version ranges in package.json."
+    },
+    {
+      "id": "6.2.3",
+      "title": "Package Execution: npm, pnpm, bun Performance Differences",
+      "description": "Compare package managers — npm, pnpm and bun differ in speed, disk usage and installation strategy.",
+      "sections": [
+        {
+          "heading": "Package manager comparison",
+          "list": [
+            "<b>npm</b> — the original, most widely used, copies packages to node_modules",
+            "<b>pnpm</b> — faster, uses a content-addressable store, saves disk space",
+            "<b>bun</b> — fastest, written in Zig, combines runtime and package manager",
+            "All three are compatible with package.json and lockfiles"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Installing with different managers",
+          "file": "Terminal",
+          "language": "Shell",
+          "code": "# npm\nnpm install express\nnpm run dev\n\n# pnpm\npnpm install express\npnpm run dev\n\n# bun\nbun install express\nbun run dev\n\n# All three read the same package.json\n# pnpm and bun are significantly faster than npm",
+          "explanation": [
+            "All three managers use the same package.json format.",
+            "pnpm uses symlinks to a central store — saves disk space.",
+            "bun is the fastest — combines package management with the runtime.",
+            "Choose based on your project needs and team preference."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Install the same set of dependencies using npm, pnpm, and bun. Compare the installation speed and node_modules size.",
+        "hints": [
+          "Time each install: <code>time npm install</code>.",
+          "Check node_modules size: <code>du -sh node_modules</code>.",
+          "Note that bun is typically the fastest."
+        ]
+      },
+      "keyTakeaways": [
+        "npm, pnpm, and bun are compatible with the same package.json format.",
+        "pnpm saves disk space with a content-addressable store.",
+        "bun is the fastest option — combines package manager and runtime.",
+        "Choose based on speed needs, disk constraints and team preference."
+      ],
+      "challenge": "Set up the same project with all 3 package managers and benchmark install times."
+    },
+    {
+      "id": "6.2.4",
+      "title": "Monorepo Workspace Configurations",
+      "description": "Organize multiple related packages in a single repository with shared dependencies and scripts.",
+      "sections": [
+        {
+          "heading": "What is a monorepo?",
+          "paragraphs": ["A monorepo puts multiple packages or apps in a single repository. Workspaces let them share dependencies and scripts while remaining independent."],
+          "list": [
+            "All packages live in one repo with a root package.json",
+            "Workspaces define where packages live: <code>\"workspaces\": [\"packages/*\"]</code>",
+            "Dependencies are hoisted to the root — saved disk space",
+            "Changes across packages are atomic — one commit"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Monorepo setup",
+          "file": "Root package.json",
+          "language": "JSON",
+          "code": "{\n  \"name\": \"my-monorepo\",\n  \"private\": true,\n  \"workspaces\": [\"packages/*\"],\n  \"scripts\": {\n    \"build\": \"npm run build --workspaces\",\n    \"test\": \"npm run test --workspaces\"\n  }\n}\n\n// packages/ui/package.json\n{\n  \"name\": \"@myorg/ui\",\n  \"version\": \"1.0.0\",\n  \"dependencies\": { \"react\": \"^18.0.0\" }\n}\n\n// packages/utils/package.json\n{\n  \"name\": \"@myorg/utils\",\n  \"version\": \"1.0.0\"\n}",
+          "explanation": [
+            "The root package.json defines workspaces — where packages live.",
+            "Each package has its own package.json and dependencies.",
+            "Dependencies are hoisted to the root node_modules for efficiency.",
+            "Run scripts across all packages with <code>--workspaces</code>."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a monorepo with 2 packages: a shared utils library and an app that uses it. Set up workspaces at the root level.",
+        "hints": [
+          "Create root package.json with <code>\"workspaces\": [\"packages/*\"]</code>.",
+          "Create packages/utils and packages/app directories.",
+          "Each with their own package.json."
+        ]
+      },
+      "keyTakeaways": [
+        "Monorepos organize multiple packages in a single repository.",
+        "Workspaces define package locations and enable dependency hoisting.",
+        "Shared scripts can run across all packages.",
+        "Monorepos make cross-package changes atomic and easier to manage."
+      ],
+      "challenge": "Set up a Turborepo or Nx monorepo with a shared library, a web app and an API server."
+    }
+  ]
+}

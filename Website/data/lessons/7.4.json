@@ -1,0 +1,143 @@
+{
+  "topicId": "7.4",
+  "topicTitle": "Specialized Data Collections (Map, Set, WeakMap, WeakSet)",
+  "lessons": [
+    {
+      "id": "7.4.1",
+      "title": "Keyed Collections: Map vs Object",
+      "description": "Map stores key-value pairs with any type as key — more flexible than plain objects.",
+      "sections": [
+        {
+          "heading": "Why Map over Object?",
+          "paragraphs": ["Objects only accept string/symbol keys. Maps accept any value — objects, functions, primitives — as keys. They also maintain insertion order and have a size property."],
+          "list": [
+            "Map keys can be any type; Object keys are strings/symbols only",
+            "Map has a <code>.size</code> property; objects need <code>Object.keys().length</code>",
+            "Maps are optimized for frequent additions/deletions",
+            "Maps don't have prototype pollution risks"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Map basics",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let map = new Map();\n\n// Set with any key type\nmap.set(\"name\", \"Alex\");\nmap.set(42, \"the answer\");\nmap.set(true, \"yes\");\n\nlet obj = { id: 1 };\nmap.set(obj, \"object as key!\");\n\nconsole.log(map.get(\"name\"));    // \"Alex\"\nconsole.log(map.get(obj));       // \"object as key!\"\nconsole.log(map.size);           // 4\n\n// Iterate\nmap.forEach((value, key) => {\n  console.log(key + \" → \" + value);\n});\n\n// Check existence\nconsole.log(map.has(\"name\"));    // true\nmap.delete(42);",
+          "explanation": [
+            "Maps accept any value as a key — not just strings.",
+            ".set() adds entries, .get() retrieves them, .has() checks existence.",
+            ".size gives the count directly — no extra calculation needed.",
+            "Maps are iterable — use for...of, forEach, or spread."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a Map that stores user objects as keys and their permissions as values. Iterate over all entries.",
+        "hints": [
+          "Use <code>map.set(userObj, \"admin\")</code>.",
+          "Iterate with <code>for (let [key, val] of map)</code>.",
+          "Check: <code>map.has(userObj)</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Maps accept any value as a key — objects, functions, primitives.",
+        "Use .set(), .get(), .has(), .delete() for operations.",
+        "Maps are optimized for frequent additions and deletions.",
+        "Maps maintain insertion order and have a .size property."
+      ],
+      "challenge": "Build a caching function that uses a Map to store results keyed by the input arguments."
+    },
+    {
+      "id": "7.4.2",
+      "title": "Managing Unique Sets with Set",
+      "description": "Set stores unique values — perfect for deduplication, membership checks and set operations.",
+      "sections": [
+        {
+          "heading": "Set basics",
+          "list": [
+            "<code>new Set()</code> — creates an empty Set",
+            "<code>set.add(value)</code> — adds a value (ignores duplicates)",
+            "<code>set.has(value)</code> — checks membership",
+            "<code>set.size</code> — number of unique values",
+            "Sets are iterable — use for...of, spread, forEach"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Set for deduplication and operations",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Deduplication\nlet numbers = [1, 2, 2, 3, 3, 3, 4];\nlet unique = [...new Set(numbers)];\nconsole.log(unique);  // [1, 2, 3, 4]\n\n// Set operations\nlet setA = new Set([1, 2, 3, 4]);\nlet setB = new Set([3, 4, 5, 6]);\n\n// Intersection\nlet intersection = new Set(\n  [...setA].filter(x => setB.has(x))\n);\nconsole.log(intersection);  // Set {3, 4}\n\n// Union\nlet union = new Set([...setA, ...setB]);\nconsole.log(union);  // Set {1, 2, 3, 4, 5, 6}",
+          "explanation": [
+            "Spread a Set into an array to deduplicate: <code>[...new Set(arr)]</code>.",
+            "Filter for intersection: keep values both sets have.",
+            "Spread both sets for union: combine all values.",
+            "Sets make these operations clean and readable."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Given two arrays, find common elements using Set. Then find elements unique to each array.",
+        "hints": [
+          "Create sets: <code>new Set(arr1)</code> and <code>new Set(arr2)</code>.",
+          "Common: <code>[...setA].filter(x => setB.has(x))</code>.",
+          "Unique to A: <code>[...setA].filter(x => !setB.has(x))</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Sets store only unique values — duplicates are automatically removed.",
+        "Use .add(), .has(), .delete() and .size for operations.",
+        "Spread to array for filtering: <code>[...set].filter(...)</code>.",
+        "Sets are perfect for deduplication, membership checks and set operations."
+      ],
+      "challenge": "Implement symmetric difference (elements in either set but not both) using Set operations."
+    },
+    {
+      "id": "7.4.3",
+      "title": "Garbage Collection Integration: WeakMap & WeakSet",
+      "description": "WeakMap and WeakSet allow garbage collection of their entries when there are no other references.",
+      "sections": [
+        {
+          "heading": "WeakMap and WeakSet",
+          "list": [
+            "<b>WeakMap</b> — keys must be objects; entries are weakly held",
+            "<b>WeakSet</b> — values must be objects; entries are weakly held",
+            "When no other references to a key/value exist, it's garbage collected",
+            "Not iterable — you can't loop over them (by design)"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "WeakMap for private data",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let privateData = new WeakMap();\n\nclass User {\n  constructor(name) {\n    privateData.set(this, { password: \"secret123\" });\n    this.name = name;\n  }\n\n  checkPassword(pw) {\n    return privateData.get(this).password === pw;\n  }\n}\n\nlet user = new User(\"Alex\");\nconsole.log(user.checkPassword(\"secret123\"));  // true\n\n// When user is garbage collected,\n// the WeakMap entry is also cleaned up!",
+          "explanation": [
+            "WeakMap stores private data keyed by the object instance.",
+            "When the object is garbage collected, the WeakMap entry is automatically removed.",
+            "This prevents memory leaks — no cleanup code needed.",
+            "WeakMap is not iterable — it's designed for private/hidden data."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use a WeakMap to store a 'created' timestamp for objects. When the object is garbage collected, the entry should be cleaned up automatically.",
+        "hints": [
+          "Create: <code>let timestamps = new WeakMap()</code>.",
+          "Store: <code>timestamps.set(obj, Date.now())</code>.",
+          "Retrieve: <code>timestamps.get(obj)</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "WeakMap and WeakSet hold weak references — entries are garbage collected when unreferenced.",
+        "Keys (WeakMap) and values (WeakSet) must be objects.",
+        "They're not iterable — designed for private data and caching.",
+        "Perfect for associating metadata with objects without preventing garbage collection."
+      ],
+      "challenge": "Build a memoization cache using WeakMap that automatically cleans up when the input object is garbage collected."
+    }
+  ]
+}

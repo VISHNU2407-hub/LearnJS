@@ -1,0 +1,144 @@
+{
+  "topicId": "5.2",
+  "topicTitle": "Asynchronous Callbacks & Callback Hell",
+  "lessons": [
+    {
+      "id": "5.2.1",
+      "title": "Asynchronous Callback Execution Patterns",
+      "description": "Callbacks are functions passed to async operations — they run when the operation completes.",
+      "sections": [
+        {
+          "heading": "How async callbacks work",
+          "paragraphs": ["A callback is a function you pass to another function to be called later. In async operations, the callback runs after the background work finishes — not when you pass it."],
+          "list": [
+            "The callback is registered immediately",
+            "The async work happens in the background",
+            "When done, the callback is placed on the event queue",
+            "The callback runs when the call stack is empty"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Async callback timing",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "console.log(\"1 — before setTimeout\");\n\nsetTimeout(() => {\n  console.log(\"2 — inside setTimeout callback\");\n}, 0);  // even with 0ms delay!\n\nconsole.log(\"3 — after setTimeout\");\n\n// Output:\n// 1 — before setTimeout\n// 3 — after setTimeout\n// 2 — inside setTimeout callback",
+          "explanation": [
+            "Even with a 0ms delay, the callback runs after the current code finishes.",
+            "setTimeout schedules the callback on the event queue, not immediately.",
+            "The main thread finishes all synchronous code first.",
+            "This proves async callbacks always wait for the call stack to clear."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create 3 setTimeouts with delays of 0ms, 100ms, and 50ms. Log their order and predict the output before running.",
+        "hints": [
+          "Even 0ms doesn't mean immediate execution.",
+          "The order depends on when each is queued and when the stack is free.",
+          "Synchronous code always runs before any async callbacks."
+        ]
+      },
+      "keyTakeaways": [
+        "Callbacks are functions passed to be called when async work completes.",
+        "Even 0ms setTimeout doesn't run immediately — it waits for the call stack to clear.",
+        "Async callbacks are placed on the event queue and executed when the thread is free.",
+        "This is the foundation of JavaScript's non-blocking execution model."
+      ],
+      "challenge": "Write code that demonstrates callback execution timing with console.time to measure the actual delay."
+    },
+    {
+      "id": "5.2.2",
+      "title": "Node.js Error-First Callback Conventions",
+      "description": "The standard Node.js pattern: callbacks receive an error as the first argument, then the result.",
+      "sections": [
+        {
+          "heading": "Error-first callbacks",
+          "paragraphs": ["In Node.js, the convention is to pass error-first callbacks: the first argument is always an error (or null on success), and subsequent arguments are the result."],
+          "list": [
+            "Callback signature: <code>(error, result) => {}</code>",
+            "If no error: <code>error</code> is null, <code>result</code> contains the data",
+            "If error: <code>error</code> is an Error object, <code>result</code> is undefined",
+            "Always check <code>if (err)</code> before using the result"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Error-first callback pattern",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Simulated async function with error-first callback\nfunction readFile(path, callback) {\n  setTimeout(() => {\n    if (path.includes(\"bad\")) {\n      callback(new Error(\"File not found\"), null);\n    } else {\n      callback(null, \"File contents here\");\n    }\n  }, 100);\n}\n\nreadFile(\"data.txt\", (err, data) => {\n  if (err) {\n    console.error(\"Error: \" + err.message);\n    return;\n  }\n  console.log(\"Data: \" + data);\n});",
+          "explanation": [
+            "The callback receives (error, result) — error first.",
+            "On success, error is null and result contains the data.",
+            "On failure, error is an Error object and result is null.",
+            "Always check for errors before using the result."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a simulated async function that fetches a user by ID using the error-first callback pattern. Handle both success and error cases.",
+        "hints": [
+          "Use setTimeout to simulate async work.",
+          "If ID exists, call <code>callback(null, user)</code>.",
+          "If ID doesn't exist, call <code>callback(new Error(\"Not found\"), null)</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Error-first callbacks put the error as the first argument.",
+        "Always check <code>if (err)</code> before accessing the result.",
+        "This pattern is the foundation of Node.js async operations.",
+        "Modern async/await is preferred, but understanding this pattern is essential for legacy code."
+      ],
+      "challenge": "Write a simulated database lookup function with error-first callbacks, then refactor it to return a Promise."
+    },
+    {
+      "id": "5.2.3",
+      "title": "Nesting Issues, Inverted Control & Callback Hell",
+      "description": "When callbacks nest deeply, code becomes unreadable — this problem is called callback hell.",
+      "sections": [
+        {
+          "heading": "Callback hell",
+          "paragraphs": ["When multiple async operations depend on each other, callbacks nest inside callbacks. The result is deeply indented, hard to read, and difficult to debug — the infamous \"callback hell\" or \"pyramid of doom.\""],
+          "list": [
+            "Deep nesting makes code hard to follow",
+            "Error handling must be repeated at every level",
+            "Inverted control: you give control to the callback and hope it calls you back correctly",
+            "Promises and async/await solve this problem"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Callback hell vs clean async code",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ Callback hell\ngetUser(userId, (err, user) => {\n  if (err) return handleError(err);\n  getOrders(user.id, (err, orders) => {\n    if (err) return handleError(err);\n    getOrderDetails(orders[0].id, (err, details) => {\n      if (err) return handleError(err);\n      console.log(details);\n    });\n  });\n});\n\n// ✅ Same logic with Promises (much cleaner)\ngetUser(userId)\n  .then(user => getOrders(user.id))\n  .then(orders => getOrderDetails(orders[0].id))\n  .then(details => console.log(details))\n  .catch(handleError);",
+          "explanation": [
+            "The callback version nests 3 levels deep — hard to read and maintain.",
+            "Error handling is repeated at every level — verbose and error-prone.",
+            "The Promise version is flat and readable — each step on its own line.",
+            "Promises solve callback hell by chaining async operations."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Take a 3-level nested callback and flatten it using Promises. Identify the inversion of control problem in the callback version.",
+        "hints": [
+          "Replace each callback with a <code>.then()</code> chain.",
+          "Move error handling to a single <code>.catch()</code> at the end.",
+          "Notice how much easier the flat chain is to read."
+        ]
+      },
+      "keyTakeaways": [
+        "Callback hell occurs when async operations nest deeply.",
+        "Inverted control means you hand control to the callback and trust it to work correctly.",
+        "Error handling in nested callbacks is repetitive and error-prone.",
+        "Promises and async/await were created specifically to solve callback hell."
+      ],
+      "challenge": "Rewrite a 4-level callback hell example using Promises, then again using async/await."
+    }
+  ]
+}

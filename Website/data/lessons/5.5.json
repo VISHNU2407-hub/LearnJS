@@ -1,0 +1,238 @@
+{
+  "topicId": "5.5",
+  "topicTitle": "Working with Web APIs: Fetch API & REST",
+  "lessons": [
+    {
+      "id": "5.5.1",
+      "title": "Client-Server Communication & RESTful API Architecture",
+      "description": "Understand how web apps communicate with servers using HTTP requests and REST conventions.",
+      "sections": [
+        {
+          "heading": "How client-server communication works",
+          "paragraphs": ["Web applications follow a client-server model. Your browser (client) sends HTTP requests to a server, which responds with data. REST is a set of conventions for structuring these requests."],
+          "list": [
+            "Client sends a request → Server processes it → Server sends a response",
+            "HTTP methods define the action: GET (read), POST (create), PUT (update), DELETE (remove)",
+            "Resources are identified by URLs: <code>/api/users</code>, <code>/api/posts/1</code>",
+            "Data is exchanged as JSON (typically)"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "REST API conventions",
+          "file": "Conceptual",
+          "language": "HTTP",
+          "code": "GET    /api/users          → list all users\nGET    /api/users/1        → get user #1\nPOST   /api/users          → create a new user\nPUT    /api/users/1        → update user #1\nDELETE /api/users/1        → delete user #1",
+          "explanation": [
+            "GET retrieves data — it should never change server state.",
+            "POST creates new resources on the server.",
+            "PUT replaces or updates an existing resource.",
+            "DELETE removes a resource.",
+            "URLs use nouns for resources, HTTP methods for actions."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "List 5 REST API endpoints for a blog application (posts, comments, users). Write the HTTP method and URL for each CRUD operation.",
+        "hints": [
+          "Posts: GET /api/posts, POST /api/posts, GET /api/posts/:id, etc.",
+          "Each resource gets its own URL pattern.",
+          "Use HTTP methods to indicate the action."
+        ]
+      },
+      "keyTakeaways": [
+        "REST is a convention for structuring HTTP requests and responses.",
+        "HTTP methods map to CRUD operations: GET, POST, PUT, DELETE.",
+        "URLs represent resources, not actions.",
+        "JSON is the standard data format for API communication."
+      ],
+      "challenge": "Design a REST API for a to-do list app with endpoints for lists, tasks, and users."
+    },
+    {
+      "id": "5.5.2",
+      "title": "Sending Requests with fetch() & Parsing Responses (.json())",
+      "description": "Use the fetch API to make HTTP requests and parse JSON responses.",
+      "sections": [
+        {
+          "heading": "The fetch API",
+          "paragraphs": ["<code>fetch()</code> is the modern way to make HTTP requests. It returns a Promise that resolves to a Response object — you then parse the body as JSON or text."],
+          "list": [
+            "<code>fetch(url)</code> — returns a Promise resolving to a Response object",
+            "<code>response.json()</code> — parses the body as JSON (also returns a Promise)",
+            "<code>response.text()</code> — parses the body as plain text",
+            "<code>response.ok</code> — true if status is 200–299"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Basic fetch usage",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// GET request\nasync function getUsers() {\n  let response = await fetch(\"https://jsonplaceholder.typicode.com/users\");\n  \n  if (!response.ok) {\n    throw new Error(\"HTTP error: \" + response.status);\n  }\n  \n  let users = await response.json();\n  console.log(users);\n}\n\ngetUsers();",
+          "explanation": [
+            "<code>fetch()</code> returns a Response Promise — not the data yet.",
+            "You must call <code>.json()</code> (or <code>.text()</code>) to parse the body.",
+            "Always check <code>response.ok</code> — fetch doesn't reject on HTTP errors.",
+            "Both fetch and .json() are async — use await on each."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Fetch a list of posts from a public API (jsonplaceholder.typicode.com/posts) and log the title of each post.",
+        "hints": [
+          "Use <code>await fetch(\"https://jsonplaceholder.typicode.com/posts\")</code>.",
+          "Parse: <code>let posts = await response.json()</code>.",
+          "Loop: <code>posts.forEach(p => console.log(p.title))</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "fetch() returns a Promise that resolves to a Response object.",
+        "Always check response.ok — fetch doesn't reject on HTTP errors.",
+        "Call .json() or .text() to parse the response body.",
+        "Both fetch and body parsing are async — chain with await."
+      ],
+      "challenge": "Fetch a specific post by ID and its comments, displaying them on the page."
+    },
+    {
+      "id": "5.5.3",
+      "title": "Configuring HTTP Verbs: GET, POST, PUT, DELETE",
+      "description": "Use fetch options to send different types of HTTP requests with custom methods.",
+      "sections": [
+        {
+          "heading": "Fetch options",
+          "paragraphs": ["The second argument to fetch() is an options object where you specify the HTTP method, headers, body and other request details."],
+          "list": [
+            "<code>method</code> — HTTP verb: GET, POST, PUT, DELETE, PATCH",
+            "<code>headers</code> — object with request headers",
+            "<code>body</code> — data to send (must be a string for JSON)",
+            "<code>JSON.stringify()</code> is required for sending JSON data"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "POST, PUT, DELETE with fetch",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// POST — create a new resource\nasync function createPost(title, body) {\n  let response = await fetch(\"https://jsonplaceholder.typicode.com/posts\", {\n    method: \"POST\",\n    headers: { \"Content-Type\": \"application/json\" },\n    body: JSON.stringify({ title, body, userId: 1 })\n  });\n  return await response.json();\n}\n\n// DELETE — remove a resource\nasync function deletePost(id) {\n  await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {\n    method: \"DELETE\"\n  });\n}\n\n// PUT — update a resource\nasync function updatePost(id, data) {\n  let response = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {\n    method: \"PUT\",\n    headers: { \"Content-Type\": \"application/json\" },\n    body: JSON.stringify(data)\n  });\n  return await response.json();\n}",
+          "explanation": [
+            "POST requests need a body — stringify objects with JSON.stringify().",
+            "Always set Content-Type header to application/json for JSON data.",
+            "DELETE requests typically don't need a body.",
+            "PUT replaces the entire resource — PATCH updates individual fields."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a new post using fetch with the POST method to jsonplaceholder.typicode.com/posts. Log the response to verify creation.",
+        "hints": [
+          "Set <code>method: \"POST\"</code> in the options.",
+          "Set headers: <code>{\"Content-Type\": \"application/json\"}</code>.",
+          "Stringify the body: <code>JSON.stringify({title: \"...\", body: \"...\"})</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Specify the HTTP method in fetch options: GET, POST, PUT, DELETE.",
+        "Always set Content-Type header when sending JSON data.",
+        "Use JSON.stringify() to convert objects to JSON for the request body.",
+        "GET is the default — other methods require explicit configuration."
+      ],
+      "challenge": "Build a CRUD interface for posts: create, read, update, and delete — all using fetch with the correct HTTP methods."
+    },
+    {
+      "id": "5.5.4",
+      "title": "Handling Request Headers & Payload Data",
+      "description": "Set custom headers for authentication, content types and other metadata.",
+      "sections": [
+        {
+          "heading": "Request headers",
+          "paragraphs": ["Headers carry metadata about the request — content type, authorization tokens, custom application data and more."],
+          "list": [
+            "<code>Content-Type</code> — tells the server what format the body is in",
+            "<code>Authorization</code> — carries authentication tokens (Bearer tokens)",
+            "<code>Accept</code> — tells the server what format you want back",
+            "Custom headers: any string key is valid"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Headers and authentication",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "async function fetchProtectedData(token) {\n  let response = await fetch(\"https://api.example.com/protected\", {\n    headers: {\n      \"Authorization\": `Bearer ${token}`,\n      \"Accept\": \"application/json\",\n      \"X-Custom-Header\": \"my-value\"\n    }\n  });\n\n  if (!response.ok) throw new Error(\"Unauthorized\");\n  return await response.json();\n}\n\n// Sending form data\nasync function uploadFile(file) {\n  let formData = new FormData();\n  formData.append(\"file\", file);\n  formData.append(\"description\", \"My file\");\n\n  let response = await fetch(\"/upload\", {\n    method: \"POST\",\n    body: formData  // browser sets Content-Type automatically\n  });\n  return await response.json();\n}",
+          "explanation": [
+            "Authorization header carries the Bearer token for authenticated requests.",
+            "Accept header tells the server what response format you prefer.",
+            "FormData handles file uploads — the browser sets the correct Content-Type.",
+            "Never set Content-Type manually for FormData — the browser does it with the boundary."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Make a fetch request with custom headers: Authorization (Bearer token) and Accept (application/json). Log the response.",
+        "hints": [
+          "Set headers as an object: <code>{ \"Authorization\": \"Bearer mytoken\", \"Accept\": \"application/json\" }</code>.",
+          "Pass headers in the fetch options: <code>fetch(url, { headers })</code>.",
+          "Always include error handling for 401/403 responses."
+        ]
+      },
+      "keyTakeaways": [
+        "Headers carry metadata: content type, authentication, custom data.",
+        "Always set Content-Type when sending JSON data.",
+        "Authorization header is used for Bearer token authentication.",
+        "Use FormData for file uploads — don't set Content-Type manually."
+      ],
+      "challenge": "Build a function that sends a POST request with JSON body, custom authorization header, and handles 401 errors specifically."
+    },
+    {
+      "id": "5.5.5",
+      "title": "Request Cancellation via AbortController API",
+      "description": "Cancel ongoing fetch requests when they're no longer needed — essential for search-as-you-type.",
+      "sections": [
+        {
+          "heading": "Why cancel requests?",
+          "paragraphs": ["When a user types in a search box, each keystroke fires a new request. Without cancellation, old requests still complete and their results may overwrite newer ones. AbortController lets you cancel stale requests."],
+          "list": [
+            "<code>new AbortController()</code> — creates a controller",
+            "<code>controller.signal</code> — a signal object passed to fetch",
+            "<code>controller.abort()</code> — cancels the request",
+            "Aborted fetches reject with an AbortError"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Cancelling fetch requests",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let controller = null;\n\nasync function search(query) {\n  // Cancel previous request\n  if (controller) controller.abort();\n  controller = new AbortController();\n\n  try {\n    let response = await fetch(\n      `https://api.example.com/search?q=${query}`,\n      { signal: controller.signal }\n    );\n    let results = await response.json();\n    console.log(results);\n  } catch (error) {\n    if (error.name === \"AbortError\") {\n      console.log(\"Request cancelled\");\n    } else {\n      console.error(\"Fetch error:\", error);\n    }\n  }\n}\n\n// Each keystroke cancels the previous search\ninput.addEventListener(\"input\", (e) => search(e.target.value));",
+          "explanation": [
+            "Each new search cancels the previous request with <code>abort()</code>.",
+            "The abort signal is passed to fetch via the options object.",
+            "Aborted fetches throw an AbortError — catch it specifically.",
+            "This pattern is essential for search-as-you-type functionality."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Implement a search input that cancels the previous request when a new character is typed. Use AbortController.",
+        "hints": [
+          "Create a controller variable outside the search function.",
+          "Call <code>controller.abort()</code> at the start of each new search.",
+          "Pass <code>signal: controller.signal</code> in the fetch options.",
+          "Catch AbortError specifically to suppress cancellation errors."
+        ]
+      },
+      "keyTakeaways": [
+        "AbortController cancels ongoing fetch requests.",
+        "Pass the signal to fetch: <code>{ signal: controller.signal }</code>.",
+        "Aborted requests throw an AbortError — catch and handle it.",
+        "Essential for search-as-you-type and other rapid-fire request patterns."
+      ],
+      "challenge": "Build a type-ahead search that cancels requests older than 500ms using AbortController and setTimeout."
+    }
+  ]
+}

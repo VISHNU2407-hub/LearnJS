@@ -1,0 +1,145 @@
+{
+  "topicId": "6.5",
+  "topicTitle": "Code Quality Automation: ESLint & Prettier",
+  "lessons": [
+    {
+      "id": "6.5.1",
+      "title": "Static Linting Rule Configurations with ESLint",
+      "description": "ESLint catches errors and enforces code style automatically — it's your code's quality guardrail.",
+      "sections": [
+        {
+          "heading": "What is ESLint?",
+          "paragraphs": ["ESLint analyzes your JavaScript code without running it. It catches common errors, enforces coding conventions and helps maintain consistent code across your team."],
+          "list": [
+            "Catches errors before they reach production",
+            "Enforces consistent coding style across a team",
+            "Configurable rules — turn on/off as needed",
+            "Integrates with VS Code for real-time feedback"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "ESLint catches common mistakes",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ESLint flags these issues:\n\nlet x = 5       // Missing semicolon (if configured)\nconst y = 5\ny = 10           // Error: Assignment to constant variable\n\nfunction foo(a, a) {}  // Error: Duplicate parameter name\n\nconsole.log(x)\nconsole.log(y)   // Warning: 'y' is assigned but never used",
+          "explanation": [
+            "ESLint catches real bugs like constant reassignment and duplicate parameters.",
+            "It enforces style rules like semicolons, quotes and spacing.",
+            "Warnings highlight potential issues; errors prevent code from running.",
+            "Rules are fully configurable via .eslintrc or eslint.config.js."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Install ESLint in a project and create a config that enforces no-unused-vars and no-undef rules. Test with code that triggers both warnings.",
+        "hints": [
+          "Install: <code>npm install -D eslint</code>.",
+          "Init: <code>npx eslint --init</code>.",
+          "Add a variable that's never used and test the rule."
+        ]
+      },
+      "keyTakeaways": [
+        "ESLint catches errors and enforces style without running your code.",
+        "Rules are configurable — customize for your project's needs.",
+        "Integrates with VS Code for real-time error feedback.",
+        "Use it in CI/CD pipelines to enforce quality across the team."
+      ],
+      "challenge": "Configure ESLint with a custom rule set for a team project, including rules for complexity, naming and formatting."
+    },
+    {
+      "id": "6.5.2",
+      "title": "Automated Code Formatting with Prettier",
+      "description": "Prettier formats your code consistently — no more debates about style.",
+      "sections": [
+        {
+          "heading": "What is Prettier?",
+          "paragraphs": ["Prettier is an opinionated code formatter. It rewrites your code to follow a consistent style — regardless of how you originally wrote it."],
+          "list": [
+            "Formats code on save in VS Code",
+            "Supports JavaScript, HTML, CSS, JSON, Markdown and more",
+            "Removes style debates — Prettier decides",
+            "Integrates with ESLint for comprehensive code quality"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Prettier before and after",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Before Prettier:\nconst x={a:1,b:2,c:3}\nif(x.a==1){console.log(\"yes\")}\n\n// After Prettier:\nconst x = { a: 1, b: 2, c: 3 };\nif (x.a == 1) {\n  console.log(\"yes\");\n}",
+          "explanation": [
+            "Prettier adds consistent spacing, semicolons and line breaks.",
+            "It handles indentation, trailing commas and quote styles.",
+            "Configure in .prettierrc or use defaults.",
+            "Run on save for automatic formatting."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Install Prettier and configure it to format on save in VS Code. Test with intentionally messy code.",
+        "hints": [
+          "Install the Prettier VS Code extension.",
+          "Add <code>\"editor.formatOnSave\": true</code> to settings.",
+          "Write messy code and save — observe the formatting."
+        ]
+      },
+      "keyTakeaways": [
+        "Prettier automatically formats code to a consistent style.",
+        "Configure it with .prettierrc and enable format-on-save.",
+        "It eliminates style debates — everyone's code looks the same.",
+        "Use with ESLint for comprehensive code quality."
+      ],
+      "challenge": "Set up Prettier with custom rules for your project (single quotes, 2-space indent, trailing commas) and verify it formats correctly."
+    },
+    {
+      "id": "6.5.3",
+      "title": "Pre-commit Hook Automation via Husky & lint-staged",
+      "description": "Automatically lint and format code before every commit — catching issues before they enter the repo.",
+      "sections": [
+        {
+          "heading": "Pre-commit hooks",
+          "paragraphs": ["Pre-commit hooks run automatically before each git commit. They can lint, format and test your code, preventing bad code from being committed."],
+          "list": [
+            "<b>Husky</b> — sets up git hooks in your project",
+            "<b>lint-staged</b> — runs linters only on staged files (faster)",
+            "Together they ensure code quality before every commit",
+            "Catches issues early — before they reach CI or code review"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Setting up Husky and lint-staged",
+          "file": "package.json",
+          "language": "JSON",
+          "code": "{\n  \"scripts\": {\n    \"prepare\": \"husky\"\n  },\n  \"lint-staged\": {\n    \"*.{js,ts}\": [\"eslint --fix\", \"prettier --write\"],\n    \"*.{json,md}\": [\"prettier --write\"]\n  }\n}\n\n// .husky/pre-commit:\n// npx lint-staged",
+          "explanation": [
+            "Husky initializes git hooks in your project with <code>npm run prepare</code>.",
+            "lint-staged runs linters only on files that are being committed.",
+            "eslint --fix auto-fixes issues before committing.",
+            "prettier --write formats the code consistently."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Set up Husky and lint-staged so that running <code>git commit</code> automatically runs ESLint and Prettier on staged files.",
+        "hints": [
+          "Install: <code>npm install -D husky lint-staged</code>.",
+          "Run <code>npx husky init</code>.",
+          "Add lint-staged config to package.json.",
+          "Test by committing a file with lint errors."
+        ]
+      },
+      "keyTakeaways": [
+        "Husky sets up git hooks that run automatically before commits.",
+        "lint-staged runs linters only on staged files for speed.",
+        "Together they prevent bad code from entering the repository.",
+        "This is the industry standard for maintaining code quality."
+      ],
+      "challenge": "Set up a complete pre-commit pipeline: ESLint + Prettier + a quick test run, all triggered by Husky and lint-staged."
+    }
+  ]
+}
