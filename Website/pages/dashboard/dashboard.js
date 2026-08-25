@@ -739,16 +739,10 @@ function goToPanel(name, _fromPopState) {
   document.querySelectorAll(".dash-panel").forEach((panel) => {
     panel.classList.toggle("active", panel.getAttribute("data-panel-body") === name);
   });
-  // Roadmap + Learning maximize the content area — collapse the sidebar for
-  // the learning flow only. The user's stored preference is restored when
-  // leaving, so the rest of the dashboard keeps its usual look.
-  if (name === "roadmap" || name === "learning") {
-    if (!dashShell.classList.contains("sidebar-collapsed")) applySidebarState(true);
-  } else if (dashShell.classList.contains("sidebar-collapsed")) {
-    let saved = false;
-    try { saved = localStorage.getItem(SIDEBAR_STORAGE_KEY) === "collapsed"; } catch (err) {}
-    if (!saved) applySidebarState(false);
-  }
+  // Navigation does NOT change sidebar state. The sidebar stays exactly as
+  // the user left it (expanded or collapsed) regardless of which panel
+  // is activated. This prevents the Roadmap (and Learning) panel from
+  // collapsing the sidebar against the user's preference.
   // Refresh live progress every time the roadmap panel is opened.
   if (name === "roadmap") renderRoadmap();
   renderPanelBreadcrumb(name);

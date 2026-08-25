@@ -10,8 +10,6 @@
      - track filters (All / Beginner / Intermediate / Advanced / Expert)
      - recursive expand/collapse tree — levels, topics and subtopics
        each toggle independently (any depth)
-     - compact right-side Topic Preview (name, estimated time,
-       difficulty, subtopic count, Start Learning)
    UI only — no Firebase, routing or persistence changes. All
    progress data comes from the existing roadmap-progress store.
    Interacts with the dashboard via events (no imports of the
@@ -51,7 +49,7 @@ const ICON = {
 let data = { levels: [], tracks: {} };
 let activeTrack = "all";
 let expandedNodes = new Set(); // ids of expanded nodes (levels, topics, ...) — each toggles independently
-let previewTopicId = null;    // topic shown in the right-side preview
+
 
 const TRACKS = ["Beginner", "Intermediate", "Advanced", "Expert"];
 
@@ -231,12 +229,11 @@ function renderTopicNode(node, open) {
   const topic = node.raw;
   const pct = topicProgress(topic);
   const done = pct === 100;
-  const selected = previewTopicId === topic.id;
   // Topics are navigation links, not expandable accordions.
   // Clicking a topic opens the learning page for that topic's first lesson.
   return (
-    '<div class="roadmap-topic' + (selected ? " selected" : "") +
-      '" data-node="' + escapeHtml(topic.id) + '" data-node-type="topic"' +
+    '<div class="roadmap-topic"' +
+      ' data-node="' + escapeHtml(topic.id) + '" data-node-type="topic"' +
       ' data-topic="' + escapeHtml(topic.id) + '" data-index="0"' +
       ' data-has-children="0">' +
       '<button class="roadmap-topic-head" type="button"' +
@@ -307,15 +304,6 @@ function renderTree() {
     return;
   }
 
-  // If the preview topic is hidden by the active filter, fall back to the
-  // first visible topic so the preview never goes stale.
-  if (previewTopicId && !findVisibleTopic(previewTopicId)) {
-    previewTopicId = levels[0].topics[0] ? levels[0].topics[0].id : null;
-  }
-  if (!previewTopicId && levels[0] && levels[0].topics[0]) {
-    previewTopicId = levels[0].topics[0].id;
-  }
-
   const nodes = buildTree(levels);
   // Everything starts COLLAPSED — only the top-level (main topic) rows are
   // visible on first paint. No node is ever auto-expanded; each one opens
@@ -329,42 +317,12 @@ function renderTree() {
   tree.innerHTML = nodes.map(renderNode).join("");
 }
 
-function findVisibleTopic(topicId) {
-  return visibleLevels().some((l) => (l.topics || []).some((t) => t.id === topicId));
-}
 
-function renderPreview() {
-  const wrap = document.getElementById("topicPreview");
-  if (!wrap) return;
-  const found = previewTopicId ? findTopic(previewTopicId) : null;
-  if (!found) {
-    wrap.innerHTML =
-      '<div class="topic-preview-card">' +
-        '<p class="topic-preview-empty">Select a topic to preview it.</p>' +
-      "</div>";
-    return;
-  }
-  const { level, topic } = found;
-  wrap.innerHTML =
-    '<div class="topic-preview-card">' +
-      '<p class="topic-preview-eyebrow">Topic Preview</p>' +
-      '<h3 class="topic-preview-name">' + escapeHtml(topic.title) + "</h3>" +
-      '<ul class="topic-preview-meta">' +
-        '<li><span class="topic-preview-ico">' + ICON.clock + "</span><div><b>Estimated Time</b><span>" + formatEstimate(topic) + "</span></div></li>" +
-        '<li><span class="topic-preview-ico">' + ICON.gauge + "</span><div><b>Difficulty</b><span>" + escapeHtml(level.track) + "</span></div></li>" +
-        '<li><span class="topic-preview-ico">' + ICON.layers + "</span><div><b>Subtopics</b><span>" + (topic.subtopics || []).length + ((topic.subtopics || []).length === 1 ? " lesson" : " lessons") + "</span></div></li>" +
-      "</ul>" +
-      '<button class="btn btn-primary btn-block topic-preview-start" data-start-topic="' + escapeHtml(topic.id) + '" type="button">' +
-        ICON.play + "Start Learning" +
-      "</button>" +
-    "</div>";
-}
 
 export function renderRoadmap() {
   renderOverall();
   renderFilters();
   renderTree();
-  renderPreview();
 }
 
 /* ---------- interactions ---------- */
@@ -418,18 +376,7 @@ function bindEvents() {
         const head = row.querySelector("[aria-expanded]");
         if (head) head.setAttribute("aria-expanded", String(open));
       }
-      if (changed) renderPreview();
-    });
-  }
 
-  const preview = document.getElementById("topicPreview");
-  if (preview) {
-    preview.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-start-topic]");
-      if (!btn) return;
-      window.dispatchEvent(new CustomEvent("learnjs:open-topic", {
-        detail: { topicId: btn.getAttribute("data-start-topic") }
-      }));
     });
   }
 }
@@ -437,10 +384,6 @@ function bindEvents() {
 /* ---------- boot ---------- */
 export async function initRoadmap() {
   data = await loadRoadmap();
-  // Restore the previously previewed topic, if any.
-  if (data.levels.length && !previewTopicId) {
-    previewTopicId = data.levels[0].topics[0] ? data.levels[0].topics[0].id : null;
-  }
   bindEvents();
   // Keep the roadmap in sync when lessons are completed on the Learning page.
   subscribe(renderRoadmap);

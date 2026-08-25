@@ -1039,12 +1039,8 @@ body.dash-open .dash-backdrop { opacity: 1; visibility: visible; }
 
 /* ---------- Roadmap layout ---------- */
 .roadmap-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 1.6rem;
-  align-items: start;
+  display: block;
 }
-@media (max-width: 1100px) { .roadmap-layout { grid-template-columns: 1fr; } }
 
 /* ---------- Level sections ---------- */
 .roadmap-level { margin-bottom: 1.2rem; }
@@ -1177,7 +1173,6 @@ html.dark .roadmap-track-pill.expert { color: #c4b5fd; }
   line-height: 1.4;
   transition: color 0.18s ease;
 }
-.roadmap-topic.selected .roadmap-topic-name { color: var(--brand-strong); }
 .roadmap-topic-progress {
   display: inline-flex;
   align-items: center;
@@ -1271,60 +1266,7 @@ html.dark .roadmap-track-pill.expert { color: #c4b5fd; }
   padding: 0.1rem 0 0.15rem;
 }
 
-/* ---------- Topic preview rail ---------- */
-.topic-preview { position: sticky; top: calc(var(--dash-nav-h) + 1.4rem); }
-@media (max-width: 1100px) { .topic-preview { position: static; } }
-.topic-preview-card {
-  background: var(--card);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  padding: 1.4rem 1.35rem;
-  transition: transform 0.25s var(--ease), box-shadow 0.25s ease, border-color 0.25s ease;
-}
-.topic-preview-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-  border-color: color-mix(in srgb, var(--brand) 30%, var(--line-soft));
-}
-.topic-preview-eyebrow {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--brand-strong);
-  margin-bottom: 0.55rem;
-}
-.topic-preview-name {
-  font-size: 1.02rem;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-  margin-bottom: 1.1rem;
-}
-.topic-preview-meta { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.25rem; }
-.topic-preview-meta li {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.topic-preview-ico {
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background: var(--surface-2);
-  color: var(--brand-strong);
-}
-.topic-preview-ico svg { width: 17px; height: 17px; }
-.topic-preview-meta b { display: block; font-size: 0.78rem; font-weight: 700; color: var(--ink); }
-.topic-preview-meta span { font-size: 0.78rem; color: var(--muted); }
-.topic-preview-start svg { width: 15px; height: 15px; }
-.topic-preview-empty { color: var(--faint); font-size: 0.88rem; text-align: center; padding: 0.5rem 0; }
+
 
 /* ---------- Learning page ---------- */
 .learning-layout {
