@@ -1646,23 +1646,103 @@ button.learn-crumb:hover { color: var(--brand-strong); background: var(--brand-m
 .lv-arrow { display: flex; justify-content: center; color: var(--faint); }
 .lv-arrow svg { width: 16px; height: 16px; }
 
-/* Key takeaways */
-.takeaways { display: flex; flex-direction: column; gap: 0.7rem; }
-.takeaways li { display: flex; align-items: flex-start; gap: 0.7rem; line-height: 1.6; }
-.tk-ico {
-  flex: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
+/* Key takeaways — premium revision panel */
+.takeaways-box {
+  margin: 0.4rem 0 0.6rem;
+  padding: 1rem 1.15rem 0.85rem;
+  background: linear-gradient(180deg, #f7f8fb 0%, #f2f4f8 100%);
+  border: 1px solid #dde3ed;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.02);
+}
+html.dark .takeaways-box {
+  background: linear-gradient(180deg, #1e2230 0%, #1a1e2a 100%);
+  border-color: #2e3548;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+/* Header */
+.takeaways-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #e2e7f0;
+}
+html.dark .takeaways-head { border-bottom-color: #2a3040; }
+.takeaways-head-ico {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--brand-mist);
-  border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent);
-  color: var(--brand-strong);
-  margin-top: 0.1em;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #4F6B95, #5a7aa8);
+  color: #fff;
+  flex-shrink: 0;
 }
-.tk-ico svg { width: 12px; height: 12px; }
+.takeaways-head-ico svg { width: 12px; height: 12px; }
+html.dark .takeaways-head-ico { background: linear-gradient(135deg, #5a7aa8, #6b8cbd); }
+.takeaways-head-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+.takeaways-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #172033;
+}
+html.dark .takeaways-title { color: #c5d0e0; }
+.takeaways-sub {
+  font-size: 0.62rem;
+  color: #7a8599;
+  font-weight: 500;
+}
+html.dark .takeaways-sub { color: #7a8a9e; }
+
+/* Items */
+.takeaways { display: flex; flex-direction: column; gap: 0; margin: 0; padding: 0; list-style: none; }
+.takeaways li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.4rem 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #374151;
+}
+.takeaways li + li { border-top: 1px solid #eef1f5; }
+html.dark .takeaways li { color: #c5d0e0; }
+html.dark .takeaways li + li { border-top-color: #262d3c; }
+
+/* Number badges */
+.tk-num {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 20px;
+  border-radius: 5px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin-top: 0.12em;
+  flex-shrink: 0;
+}
+.tk-num--blue { background: color-mix(in srgb, #4F6B95 10%, transparent); color: #4F6B95; border: 1px solid color-mix(in srgb, #4F6B95 15%, var(--line-soft)); }
+.tk-num--lavender { background: color-mix(in srgb, #8b5cf6 8%, transparent); color: #7c3aed; border: 1px solid color-mix(in srgb, #8b5cf6 12%, var(--line-soft)); }
+.tk-num--slate { background: color-mix(in srgb, #64748b 8%, transparent); color: #475569; border: 1px solid color-mix(in srgb, #64748b 12%, var(--line-soft)); }
+html.dark .tk-num--blue { background: color-mix(in srgb, #6b8cbd 14%, transparent); color: #93a8c8; border-color: color-mix(in srgb, #6b8cbd 18%, var(--line-soft)); }
+html.dark .tk-num--lavender { background: color-mix(in srgb, #a78bfa 12%, transparent); color: #a78bfa; border-color: color-mix(in srgb, #a78bfa 16%, var(--line-soft)); }
+html.dark .tk-num--slate { background: color-mix(in srgb, #94a3b8 10%, transparent); color: #94a3b8; border-color: color-mix(in srgb, #94a3b8 14%, var(--line-soft)); }
+.tk-text { flex: 1; min-width: 0; }
+.tk-text b, .tk-text strong { color: #172033; font-weight: 700; }
+html.dark .tk-text b, html.dark .tk-text strong { color: #e2e8f0; }
 
 /* Practice card */
 .lesson-practice-card {

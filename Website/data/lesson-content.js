@@ -125,6 +125,10 @@ export const LESSON_CONTENT = {
         language: "JavaScript",
         code: "const button = document.querySelector(\"button\");\n\nbutton.addEventListener(\"click\", () => {\n    alert(\"Hello JavaScript!\");\n});",
         output: "> click\n\u2192 alert dialog appears: \u201cHello JavaScript!\u201d",
+        preview: {
+          html: '<div class="lp-preview-center"><button class="lp-preview-btn">Click Me</button><p class="lp-preview-hint">Click the button to see JavaScript in action.</p></div>',
+          script: "const button = document.querySelector('.lp-preview-btn');\nbutton.addEventListener('click', () => {\n    alert('Hello JavaScript!');\n});"
+        },
         explanation: [
           "<code>document.querySelector(\"button\")</code> searches the page (the DOM) and returns the " +
             "<b>first</b> <code>&lt;button&gt;</code> element it finds. Think of it as asking the document: " +

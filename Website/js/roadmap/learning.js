@@ -11,14 +11,16 @@
 
    Authored lessons: when the current lesson number has an entry in
    data/lesson-content.js (LESSON_CONTENT), its rich teaching content
-   is rendered here through a generic renderer. Lessons without an
-   entry keep the professional placeholder until they are written —
-   adding a new lesson never requires touching this file.
+   is rendered through the universal renderer (lesson-renderer.js).
+   Lessons without an entry keep the professional placeholder until
+   they are written — adding a new lesson never requires touching
+   this file.
    ============================================================ */
 
 import { loadRoadmap } from "./roadmap-loader.js";
 import { LESSON_CONTENT } from "../../data/lesson-content.js";
 import { prefetchTopic, getLessonByNumber, isJsonLesson } from "./lesson-file-loader.js";
+import { renderIntoElement } from "./lesson-renderer.js";
 import {
   toggleLesson,
   isLessonDone,
@@ -37,137 +39,7 @@ function escapeHtml(value) {
   return div.innerHTML;
 }
 
-/* ---------- professional JS syntax highlighter ----------
-   Tokenises JavaScript source into coloured <span> wrappers.
-   Runs entirely in the browser — zero dependencies.
-   Token categories: comment, string, number, keyword, builtin,
-   fn (function call / method), prop (property access),
-   op (operator), punct (punctuation), plain.
-
-   Context-aware: . after an identifier marks the NEXT identifier
-   as a property access.  An identifier followed by ( is a call.
-   Built-in objects keep their own colour even when called. */
-const JS_KEYWORDS = new Set([
-  "const","let","var","function","return","if","else","for","while",
-  "do","switch","case","break","continue","new","this","class",
-  "extends","super","import","export","from","default","async",
-  "await","try","catch","finally","throw","typeof","instanceof",
-  "in","of","delete","void","yield","static","get","set",
-  "null","undefined","true","false"
-]);
-const JS_BUILTINS = new Set([
-  "console","document","window","Math","JSON","Array","Object",
-  "String","Number","Boolean","Promise","Map","Set","Date",
-  "RegExp","Error","Symbol","parseInt","parseFloat","isNaN",
-  "setTimeout","setInterval","clearTimeout","clearInterval",
-  "fetch","alert","prompt","confirm","URL","URLSearchParams",
-  "localStorage","sessionStorage","navigator","history",
-  "requestAnimationFrame","cancelAnimationFrame","queueMicrotask",
-  "WeakMap","WeakSet","Proxy","Reflect","Intl"
-]);
-const JS_OPERATORS = new Set([
-  "+","-","*","/","%","=","==","===","!=","!==",
-  ">","<",">=","<=","&&","||","!","&","|","^","~",
-  "<<",">>",">>>","++","--","+=","-=","*=","/=","%=",
-  "?.","??","..."
-]);
-const JS_PUNCT = new Set([
-  "(",")","{","}","[","]",";",":",",","."
-]);
-
-function highlightJS(code) {
-  const tokens = [];
-  let i = 0;
-  const len = code.length;
-  while (i < len) {
-    /* --- Single-line comment --- */
-    if (code[i] === "/" && code[i + 1] === "/") {
-      const end = code.indexOf("\n", i);
-      const finish = end === -1 ? len : end;
-      tokens.push({ text: code.slice(i, finish), type: "comment" });
-      i = finish;
-    /* --- Multi-line comment --- */
-    } else if (code[i] === "/" && code[i + 1] === "*") {
-      const end = code.indexOf("*/", i + 2);
-      const finish = end === -1 ? len : end + 2;
-      tokens.push({ text: code.slice(i, finish), type: "comment" });
-      i = finish;
-    /* --- Strings (double, single, template) --- */
-    } else if (code[i] === '"' || code[i] === "'" || code[i] === "`") {
-      const q = code[i];
-      let j = i + 1;
-      while (j < len && code[j] !== q) {
-        if (code[j] === "\\") j++;
-        j++;
-      }
-      tokens.push({ text: code.slice(i, j + 1), type: "string" });
-      i = j + 1;
-    /* --- Numbers --- */
-    } else if (/\d/.test(code[i]) && (i === 0 || /[\s(,=:+\-*/<>!&|^~%\[{;?]/.test(code[i - 1]))) {
-      let j = i;
-      while (j < len && /[\d.xXa-fA-FeEn_]/.test(code[j])) j++;
-      tokens.push({ text: code.slice(i, j), type: "number" });
-      i = j;
-    /* --- Identifiers / keywords / builtins --- */
-    } else if (/[a-zA-Z_$]/.test(code[i])) {
-      let j = i;
-      while (j < len && /[a-zA-Z0-9_$]/.test(code[j])) j++;
-      const word = code.slice(i, j);
-      // Look ahead: skip whitespace then check for (
-      let k = j;
-      while (k < len && code[k] === " ") k++;
-      const isCall = code[k] === "(";
-      // Look behind: is previous meaningful char a dot?
-      const prevChar = i > 0 ? code[i - 1] : "";
-      const isAfterDot = prevChar === ".";
-      if (JS_KEYWORDS.has(word)) {
-        tokens.push({ text: word, type: "keyword" });
-      } else if (JS_BUILTINS.has(word)) {
-        tokens.push({ text: word, type: "builtin" });
-      } else if (isAfterDot) {
-        tokens.push({ text: word, type: isCall ? "fn" : "prop" });
-      } else if (isCall) {
-        tokens.push({ text: word, type: "fn" });
-      } else {
-        tokens.push({ text: word, type: "plain" });
-      }
-      i = j;
-    /* --- Multi-char operators (===, !==, =>, >=, <=, &&, ||, etc.) --- */
-    } else if (/[+\-*/%=!<>&|^~?]/.test(code[i])) {
-      // Try 3-char, then 2-char operators
-      const three = code.slice(i, i + 3);
-      const two = code.slice(i, i + 2);
-      if (JS_OPERATORS.has(three)) {
-        tokens.push({ text: three, type: "op" });
-        i += 3;
-      } else if (JS_OPERATORS.has(two)) {
-        tokens.push({ text: two, type: "op" });
-        i += 2;
-      } else if (JS_OPERATORS.has(code[i])) {
-        tokens.push({ text: code[i], type: "op" });
-        i++;
-      } else {
-        tokens.push({ text: code[i], type: "plain" });
-        i++;
-      }
-    /* --- Punctuation --- */
-    } else if (JS_PUNCT.has(code[i])) {
-      tokens.push({ text: code[i], type: "punct" });
-      i++;
-    /* --- Everything else --- */
-    } else {
-      tokens.push({ text: code[i], type: "plain" });
-      i++;
-    }
-  }
-  // Render tokens to HTML — only wrap non-plain tokens
-  return tokens.map((t) => {
-    const safe = escapeHtml(t.text);
-    if (t.type === "plain") return safe;
-    return '<span class="tk-' + t.type + '">' + safe + "</span>";
-  }).join("");
-}
-
+/* ---------- Lucide-style stroke icons (used by navigation UI) ---------- */
 const ICON = {
   chevronLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
   chevronRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
@@ -297,157 +169,6 @@ function renderPlaceholder(topic) {
     "</div>";
 }
 
-/* ---------- authored lesson renderer (generic — driven by LESSON_CONTENT) ---------- */
-function renderSection(sec) {
-  let body = "";
-  (sec.paragraphs || []).forEach((p) => { body += "<p>" + p + "</p>"; });
-  if (sec.list && sec.list.length) {
-    body +=
-      '<ul class="lesson-list">' +
-        sec.list.map((li) => "<li><span>" + li + "</span></li>").join("") +
-      "</ul>";
-  }
-  return '<section class="lesson-section"><h2>' + escapeHtml(sec.heading) + "</h2>" + body + "</section>";
-}
-
-function renderCodeExample(ex) {
-  const filename = escapeHtml(ex.file || "script.js");
-  const lang = escapeHtml(ex.language || "JavaScript");
-  const rawCode = ex.code || "";
-  const highlighted = highlightJS(rawCode);
-  const lines = rawCode.split("\n");
-  const lineCount = lines.length;
-  const lineNums = Array.from({ length: lineCount }, (_, i) =>
-    '<span class="line-num">' + (i + 1) + "</span>"
-  ).join("");
-
-  let body =
-    '<div class="code-block">' +
-      '<div class="code-head">' +
-        '<div class="code-head-left">' +
-          '<span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span>' +
-          '<span class="code-filename">' + filename + "</span>" +
-        "</div>" +
-        '<div class="code-head-right">' +
-          '<span class="code-lang">' + lang + "</span>" +
-          '<button class="code-copy-btn" type="button" data-code="' +
-            escapeHtml(rawCode).replace(/"/g, "&quot;") +
-          '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span></button>' +
-        "</div>" +
-      "</div>" +
-      '<div class="code-body">' +
-        '<div class="code-line-nums" aria-hidden="true">' + lineNums + "</div>" +
-        '<pre class="code-pre"><code>' + highlighted + "</code></pre>" +
-      "</div>" +
-    "</div>";
-
-  if (ex.output) {
-    body +=
-      '<div class="code-output">' +
-        '<div class="code-output-head">' +
-          ICON.terminal +
-          "<span>Output</span>" +
-          '<button class="code-copy-btn code-copy-output" type="button" data-code="' +
-            escapeHtml(ex.output).replace(/"/g, "&quot;") +
-          '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span></button>' +
-        "</div>" +
-        "<pre>" + escapeHtml(ex.output) + "</pre>" +
-      "</div>";
-  }
-  if (ex.explanation && ex.explanation.length) {
-    body +=
-      '<p class="code-explain-label">How it works</p>' +
-      '<ul class="lesson-list code-explain">' +
-        ex.explanation.map((x) => "<li><span>" + x + "</span></li>").join("") +
-      "</ul>";
-  }
-  return '<section class="lesson-section"><h2>' + escapeHtml(ex.heading || "Code example") + "</h2>" + body + "</section>";
-}
-
-function renderVisualExplanation(visual) {
-  if (!visual || !visual.items || !visual.items.length) return "";
-  return (
-    '<section class="lesson-section"><h2>' + escapeHtml(visual.heading) + "</h2>" +
-      '<div class="lesson-visual">' +
-        visual.items.map((item, i) =>
-          '<div class="lv-row">' +
-            '<span class="lv-lang">' + escapeHtml(item.lang) + "</span>" +
-            '<div class="lv-body"><b>' + escapeHtml(item.result) + "</b>" +
-              (item.note ? "<span>" + item.note + "</span>" : "") +
-            "</div>" +
-          "</div>" +
-          (i < visual.items.length - 1 ? '<div class="lv-arrow">' + ICON.chevronDown + "</div>" : "")
-        ).join("") +
-      "</div>" +
-    "</section>"
-  );
-}
-
-function renderTakeaways(items) {
-  return (
-    '<section class="lesson-section"><h2>Key takeaways</h2>' +
-      '<ul class="takeaways">' +
-        items.map((t) =>
-          '<li><span class="tk-ico">' + ICON.check + "</span><span>" + t + "</span></li>"
-        ).join("") +
-      "</ul>" +
-    "</section>"
-  );
-}
-
-function renderPractice(practice) {
-  let body = "";
-  if (practice.tasks && practice.tasks.length) {
-    // Multi-task form: numbered tasks with optional expected output.
-    if (practice.intro) body += '<p class="lp-task">' + practice.intro + "</p>";
-    body +=
-      '<div class="lp-hints">' +
-        practice.tasks.map((t, i) =>
-          "<span><b>" + (i + 1) + ".</b> " + t.text +
-            (t.expected ? ' <i>Expected: ' + t.expected + "</i>" : "") +
-          "</span>"
-        ).join("") +
-      "</div>";
-  } else {
-    body += '<p class="lp-task">' + practice.task + "</p>";
-    if (practice.hints && practice.hints.length) {
-      body +=
-        '<div class="lp-hints">' +
-          practice.hints.map((hint, i) =>
-            "<span><b>" + (i + 1) + ".</b> " + hint + "</span>"
-          ).join("") +
-        "</div>";
-    }
-  }
-  if (practice.note) body += '<p class="lp-note">' + practice.note + "</p>";
-  return (
-    '<section class="lesson-section"><h2>Practice</h2>' +
-      '<div class="lesson-practice-card">' +
-        '<div class="lp-head">' + ICON.pencil + "Your turn</div>" +
-        body +
-      "</div>" +
-    "</section>"
-  );
-}
-
-/** Render an authored lesson into the lesson body area. */
-function renderLessonContent(content) {
-  const wrap = document.getElementById("learnPlaceholder");
-  if (!wrap) return;
-  wrap.innerHTML =
-    '<article class="lesson-content">' +
-      '<p class="lesson-lead">' + content.description + "</p>" +
-      (content.sections || []).map(renderSection).join("") +
-      (content.codeExamples || []).map(renderCodeExample).join("") +
-      (content.sectionsAfterCode || []).map(renderSection).join("") +
-      renderVisualExplanation(content.visualExplanation) +
-      (content.keyTakeaways && content.keyTakeaways.length
-        ? renderTakeaways(content.keyTakeaways)
-        : "") +
-      (content.practice ? renderPractice(content.practice) : "") +
-    "</article>";
-}
-
 function renderNav(flat, index) {
   const prevBtn = document.getElementById("learnPrevBtn");
   const nextBtn = document.getElementById("learnNextBtn");
@@ -508,8 +229,13 @@ export function renderLearning() {
   renderBreadcrumb(level, topic, authored);
   renderLessonHeader(topic, lessonIndex);
   renderLessonBody(topic, lessonIndex);
-  if (authored) renderLessonContent(authored);
-  else renderPlaceholder(topic);
+
+  // Use the universal lesson renderer for authored content
+  if (authored) {
+    renderIntoElement(authored, "learnPlaceholder");
+  } else {
+    renderPlaceholder(topic);
+  }
 
   const flat = flatLessons();
   const index = flat.findIndex((f) => f.topic.id === topic.id && f.lessonIndex === lessonIndex);
