@@ -44,6 +44,20 @@ const ICON = {
 };
 
 /* ---------- helpers ---------- */
+
+/**
+ * renderTerminalOutput — extracts ONLY the result from output text.
+ * Lines starting with ">" are the input/command (already shown in CODE panel).
+ * We strip those and return only the actual output lines.
+ */
+function renderTerminalOutput(output) {
+  if (!output) return '';
+  const lines = output.split('\n');
+  // Filter out lines that start with "> " — those are input/command lines
+  const resultLines = lines.filter((line) => !line.startsWith('> '));
+  return resultLines.map((line) => escapeHtml(line)).join('\n');
+}
+
 function escapeHtml(value) {
   const div = document.createElement("div");
   div.textContent = value == null ? "" : String(value);
@@ -293,6 +307,59 @@ function hasListItems(sec) {
 }
 
 /**
+ * Detect "X vs Y" comparison sections that can be rendered as tables.
+ * Returns parsed comparison data or null.
+ */
+function parseComparisonTable(sec) {
+  const h = (sec.heading || "").toLowerCase();
+  if (!h.includes(" vs ") && !h.includes("versus")) return null;
+  if (!sec.list || sec.list.length < 2) return null;
+
+  // Extract left/right labels from heading: "Statements vs expressions" → ["Statement", "Expression"]
+  const parts = sec.heading.split(/\s+vs\.?\s+|\s+versus\s+/i);
+  if (parts.length < 2) return null;
+  const leftLabel = parts[0].trim().replace(/s$/, ''); // "Statements" → "Statement"
+  const rightLabel = parts[1].trim().replace(/s$/, ''); // "expressions" → "Expression"
+
+  // Parse list items to extract comparison rows
+  // Pattern: "<b>Label</b> — description. Example: <code>...</code> (result)."
+  const rows = [];
+  const leftItem = sec.list[0] || '';
+  const rightItem = sec.list[1] || '';
+
+  // Extract description and example from each item
+  function parseItem(html) {
+    // Remove HTML tags for plain text extraction
+    const plain = html.replace(/<[^>]+>/g, '').replace(/\u2014/g, '—').replace(/\u201c|\u201d/g, '"');
+    // Split on "Example:" or "Example —"
+    const exMatch = plain.match(/(?:Example[:\s—]+|e\.?g\.?[\s:]+)(.+)/i);
+    const desc = exMatch ? plain.slice(0, plain.indexOf(exMatch[0])).trim() : plain.split('.')[0].trim();
+    const example = exMatch ? exMatch[1].trim().split('.')[0].trim() : '';
+    return { desc, example };
+  }
+
+  const left = parseItem(leftItem);
+  const right = parseItem(rightItem);
+
+  // Extract code examples from HTML
+  function extractCode(html) {
+    const m = html.match(/<code>([^<]+)<\/code>/);
+    return m ? m[1] : '';
+  }
+
+  return {
+    leftLabel,
+    rightLabel,
+    leftDesc: left.desc,
+    rightDesc: right.desc,
+    leftExample: extractCode(leftItem),
+    rightExample: extractCode(rightItem),
+    // Use the third item as a "Think of it as" row if available
+    thinkOfIt: sec.list[2] ? sec.list[2].replace(/<[^>]+>/g, '').trim() : ''
+  };
+}
+
+/**
  * Classify a single section into the best visual treatment.
  * Content-driven: the structure determines the presentation.
  */
@@ -300,7 +367,17 @@ function classifySection(sec) {
   const hasParagraphs = sec.paragraphs && sec.paragraphs.length;
   const hasList = sec.list && sec.list.length;
 
-  // Pattern 1: Section describes how multiple technologies relate
+  // Pattern 1: "X vs Y" comparison → render as comparison table
+  const comparisonTable = parseComparisonTable(sec);
+  if (comparisonTable) {
+    return {
+      type: "comparison-table",
+      title: sec.heading,
+      table: comparisonTable
+    };
+  }
+
+  // Pattern 2: Section describes how multiple technologies relate
   // → render as tech-relationship visual (e.g., HTML/CSS/JS comparison)
   if (isTechRelationship(sec)) {
     return {
@@ -436,16 +513,58 @@ function normalizeBlocks(lesson) {
     });
   }
 
-  // Sections after code
+  // Sections after code — detect and pair list-heavy sections
   if (lesson.sectionsAfterCode && lesson.sectionsAfterCode.length) {
-    lesson.sectionsAfterCode.forEach((sec) => {
-      blocks.push({
-        type: "concept",
-        title: sec.heading,
-        paragraphs: sec.paragraphs,
-        list: sec.list
-      });
+    // Classify sections
+    const afterClassified = lesson.sectionsAfterCode.map((sec) => ({
+      type: sec.list && sec.list.length >= 3 ? "list-section" : "concept",
+      title: sec.heading,
+      paragraphs: sec.paragraphs,
+      list: sec.list
+    }));
+
+    // Find consecutive list-heavy sections to pair
+    const listIndices = [];
+    afterClassified.forEach((sec, idx) => {
+      if (sec.type === "list-section") listIndices.push(idx);
     });
+
+    if (listIndices.length >= 2) {
+      // Pair the first two list-heavy sections
+      const [idxA, idxB] = listIndices;
+      const secA = afterClassified[idxA];
+      const secB = afterClassified[idxB];
+      let pairInserted = false;
+
+      afterClassified.forEach((sec, idx) => {
+        if (idx === idxA || idx === idxB) {
+          if (!pairInserted) {
+            // Render paragraphs from first paired section above the pair
+            if (secA.paragraphs && secA.paragraphs.length) {
+              blocks.push({ type: "concept", title: secA.title, paragraphs: secA.paragraphs, list: [] });
+            }
+            blocks.push({
+              type: "concept-pair",
+              variant: "blue-lavender",
+              sections: [
+                { title: secA.title, list: secA.list },
+                { title: secB.title, list: secB.list }
+              ]
+            });
+            pairInserted = true;
+          }
+        } else if (!pairInserted && idx < Math.min(idxA, idxB)) {
+          blocks.push(sec);
+        } else if (pairInserted) {
+          blocks.push(sec);
+        } else {
+          blocks.push(sec);
+        }
+      });
+    } else {
+      // No pairable sections — render all normally
+      afterClassified.forEach((sec) => blocks.push(sec));
+    }
   }
 
   // Key takeaways
@@ -549,7 +668,11 @@ function renderConceptVisual(block) {
  */
 function renderConceptPair(block) {
   if (!block.sections || block.sections.length < 2) return "";
-  const accentClasses = ["lr-concept-card--green", "lr-concept-card--lavender"];
+  // Support different accent variants: "green-lavender" (default) or "blue-lavender"
+  const variant = block.variant || "green-lavender";
+  const accentClasses = variant === "blue-lavender"
+    ? ["lr-concept-card--blue", "lr-concept-card--lavender"]
+    : ["lr-concept-card--green", "lr-concept-card--lavender"];
 
   const cardsHtml = block.sections.slice(0, 2).map((sec, idx) => {
     const list = sec.list || [];
@@ -563,8 +686,10 @@ function renderConceptPair(block) {
       '</div>';
     }).join("");
 
-    // First card gets a small JS badge
-    const badge = idx === 0 ? '<span class="lr-concept-card-badge">JS</span>' : '';
+    // Badge: JS for green variant, none for blue variant
+    const badge = variant !== "blue-lavender" && idx === 0
+      ? '<span class="lr-concept-card-badge">JS</span>'
+      : '';
 
     return '<div class="lr-concept-card ' + accentClasses[idx] + '">' +
       badge +
@@ -637,6 +762,47 @@ function renderComparison(block) {
 }
 
 /**
+ * renderComparisonTable — renders "X vs Y" sections as a compact comparison table.
+ */
+function renderComparisonTable(block) {
+  const t = block.table;
+  if (!t) return '';
+  return (
+    '<section class="lesson-section">' +
+      '<h2>' + escapeHtml(block.title) + '</h2>' +
+      '<div class="lr-cmp-table-wrap">' +
+        '<table class="lr-cmp-table">' +
+          '<thead>' +
+            '<tr>' +
+              '<th></th>' +
+              '<th class="lr-cmp-col-statement">' + escapeHtml(t.leftLabel) + '</th>' +
+              '<th class="lr-cmp-col-expression">' + escapeHtml(t.rightLabel) + '</th>' +
+            '</tr>' +
+          '</thead>' +
+          '<tbody>' +
+            '<tr>' +
+              '<td class="lr-cmp-row-label">What it does</td>' +
+              '<td>' + escapeHtml(t.leftDesc) + '</td>' +
+              '<td>' + escapeHtml(t.rightDesc) + '</td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td class="lr-cmp-row-label">Example</td>' +
+              '<td><code class="lr-cmp-code">' + escapeHtml(t.leftExample) + '</code></td>' +
+              '<td><code class="lr-cmp-code">' + escapeHtml(t.rightExample) + '</code></td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td class="lr-cmp-row-label">Think of it as</td>' +
+              '<td class="lr-cmp-think">"Do this"</td>' +
+              '<td class="lr-cmp-think">"Give me a value"</td>' +
+            '</tr>' +
+          '</tbody>' +
+        '</table>' +
+      '</div>' +
+    '</section>'
+  );
+}
+
+/**
  * renderCodeBlock — renders just the code block + output + explanation
  * WITHOUT a section wrapper. Used internally and by question renderer.
  */
@@ -699,7 +865,7 @@ function renderCodeBlock(block) {
           '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span></button>' +
         "</div>" +
         '<div class="code-output-body">' +
-          "<pre>" + escapeHtml(block.output) + "</pre>" +
+          "<pre>" + renderTerminalOutput(block.output) + "</pre>" +
         "</div>" +
       "</div>";
   }
@@ -892,6 +1058,7 @@ function renderBlock(block) {
     case "concept-pair":      return renderConceptPair(block);
     case "tech-combined":    return renderTechCombined(block);
     case "comparison":        return renderComparison(block);
+    case "comparison-table": return renderComparisonTable(block);
     case "code":              return renderCodeExample(block);
     case "steps":             return renderSteps(block);
     case "question":          return renderQuestion(block);
