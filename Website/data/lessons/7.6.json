@@ -1,0 +1,189 @@
+{
+  "topicId": "7.6",
+  "topicTitle": "Binary Data Handling: ArrayBuffer & TypedArrays",
+  "lessons": [
+    {
+      "id": "7.6.1",
+      "title": "Allocating Binary Memory with ArrayBuffer",
+      "description": "ArrayBuffer allocates a fixed block of raw binary memory — the foundation for working with binary data in JavaScript.",
+      "sections": [
+        {
+          "heading": "What is ArrayBuffer?",
+          "paragraphs": ["An ArrayBuffer is a fixed-length raw binary data buffer. You can't read or write it directly — you must create a typed view to interpret the bytes."],
+          "list": [
+            "<code>new ArrayBuffer(length)</code> — allocates 'length' bytes of memory",
+            "All bytes initialized to zero",
+            "Fixed size — cannot be resized",
+            "Use TypedArrays or DataView to read/write the bytes"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Creating an ArrayBuffer",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Allocate 16 bytes of binary memory\nlet buffer = new ArrayBuffer(16);\n\nconsole.log(buffer.byteLength);  // 16\n\n// Create a view to access the bytes\nlet view = new Uint8Array(buffer);\nconsole.log(view);  // Uint8Array(16) [0, 0, 0, ..., 0]\n\n// Write bytes\nview[0] = 72;   // 'H'\nview[1] = 105;  // 'i'\n\nconsole.log(view.slice(0, 2));  // [72, 105]",
+          "explanation": [
+            "ArrayBuffer allocates raw memory — no reading or writing directly.",
+            "TypedArray views interpret the bytes as specific data types.",
+            "Uint8Array treats each byte as an unsigned 8-bit integer (0–255).",
+            "The same buffer can have multiple views with different interpretations."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create an ArrayBuffer of 8 bytes and use a Uint8Array view to store the ASCII codes for \"Hello!\".",
+        "hints": [
+          "Allocate: <code>new ArrayBuffer(8)</code>.",
+          "Create view: <code>new Uint8Array(buffer)</code>.",
+          "Store ASCII: 72, 101, 108, 108, 111, 33."
+        ]
+      },
+      "keyTakeaways": [
+        "ArrayBuffer allocates fixed-length raw binary memory.",
+        "You must create a TypedArray view to read/write the bytes.",
+        "The same buffer can have multiple views with different data type interpretations.",
+        "ArrayBuffer is the foundation for binary data in the browser and Node.js."
+      ],
+      "challenge": "Create an ArrayBuffer and interpret it as both Uint8Array and Int32Array to see how the same bytes look in different formats."
+    },
+    {
+      "id": "7.6.2",
+      "title": "TypedArray Views (Uint8Array, Float64Array)",
+      "description": "TypedArrays provide typed views over ArrayBuffers — read and write binary data as specific numeric types.",
+      "sections": [
+        {
+          "heading": "TypedArray types",
+          "list": [
+            "<code>Uint8Array</code> — unsigned 8-bit integers (0–255): bytes, images",
+            "<code>Int16Array</code> — signed 16-bit integers (-32768 to 32767)",
+            "<code>Float32Array</code> — 32-bit floating point: audio, physics",
+            "<code>Float64Array</code> — 64-bit floating point: high precision math",
+            "All TypedArrays share the same API: length, slice, fill, map, etc."
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "TypedArray operations",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Float32Array for physics simulation\nlet positions = new Float32Array(6);\npositions[0] = 1.5;  // x1\npositions[1] = 2.0;  // y1\npositions[2] = 3.5;  // x2\npositions[3] = 4.0;  // y2\n\n// Array-like operations\nlet doubled = new Float64Array(positions.map(x => x * 2));\nconsole.log(doubled);  // Float64Array [3, 4, 7, 8, 0, 0]\n\n// From regular array\nlet bytes = new Uint8Array([72, 101, 108, 108, 111]);\nlet text = new TextDecoder().decode(bytes);\nconsole.log(text);  // \"Hello\"",
+          "explanation": [
+            "TypedArrays allocate their own ArrayBuffer internally.",
+            "They behave like arrays but are fixed-length and type-restricted.",
+            "Use TextDecoder to convert bytes to strings.",
+            "Different types have different byte sizes and value ranges."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a Uint8Array from a string using TextEncoder, then decode it back with TextDecoder.",
+        "hints": [
+          "Encode: <code>new TextEncoder().encode(\"Hello\")</code>.",
+          "Decode: <code>new TextDecoder().decode(bytes)</code>.",
+          "Verify the round-trip produces the original string."
+        ]
+      },
+      "keyTakeaways": [
+        "TypedArrays provide typed views over binary data.",
+        "Different types have different byte sizes and value ranges.",
+        "Use TextEncoder/TextDecoder to convert between strings and bytes.",
+        "TypedArrays are used in audio processing, image manipulation and network protocols."
+      ],
+      "challenge": "Build a simple image processor that reads pixel data as Uint8Array and applies a grayscale filter."
+    },
+    {
+      "id": "7.6.3",
+      "title": "DataView Manipulation & Endianness Controls",
+      "description": "DataView reads binary data in specific byte orders — essential for network protocols and file formats.",
+      "sections": [
+        {
+          "heading": "What is DataView?",
+          "paragraphs": ["DataView provides fine-grained control over reading and writing binary data. Unlike TypedArrays, it can read different types from the same buffer and control byte order (endianness)."],
+          "list": [
+            "<code>new DataView(buffer, offset, length)</code> — creates a view into a buffer",
+            "Read/write specific types at specific offsets",
+            "Control endianness: little-endian or big-endian",
+            "Essential for binary file formats and network protocols"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "DataView for binary protocols",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let buffer = new ArrayBuffer(8);\nlet view = new DataView(buffer);\n\n// Write a 32-bit integer at byte 0\nview.setInt32(0, 1000, false);  // big-endian\n\n// Write a 16-bit integer at byte 4\nview.setInt16(4, 256, true);    // little-endian\n\n// Read them back\nconsole.log(view.getInt32(0, false));  // 1000\nconsole.log(view.getInt16(4, true));   // 256\n\n// Different byte orders for the same data\nview.setInt32(0, 256, false);  // big-endian: [0,0,1,0]\nview.setInt32(0, 256, true);   // little-endian: [0,1,0,0]",
+          "explanation": [
+            "DataView reads/writes at specific byte offsets in the buffer.",
+            "The boolean parameter controls endianness (byte order).",
+            "Big-endian: most significant byte first. Little-endian: least significant first.",
+            "Different systems use different endianness — DataView handles both."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use DataView to write your name as individual bytes into an ArrayBuffer, then read them back as a string.",
+        "hints": [
+          "Use <code>view.setUint8(i, charCode)</code> for each character.",
+          "Read back with <code>view.getUint8(i)</code>.",
+          "Convert bytes to string with <code>String.fromCharCode()</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "DataView provides fine-grained control over binary data access.",
+        "Read/write at specific byte offsets with specific data types.",
+        "Control endianness for cross-platform binary compatibility.",
+        "Essential for parsing binary file formats and network protocols."
+      ],
+      "challenge": "Parse a BMP image header using DataView to extract width, height and color depth."
+    },
+    {
+      "id": "7.6.4",
+      "title": "String Encoding Conversions via TextEncoder & TextDecoder",
+      "description": "Convert between JavaScript strings and binary data using the Encoding API.",
+      "sections": [
+        {
+          "heading": "TextEncoder and TextDecoder",
+          "list": [
+            "<code>new TextEncoder()</code> — converts strings to Uint8Array (UTF-8)",
+            "<code>new TextDecoder()</code> — converts Uint8Array back to strings",
+            "UTF-8 is the default encoding for both",
+            "Essential for working with binary data that represents text"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Encoding and decoding strings",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let encoder = new TextEncoder();\nlet decoder = new TextDecoder();\n\n// Encode string to bytes\nlet encoded = encoder.encode(\"Hello, 世界!\");\nconsole.log(encoded);     // Uint8Array(13) [72, 101, ...]\nconsole.log(encoded.length);  // 13 bytes (not 9 chars!)\n\n// Decode bytes to string\nlet decoded = decoder.decode(encoded);\nconsole.log(decoded);     // \"Hello, 世界!\"\n\n// Different encodings\nlet utf16decoder = new TextDecoder(\"utf-16\");\nlet utf16bytes = new Uint8Array([255, 254, 72, 0, 105, 0]);\nconsole.log(utf16decoder.decode(utf16bytes));  // \"Hi\"",
+          "explanation": [
+            "TextEncoder produces UTF-8 bytes — each character may be 1–4 bytes.",
+            "Chinese/Japanese characters use 3 bytes in UTF-8.",
+            "TextDecoder can handle different encodings: UTF-8, UTF-16, etc.",
+            "The byte length differs from the string length for multi-byte characters."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Encode a string with special characters to bytes, check the byte length vs string length, then decode it back.",
+        "hints": [
+          "Encode: <code>encoder.encode(\"Hello 🌍\")</code>.",
+          "Check: <code>encoded.length</code> vs <code>\"Hello 🌍\".length</code>.",
+          "Decode: <code>decoder.decode(encoded)</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "TextEncoder converts strings to UTF-8 bytes (Uint8Array).",
+        "TextDecoder converts bytes back to strings, supporting multiple encodings.",
+        "UTF-8 uses 1–4 bytes per character — byte length differs from string length.",
+        "Essential for binary protocols, file I/O and network communication."
+      ],
+      "challenge": "Build a simple file reader that loads a text file as ArrayBuffer and decodes it to a string using TextDecoder."
+    }
+  ]
+}

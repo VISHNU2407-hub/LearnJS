@@ -1,0 +1,144 @@
+{
+  "topicId": "7.5",
+  "topicTitle": "Meta-Programming: Proxy & Reflect API",
+  "lessons": [
+    {
+      "id": "7.5.1",
+      "title": "Target Interception using Proxy Traps (get, set, apply)",
+      "description": "Proxies intercept operations on objects — customizing behavior for property access, assignment and function calls.",
+      "sections": [
+        {
+          "heading": "What is a Proxy?",
+          "paragraphs": ["A Proxy wraps an object and intercepts fundamental operations. You can customize what happens when properties are read, written, deleted or functions are called."],
+          "list": [
+            "<code>new Proxy(target, handler)</code> — creates a proxied object",
+            "<b>handler traps</b>: get, set, has, deleteProperty, apply, etc.",
+            "The proxy intercepts operations on the target object",
+            "Transparent to most code — proxies behave like regular objects"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Proxy get and set traps",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let user = { name: \"Alex\", age: 25 };\n\nlet proxy = new Proxy(user, {\n  get(target, prop) {\n    console.log(`Reading ${prop}`);\n    return prop in target ? target[prop] : \"Property not found\";\n  },\n  set(target, prop, value) {\n    console.log(`Setting ${prop} = ${value}`);\n    target[prop] = value;\n    return true;\n  }\n});\n\nconsole.log(proxy.name);  // \"Reading name\" → \"Alex\"\nconsole.log(proxy.x);     // \"Reading x\" → \"Property not found\"\nproxy.age = 30;           // \"Setting age = 30\"",
+          "explanation": [
+            "The get trap intercepts every property read on the proxy.",
+            "The set trap intercepts every property assignment.",
+            "The proxy wraps the original object — operations go through the traps first.",
+            "Return true from set to indicate the operation succeeded."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a proxy that logs every property access and prevents modification of properties starting with underscore (_).",
+        "hints": [
+          "In the get trap: log <code>prop</code> and return the value.",
+          "In the set trap: check if <code>prop.startsWith(\"_\")</code>.",
+          "If it starts with _, throw an error or ignore the set."
+        ]
+      },
+      "keyTakeaways": [
+        "Proxies intercept fundamental object operations via handler traps.",
+        "get, set, has and deleteProperty are the most commonly used traps.",
+        "Proxies are transparent — most code doesn't know it's talking to a proxy.",
+        "They enable validation, logging, access control and reactive systems."
+      ],
+      "challenge": "Build a validation proxy that enforces type constraints on object properties."
+    },
+    {
+      "id": "7.5.2",
+      "title": "Default Operation Delegation with the Reflect API",
+      "description": "Reflect provides methods that mirror Proxy traps — use it to delegate default behavior cleanly.",
+      "sections": [
+        {
+          "heading": "What is Reflect?",
+          "paragraphs": ["Reflect is a built-in object with methods that correspond to Proxy traps. Instead of manually manipulating <code>target[prop]</code>, use Reflect to perform the default behavior."],
+          "list": [
+            "<code>Reflect.get(target, prop)</code> — default property access",
+            "<code>Reflect.set(target, prop, value)</code> — default property assignment",
+            "<code>Reflect.has(target, prop)</code> — default property check",
+            "Always pairs with Proxy for clean delegation"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Reflect with Proxy",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let user = { name: \"Alex\", age: 25 };\n\nlet proxy = new Proxy(user, {\n  get(target, prop, receiver) {\n    console.log(`Accessed: ${prop}`);\n    return Reflect.get(target, prop, receiver);\n  },\n  set(target, prop, value, receiver) {\n    if (typeof value === \"string\" && prop === \"name\") {\n      value = value.toUpperCase();\n    }\n    return Reflect.set(target, prop, value, receiver);\n  }\n});\n\nconsole.log(proxy.name);  // \"ALEX\"\nproxy.name = \"Sam\";\nconsole.log(proxy.name);  // \"SAM\"",
+          "explanation": [
+            "Reflect.get/set perform the default operation cleanly.",
+            "The handler can modify values before delegating with Reflect.",
+            "receiver ensures proper this binding in inheritance chains.",
+            "Always use Reflect in Proxy traps for clean, correct delegation."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a proxy that converts all string values to uppercase when they're set on an object. Use Reflect for default behavior.",
+        "hints": [
+          "In the set trap: check if <code>typeof value === \"string\"</code>.",
+          "If so, convert: <code>value = value.toUpperCase()</code>.",
+          "Delegate: <code>return Reflect.set(target, prop, value, receiver)</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Reflect methods mirror Proxy traps — use them for default behavior.",
+        "Always use Reflect in Proxy traps instead of manually manipulating target.",
+        "Reflect ensures proper receiver binding for inheritance chains.",
+        "Together, Proxy and Reflect enable clean meta-programming."
+      ],
+      "challenge": "Build a logging proxy that records all property access and modification using Reflect for delegation."
+    },
+    {
+      "id": "7.5.3",
+      "title": "Building Reactive State Systems with Proxies",
+      "description": "Use Proxies to create reactive objects that automatically trigger callbacks when state changes.",
+      "sections": [
+        {
+          "heading": "Reactive programming with Proxies",
+          "paragraphs": ["Reactive systems automatically update when data changes — the foundation of Vue.js, MobX and other frameworks. Proxies make this possible by intercepting set operations."],
+          "list": [
+            "Intercept set operations to detect state changes",
+            "Trigger callbacks or re-renders when data changes",
+            "Track which properties are accessed (dependency tracking)",
+            "This is how Vue 3's reactivity system works internally"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Simple reactive state",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function reactive(obj, onChange) {\n  return new Proxy(obj, {\n    set(target, prop, value) {\n      let oldValue = target[prop];\n      target[prop] = value;\n      if (oldValue !== value) {\n        onChange(prop, value, oldValue);\n      }\n      return true;\n    }\n  });\n}\n\nlet state = reactive({ count: 0, name: \"Alex\" }, (prop, newVal, oldVal) => {\n  console.log(`${prop}: ${oldVal} → ${newVal}`);\n});\n\nstate.count = 1;   // \"count: 0 → 1\"\nstate.name = \"Sam\"; // \"name: Alex → Sam\"\nstate.count = 1;   // no log (same value)",
+          "explanation": [
+            "The reactive() function wraps an object in a Proxy.",
+            "The set trap detects changes and triggers the callback.",
+            "Only actual changes (oldValue !== newValue) trigger notifications.",
+            "This is the core pattern behind reactive frameworks."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Build a reactive state object that updates a DOM element whenever a property changes.",
+        "hints": [
+          "Use the reactive pattern above.",
+          "In the onChange callback, update <code>document.querySelector(\".display\").textContent</code>.",
+          "Test: <code>state.count = 5</code> should update the DOM."
+        ]
+      },
+      "keyTakeaways": [
+        "Proxies enable reactive systems by intercepting property changes.",
+        "The set trap detects changes and triggers update callbacks.",
+        "This is the foundation of Vue 3, MobX and similar frameworks.",
+        "Reactive programming eliminates manual DOM updates — the UI reflects the data automatically."
+      ],
+      "challenge": "Build a mini reactive framework that supports computed properties and watchers using Proxy."
+    }
+  ]
+}

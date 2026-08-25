@@ -1,0 +1,244 @@
+{
+  "topicId": "3.3",
+  "topicTitle": "User Interactions: Browser Event Mechanics",
+  "lessons": [
+    {
+      "id": "3.3.1",
+      "title": "Attaching Event Listeners (addEventListener)",
+      "description": "Learn how to make elements respond to user actions like clicks, key presses and form submissions.",
+      "sections": [
+        {
+          "heading": "What are events?",
+          "paragraphs": ["An event is anything that happens in the browser — a click, a key press, a form submission, a page load. JavaScript can listen for these events and run code in response. This is how pages become interactive."],
+          "list": [
+            "Events are triggered by user actions or the browser itself",
+            "You attach a listener with <code>element.addEventListener(event, handler)</code>",
+            "The handler function runs every time the event occurs",
+            "You can attach multiple listeners to the same element"
+          ]
+        },
+        {
+          "heading": "Removing listeners",
+          "list": [
+            "<code>removeEventListener(event, handler)</code> — stops listening",
+            "You must pass the same function reference — not a new copy",
+            "Useful for temporary listeners (e.g., one-time modals)"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Basic click listener",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let button = document.querySelector(\"#myBtn\");\n\nbutton.addEventListener(\"click\", () => {\n  console.log(\"Button was clicked!\");\n});\n\n// Multiple listeners on the same element\nbutton.addEventListener(\"click\", () => {\n  document.body.classList.toggle(\"highlight\");\n});",
+          "explanation": [
+            "<code>addEventListener</code> takes an event name and a callback function.",
+            "You can add multiple listeners — they all fire in order.",
+            "The callback runs every time the event occurs, not just once."
+          ]
+        },
+        {
+          "heading": "Removing a listener with a named function",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let button = document.querySelector(\"#myBtn\");\n\nfunction handleClick() {\n  console.log(\"Clicked!\");\n  button.removeEventListener(\"click\", handleClick);\n}\n\nbutton.addEventListener(\"click\", handleClick);\n// First click logs \"Clicked!\", then removes itself.",
+          "explanation": [
+            "To remove a listener, you must pass the exact same function reference.",
+            "Named functions let you reference them for both add and remove.",
+            "Arrow functions create new references each time — you can't remove them easily."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Add a click listener to a button that logs \"Hello!\" to the console. Then add a second listener to the same button that changes the button's text to \"Clicked!\".",
+        "hints": [
+          "Use <code>button.addEventListener(\"click\", ...)</code> twice.",
+          "Inside the second handler, use <code>button.textContent = \"Clicked!\"</code>.",
+          "Both listeners will fire on each click."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>addEventListener(event, handler)</code> is the standard way to respond to events.",
+        "Multiple listeners can coexist on the same element.",
+        "To remove a listener, you must pass the exact same function reference.",
+        "Named functions are better than arrows when you need to remove listeners later."
+      ],
+      "challenge": "Create a button that only works once — the first click shows an alert, then the listener removes itself so subsequent clicks do nothing."
+    },
+    {
+      "id": "3.3.2",
+      "title": "Handling Mouse, Keyboard, and Form Input Events",
+      "description": "The most common event types for user interaction — mouse, keyboard and form inputs.",
+      "sections": [
+        {
+          "heading": "Mouse events",
+          "list": [
+            "<code>click</code> — button pressed and released",
+            "<code>dblclick</code> — double click",
+            "<code>mousedown</code> / <code>mouseup</code> — individual press/release",
+            "<code>mouseover</code> / <code>mouseout</code> — cursor enters/leaves an element",
+            "<code>mousemove</code> — cursor moves over an element (fires rapidly)"
+          ]
+        },
+        {
+          "heading": "Keyboard events",
+          "list": [
+            "<code>keydown</code> — key is pressed (fires repeatedly while held)",
+            "<code>keyup</code> — key is released",
+            "<code>event.key</code> — the key name (\"Enter\", \"a\", \"ArrowUp\")",
+            "<code>event.code</code> — physical key position (\"KeyA\", \"Space\")"
+          ]
+        },
+        {
+          "heading": "Form events",
+          "list": [
+            "<code>submit</code> — form is submitted (use <code>preventDefault()</code> to stop page reload)",
+            "<code>input</code> — value changes as user types",
+            "<code>change</code> — value changes and element loses focus"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Mouse and keyboard events",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let box = document.querySelector(\".box\");\n\n// Mouse events\nbox.addEventListener(\"click\", () => console.log(\"clicked\"));\nbox.addEventListener(\"mouseover\", () => {\n  box.style.backgroundColor = \"lightblue\";\n});\nbox.addEventListener(\"mouseout\", () => {\n  box.style.backgroundColor = \"white\";\n});\n\n// Keyboard event\ndocument.addEventListener(\"keydown\", (e) => {\n  console.log(\"Key: \" + e.key);\n  if (e.key === \"Escape\") console.log(\"Escape pressed!\");\n});",
+          "explanation": [
+            "Mouse events let you respond to clicks, hovers and drags.",
+            "<code>e.key</code> gives you the key name — perfect for shortcuts.",
+            "Attach keyboard listeners to <code>document</code> since key events need a focused element or document-level listener."
+          ]
+        },
+        {
+          "heading": "Form submission handling",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let form = document.querySelector(\"#myForm\");\n\nform.addEventListener(\"submit\", (e) => {\n  e.preventDefault();  // stop page reload\n  let name = form.querySelector(\"#name\").value;\n  console.log(\"Name: \" + name);\n});\n\n// Real-time input tracking\nlet input = document.querySelector(\"#search\");\ninput.addEventListener(\"input\", (e) => {\n  console.log(\"Current value: \" + e.target.value);\n});",
+          "explanation": [
+            "<code>preventDefault()</code> stops the browser's default form submission (page reload).",
+            "<code>e.target.value</code> reads the current value of the input.",
+            "<code>input</code> event fires on every keystroke — ideal for live search."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a form with a text input and a submit button. Prevent the default form submission and instead log the input value to the console.",
+        "hints": [
+          "Use <code>form.addEventListener(\"submit\", (e) => { e.preventDefault(); ... })</code>.",
+          "Read the value with <code>input.value</code> inside the handler.",
+          "Test that the page doesn't reload when you submit."
+        ]
+      },
+      "keyTakeaways": [
+        "Mouse events: <code>click</code>, <code>mouseover</code>, <code>mouseout</code> handle pointer interactions.",
+        "Keyboard events: <code>keydown</code> and <code>keyup</code> with <code>e.key</code> handle key presses.",
+        "Always use <code>preventDefault()</code> on form submit to stop page reload.",
+        "Use the <code>input</code> event for real-time value tracking as the user types."
+      ],
+      "challenge": "Build a live character counter — an input field that shows the remaining characters (out of 140) as the user types, turning red when over the limit."
+    },
+    {
+      "id": "3.3.3",
+      "title": "Working with the Event Object (event.target, event.key)",
+      "description": "The event object carries useful information about what happened — target element, key pressed, mouse coordinates and more.",
+      "sections": [
+        {
+          "heading": "The event parameter",
+          "paragraphs": ["Every event handler receives an event object as its first argument. This object tells you exactly what happened, where it happened, and gives you control over it."],
+          "list": [
+            "<code>e.target</code> — the element that triggered the event",
+            "<code>e.currentTarget</code> — the element the listener is attached to",
+            "<code>e.type</code> — the event name (\"click\", \"keydown\", etc.)",
+            "<code>e.timeStamp</code> — when the event occurred",
+            "<code>e.preventDefault()</code> — cancels the default behavior"
+          ]
+        },
+        {
+          "heading": "Event-specific properties",
+          "list": [
+            "Keyboard: <code>e.key</code>, <code>e.code</code>, <code>e.ctrlKey</code>",
+            "Mouse: <code>e.clientX</code>, <code>e.clientY</code>, <code>e.button</code>",
+            "Form input: <code>e.target.value</code>"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Using event.target and event properties",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// event.target tells you WHAT was clicked\ndocument.querySelector(\".list\").addEventListener(\"click\", (e) => {\n  if (e.target.tagName === \"LI\") {\n    console.log(\"Clicked item: \" + e.target.textContent);\n  }\n});\n\n// Keyboard shortcuts\ndocument.addEventListener(\"keydown\", (e) => {\n  if (e.ctrlKey && e.key === \"s\") {\n    e.preventDefault();\n    console.log(\"Save shortcut!\");\n  }\n});",
+          "explanation": [
+            "<code>e.target</code> is the actual element that received the event — crucial for delegation.",
+            "<code>e.currentTarget</code> is where the listener is attached — often the same as <code>e.target</code>.",
+            "Check <code>e.key</code> and modifier flags like <code>e.ctrlKey</code> for keyboard shortcuts."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Add a click listener to a list element. Use event.target to detect which specific <code>&lt;li&gt;</code> was clicked and log its text content.",
+        "hints": [
+          "Attach the listener to the parent <code>&lt;ul&gt;</code>.",
+          "Check <code>e.target.tagName === \"LI\"</code> inside the handler.",
+          "Read the text with <code>e.target.textContent</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>e.target</code> is the element that actually received the event.",
+        "<code>e.currentTarget</code> is the element the listener is attached to.",
+        "Event-specific properties like <code>e.key</code> and <code>e.clientX</code> tell you details about the event.",
+        "Use <code>e.preventDefault()</code> to cancel default behaviors like form submission."
+      ],
+      "challenge": "Build a keyboard game where pressing arrow keys logs the direction (up/down/left/right) and pressing Escape shows \"Game Over\"."
+    },
+    {
+      "id": "3.3.4",
+      "title": "Preventing Default Browser Behaviors (event.preventDefault())",
+      "description": "Stop the browser from doing what it normally would — form submissions, link navigation, context menus and more.",
+      "sections": [
+        {
+          "heading": "What is default behavior?",
+          "paragraphs": ["The browser has built-in actions for many elements — clicking a link navigates, submitting a form reloads the page, right-clicking shows a context menu. <code>preventDefault()</code> stops these from happening."],
+          "list": [
+            "Form submit → page reload (prevent to handle with JavaScript)",
+            "Link click → navigation (prevent for SPA routing or analytics)",
+            "Right-click → context menu (prevent to build custom menus)",
+            "Spacebar on checkbox → toggle (prevent for custom behavior)",
+            "Drag and drop → browser drag behavior (prevent for custom drag)"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Preventing form submission and link navigation",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Stop form reload\nlet form = document.querySelector(\"form\");\nform.addEventListener(\"submit\", (e) => {\n  e.preventDefault();\n  console.log(\"Form submitted without page reload!\");\n});\n\n// Stop link navigation\nlet link = document.querySelector(\"a.no-nav\");\nlink.addEventListener(\"click\", (e) => {\n  e.preventDefault();\n  console.log(\"Navigation blocked: \" + link.href);\n});\n\n// Prevent context menu\ndocument.addEventListener(\"contextmenu\", (e) => {\n  e.preventDefault();\n  console.log(\"Right-click menu blocked\");\n});",
+          "explanation": [
+            "<code>preventDefault()</code> on form submit is essential for JavaScript-driven forms.",
+            "Blocking link navigation is useful for single-page apps and analytics.",
+            "Preventing the context menu lets you build a custom right-click menu.",
+            "Only prevent defaults when you have a good reason — it changes expected behavior."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a form that prevents page reload on submit, validates that the email field contains an \"@\" symbol, and shows an error message if it doesn't.",
+        "hints": [
+          "Use <code>e.preventDefault()</code> inside the submit handler.",
+          "Check the value with <code>emailInput.value.includes(\"@\")</code>.",
+          "Show errors by updating a <code>&lt;p&gt;</code> element's textContent."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>preventDefault()</code> stops the browser's built-in action for an event.",
+        "Most commonly used on form submit to prevent page reload.",
+        "Also useful for blocking link navigation and context menus.",
+        "Only prevent defaults when you're replacing the behavior with your own JavaScript."
+      ],
+      "challenge": "Build a link-based navigation menu where clicking links doesn't navigate away — instead it updates the page content dynamically using JavaScript."
+    }
+  ]
+}

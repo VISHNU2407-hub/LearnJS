@@ -1,0 +1,219 @@
+{
+  "topicId": "10.5",
+  "topicTitle": "Architectural Software Patterns in Native JavaScript",
+  "lessons": [
+    {
+      "id": "10.5.1",
+      "title": "Creational Design Patterns: Factory, Singleton, Builder",
+      "description": "Control how objects are created — factories produce flexible objects, singletons enforce uniqueness, builders construct complex ones.",
+      "sections": [
+        {
+          "heading": "Factory pattern",
+          "list": [
+            "A function that creates and returns objects without using 'new'",
+            "Decouples object creation from the calling code",
+            "Can return different types based on input",
+            "Simplifies complex object creation logic"
+          ]
+        },
+        {
+          "heading": "Singleton pattern",
+          "list": [
+            "Ensures only one instance of a class exists",
+            "Provides a global access point to that instance",
+            "Use for: database connections, configuration, caches",
+            "Module-level variables in JavaScript are natural singletons"
+          ]
+        },
+        {
+          "heading": "Builder pattern",
+          "list": [
+            "Constructs complex objects step by step",
+            "Each step returns the builder for chaining",
+            "Separates construction from representation",
+            "Useful for objects with many optional parameters"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Three creational patterns",
+          "file": "patterns.js",
+          "language": "JavaScript",
+          "code": "// Factory\nfunction createUser(type) {\n  const users = {\n    admin: { role: \"admin\", permissions: [\"read\", \"write\", \"delete\"] },\n    guest: { role: \"guest\", permissions: [\"read\"] }\n  };\n  return { ...users[type], createdAt: new Date() };\n}\nlet admin = createUser(\"admin\");\n\n// Singleton\nclass Database {\n  static #instance = null;\n  static getInstance() {\n    if (!Database.#instance) {\n      Database.#instance = new Database();\n    }\n    return Database.#instance;\n  }\n  query(sql) { console.log(\"Executing:\", sql); }\n}\nlet db1 = Database.getInstance();\nlet db2 = Database.getInstance();\nconsole.log(db1 === db2);  // true\n\n// Builder\nclass RequestBuilder {\n  constructor() { this.options = {}; }\n  url(u) { this.options.url = u; return this; }\n  method(m) { this.options.method = m; return this; }\n  header(k, v) { this.options.headers = { ...this.options.headers, [k]: v }; return this; }\n  build() { return { ...this.options }; }\n}\nlet req = new RequestBuilder()\n  .url(\"/api/users\")\n  .method(\"GET\")\n  .header(\"Accept\", \"application/json\")\n  .build();",
+          "explanation": [
+            "Factory: a function that creates different object types based on input.",
+            "Singleton: ensures only one instance exists via static method.",
+            "Builder: step-by-step construction with method chaining.",
+            "Each pattern solves a specific object creation problem."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Implement a Factory that creates different notification types (email, SMS, push) based on user preference.",
+        "hints": [
+          "Factory function: <code>createNotification(type, message)</code>.",
+          "Each type has different properties: to, phone, token.",
+          "Return the appropriate notification object."
+        ]
+      },
+      "keyTakeaways": [
+        "Factory: creates objects without using 'new' — decouples creation from usage.",
+        "Singleton: ensures only one instance exists — use for shared resources.",
+        "Builder: constructs complex objects step by step with method chaining.",
+        "Choose the pattern based on your specific creation requirements."
+      ],
+      "challenge": "Build a configuration manager using the Builder pattern that validates settings at each step."
+    },
+    {
+      "id": "10.5.2",
+      "title": "Structural Design Patterns: Adapter, Proxy, Decorator",
+      "description": "Structure objects and classes into larger combinations — adapters bridge interfaces, proxies control access, decorators add behavior.",
+      "sections": [
+        {
+          "heading": "Adapter pattern",
+          "list": "Converts one interface to another that the client expects."
+        },
+        {
+          "heading": "Proxy pattern",
+          "list": "Controls access to another object — add logging, validation or caching."
+        },
+        {
+          "heading": "Decorator pattern",
+          "list": "Adds behavior to objects dynamically without modifying their class."
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Three structural patterns",
+          "file": "patterns.js",
+          "language": "JavaScript",
+          "code": "// Adapter: convert old API to new interface\nclass OldAPI {\n  getRequest(url) { return fetch(url); }\n}\n\nclass APIAdapter {\n  constructor(oldApi) { this.api = oldApi; }\n  async get(url) {\n    let response = await this.api.getRequest(url);\n    return { data: await response.json(), status: response.status };\n  }\n}\n\n// Proxy: logging proxy\nlet handler = {\n  get(target, prop) {\n    console.log(`Accessed: ${prop}`);\n    return Reflect.get(target, prop);\n  }\n};\nlet proxy = new Proxy({ data: 42 }, handler);\n\n// Decorator: add timing to any function\nfunction withTiming(fn) {\n  return function(...args) {\n    console.time(fn.name);\n    let result = fn(...args);\n    console.timeEnd(fn.name);\n    return result;\n  };\n}\nlet fastSum = withTiming((a, b) => a + b);\nfastSum(1, 2);  // logs timing info",
+          "explanation": [
+            "Adapter: wraps an old interface to match what the client expects.",
+            "Proxy: intercepts operations for logging, validation or caching.",
+            "Decorator: wraps a function to add behavior without changing it.",
+            "All three modify objects without changing their core implementation."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a caching Proxy that caches the results of expensive function calls.",
+        "hints": [
+          "Use a Proxy with a get trap.",
+          "Check if the result is cached before computing.",
+          "Store results in a Map keyed by arguments."
+        ]
+      },
+      "keyTakeaways": [
+        "Adapter: converts one interface to another — bridges incompatible APIs.",
+        "Proxy: controls access to an object — add logging, validation or caching.",
+        "Decorator: adds behavior dynamically without modifying the original class.",
+        "All three follow the Open/Closed Principle — open for extension, closed for modification."
+      ],
+      "challenge": "Build a rate-limiting Proxy that allows only N function calls per second."
+    },
+    {
+      "id": "10.5.3",
+      "title": "Behavioral Design Patterns: Observer/PubSub, Strategy, Command",
+      "description": "Manage communication and algorithms between objects — observers notify, strategies vary, commands encapsulate.",
+      "sections": [
+        {
+          "heading": "Observer/PubSub",
+          "list": "Objects subscribe to events and are notified when they occur — the foundation of event-driven architecture."
+        },
+        {
+          "heading": "Strategy pattern",
+          "list": "Swap algorithms at runtime — pass different functions to achieve different behaviors."
+        },
+        {
+          "heading": "Command pattern",
+          "list": "Encapsulate actions as objects — enables undo, redo and command queuing."
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Three behavioral patterns",
+          "file": "patterns.js",
+          "language": "JavaScript",
+          "code": "// Observer/PubSub\nclass EventBus {\n  constructor() { this.listeners = {}; }\n  on(event, fn) {\n    (this.listeners[event] = this.listeners[event] || []).push(fn);\n  }\n  emit(event, data) {\n    (this.listeners[event] || []).forEach(fn => fn(data));\n  }\n}\nlet bus = new EventBus();\nbus.on(\"user:login\", (user) => console.log(\"Welcome\", user.name));\nbus.emit(\"user:login\", { name: \"Alex\" });\n\n// Strategy\nfunction sort(arr, strategy) {\n  return [...arr].sort(strategy);\n}\nlet byNumber = (a, b) => a - b;\nlet byLength = (a, b) => a.length - b.length;\nconsole.log(sort([3, 1, 2], byNumber));     // [1, 2, 3]\nconsole.log(sort([\"b\", \"aa\", \"c\"], byLength));  // [\"b\", \"c\", \"aa\"]\n\n// Command\nclass Calculator {\n  constructor() { this.history = []; this.current = 0; }\n  execute(cmd) { this.history.push(cmd); cmd.execute(this); }\n  undo() { this.history.pop()?.undo(this); }\n}\nclass AddCommand {\n  constructor(value) { this.value = value; }\n  execute(calc) { calc.current += this.value; }\n  undo(calc) { calc.current -= this.value; }\n}\nlet calc = new Calculator();\ncalc.execute(new AddCommand(5));\nconsole.log(calc.current);  // 5\ncalc.undo();\nconsole.log(calc.current);  // 0",
+          "explanation": [
+            "PubSub: decouples publishers from subscribers via an event bus.",
+            "Strategy: swap algorithms by passing different functions.",
+            "Command: encapsulate actions as objects with execute/undo.",
+            "Each pattern handles communication and behavior differently."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Implement a PubSub system with on, emit and off methods. Use it to decouple a form submission from multiple handlers.",
+        "hints": [
+          "on(event, fn) subscribes; off(event, fn) unsubscribes; emit(event, data) notifies.",
+          "Store listeners in an object keyed by event name.",
+          "Emit calls all registered listeners for that event."
+        ]
+      },
+      "keyTakeaways": [
+        "PubSub: decouples event producers from consumers — foundation of event-driven architecture.",
+        "Strategy: swap algorithms at runtime by passing different functions.",
+        "Command: encapsulate actions as objects — enables undo, redo and queuing.",
+        "Choose the pattern based on your communication and behavior requirements."
+      ],
+      "challenge": "Build a complete undo/redo system for a text editor using the Command pattern."
+    },
+    {
+      "id": "10.5.4",
+      "title": "Frontend Architecture: Store Pattern & Unidirectional Data Flow",
+      "description": "Manage application state with a centralized store and unidirectional data flow — the foundation of Redux and similar architectures.",
+      "sections": [
+        {
+          "heading": "Store pattern",
+          "list": [
+            "Single source of truth for application state",
+            "State is modified only through defined actions",
+            "Components read from the store and dispatch actions",
+            "Predictable state changes enable time-travel debugging"
+          ]
+        },
+        {
+          "heading": "Unidirectional data flow",
+          "list": [
+            "State flows down: store → components",
+            "Events flow up: components → actions → store → components",
+            "No two-way binding — data flows in one direction",
+            "Makes state changes predictable and debuggable"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Simple store implementation",
+          "file": "store.js",
+          "language": "JavaScript",
+          "code": "function createStore(reducer, initialState) {\n  let state = initialState;\n  let listeners = [];\n\n  return {\n    getState() { return state; },\n    dispatch(action) {\n      state = reducer(state, action);\n      listeners.forEach(fn => fn(state));\n    },\n    subscribe(fn) {\n      listeners.push(fn);\n      return () => { listeners = listeners.filter(l => l !== fn); };\n    }\n  };\n}\n\n// Reducer\nfunction todoReducer(state, action) {\n  switch (action.type) {\n    case \"ADD\":\n      return { ...state, todos: [...state.todos, action.todo] };\n    case \"TOGGLE\":\n      return {\n        ...state,\n        todos: state.todos.map((t, i) =>\n          i === action.index ? { ...t, done: !t.done } : t\n        )\n      };\n    default: return state;\n  }\n}\n\n// Usage\nlet store = createStore(todoReducer, { todos: [] });\nstore.subscribe(state => console.log(\"State:\", state));\nstore.dispatch({ type: \"ADD\", todo: { text: \"Learn patterns\", done: false } });\nstore.dispatch({ type: \"TOGGLE\", index: 0 });",
+          "explanation": [
+            "The store holds the single source of truth for application state.",
+            "dispatch sends actions to the reducer — the only way to change state.",
+            "The reducer is a pure function: (state, action) => newState.",
+            "subscribe lets components react to state changes."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Implement a simple store with getState, dispatch and subscribe. Use it to manage a counter with increment, decrement and reset actions.",
+        "hints": [
+          "Create <code>createStore(reducer, initialState)</code>.",
+          "Reducer handles INCREMENT, DECREMENT and RESET actions.",
+          "Subscribe to log state changes on each dispatch."
+        ]
+      },
+      "keyTakeaways": [
+        "The Store pattern provides a single source of truth for application state.",
+        "State changes only happen through dispatched actions and reducers.",
+        "Unidirectional data flow makes state changes predictable and debuggable.",
+        "This is the foundation of Redux, Vuex and similar state management libraries."
+      ],
+      "challenge": "Build a complete todo app using the store pattern with add, toggle, delete and filter actions — all rendered to the DOM."
+    }
+  ]
+}

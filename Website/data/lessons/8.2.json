@@ -1,0 +1,154 @@
+{
+  "topicId": "8.2",
+  "topicTitle": "Browser Rendering Pipeline & Frame Scheduling",
+  "lessons": [
+    {
+      "id": "8.2.1",
+      "title": "DOM → CSSOM → Render Tree → Layout → Paint → Composite Pipeline",
+      "description": "The browser converts your HTML and CSS into pixels through a multi-step rendering pipeline.",
+      "sections": [
+        {
+          "heading": "The rendering pipeline",
+          "paragraphs": ["When the browser renders a page, it goes through several steps: parsing HTML into the DOM, CSS into the CSSOM, combining them into a render tree, calculating layout, painting pixels, and compositing layers."],
+          "list": [
+            "<b>DOM</b> — HTML is parsed into a tree of nodes",
+            "<b>CSSOM</b> — CSS rules are parsed into a tree of styles",
+            "<b>Render Tree</b> — DOM + CSSOM combined (visible elements only)",
+            "<b>Layout</b> — calculate exact position and size of each element",
+            "<b>Paint</b> — fill in pixels (text, colors, images, borders)",
+            "<b>Composite</b> — combine layers into the final visible page"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Pipeline trigger example",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Layout-triggering properties\nlet el = document.querySelector(\".box\");\nel.style.width = \"200px\";  // triggers layout\n\n// Non-layout properties (cheaper)\nel.style.color = \"red\";    // only repaint, no layout\n\n// Batch layout reads and writes\nlet width = el.offsetWidth;  // READ (forces layout)\nel.style.height = width + \"px\";  // WRITE\n// Do all reads first, then all writes!",
+          "explanation": [
+            "Changing geometric properties (width, height, position) triggers layout.",
+            "Changing visual properties (color, visibility) only triggers repaint.",
+            "Reading layout properties forces a synchronous layout calculation.",
+            "Batch reads before writes to avoid layout thrashing."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write code that triggers layout thrashing by alternating reads and writes to element dimensions. Then refactor to batch reads and writes.",
+        "hints": [
+          "Thrashing: <code>for (let el of elements) { el.offsetWidth; el.style.width = \"100px\"; }</code>.",
+          "Batched: read all widths first, then write all styles.",
+          "Measure both approaches with performance.now()."
+        ]
+      },
+      "keyTakeaways": [
+        "The rendering pipeline: DOM → CSSOM → Render Tree → Layout → Paint → Composite.",
+        "Geometric changes trigger layout; visual changes only trigger repaint.",
+        "Layout thrashing (alternating reads and writes) kills performance.",
+        "Always batch layout reads before writes."
+      ],
+      "challenge": "Use Chrome DevTools Performance panel to visualize the rendering pipeline for a page with many DOM updates."
+    },
+    {
+      "id": "8.2.2",
+      "title": "Understanding Reflow vs Repaint Triggers",
+      "description": "Reflow recalculates layout; repaint redraws pixels. Minimize both for smooth performance.",
+      "sections": [
+        {
+          "heading": "Reflow vs Repaint",
+          "list": [
+            "<b>Reflow</b> — recalculates element positions and sizes (expensive)",
+            "<b>Repaint</b> — redraws pixels without changing layout (cheaper)",
+            "Reflow always triggers repaint; repaint never triggers reflow",
+            "Minimize reflows by batching DOM changes"
+          ]
+        },
+        {
+          "heading": "What triggers reflow?",
+          "list": [
+            "Changing width, height, margin, padding, border",
+            "Changing position, display, float, clear",
+            "Adding/removing elements from the DOM",
+            "Changing the viewport size (resize)",
+            "Reading offsetWidth, clientWidth, getBoundingClientRect()"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Minimizing reflows",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ Reflow per iteration (100 reflows!)\nfor (let i = 0; i < 100; i++) {\n  document.querySelector(\".list\")\n    .innerHTML += `<li>Item ${i}</li>`;\n}\n\n// ✅ Single reflow with DocumentFragment\nlet fragment = document.createDocumentFragment();\nfor (let i = 0; i < 100; i++) {\n  let li = document.createElement(\"li\");\n  li.textContent = `Item ${i}`;\n  fragment.appendChild(li);\n}\ndocument.querySelector(\".list\").appendChild(fragment);  // 1 reflow",
+          "explanation": [
+            "Each innerHTML change triggers a reflow — 100 changes = 100 reflows.",
+            "DocumentFragment collects all changes in memory, then adds them at once.",
+            "This reduces 100 reflows to just 1.",
+            "Other techniques: CSS transforms, will-change, and requestAnimationFrame."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create 1000 DOM elements using innerHTML in a loop (slow) vs DocumentFragment (fast). Measure the time difference.",
+        "hints": [
+          "Time innerHTML approach: <code>console.time(\"innerHTML\")</code>.",
+          "Time DocumentFragment approach: <code>console.time(\"fragment\")</code>.",
+          "Compare the timings."
+        ]
+      },
+      "keyTakeaways": [
+        "Reflow recalculates layout (expensive); repaint redraws pixels (cheaper).",
+        "Reflow always triggers repaint; batch DOM changes to minimize reflows.",
+        "DocumentFragment collects changes and applies them in one reflow.",
+        "Avoid reading layout properties inside loops — read once, use the value."
+      ],
+      "challenge": "Profile a list rendering operation in DevTools and identify reflow events."
+    },
+    {
+      "id": "8.2.3",
+      "title": "Avoiding Layout Thrashing & Scheduling with requestAnimationFrame",
+      "description": "Use requestAnimationFrame to sync DOM updates with the browser's frame cycle for smooth 60fps rendering.",
+      "sections": [
+        {
+          "heading": "requestAnimationFrame",
+          "list": [
+            "<code>requestAnimationFrame(callback)</code> — runs before the next paint",
+            "Syncs your code with the browser's refresh cycle (typically 60fps)",
+            "Automatically paused when the tab is not visible",
+            "Preferred for animations and visual updates"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Smooth animation with rAF",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ setTimeout animation (not synced with paint)\nfunction moveBad() {\n  element.style.left += \"1px\";\n  setTimeout(moveBad, 16);  // may skip frames!\n}\n\n// ✅ rAF animation (synced with browser paint)\nfunction moveGood() {\n  element.style.left += \"1px\";\n  requestAnimationFrame(moveGood);  // perfect timing!\n}\n\n// Batch updates\nfunction updateItems(items) {\n  requestAnimationFrame(() => {\n    items.forEach(item => {\n      item.style.transform = `translateX(${item.x}px)`;\n    });\n  });\n}",
+          "explanation": [
+            "requestAnimationFrame runs before the browser paints — no wasted frames.",
+            "It's automatically throttled when the tab is hidden.",
+            "Batch visual updates inside rAF for smooth 60fps rendering.",
+            "Never use setTimeout for animations — it's not synced with the paint cycle."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a smooth scrolling animation using requestAnimationFrame that moves an element across the screen over 2 seconds.",
+        "hints": [
+          "Use <code>requestAnimationFrame(callback)</code> in a loop.",
+          "Calculate progress: <code>(now - start) / duration</code>.",
+          "Apply easing for a natural feel."
+        ]
+      },
+      "keyTakeaways": [
+        "requestAnimationFrame syncs your code with the browser's paint cycle.",
+        "Always use rAF for animations — never setTimeout or setInterval.",
+        "rAF is automatically paused when the tab is hidden.",
+        "Batch DOM updates inside rAF for smooth 60fps rendering."
+      ],
+      "challenge": "Build a parallax scrolling effect using requestAnimationFrame that responds to scroll position."
+    }
+  ]
+}

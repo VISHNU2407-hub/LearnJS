@@ -1,0 +1,190 @@
+{
+  "topicId": "5.3",
+  "topicTitle": "Promises Engine & State Lifecycle",
+  "lessons": [
+    {
+      "id": "5.3.1",
+      "title": "Promise States: Pending, Fulfilled, Rejected",
+      "description": "A Promise is a placeholder for a future value — it starts pending and settles as either fulfilled or rejected.",
+      "sections": [
+        {
+          "heading": "The three states",
+          "paragraphs": ["A Promise represents an async operation that hasn't completed yet. It starts in a pending state and can transition to one of two final states."],
+          "list": [
+            "<b>Pending</b> — the operation is still in progress",
+            "<b>Fulfilled</b> — the operation completed successfully with a result value",
+            "<b>Rejected</b> — the operation failed with an error reason",
+            "Once settled, the state never changes again"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Promise states in action",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Creating a Promise\nlet promise = new Promise((resolve, reject) => {\n  let success = true;\n  if (success) {\n    resolve(\"Data loaded!\");  // → fulfilled\n  } else {\n    reject(new Error(\"Failed\"));  // → rejected\n  }\n});\n\n// Handling the result\npromise\n  .then(value => console.log(value))      // \"Data loaded!\"\n  .catch(error => console.error(error));",
+          "explanation": [
+            "The Promise constructor takes a function with resolve and reject callbacks.",
+            "Calling <code>resolve()</code> transitions to fulfilled state.",
+            "Calling <code>reject()</code> transitions to rejected state.",
+            "The state change is irreversible — a fulfilled promise stays fulfilled."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a Promise that resolves after 2 seconds with the message \"Done!\". Log the result using .then().",
+        "hints": [
+          "Use <code>new Promise((resolve) => { setTimeout(() => resolve(\"Done!\"), 2000) })</code>.",
+          "Chain <code>.then(value => console.log(value))</code>.",
+          "The message should appear after 2 seconds."
+        ]
+      },
+      "keyTakeaways": [
+        "Promises have three states: pending, fulfilled, and rejected.",
+        "A Promise settles once and never changes state again.",
+        "Use <code>.then()</code> for success and <code>.catch()</code> for errors.",
+        "Promises are the foundation of modern async JavaScript."
+      ],
+      "challenge": "Create a Promise that randomly resolves or rejects after 1 second. Handle both outcomes with .then() and .catch()."
+    },
+    {
+      "id": "5.3.2",
+      "title": "Creating Promises with the new Promise Constructor",
+      "description": "Wrap any async operation in a Promise to gain control over its resolution and rejection.",
+      "sections": [
+        {
+          "heading": "The Promise constructor",
+          "paragraphs": ["You create a Promise with <code>new Promise(executor)</code>. The executor function receives two callbacks: <code>resolve</code> to signal success and <code>reject</code> to signal failure."],
+          "list": [
+            "The executor runs immediately when the Promise is created",
+            "<code>resolve(value)</code> — fulfills the Promise with a value",
+            "<code>reject(reason)</code> — rejects the Promise with an Error",
+            "You can call only one — calling both does nothing on the second call",
+            "Errors thrown in the executor automatically reject the Promise"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Wrapping a callback in a Promise",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Wrapping setTimeout in a Promise\nfunction delay(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\ndelay(2000).then(() => console.log(\"2 seconds passed!\"));\n\n// Wrapping an error-first callback\nfunction fetchUser(id) {\n  return new Promise((resolve, reject) => {\n    setTimeout(() => {\n      if (id > 0) {\n        resolve({ id, name: \"User \" + id });\n      } else {\n        reject(new Error(\"Invalid ID\"));\n      }\n    }, 100);\n  });\n}\n\nfetchUser(1).then(console.log);  // { id: 1, name: \"User 1\" }\nfetchUser(-1).catch(console.error);  // Error: Invalid ID",
+          "explanation": [
+            "The <code>delay</code> function wraps setTimeout in a Promise.",
+            "The <code>fetchUser</code> function wraps a callback pattern in a Promise.",
+            "Promises let you chain async operations cleanly.",
+            "Thrown errors in the executor automatically become rejections."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a <code>readFile(path)</code> function that returns a Promise. Simulate success (80% chance) or failure (20% chance) with setTimeout.",
+        "hints": [
+          "Return <code>new Promise((resolve, reject) => { ... })</code>.",
+          "Use <code>Math.random()</code> to determine success or failure.",
+          "Resolve with file content or reject with an error."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>new Promise(executor)</code> creates a new Promise.",
+        "Call <code>resolve(value)</code> on success, <code>reject(reason)</code> on failure.",
+        "Only the first resolve/reject call has effect.",
+        "Errors thrown in the executor automatically reject the Promise."
+      ],
+      "challenge": "Write a retry function that tries an async operation up to N times before rejecting."
+    },
+    {
+      "id": "5.3.3",
+      "title": "Promise Chaining: .then(), .catch(), and .finally()",
+      "description": "Chain Promises together to create clean, readable async sequences.",
+      "sections": [
+        {
+          "heading": "How promise chaining works",
+          "paragraphs": [".then() returns a new Promise, so you can chain multiple operations. Each .then() receives the resolved value from the previous one."],
+          "list": [
+            "<code>.then(fn)</code> — runs when the Promise resolves, returns a new Promise",
+            "<code>.catch(fn)</code> — runs on any rejection in the chain",
+            "<code>.finally(fn)</code> — runs regardless of success or failure",
+            "Errors bubble down the chain until caught by a .catch()"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Promise chaining",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function fetchUser(id) {\n  return new Promise(resolve => {\n    setTimeout(() => resolve({ id, name: \"Alex\" }), 100);\n  });\n}\n\nfunction fetchPosts(userId) {\n  return new Promise(resolve => {\n    setTimeout(() => resolve([\"Post 1\", \"Post 2\"]), 100);\n  });\n}\n\nfetchUser(1)\n  .then(user => {\n    console.log(\"User: \" + user.name);\n    return fetchPosts(user.id);\n  })\n  .then(posts => console.log(\"Posts: \" + posts.length))\n  .catch(err => console.error(\"Error: \" + err))\n  .finally(() => console.log(\"Done!\"));",
+          "explanation": [
+            "Each <code>.then()</code> passes its result to the next one in the chain.",
+            "Return a Promise from <code>.then()</code> to chain async operations.",
+            "Errors bubble to the nearest <code>.catch()</code> in the chain.",
+            "<code>.finally()</code> runs whether the chain succeeded or failed."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Chain 3 Promises: get a user, get their orders, then get order details. Use a single .catch() at the end for all errors.",
+        "hints": [
+          "Each .then() should return the next Promise.",
+          "Pass the result to the next .then() via the return value.",
+          "One .catch() at the end handles errors from any step."
+        ]
+      },
+      "keyTakeaways": [
+        "Each <code>.then()</code> returns a new Promise, enabling chaining.",
+        "Return a Promise from <code>.then()</code> to chain async operations.",
+        "Errors bubble down the chain until caught by <code>.catch()</code>.",
+        "<code>.finally()</code> runs regardless of success or failure — great for cleanup."
+      ],
+      "challenge": "Build a chained Promise that simulates: login → fetch profile → fetch dashboard data, with error handling at each step."
+    },
+    {
+      "id": "5.3.4",
+      "title": "Promise Utilities: Promise.resolve(), Promise.reject(), Promise.withResolvers()",
+      "description": "Utility methods for creating and managing Promises in common patterns.",
+      "sections": [
+        {
+          "heading": "Promise utility methods",
+          "list": [
+            "<code>Promise.resolve(value)</code> — creates an already-resolved Promise",
+            "<code>Promise.reject(reason)</code> — creates an already-rejected Promise",
+            "<code>Promise.withResolvers()</code> — returns { promise, resolve, reject } (ES2024)",
+            "These simplify common patterns and make code more readable"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Promise utilities",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Already resolved\nlet resolved = Promise.resolve(42);\nresolved.then(v => console.log(v));  // 42\n\n// Already rejected\nlet rejected = Promise.reject(new Error(\"oops\"));\nrejected.catch(e => console.error(e.message));  // \"oops\"\n\n// withResolvers — external control\nlet { promise, resolve, reject } = Promise.withResolvers();\n\n// You control when it resolves\nsetTimeout(() => resolve(\"done\"), 1000);\npromise.then(console.log);  // \"done\" after 1 second",
+          "explanation": [
+            "<code>Promise.resolve()</code> wraps a value in an already-resolved Promise.",
+            "<code>Promise.reject()</code> creates an already-rejected Promise.",
+            "<code>Promise.withResolvers()</code> gives you the resolve/reject functions externally.",
+            "withResolvers is great for wrapping event-based or callback-based APIs."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use Promise.withResolvers() to wrap a button click into a Promise. The Promise resolves when the button is clicked.",
+        "hints": [
+          "Create: <code>let { promise, resolve } = Promise.withResolvers()</code>.",
+          "Add click listener: <code>button.addEventListener(\"click\", resolve)</code>.",
+          "Use: <code>promise.then(() => console.log(\"clicked!\"))</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>Promise.resolve()</code> and <code>Promise.reject()</code> create pre-settled Promises.",
+        "These are useful for converting values to Promises in chains.",
+        "<code>Promise.withResolvers()</code> provides external resolve/reject control.",
+        "Use withResolvers() to wrap callback or event-based APIs in Promises."
+      ],
+      "challenge": "Use Promise.withResolvers() to wrap a setTimeout into a Promise and chain it with other async operations."
+    }
+  ]
+}

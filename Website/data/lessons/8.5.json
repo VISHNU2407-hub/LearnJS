@@ -1,0 +1,144 @@
+{
+  "topicId": "8.5",
+  "topicTitle": "Profiling Memory Leaks with DevTools Snapshots",
+  "lessons": [
+    {
+      "id": "8.5.1",
+      "title": "Locating Detached DOM Node Leaks",
+      "description": "Detached DOM nodes are elements removed from the page but still referenced in JavaScript — they leak memory.",
+      "sections": [
+        {
+          "heading": "What are detached DOM leaks?",
+          "paragraphs": ["When you remove an element from the DOM but still hold a reference to it in JavaScript, the element can't be garbage collected. This is called a detached DOM leak."],
+          "list": [
+            "Removed from DOM but referenced in JavaScript",
+            "Each detached node keeps its children and event listeners in memory",
+            "Common in SPAs where elements are created and removed frequently",
+            "Use DevTools Memory tab to identify them"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Creating and finding detached nodes",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ Memory leak: detached DOM node\nlet leakedElements = [];\n\nfunction addItem() {\n  let div = document.createElement(\"div\");\n  div.textContent = \"Item\";\n  document.body.appendChild(div);\n  leakedElements.push(div);  // reference kept!\n}\n\nfunction removeItem() {\n  let div = document.body.firstChild;\n  div.remove();  // removed from DOM\n  // but leakedElements still holds the reference → leak!\n}\n\n// ✅ Fix: clear the reference\nfunction removeItemFixed() {\n  let div = document.body.firstChild;\n  div.remove();\n  leakedElements.shift();  // clear the reference → GC can collect",
+          "explanation": [
+            "When div is removed from the DOM, it becomes 'detached'.",
+            "leakedElements still holds a reference — the node can't be garbage collected.",
+            "Clear the reference to allow garbage collection.",
+            "DevTools Memory snapshots show detached nodes as memory leaks."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a function that adds and removes DOM elements, keeping references to removed ones. Use DevTools to take heap snapshots and identify the detached nodes.",
+        "hints": [
+          "Add elements to the DOM and push to an array.",
+          "Remove from DOM but keep in array.",
+          "Take heap snapshot and filter by 'Detached' elements."
+        ]
+      },
+      "keyTakeaways": [
+        "Detached DOM nodes are removed from the page but still referenced in JavaScript.",
+        "They keep themselves and their children in memory — a common leak source.",
+        "Clear references when removing elements to allow garbage collection.",
+        "DevTools Memory tab heap snapshots identify detached nodes."
+      ],
+      "challenge": "Find and fix a detached DOM leak in a todo list app that creates and removes items."
+    },
+    {
+      "id": "8.5.2",
+      "title": "Tracing Retained Closure Scope Leaks",
+      "description": "Closures can unintentionally retain large objects in their scope — a subtle but serious memory leak.",
+      "sections": [
+        {
+          "heading": "Closure memory leaks",
+          "paragraphs": ["A closure retains everything in its enclosing scope, even variables it doesn't use. If a closure references a large object, that object stays in memory as long as the closure exists."],
+          "list": [
+            "Closures retain the entire enclosing scope",
+            "Unused variables in the scope are still retained",
+            "Long-lived closures with large scope = memory leak",
+            "Use DevTools to check retained objects in closure scope"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Closure scope leak",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ Closure retains large object unnecessarily\nfunction processData() {\n  let hugeData = new Array(1000000).fill(\"data\");\n  let count = 0;\n\n  // This closure retains hugeData even though it only uses count!\n  return function increment() {\n    count++;\n    console.log(count);\n  };\n}\n\nlet increment = processData();\n// hugeData is retained in closure scope → memory leak!\n\n// ✅ Fix: extract only what's needed\nfunction processDataFixed() {\n  let hugeData = new Array(1000000).fill(\"data\");\n  let count = 0;\n  hugeData = null;  // release the large array\n\n  return function increment() {\n    count++;\n    console.log(count);\n  };\n}",
+          "explanation": [
+            "The increment closure retains the entire processData scope, including hugeData.",
+            "Even though increment doesn't use hugeData, it's still in memory.",
+            "Setting hugeData to null explicitly releases it from the closure scope.",
+            "DevTools Memory snapshots show retained objects in closure scope."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a closure that retains a large array unnecessarily. Use DevTools to identify the retained object. Then fix it by releasing the reference.",
+        "hints": [
+          "Create a function with a large local variable.",
+          "Return a closure that doesn't use the large variable.",
+          "Check DevTools Memory → Closure section in heap snapshot."
+        ]
+      },
+      "keyTakeaways": [
+        "Closures retain the entire enclosing scope — even unused variables.",
+        "Large objects in closure scope can't be garbage collected while the closure lives.",
+        "Explicitly null out references you no longer need.",
+        "DevTools Memory snapshots show what closures retain."
+      ],
+      "challenge": "Build a pub/sub system that cleans up event listeners and closures when subscribers unsubscribe."
+    },
+    {
+      "id": "8.5.3",
+      "title": "Heap Snapshot Analysis & Allocation Timelines",
+      "description": "Use DevTools to take heap snapshots, compare them and track memory allocation over time.",
+      "sections": [
+        {
+          "heading": "Using DevTools Memory tab",
+          "list": [
+            "<b>Heap Snapshot</b> — captures all objects in memory at a point in time",
+            "<b>Allocation Timeline</b> — shows memory allocation over time",
+            "<b>Allocation Sampling</b> — statistical profiling of allocations",
+            "Compare snapshots to find objects that are growing or not being freed"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Heap snapshot workflow",
+          "file": "DevTools Memory Tab",
+          "language": "JavaScript",
+          "code": "// Step 1: Take initial snapshot\n// Click 'Take snapshot' in Memory tab\n\n// Step 2: Perform the action that may leak\nfor (let i = 0; i < 1000; i++) {\n  addItem();\n}\n\n// Step 3: Take another snapshot\n// Click 'Take snapshot' again\n\n// Step 4: Compare snapshots\n// Use 'Comparison' view to see objects added between snapshots\n// Filter by 'Detached' to find DOM leaks\n// Check 'Retainers' to see what holds references",
+          "explanation": [
+            "Take a snapshot before and after the action to compare.",
+            "The Comparison view shows objects added between snapshots.",
+            "Filter by 'Detached' to find DOM elements removed from the page.",
+            "The Retainers panel shows what's preventing garbage collection."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use Chrome DevTools to take 3 heap snapshots: before, during and after creating 1000 DOM elements. Compare the snapshots to verify elements are properly cleaned up.",
+        "hints": [
+          "Take snapshot 1: empty state.",
+          "Add 1000 elements, take snapshot 2.",
+          "Remove elements, take snapshot 3.",
+          "Compare snapshots 1 and 3 to verify cleanup."
+        ]
+      },
+      "keyTakeaways": [
+        "Heap snapshots capture all objects in memory at a point in time.",
+        "Compare snapshots to find objects that persist unexpectedly.",
+        "The Retainers panel shows what's preventing garbage collection.",
+        "Allocation Timeline tracks memory usage over time for real-time leak detection."
+      ],
+      "challenge": "Profile a single-page application and identify the top 3 sources of memory growth over a 5-minute session."
+    }
+  ]
+}

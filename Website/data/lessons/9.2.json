@@ -1,0 +1,142 @@
+{
+  "topicId": "9.2",
+  "topicTitle": "Modern Build Tools & Bundlers (Vite, ESBuild, Babel)",
+  "lessons": [
+    {
+      "id": "9.2.1",
+      "title": "Asset Bundling Principles & Dev Server HMR via Vite",
+      "description": "Bundlers combine your code into optimized files — Vite does this with lightning-fast HMR for instant feedback.",
+      "sections": [
+        {
+          "heading": "Why bundlers?",
+          "paragraphs": ["Browsers can't efficiently load hundreds of separate JavaScript files. Bundlers combine them into optimized files, transforming modern syntax and handling dependencies."],
+          "list": [
+            "Combine many files into one or a few optimized bundles",
+            "Transform modern syntax for browser compatibility",
+            "Handle CSS, images, fonts and other assets",
+            "HMR (Hot Module Replacement) updates code without page reload"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Vite basics",
+          "file": "Terminal",
+          "language": "Shell",
+          "code": "# Create a new Vite project\nnpm create vite@latest my-app -- --template vanilla\n\n# Start dev server with HMR\nnpm run dev\n\n# Build for production\nnpm run build\n\n# Vite config (vite.config.js)\nimport { defineConfig } from \"vite\";\nexport default defineConfig({\n  build: { target: \"es2020\" },\n  server: { port: 3000 }\n});",
+          "explanation": [
+            "Vite uses native ES modules in development — no bundling needed.",
+            "HMR updates changed modules instantly without page reload.",
+            "For production, Vite uses Rollup to create optimized bundles.",
+            "Vite is significantly faster than webpack for development."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a Vite project, add a JavaScript module, and verify that HMR updates the page instantly when you change the module.",
+        "hints": [
+          "Run <code>npm create vite@latest my-app -- --template vanilla</code>.",
+          "Start with <code>npm run dev</code>.",
+          "Edit a module and observe the instant update."
+        ]
+      },
+      "keyTakeaways": [
+        "Bundlers combine many files into optimized bundles for the browser.",
+        "Vite uses native ES modules in dev for instant startup.",
+        "HMR updates code without page reload — essential for fast development.",
+        "Production builds use Rollup for optimized, minified output."
+      ],
+      "challenge": "Configure Vite with TypeScript, CSS modules and a custom build target."
+    },
+    {
+      "id": "9.2.2",
+      "title": "AST Transformations & Polyfills via Babel",
+      "description": "Babel transforms modern JavaScript into older syntax that all browsers can run.",
+      "sections": [
+        {
+          "heading": "What does Babel do?",
+          "list": [
+            "Transforms modern syntax (arrow functions, classes) to ES5",
+            "Adds polyfills for missing APIs (Promise, Array.from, etc.)",
+            "Configurable with presets and plugins",
+            "Works as a build step or runtime transform"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Babel transformation",
+          "file": "script.js → compiled output",
+          "language": "JavaScript",
+          "code": "// Input (modern JavaScript):\nconst greet = (name) => `Hello, ${name}!`;\n\n// Output (Babel compiled to ES5):\nvar greet = function greet(name) {\n  return \"Hello, \" + name + \"!\";\n};\n\n// Babel config (.babelrc):\n// { \"presets\": [\"@babel/preset-env\"] }",
+          "explanation": [
+            "Babel converts arrow functions to regular functions for older browsers.",
+            "Template literals become string concatenation.",
+            "const becomes var (for maximum compatibility).",
+            "@babel/preset-env automatically determines which transforms are needed."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Install Babel and configure it to compile a modern JavaScript file to ES5. Compare the input and output.",
+        "hints": [
+          "Install: <code>npm install -D @babel/core @babel/cli @babel/preset-env</code>.",
+          "Create <code>.babelrc</code> with <code>{ \"presets\": [\"@babel/preset-env\"] }</code>.",
+          "Compile: <code>npx babel input.js -o output.js</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Babel transforms modern JavaScript into compatible syntax for older browsers.",
+        "@babel/preset-env automatically determines needed transforms.",
+        "Polyfills add missing APIs for older environments.",
+        "Most modern bundlers include Babel or equivalent transforms by default."
+      ],
+      "challenge": "Configure Babel to only transform syntax needed for browsers with >1% market share."
+    },
+    {
+      "id": "9.2.3",
+      "title": "Code Minification, Tree-Shaking & Source Map Generation",
+      "description": "Optimize production bundles with minification, tree-shaking dead code and source maps for debugging.",
+      "sections": [
+        {
+          "heading": "Production optimizations",
+          "list": [
+            "<b>Minification</b> — removes whitespace, shortens variable names, reduces file size",
+            "<b>Tree-shaking</b> — removes unused code from the bundle",
+            "<b>Source maps</b> — map minified code back to original source for debugging",
+            "All modern bundlers support these optimizations"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Optimization in practice",
+          "file": "Before vs After",
+          "language": "JavaScript",
+          "code": "// Before minification:\nfunction calculateTotal(price, taxRate) {\n  const tax = price * taxRate;\n  const total = price + tax;\n  return total;\n}\n\n// After minification:\nfunction calculateTotal(t,e){return t+t*e}\n\n// Tree-shaking:\n// import { add } from \"./math.js\";\n// Only 'add' is included — 'multiply' is removed\n// even though it exists in math.js",
+          "explanation": [
+            "Minification removes all unnecessary characters — dramatic size reduction.",
+            "Tree-shaking analyzes imports and removes unused exports.",
+            "Source maps let you debug the original code in DevTools.",
+            "Vite and webpack do all of these by default for production builds."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Build a project with Vite, check the bundle size before and after minification, and verify tree-shaking removes unused imports.",
+        "hints": [
+          "Run <code>npm run build</code> and check the dist/ folder.",
+          "Import only 1 of 5 functions from a module.",
+          "Verify the unused functions are not in the bundle."
+        ]
+      },
+      "keyTakeaways": [
+        "Minification removes whitespace and shortens names — reduces file size.",
+        "Tree-shaking removes unused code — only import what you use.",
+        "Source maps let you debug original code in production.",
+        "Modern bundlers do all of this automatically for production builds."
+      ],
+      "challenge": "Compare bundle sizes with and without tree-shaking for a project that imports a large library."
+    }
+  ]
+}

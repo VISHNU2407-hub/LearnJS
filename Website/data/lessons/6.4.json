@@ -1,0 +1,143 @@
+{
+  "topicId": "6.4",
+  "topicTitle": "Professional Visual Debugging Workflows",
+  "lessons": [
+    {
+      "id": "6.4.1",
+      "title": "Advanced DevTools: Conditional Breakpoints & Logpoints",
+      "description": "Go beyond basic breakpoints — use conditional breakpoints to pause only when specific conditions are met.",
+      "sections": [
+        {
+          "heading": "Conditional breakpoints",
+          "paragraphs": ["Instead of pausing on every execution, conditional breakpoints pause only when a condition is true. This saves enormous time when debugging loops or frequent function calls."],
+          "list": [
+            "Right-click a line number → \"Add conditional breakpoint\"",
+            "Enter a JavaScript expression — pause only when it's truthy",
+            "Logpoints: right-click → \"Add logpoint\" — logs a message without pausing",
+            "Both work in Chrome, Firefox and Edge DevTools"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Using conditional breakpoints",
+          "file": "script.js (in DevTools)",
+          "language": "JavaScript",
+          "code": "function processItems(items) {\n  items.forEach((item, index) => {\n    // Add conditional breakpoint here:\n    // Condition: index === 5\n    // → Only pauses when processing the 6th item\n    console.log(item.name);\n  });\n}\n\n// Logpoint example:\n// Message: \"Processing item: {item.name} at index {index}\"\n// → Logs without pausing execution",
+          "explanation": [
+            "Conditional breakpoints avoid pausing on every iteration.",
+            "The condition expression is evaluated each time the line is reached.",
+            "Logpoints are like console.log without modifying your code.",
+            "Both dramatically speed up debugging in loops and frequent functions."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Open a JavaScript file in DevTools and set a conditional breakpoint that only pauses when a variable exceeds a certain value.",
+        "hints": [
+          "Right-click the line number in the Sources panel.",
+          "Select \"Add conditional breakpoint\".",
+          "Enter a condition like <code>count > 10</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Conditional breakpoints pause only when a specific condition is met.",
+        "Logpoints log messages to the console without pausing execution.",
+        "Both are available in Chrome, Firefox and Edge DevTools.",
+        "Use them to debug loops, frequent functions and specific data values."
+      ],
+      "challenge": "Use a conditional breakpoint to find the first item in an array where price exceeds $100 in a loop of 1000 items."
+    },
+    {
+      "id": "6.4.2",
+      "title": "DOM Mutation & Event Listener Breakpoints",
+      "description": "Pause execution when the DOM changes or when specific events fire — without setting manual breakpoints.",
+      "sections": [
+        {
+          "heading": "DOM mutation breakpoints",
+          "paragraphs": ["DevTools can pause when specific DOM changes occur. This is invaluable for debugging dynamic UI updates where you don't know which code is making the change."],
+          "list": [
+            "Right-click an element → \"Break on\" → subtree/attribute/removal",
+            "Pauses on the exact line that modifies the DOM",
+            "Event listener breakpoints: pause when specific events fire",
+            "Both work in Chrome, Firefox and Edge DevTools"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "DOM mutation debugging",
+          "file": "DevTools Elements Panel",
+          "language": "JavaScript",
+          "code": "// To debug DOM mutations:\n// 1. Right-click element in Elements panel\n// 2. Select \"Break on\" → \"subtree modifications\"\n// 3. The debugger pauses when something changes this element\n\n// To debug event listeners:\n// 1. Go to Sources → Event Listener Breakpoints\n// 2. Expand the event type (e.g., Mouse → click)\n// 3. Check the box — debugger pauses on any click event",
+          "explanation": [
+            "DOM mutation breakpoints catch unexpected DOM changes.",
+            "You don't need to know which code is responsible — the debugger finds it.",
+            "Event listener breakpoints pause when any element receives the specified event.",
+            "These are the fastest ways to debug mysterious UI behavior."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use DevTools to set a subtree mutation breakpoint on a <code>&lt;div&gt;</code>. Then write JavaScript that modifies it and verify the debugger pauses.",
+        "hints": [
+          "Right-click the div in Elements panel → Break on → subtree modifications.",
+          "In the console: <code>div.innerHTML = \"changed\"</code>.",
+          "The debugger should pause on the line that makes the change."
+        ]
+      },
+      "keyTakeaways": [
+        "DOM mutation breakpoints pause when an element's subtree, attributes or presence changes.",
+        "Event listener breakpoints pause when a specific event fires on any element.",
+        "Both are invaluable for debugging dynamic UI behavior.",
+        "Use them when you don't know which code is making a change."
+      ],
+      "challenge": "Debug a scenario where an element disappears unexpectedly using DOM removal breakpoints."
+    },
+    {
+      "id": "6.4.3",
+      "title": "Inspecting Call Stacks & Watching Scope Variables",
+      "description": "Use the debugger's Call Stack and Scope panels to understand exactly what's happening at any breakpoint.",
+      "sections": [
+        {
+          "heading": "The debugger panels",
+          "list": [
+            "<b>Call Stack</b> — shows the chain of function calls that led to the current line",
+            "<b>Scope</b> — shows all variables accessible at this point (local, closure, global)",
+            "<b>Watch</b> — add expressions to monitor their values as you step through code",
+            "<b>Breakpoints</b> — list all your breakpoints with enable/disable toggles"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Using Call Stack and Watch",
+          "file": "DevTools Sources Panel",
+          "language": "JavaScript",
+          "code": "// Set a breakpoint inside a nested function\nfunction outer() {\n  let x = 1;\n  function inner() {\n    let y = 2;\n    // ← Set breakpoint here\n    debugger; // or use DevTools breakpoint\n    console.log(x + y);\n  }\n  inner();\n}\n\n// In the debugger:\n// Call Stack: inner → outer → (anonymous)\n// Scope: { y: 1, x: 1 } (local + closure)\n// Watch: add 'x + y' to monitor the expression",
+          "explanation": [
+            "The Call Stack shows the full execution path — how you got here.",
+            "Scope shows all accessible variables — local, closure and global.",
+            "Watch lets you add custom expressions to monitor.",
+            "Use step buttons (over, into, out) to navigate the stack."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Set a debugger statement inside a nested function. When the debugger pauses, examine the Call Stack and identify all enclosing scopes.",
+        "hints": [
+          "Write a function that calls another function that calls a third.",
+          "Put <code>debugger;</code> in the innermost function.",
+          "In DevTools, examine the Call Stack panel."
+        ]
+      },
+      "keyTakeaways": [
+        "The Call Stack shows the chain of function calls that led to the current line.",
+        "The Scope panel shows all accessible variables at the breakpoint.",
+        "Watch expressions let you monitor custom values as you step through code.",
+        "Step Over, Step Into and Step Out let you navigate the execution flow."
+      ],
+      "challenge": "Debug a recursive function by stepping through the call stack and observing variable changes at each level."
+    }
+  ]
+}

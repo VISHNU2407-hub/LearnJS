@@ -1,0 +1,151 @@
+{
+  "topicId": "5.6",
+  "topicTitle": "Managing Parallel Async Requests (Promise Concurrency)",
+  "lessons": [
+    {
+      "id": "5.6.1",
+      "title": "Parallel Execution with Promise.all()",
+      "description": "Run multiple async operations simultaneously and wait for all of them to complete.",
+      "sections": [
+        {
+          "heading": "Promise.all()",
+          "paragraphs": ["<code>Promise.all()</code> takes an array of Promises and returns a new Promise that resolves when all of them resolve. If any one rejects, the whole thing rejects."],
+          "list": [
+            "Takes an array of Promises",
+            "Resolves with an array of results (same order as input)",
+            "Rejects immediately if ANY Promise rejects",
+            "All operations run in parallel — not sequentially"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Parallel fetching with Promise.all",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "async function loadDashboard() {\n  try {\n    let [users, posts, comments] = await Promise.all([\n      fetch(\"/api/users\").then(r => r.json()),\n      fetch(\"/api/posts\").then(r => r.json()),\n      fetch(\"/api/comments\").then(r => r.json())\n    ]);\n\n    console.log(users.length + \" users\");\n    console.log(posts.length + \" posts\");\n    console.log(comments.length + \" comments\");\n  } catch (error) {\n    console.error(\"One request failed:\", error);\n  }\n}\n\n// vs sequential (much slower!)\nasync function loadSequential() {\n  let users = await fetch(\"/api/users\").then(r => r.json());  // wait\n  let posts = await fetch(\"/api/posts\").then(r => r.json());  // wait\n  let comments = await fetch(\"/api/comments\").then(r => r.json());  // wait\n}",
+          "explanation": [
+            "Promise.all runs all fetches simultaneously — total time = slowest request.",
+            "Sequential awaits wait for each to finish before starting the next.",
+            "Promise.all is dramatically faster when requests are independent.",
+            "If any request fails, Promise.all rejects immediately."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Fetch 3 different endpoints in parallel using Promise.all. Measure the total time vs sequential fetching.",
+        "hints": [
+          "Use <code>Promise.all([fetch(url1), fetch(url2), fetch(url3)])</code>.",
+          "Wrap in <code>console.time()</code> / <code>console.timeEnd()</code>.",
+          "Compare parallel vs sequential total time."
+        ]
+      },
+      "keyTakeaways": [
+        "Promise.all runs multiple Promises in parallel.",
+        "Results come back as an array in the same order as the input.",
+        "If any Promise rejects, the whole Promise.all rejects.",
+        "Use Promise.all for independent async operations to maximize speed."
+      ],
+      "challenge": "Fetch data from 5 endpoints in parallel and render the results on the page as they arrive."
+    },
+    {
+      "id": "5.6.2",
+      "title": "Fault-Tolerant Concurrent Operations with Promise.allSettled()",
+      "description": "Wait for all Promises to settle — success or failure — without short-circuiting on the first error.",
+      "sections": [
+        {
+          "heading": "Promise.allSettled()",
+          "paragraphs": ["<code>Promise.allSettled()</code> waits for all Promises to complete (fulfilled or rejected) and returns the status of each. It never rejects."],
+          "list": [
+            "Returns an array of status objects: <code>{status: \"fulfilled\", value}</code> or <code>{status: \"rejected\", reason}</code>",
+            "Never rejects — always resolves",
+            "Use when you need results from all operations regardless of failures",
+            "Introduced in ES2020"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Promise.allSettled() in action",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "async function loadMultipleSources() {\n  let results = await Promise.allSettled([\n    fetch(\"/api/users\").then(r => r.json()),\n    fetch(\"/api/bad-url\").then(r => r.json()),  // will fail!\n    fetch(\"/api/posts\").then(r => r.json())\n  ]);\n\n  results.forEach((result, i) => {\n    if (result.status === \"fulfilled\") {\n      console.log(`Source ${i}: success`, result.value);\n    } else {\n      console.log(`Source ${i}: failed`, result.reason.message);\n    }\n  });\n}\n// Output:\n// Source 0: success [...]\n// Source 1: failed Not Found\n// Source 2: success [...]",
+          "explanation": [
+            "Promise.allSettled waits for all operations to finish.",
+            "Each result has a status: \"fulfilled\" or \"rejected\".",
+            "Fulfilled results have a <code>value</code>; rejected have a <code>reason</code>.",
+            "No matter how many fail, the function resolves with all results."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use Promise.allSettled to fetch 3 endpoints, one of which will fail. Log the status of each result.",
+        "hints": [
+          "Include one intentionally invalid URL.",
+          "Check <code>result.status === \"fulfilled\"</code> for successes.",
+          "Check <code>result.status === \"rejected\"</code> for failures."
+        ]
+      },
+      "keyTakeaways": [
+        "Promise.allSettled waits for all Promises to settle — it never rejects.",
+        "Each result includes status (fulfilled/rejected) and the value or reason.",
+        "Use it when you need partial results — some failures are acceptable.",
+        "Promise.all is for \"all or nothing\"; allSettled is for \"best effort.\""
+      ],
+      "challenge": "Build a dashboard that loads data from multiple APIs and shows whatever loads successfully, even if some fail."
+    },
+    {
+      "id": "5.6.3",
+      "title": "Handling Race Conditions with Promise.race() & Promise.any()",
+      "description": "Race multiple Promises — race() returns the first to settle, any() returns the first to succeed.",
+      "sections": [
+        {
+          "heading": "Promise.race()",
+          "list": [
+            "Returns the result of the FIRST Promise to settle (fulfilled or rejected)",
+            "If the first to settle rejects, race() rejects",
+            "Useful for timeouts and competing requests"
+          ]
+        },
+        {
+          "heading": "Promise.any()",
+          "list": [
+            "Returns the result of the FIRST Promise to FULFILL",
+            "Ignores rejections (unless ALL reject)",
+            "Useful when you have multiple fallback sources",
+            "Rejects with AggregateError if all Promises reject"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Race and any in action",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Race — first to finish wins (or fails)\nlet result = await Promise.race([\n  fetch(\"/api/fast\"),\n  fetch(\"/api/slow\")\n]);\nconsole.log(\"Fastest response:\", result.status);\n\n// Timeout pattern\nfunction fetchWithTimeout(url, ms) {\n  let fetchPromise = fetch(url);\n  let timeoutPromise = new Promise((_, reject) => {\n    setTimeout(() => reject(new Error(\"Timeout!\")), ms);\n  });\n  return Promise.race([fetchPromise, timeoutPromise]);\n}\n\n// Any — first success wins\nlet data = await Promise.any([\n  fetch(\"/api/mirror1\").then(r => r.json()),\n  fetch(\"/api/mirror2\").then(r => r.json()),\n  fetch(\"/api/mirror3\").then(r => r.json())\n]);\nconsole.log(data);  // first successful response",
+          "explanation": [
+            "Promise.race returns whichever settles first — success or failure.",
+            "The timeout pattern races fetch against a timer — if the timer wins, it rejects.",
+            "Promise.any returns the first SUCCESS — rejections are ignored.",
+            "Promise.any only rejects if ALL Promises reject."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a fetchWithTimeout function using Promise.race that rejects if the request takes more than 3 seconds.",
+        "hints": [
+          "Create a timeout Promise: <code>new Promise((_, rej) => setTimeout(() => rej(new Error(\"Timeout\")), 3000))</code>.",
+          "Race it against the fetch Promise.",
+          "If the timeout wins, the error is thrown."
+        ]
+      },
+      "keyTakeaways": [
+        "Promise.race returns the first to settle — success or failure.",
+        "Promise.any returns the first to succeed — it ignores rejections.",
+        "Use race for timeouts: race a fetch against a timer.",
+        "Use any for fallback sources: try multiple mirrors/APIs."
+      ],
+      "challenge": "Build a function that tries 3 API mirrors using Promise.any, with a 5-second timeout using Promise.race."
+    }
+  ]
+}

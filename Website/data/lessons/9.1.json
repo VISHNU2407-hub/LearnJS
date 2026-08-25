@@ -1,0 +1,144 @@
+{
+  "topicId": "9.1",
+  "topicTitle": "Server-Side JavaScript with Node.js & Express",
+  "lessons": [
+    {
+      "id": "9.1.1",
+      "title": "Server Execution via Node.js Runtime",
+      "description": "Run JavaScript outside the browser using Node.js — build servers, APIs and command-line tools.",
+      "sections": [
+        {
+          "heading": "What is Node.js?",
+          "paragraphs": ["Node.js is a JavaScript runtime built on V8 that runs outside the browser. It gives you access to the file system, network, operating system and more — everything you need to build server-side applications."],
+          "list": [
+            "Runs JavaScript outside the browser using the V8 engine",
+            "Provides APIs for file I/O, networking, processes and more",
+            "Uses an event loop for non-blocking I/O (same concept as the browser)",
+            "npm gives access to over 1 million packages"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Your first Node.js script",
+          "file": "app.js",
+          "language": "JavaScript",
+          "code": "// Built-in modules\nconst fs = require(\"fs\");\nconst path = require(\"path\");\n\n// Read a file\nfs.readFile(\"package.json\", \"utf8\", (err, data) => {\n  if (err) throw err;\n  console.log(JSON.parse(data).name);\n});\n\n// __dirname — current directory\nconsole.log(\"Running from:\", __dirname);\nconsole.log(\"Node version:\", process.version);",
+          "explanation": [
+            "require() imports built-in modules (no installation needed).",
+            "fs.readFile reads files asynchronously with a callback.",
+            "__dirname gives you the current script's directory.",
+            "process.version shows the Node.js version."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a Node.js script that reads a JSON file and logs its contents to the console.",
+        "hints": [
+          "Use <code>require(\"fs\").readFileSync(\"file.json\", \"utf8\")</code>.",
+          "Parse with <code>JSON.parse(data)</code>.",
+          "Log the parsed object."
+        ]
+      },
+      "keyTakeaways": [
+        "Node.js runs JavaScript outside the browser using the V8 engine.",
+        "It provides built-in modules for file I/O, networking and system operations.",
+        "npm gives access to a massive ecosystem of packages.",
+        "Node.js uses the same event loop concept as the browser."
+      ],
+      "challenge": "Build a command-line tool that reads a CSV file and outputs the total number of rows."
+    },
+    {
+      "id": "9.1.2",
+      "title": "Node Core Modules: fs/promises, path, http",
+      "description": "Master the essential built-in modules: file system, path manipulation and HTTP server creation.",
+      "sections": [
+        {
+          "heading": "Core modules",
+          "list": [
+            "<code>fs/promises</code> — async file operations with Promises",
+            "<code>path</code> — cross-platform file path utilities",
+            "<code>http</code> — create HTTP servers and make requests",
+            "<code>os</code> — operating system information",
+            "<code>crypto</code> — cryptographic functions"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "HTTP server with built-in modules",
+          "file": "server.js",
+          "language": "JavaScript",
+          "code": "const http = require(\"http\");\nconst fs = require(\"fs/promises\");\nconst path = require(\"path\");\n\nconst server = http.createServer(async (req, res) => {\n  if (req.url === \"/\") {\n    let html = await fs.readFile(\"index.html\", \"utf8\");\n    res.writeHead(200, { \"Content-Type\": \"text/html\" });\n    res.end(html);\n  } else if (req.url === \"/api/data\") {\n    res.writeHead(200, { \"Content-Type\": \"application/json\" });\n    res.end(JSON.stringify({ message: \"Hello from Node!\" }));\n  } else {\n    res.writeHead(404);\n    res.end(\"Not found\");\n  }\n});\n\nserver.listen(3000, () => console.log(\"Server on port 3000\"));",
+          "explanation": [
+            "http.createServer creates a basic HTTP server.",
+            "The callback receives every request with req and res objects.",
+            "fs/promises reads files asynchronously with async/await.",
+            "path.join constructs cross-platform file paths."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a Node.js HTTP server that serves different responses for /, /about, and /api/time routes.",
+        "hints": [
+          "Check <code>req.url</code> to determine the route.",
+          "Set appropriate Content-Type headers.",
+          "/api/time should return the current time as JSON."
+        ]
+      },
+      "keyTakeaways": [
+        "fs/promises provides async file operations with modern async/await.",
+        "path handles cross-platform file paths safely.",
+        "http.createServer builds basic HTTP servers without frameworks.",
+        "Always set Content-Type headers and handle 404 errors."
+      ],
+      "challenge": "Build a static file server using only Node.js built-in modules (no Express)."
+    },
+    {
+      "id": "9.1.3",
+      "title": "Building REST APIs using Express / Fastify",
+      "description": "Express is the most popular Node.js framework for building REST APIs — clean routing, middleware and more.",
+      "sections": [
+        {
+          "heading": "Express basics",
+          "list": [
+            "<code>express()</code> — creates an Express application",
+            "<code>app.get(path, handler)</code> — handle GET requests",
+            "<code>app.post(path, handler)</code> — handle POST requests",
+            "<code>app.use(middleware)</code> — add middleware (logging, auth, etc.)",
+            "<code>express.json()</code> — middleware to parse JSON request bodies"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Express REST API",
+          "file": "server.js",
+          "language": "JavaScript",
+          "code": "const express = require(\"express\");\nconst app = express();\n\napp.use(express.json());  // parse JSON bodies\n\nlet users = [\n  { id: 1, name: \"Alex\" },\n  { id: 2, name: \"Sam\" }\n];\n\n// GET all users\napp.get(\"/api/users\", (req, res) => {\n  res.json(users);\n});\n\n// GET user by ID\napp.get(\"/api/users/:id\", (req, res) => {\n  let user = users.find(u => u.id === +req.params.id);\n  if (!user) return res.status(404).json({ error: \"Not found\" });\n  res.json(user);\n});\n\n// POST new user\napp.post(\"/api/users\", (req, res) => {\n  let user = { id: users.length + 1, ...req.body };\n  users.push(user);\n  res.status(201).json(user);\n});\n\napp.listen(3000);",
+          "explanation": [
+            "express.json() middleware parses JSON request bodies.",
+            "Route parameters like :id are available via req.params.",
+            "res.json() sends a JSON response with proper headers.",
+            "res.status() sets the HTTP status code."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Build a complete REST API for a todo list with GET, POST, PUT and DELETE endpoints using Express.",
+        "hints": [
+          "Use <code>app.get/post/put/delete()</code> for each operation.",
+          "Parse JSON body with <code>express.json()</code>.",
+          "Return appropriate status codes: 200, 201, 404."
+        ]
+      },
+      "keyTakeaways": [
+        "Express simplifies HTTP server creation with clean routing syntax.",
+        "Middleware adds functionality like JSON parsing, logging and authentication.",
+        "Route parameters capture dynamic URL segments.",
+        "Always return proper HTTP status codes and Content-Type headers."
+      ],
+      "challenge": "Build a REST API for a blog with posts, comments and users — including validation and error handling."
+    }
+  ]
+}

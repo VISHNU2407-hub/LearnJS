@@ -1,0 +1,205 @@
+{
+  "topicId": "4.6",
+  "topicTitle": "Object-Oriented Programming: ES6 Class Syntax",
+  "lessons": [
+    {
+      "id": "4.6.1",
+      "title": "Class Declarations, Constructors & Instantiation",
+      "description": "ES6 classes provide a clean syntax for creating objects with shared methods — syntactic sugar over prototypes.",
+      "sections": [
+        {
+          "heading": "What is a class?",
+          "paragraphs": ["A class is a blueprint for creating objects. It defines properties and methods that all instances share. Under the hood, classes use prototypes — but the syntax is much cleaner."],
+          "list": [
+            "Declare with <code>class ClassName { }</code>",
+            "The <code>constructor()</code> method runs when you create a new instance with <code>new</code>",
+            "Instance methods are defined directly in the class body",
+            "Use <code>new ClassName()</code> to create instances"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Basic class declaration",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "class User {\n  constructor(name, age) {\n    this.name = name;\n    this.age = age;\n  }\n\n  greet() {\n    return `Hi, I'm ${this.name}, age ${this.age}`;\n  }\n}\n\nlet alex = new User(\"Alex\", 25);\nconsole.log(alex.greet());  // \"Hi, I'm Alex, age 25\"\nconsole.log(alex instanceof User);  // true",
+          "explanation": [
+            "<code>class User</code> defines a blueprint for creating user objects.",
+            "<code>constructor(name, age)</code> initializes each new instance.",
+            "<code>greet()</code> is a method shared by all User instances.",
+            "<code>new User()</code> creates a fresh instance and calls the constructor."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a <code>Car</code> class with make, model and year properties. Add a <code>describe()</code> method that returns a formatted string.",
+        "hints": [
+          "Use <code>constructor(make, model, year)</code> to set properties.",
+          "Add <code>describe() { return this.make + \" \" + this.model; }</code>.",
+          "Create an instance: <code>let car = new Car(\"Toyota\", \"Camry\", 2024)</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Classes are blueprints for creating objects with shared methods.",
+        "The <code>constructor()</code> method runs when you create a new instance.",
+        "All instances share the same methods — efficient memory usage.",
+        "ES6 classes are syntactic sugar over prototype-based inheritance."
+      ],
+      "challenge": "Create a BankAccount class with deposit, withdraw and getBalance methods. Test with multiple accounts."
+    },
+    {
+      "id": "4.6.2",
+      "title": "Instance Methods, Getters, Setters & Static Methods",
+      "description": "Classes support computed properties (getters/setters) and class-level methods (static).",
+      "sections": [
+        {
+          "heading": "Getters and setters",
+          "list": [
+            "<code>get propertyName()</code> — runs when you access the property",
+            "<code>set propertyName(value)</code> — runs when you assign to the property",
+            "Let you add validation or computed values to properties",
+            "Access like normal properties: <code>obj.name</code>, not <code>obj.name()</code>"
+          ]
+        },
+        {
+          "heading": "Static methods",
+          "list": [
+            "<code>static methodName()</code> — called on the class itself, not instances",
+            "Use for utility functions related to the class",
+            "Cannot access <code>this</code> — they don't have an instance"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Getters, setters and static methods",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "class Temperature {\n  constructor(celsius) {\n    this.celsius = celsius;\n  }\n\n  // Computed property\n  get fahrenheit() {\n    return this.celsius * 9/5 + 32;\n  }\n\n  // Validated setter\n  set celsius(value) {\n    if (value < -273.15) throw new Error(\"Below absolute zero!\");\n    this._celsius = value;\n  }\n\n  get celsius() {\n    return this._celsius;\n  }\n\n  // Static utility\n  static fromFahrenheit(f) {\n    return new Temperature((f - 32) * 5/9);\n  }\n}\n\nlet temp = new Temperature(100);\nconsole.log(temp.fahrenheit);  // 212 (getter)\n\nlet cold = Temperature.fromFahrenheit(32);\nconsole.log(cold.celsius);  // 0 (static method)",
+          "explanation": [
+            "Getters compute values on access — no parentheses needed.",
+            "Setters let you validate or transform data before storing it.",
+            "Static methods are called on the class: <code>Temperature.fromFahrenheit()</code>.",
+            "The convention for internal storage is <code>_propertyName</code>."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a Rectangle class with width and height. Add getters for area and perimeter. Add a static method that creates a square from a single side length.",
+        "hints": [
+          "Getter: <code>get area() { return this.width * this.height; }</code>.",
+          "Static: <code>static square(side) { return new Rectangle(side, side); }</code>.",
+          "Verify: <code>Rectangle.square(5).area</code> should return 25."
+        ]
+      },
+      "keyTakeaways": [
+        "Getters and setters let you add computed properties with custom logic.",
+        "Static methods are called on the class itself, not on instances.",
+        "Getters/setters use the same syntax as property access — no parentheses.",
+        "Static methods are perfect for factory functions and utility methods."
+      ],
+      "challenge": "Build a Queue class with enqueue, dequeue, peek (getter), and a static <code>fromArray()</code> method."
+    },
+    {
+      "id": "4.6.3",
+      "title": "Private Class Fields (#private) & Static Blocks",
+      "description": "True private fields with # prefix and static initialization blocks for class-level setup.",
+      "sections": [
+        {
+          "heading": "Private fields with #",
+          "paragraphs": ["ES2022 introduced truly private class fields using the <code>#</code> prefix. These are completely inaccessible from outside the class — even <code>Object.keys()</code> can't see them."],
+          "list": [
+            "Declare with <code>#fieldName</code> in the class body",
+            "Accessible only inside the class methods",
+            "Not visible on the instance or through Object.keys()",
+            "The strongest encapsulation JavaScript offers"
+          ]
+        },
+        {
+          "heading": "Static blocks",
+          "list": [
+            "<code>static { }</code> runs once when the class is first loaded",
+            "Used for complex static initialization that can't be done in one line",
+            "Can access private static fields",
+            "Multiple static blocks run in order"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Private fields and static blocks",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "class BankAccount {\n  #balance = 0;\n  #pin;\n\n  constructor(owner, pin, initial = 0) {\n    this.owner = owner;\n    this.#pin = pin;\n    this.#balance = initial;\n  }\n\n  withdraw(amount, pin) {\n    if (pin !== this.#pin) throw new Error(\"Wrong PIN!\");\n    if (amount > this.#balance) throw new Error(\"Insufficient funds!\");\n    this.#balance -= amount;\n    return this.#balance;\n  }\n\n  get balance() {\n    return this.#balance;\n  }\n}\n\nlet account = new BankAccount(\"Alex\", \"1234\", 1000);\nconsole.log(account.balance);  // 1000\naccount.withdraw(200, \"1234\");\nconsole.log(account.balance);  // 800\n// account.#balance  → SyntaxError!",
+          "explanation": [
+            "<code>#balance</code> is truly private — it cannot be accessed from outside the class.",
+            "The <code>balance</code> getter provides read-only access without exposing the raw field.",
+            "Private fields enforce encapsulation at the language level.",
+            "The <code>#</code> is part of the field name — <code>#x</code> and <code>x</code> are different fields."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a class with a private field <code>#count</code>. Add public methods to increment, decrement and get the count. Verify the field is inaccessible from outside.",
+        "hints": [
+          "Declare <code>#count = 0</code> in the class body.",
+          "Add <code>increment() { this.#count++; }</code>.",
+          "Verify: <code>obj.#count</code> throws a SyntaxError."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>#</code> prefix creates truly private fields — inaccessible from outside the class.",
+        "Private fields enforce encapsulation at the language level.",
+        "Static blocks run once at class load time for complex static initialization.",
+        "Use private fields for sensitive data like passwords, balances and internal state."
+      ],
+      "challenge": "Build a Timer class with private fields for start time and elapsed time. Add methods for start, stop and a getter for the formatted elapsed time."
+    },
+    {
+      "id": "4.6.4",
+      "title": "Inheritance Patterns: extends, super, and Method Overriding",
+      "description": "Create class hierarchies with extends and override parent methods with your own implementations.",
+      "sections": [
+        {
+          "heading": "Class inheritance",
+          "list": [
+            "<code>class Child extends Parent</code> — Child inherits all methods from Parent",
+            "<code>super()</code> in the constructor calls the parent's constructor (required before using <code>this</code>)",
+            "<code>super.method()</code> calls the parent's version of a method",
+            "Override by redefining the method in the child class"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Class inheritance with extends and super",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "class Animal {\n  constructor(name) {\n    this.name = name;\n  }\n\n  speak() {\n    return `${this.name} makes a noise`;\n  }\n}\n\nclass Dog extends Animal {\n  constructor(name, breed) {\n    super(name);  // must call before using 'this'\n    this.breed = breed;\n  }\n\n  // Override parent method\n  speak() {\n    return `${this.name} barks!`;\n  }\n\n  // Add new method\n  fetch(item) {\n    return `${this.name} fetches the ${item}`;\n  }\n}\n\nlet rex = new Dog(\"Rex\", \"German Shepherd\");\nconsole.log(rex.speak());      // \"Rex barks!\"\nconsole.log(rex.fetch(\"ball\")); // \"Rex fetches the ball\"",
+          "explanation": [
+            "<code>extends</code> sets up the inheritance chain between classes.",
+            "<code>super(name)</code> calls the parent constructor — required before using <code>this</code>.",
+            "Override methods by redefining them in the child class.",
+            "Add new methods that the parent doesn't have."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a Vehicle base class with start() and stop() methods. Create a Truck subclass that overrides start() to add a cargo check, and adds a load() method.",
+        "hints": [
+          "Call <code>super()</code> in the Truck constructor.",
+          "Override: <code>start() { /* check cargo */ super.start(); }</code>.",
+          "Add: <code>load(cargo) { this.cargo = cargo; }</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "<code>extends</code> creates an inheritance relationship between classes.",
+        "<code>super()</code> must be called in the child constructor before using <code>this</code>.",
+        "Override parent methods by redefining them in the child class.",
+        "<code>super.method()</code> lets you call the parent's version when overriding."
+      ],
+      "challenge": "Build a 3-level class hierarchy: Shape → Polygon → Rectangle. Each level adds properties and overrides a describe() method."
+    }
+  ]
+}

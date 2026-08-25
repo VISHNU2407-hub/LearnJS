@@ -1,0 +1,199 @@
+{
+  "topicId": "4.7",
+  "topicTitle": "Functional Programming (FP) Core Principles",
+  "lessons": [
+    {
+      "id": "4.7.1",
+      "title": "Pure Functions & Eliminating Side Effects",
+      "description": "A pure function always returns the same output for the same input and has no side effects.",
+      "sections": [
+        {
+          "heading": "What is a pure function?",
+          "paragraphs": ["A pure function is predictable: given the same inputs, it always returns the same output and never modifies anything outside itself. Pure functions are the building blocks of reliable, testable code."],
+          "list": [
+            "Same input → same output, always",
+            "No side effects: no modifying globals, no DOM changes, no network calls",
+            "No reading external state: no global variables, no Math.random()",
+            "Easy to test, debug, and compose"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Pure vs impure functions",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ Impure — depends on external state\nlet tax = 0.1;\nfunction calculateTotal(price) {\n  return price + price * tax;  // 'tax' can change!\n}\n\n// ✅ Pure — all inputs are explicit\nfunction calculateTotalPure(price, taxRate) {\n  return price + price * taxRate;\n}\n\n// ❌ Impure — modifies external state\nlet count = 0;\nfunction increment() {\n  count++;  // side effect!\n}\n\n// ✅ Pure — returns new value\nfunction incrementPure(n) {\n  return n + 1;\n}\nconsole.log(incrementPure(5));  // 6",
+          "explanation": [
+            "Pure functions depend only on their arguments — no surprises.",
+            "Impure functions read or modify external state, making behavior unpredictable.",
+            "Pure functions are trivial to test: just call and check the return value.",
+            "In FP, you pass data into functions and get new data back — no mutations."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Convert an impure function that reads from a global variable into a pure function that takes all needed values as parameters.",
+        "hints": [
+          "Identify every external variable the function reads.",
+          "Add those values as function parameters.",
+          "Remove any mutations — return new values instead."
+        ]
+      },
+      "keyTakeaways": [
+        "Pure functions always return the same output for the same input.",
+        "No side effects: they don't modify external state or read global variables.",
+        "They're easy to test, reason about, and compose into larger programs.",
+        "Make functions pure whenever possible — use side effects only at the edges of your program."
+      ],
+      "challenge": "Write 3 pure functions for a shopping cart: addItem, removeItem, and calculateTotal. All should return new values without mutating the original data."
+    },
+    {
+      "id": "4.7.2",
+      "title": "Immutability Patterns in Application State",
+      "description": "Instead of modifying data, create new copies with the changes — this prevents bugs in complex applications.",
+      "sections": [
+        {
+          "heading": "Why immutability?",
+          "paragraphs": ["When you mutate data, every function that touches it could potentially change it. Immutability means creating new values instead of modifying existing ones — this eliminates an entire class of bugs."],
+          "list": [
+            "Never modify objects or arrays directly — create new ones",
+            "Use spread operator <code>...</code> to copy and update",
+            "Use <code>Object.freeze()</code> to enforce immutability at runtime",
+            "React, Redux and many frameworks depend on immutability"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Immutable patterns",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// ❌ Mutable — modifies original\nlet user = { name: \"Alex\", age: 25 };\nuser.age = 26;  // original changed!\n\n// ✅ Immutable — creates new object\nlet user2 = { ...user, age: 26 };\nconsole.log(user);    // { name: \"Alex\", age: 25 }\nconsole.log(user2);   // { name: \"Alex\", age: 26 }\n\n// Arrays\nlet items = [1, 2, 3];\nlet updated = [...items, 4];        // add\nlet removed = items.filter(x => x !== 2);  // remove\nlet replaced = items.map(x => x === 2 ? 20 : x);  // update",
+          "explanation": [
+            "Spread <code>...</code> creates a shallow copy of the object/array.",
+            "For objects, override properties after spreading: <code>{...obj, newProp: val}</code>.",
+            "For arrays, use <code>filter()</code> to remove, <code>map()</code> to update, <code>...</code> to add.",
+            "The original data is never modified — all operations return new values."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Given an array of users, write immutable operations to: add a new user, update a user's name, and remove a user by ID. Each operation should return a new array.",
+        "hints": [
+          "Add: <code>[...users, newUser]</code>.",
+          "Update: <code>users.map(u => u.id === id ? {...u, name: \"New\"} : u)</code>.",
+          "Remove: <code>users.filter(u => u.id !== id)</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Immutability means creating new values instead of modifying existing ones.",
+        "Use spread <code>...</code> to create shallow copies of objects and arrays.",
+        "Array methods like <code>map()</code>, <code>filter()</code> and <code>reduce()</code> return new arrays.",
+        "Immutability prevents accidental mutations and makes state changes predictable."
+      ],
+      "challenge": "Build a todo list with immutable state management: add, toggle, remove, and edit — all returning new arrays."
+    },
+    {
+      "id": "4.7.3",
+      "title": "Higher-Order Functions & Currying Patterns",
+      "description": "Functions that accept or return other functions — the backbone of functional programming.",
+      "sections": [
+        {
+          "heading": "Higher-order functions",
+          "paragraphs": ["A higher-order function either takes a function as an argument or returns a function. Array methods like <code>map()</code>, <code>filter()</code>, and <code>reduce()</code> are all higher-order functions."],
+          "list": [
+            "Accept a function as a parameter: <code>map(fn)</code>, <code>filter(fn)</code>",
+            "Return a function: <code>function multiply(n) { return (x) => x * n; }</code>",
+            "Enable abstracting over behavior — pass different operations to the same function"
+          ]
+        },
+        {
+          "heading": "Currying",
+          "list": [
+            "Currying transforms a function that takes multiple args into a chain of functions each taking one arg",
+            "<code>f(a, b)</code> becomes <code>f(a)(b)</code>",
+            "Useful for creating specialized functions from general ones",
+            "Common in functional programming and libraries like Redux"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Higher-order functions and currying",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Higher-order function\nfunction repeat(times, fn) {\n  for (let i = 0; i < times; i++) fn(i);\n}\n\nrepeat(3, (i) => console.log(\"Iteration \" + i));\n\n// Currying\nfunction multiply(a) {\n  return function(b) {\n    return a * b;\n  };\n}\n\nlet double = multiply(2);\nlet triple = multiply(3);\n\nconsole.log(double(5));   // 10\nconsole.log(triple(5));   // 15\n\n// Practical: create specialized functions\nlet add10 = (x) => x + 10;\nlet numbers = [1, 2, 3];\nconsole.log(numbers.map(add10));  // [11, 12, 13]",
+          "explanation": [
+            "<code>repeat</code> takes a function and calls it multiple times — higher-order pattern.",
+            "<code>multiply(2)</code> returns a new function that doubles any input — currying.",
+            "Currying creates specialized functions from general ones.",
+            "This pattern makes code composable and reusable."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a curried <code>format Currency</code> function: <code>formatCurrency(\"USD\")(100)</code> returns <code>\"$100.00\"</code>, <code>formatCurrency(\"EUR\")(100)</code> returns <code>\"€100.00\"</code>.",
+        "hints": [
+          "Outer function takes the currency symbol.",
+          "Inner function takes the amount.",
+          "Return the formatted string using the captured symbol."
+        ]
+      },
+      "keyTakeaways": [
+        "Higher-order functions take or return functions — enabling behavior abstraction.",
+        "Currying transforms multi-argument functions into chains of single-argument functions.",
+        "Curried functions create specialized versions from general ones.",
+        "These patterns make code composable, reusable and declarative."
+      ],
+      "challenge": "Write a generic <code>createFilter(predicate)</code> curried function that returns a filter function. Use it to create filters for even numbers, strings starting with 'a', and objects with price under 10."
+    },
+    {
+      "id": "4.7.4",
+      "title": "Function Composition & Pipeline Concepts",
+      "description": "Combine small functions into larger ones by chaining them together — like assembling Lego blocks.",
+      "sections": [
+        {
+          "heading": "Function composition",
+          "paragraphs": ["Composition is building complex operations by combining simple functions. The output of one function becomes the input of the next. This creates readable, maintainable code."],
+          "list": [
+            "Compose: <code>compose(f, g)(x)</code> = <code>f(g(x))</code>",
+            "Pipe: <code>pipe(g, f)(x)</code> = <code>f(g(x))</code> (left-to-right)",
+            "Each function does one thing well",
+            "The composed function describes the flow of data"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Compose and pipe utilities",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Compose: right to left\nconst compose = (...fns) => (x) => fns.reduceRight((acc, fn) => fn(acc), x);\n\n// Pipe: left to right\nconst pipe = (...fns) => (x) => fns.reduce((acc, fn) => fn(acc), x);\n\n// Simple functions\nconst addTax = (price) => price * 1.1;\nconst applyDiscount = (price) => price * 0.9;\nconst round = (price) => Math.round(price * 100) / 100;\n\n// Compose (right to left)\nconst processPrice = compose(round, applyDiscount, addTax);\nconsole.log(processPrice(100));  // 99\n\n// Pipe (left to right)\nconst processPricePipe = pipe(addTax, applyDiscount, round);\nconsole.log(processPricePipe(100));  // 99",
+          "explanation": [
+            "<code>compose</code> applies functions right to left: round(applyDiscount(addTax(100))).",
+            "<code>pipe</code> applies functions left to right: addTax → applyDiscount → round.",
+            "Each small function is pure and does one thing.",
+            "The composed function reads like a data pipeline."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create pipe functions for text processing: trim, lowercase, and replace spaces with dashes. Pipe them together to convert \"  Hello World  \" to \"hello-world\".",
+        "hints": [
+          "trim: <code>(s) => s.trim()</code>.",
+          "lowercase: <code>(s) => s.toLowerCase()</code>.",
+          "dashes: <code>(s) => s.replace(/\\s+/g, \"-\")</code>.",
+          "Pipe: <code>pipe(trim, toLower, toDashes)(\"  Hello World  \")</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Function composition combines small functions into larger ones.",
+        "<code>compose()</code> applies right-to-left; <code>pipe()</code> applies left-to-right.",
+        "Each function should be pure and do one thing well.",
+        "Composed functions describe data flow as a readable pipeline."
+      ],
+      "challenge": "Build a data pipeline that takes an array of numbers, filters evens, doubles them, and sums the result — all composed from individual pure functions."
+    }
+  ]
+}

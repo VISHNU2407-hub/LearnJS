@@ -1,0 +1,144 @@
+{
+  "topicId": "3.5",
+  "topicTitle": "Web Utility APIs: Clipboard, Geolocation & Notifications",
+  "lessons": [
+    {
+      "id": "3.5.1",
+      "title": "Reading/Writing System Clipboard Data (navigator.clipboard)",
+      "description": "Use the Clipboard API to copy and paste text programmatically.",
+      "sections": [
+        {
+          "heading": "The Clipboard API",
+          "paragraphs": ["The modern Clipboard API lets JavaScript read from and write to the system clipboard. It works with both text and images and requires a user gesture (click) for security."],
+          "list": [
+            "<code>navigator.clipboard.writeText(text)</code> — copies text to clipboard",
+            "<code>navigator.clipboard.readText()</code> — reads text from clipboard",
+            "Both return Promises — use async/await",
+            "Must be triggered by a user action (click, keydown) for security"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Copy text to clipboard",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let copyBtn = document.querySelector(\"#copyBtn\");\n\ncopyBtn.addEventListener(\"click\", async () => {\n  try {\n    await navigator.clipboard.writeText(\"Hello, clipboard!\");\n    console.log(\"Text copied!\");\n  } catch (err) {\n    console.error(\"Failed to copy:\", err);\n  }\n});\n\n// Reading from clipboard\nlet pasteBtn = document.querySelector(\"#pasteBtn\");\npasteBtn.addEventListener(\"click\", async () => {\n  try {\n    let text = await navigator.clipboard.readText();\n    console.log(\"Pasted: \" + text);\n  } catch (err) {\n    console.error(\"Failed to read:\", err);\n  }\n});",
+          "explanation": [
+            "<code>writeText()</code> copies a string to the system clipboard.",
+            "Clipboard operations are async — use <code>await</code> with try/catch.",
+            "The browser may ask the user for permission on the first read attempt.",
+            "Both operations require a user gesture — you can't run them on page load."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a button that copies a specific text string to the clipboard when clicked. Show a confirmation message after copying.",
+        "hints": [
+          "Use <code>navigator.clipboard.writeText(\"your text\")</code> inside a click handler.",
+          "Use <code>await</code> and wrap in try/catch.",
+          "After the await, update a message element to show \"Copied!\"."
+        ]
+      },
+      "keyTakeaways": [
+        "The Clipboard API uses Promises — always use async/await with try/catch.",
+        "Write and read operations require user gestures for security.",
+        "Clipboard access may require user permission in some browsers.",
+        "The older <code>document.execCommand(\"copy\")</code> is deprecated — prefer the modern API."
+      ],
+      "challenge": "Build a \"Copy to Clipboard\" button for a code snippet that shows a brief \"Copied!\" animation after the copy succeeds."
+    },
+    {
+      "id": "3.5.2",
+      "title": "Retrieving Device Coordinates via Geolocation API",
+      "description": "Get the user's current location with the browser's Geolocation API.",
+      "sections": [
+        {
+          "heading": "How geolocation works",
+          "paragraphs": ["The Geolocation API provides the device's current position using GPS, Wi-Fi or cell tower data. The browser asks the user for permission before sharing location."],
+          "list": [
+            "<code>navigator.geolocation.getCurrentPosition(success, error)</code> — one-time location",
+            "<code>navigator.geolocation.watchPosition(success, error)</code> — continuous tracking",
+            "Returns coordinates: latitude, longitude, accuracy",
+            "Requires user permission — the browser prompts automatically"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Getting current position",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "function getLocation() {\n  if (!navigator.geolocation) {\n    console.log(\"Geolocation not supported\");\n    return;\n  }\n\n  navigator.geolocation.getCurrentPosition(\n    (position) => {\n      console.log(\"Latitude: \" + position.coords.latitude);\n      console.log(\"Longitude: \" + position.coords.longitude);\n      console.log(\"Accuracy: \" + position.coords.accuracy + \" meters\");\n    },\n    (error) => {\n      console.error(\"Error: \" + error.message);\n    }\n  );\n}\n\ngetLocation();",
+          "explanation": [
+            "Always check if geolocation is supported before using it.",
+            "The success callback receives a position object with coordinates.",
+            "The error callback handles permission denied or unavailable location.",
+            "Coordinates include latitude, longitude, altitude and accuracy."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Write a function that gets the user's current coordinates and logs them to the console. Include error handling for when permission is denied.",
+        "hints": [
+          "Check <code>navigator.geolocation</code> exists first.",
+          "Use <code>getCurrentPosition(success, error)</code>.",
+          "Log <code>position.coords.latitude</code> and <code>position.coords.longitude</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "The Geolocation API requires user permission before sharing location.",
+        "<code>getCurrentPosition()</code> gets a one-time location; <code>watchPosition()</code> tracks continuously.",
+        "Always handle errors — users may deny permission or location may be unavailable.",
+        "Coordinates include latitude, longitude, accuracy and optional altitude."
+      ],
+      "challenge": "Build a page that shows the user's coordinates and plots them on a map link using Google Maps URL format."
+    },
+    {
+      "id": "3.5.3",
+      "title": "Displaying System Notifications via Notification API",
+      "description": "Show desktop-style notifications from your web page to alert users.",
+      "sections": [
+        {
+          "heading": "The Notification API",
+          "paragraphs": ["Notifications let your web page send desktop-style alerts even when the tab isn't focused. They're great for new messages, updates or reminders."],
+          "list": [
+            "<code>Notification.requestPermission()</code> — asks user for permission",
+            "<code>new Notification(title, options)</code> — shows a notification",
+            "Options: body, icon, image, tag, data",
+            "Permission must be granted before showing notifications"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Requesting permission and showing notifications",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "async function showNotification() {\n  // Request permission first\n  let permission = await Notification.requestPermission();\n\n  if (permission === \"granted\") {\n    new Notification(\"Hello!\", {\n      body: \"This is a web notification.\",\n      icon: \"icon.png\"\n    });\n  } else {\n    console.log(\"Permission denied\");\n  }\n}\n\n// Trigger on button click\ndocument.querySelector(\"#notifyBtn\")\n  .addEventListener(\"click\", showNotification);",
+          "explanation": [
+            "<code>requestPermission()</code> shows a browser prompt asking the user.",
+            "Only show notifications after permission is granted.",
+            "The notification appears as a system-level alert outside the browser window.",
+            "Always trigger from a user gesture — browsers block auto-requesting permission."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Create a button that requests notification permission and, if granted, shows a notification with a title and body message.",
+        "hints": [
+          "Use <code>await Notification.requestPermission()</code> inside a click handler.",
+          "Check if permission is <code>\"granted\"</code> before showing.",
+          "Use <code>new Notification(\"Title\", { body: \"Message\" })</code>."
+        ]
+      },
+      "keyTakeaways": [
+        "Notifications require explicit user permission via <code>requestPermission()</code>.",
+        "Always trigger the permission request from a user gesture.",
+        "Notifications work even when the browser tab isn't focused.",
+        "Use options like <code>body</code>, <code>icon</code> and <code>tag</code> to customize appearance."
+      ],
+      "challenge": "Build a reminder app where the user sets a time in minutes. When the timer expires, show a notification saying \"Time's up!\"."
+    }
+  ]
+}

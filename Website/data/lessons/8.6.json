@@ -1,0 +1,187 @@
+{
+  "topicId": "8.6",
+  "topicTitle": "Advanced Performance & Observer APIs",
+  "lessons": [
+    {
+      "id": "8.6.1",
+      "title": "Lazy Loading & Viewport Tracking via IntersectionObserver",
+      "description": "Detect when elements enter or leave the viewport without expensive scroll event listeners.",
+      "sections": [
+        {
+          "heading": "What is IntersectionObserver?",
+          "paragraphs": ["IntersectionObserver asynchronously observes changes in the intersection of an element with its ancestor or the viewport. It's the modern way to implement lazy loading and infinite scroll."],
+          "list": [
+            "Replaces scroll event listeners for viewport detection",
+            "Runs off the main thread — no performance impact",
+            "Use for: lazy loading images, infinite scroll, ad viewability",
+            "Configurable: root, rootMargin, threshold"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Lazy loading images",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// HTML: <img data-src=\"photo.jpg\" src=\"placeholder.jpg\">\n\nlet observer = new IntersectionObserver((entries) => {\n  entries.forEach(entry => {\n    if (entry.isIntersecting) {\n      let img = entry.target;\n      img.src = img.dataset.src;  // load real image\n      observer.unobserve(img);    // stop watching\n    }\n  });\n}, { rootMargin: \"200px\" });  // start loading 200px before visible\n\ndocument.querySelectorAll(\"img[data-src]\").forEach(img => {\n  observer.observe(img);\n});",
+          "explanation": [
+            "IntersectionObserver watches elements and fires when they enter the viewport.",
+            "rootMargin: 200px starts loading before the element is visible.",
+            "unobserve() stops watching after the image loads — cleanup.",
+            "This runs off the main thread — no scroll jank."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Implement lazy loading for 10 images using IntersectionObserver. Show a placeholder until each image enters the viewport.",
+        "hints": [
+          "Set <code>data-src</code> on images with a placeholder <code>src</code>.",
+          "Create an observer that loads <code>data-src</code> when intersecting.",
+          "Add rootMargin to preload images before they're visible."
+        ]
+      },
+      "keyTakeaways": [
+        "IntersectionObserver detects when elements enter the viewport.",
+        "It's asynchronous and runs off the main thread — no performance impact.",
+        "Use rootMargin to preload content before it's visible.",
+        "Perfect for lazy loading, infinite scroll and ad viewability tracking."
+      ],
+      "challenge": "Build an infinite scroll feed that loads more content when the user scrolls near the bottom."
+    },
+    {
+      "id": "8.6.2",
+      "title": "Tracking Element Bounds via ResizeObserver",
+      "description": "Detect when an element's size changes — useful for responsive layouts and dynamic content.",
+      "sections": [
+        {
+          "heading": "What is ResizeObserver?",
+          "list": [
+            "Observes changes to an element's content rect or border box",
+            "Replaces window.resize for element-specific size tracking",
+            "Runs off the main thread — no performance impact",
+            "Use for: responsive components, chart resizing, layout adjustments"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "ResizeObserver in action",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "let box = document.querySelector(\".resizable-box\");\nlet display = document.querySelector(\".size-display\");\n\nlet observer = new ResizeObserver(entries => {\n  for (let entry of entries) {\n    let { width, height } = entry.contentRect;\n    display.textContent = `${Math.round(width)}x${Math.round(height)}`;\n  }\n});\n\nobserver.observe(box);\n// Updates automatically when the box is resized!",
+          "explanation": [
+            "ResizeObserver fires whenever the observed element's size changes.",
+            "contentRect gives you the element's dimensions.",
+            "It runs off the main thread — safe for frequent size changes.",
+            "Much more efficient than window.resize for element-specific tracking."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use ResizeObserver to track a div's dimensions and display them in real-time as the user resizes the browser.",
+        "hints": [
+          "Create an observer: <code>new ResizeObserver(callback)</code>.",
+          "Read: <code>entry.contentRect.width</code> and <code>.height</code>.",
+          "Display the dimensions in a fixed-position element."
+        ]
+      },
+      "keyTakeaways": [
+        "ResizeObserver detects when an element's size changes.",
+        "It's more efficient than window.resize for element-specific tracking.",
+        "contentRect provides the element's current dimensions.",
+        "Perfect for responsive components and dynamic layout adjustments."
+      ],
+      "challenge": "Build a responsive sidebar that uses ResizeObserver to adjust its content layout based on its current width."
+    },
+    {
+      "id": "8.6.3",
+      "title": "Performance Metrics: Core Web Vitals (INP, LCP, CLS) & PerformanceObserver",
+      "description": "Measure and monitor key performance metrics that affect user experience and SEO rankings.",
+      "sections": [
+        {
+          "heading": "Core Web Vitals",
+          "list": [
+            "<b>LCP</b> (Largest Contentful Paint) — how fast the main content loads",
+            "<b>INP</b> (Interaction to Next Paint) — responsiveness to user interactions",
+            "<b>CLS</b> (Cumulative Layout Shift) — visual stability during loading",
+            "These metrics directly impact Google search rankings"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "Measuring Core Web Vitals",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "// Measure LCP\nlet lcpObserver = new PerformanceObserver((entry) => {\n  let lastEntry = entry.getEntries().pop();\n  console.log(\"LCP:\", lastEntry.startTime, \"ms\");\n});\nlcpObserver.observe({ type: \"largest-contentful-paint\", buffered: true });\n\n// Measure CLS\nlet clsValue = 0;\nlet clsObserver = new PerformanceObserver((entry) => {\n  for (let shift of entry.getEntries()) {\n    if (!shift.hadRecentInput) {\n      clsValue += shift.value;\n    }\n  }\n  console.log(\"CLS:\", clsValue);\n});\nclsObserver.observe({ type: \"layout-shift\", buffered: true });",
+          "explanation": [
+            "PerformanceObserver watches for performance events asynchronously.",
+            "LCP measures when the largest visible element finishes painting.",
+            "CLS measures layout shifts that happen without user input.",
+            "buffered: true includes events that already happened."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use PerformanceObserver to measure and log the LCP and CLS of your web page.",
+        "hints": [
+          "Create observers for 'largest-contentful-paint' and 'layout-shift'.",
+          "Log the values: <code>entry.startTime</code> for LCP, <code>entry.value</code> for CLS.",
+          "Good LCP: < 2.5s. Good CLS: < 0.1."
+        ]
+      },
+      "keyTakeaways": [
+        "Core Web Vitals measure real user experience: loading speed, responsiveness, visual stability.",
+        "PerformanceObserver asynchronously monitors these metrics.",
+        "LCP, INP and CLS directly impact SEO and user satisfaction.",
+        "Always measure before optimizing — know what to improve."
+      ],
+      "challenge": "Build a performance dashboard that displays real-time Core Web Vitals using PerformanceObserver."
+    },
+    {
+      "id": "8.6.4",
+      "title": "Scheduling Idle Tasks via requestIdleCallback",
+      "description": "Run low-priority work during browser idle time — don't block the main thread.",
+      "sections": [
+        {
+          "heading": "What is requestIdleCallback?",
+          "list": [
+            "Runs a callback when the browser is idle (no urgent work)",
+            "Provides a deadline object to manage time budget",
+            "Automatically paused when the tab is not visible",
+            "Use for: analytics, prefetching, non-urgent background work"
+          ]
+        }
+      ],
+      "codeExamples": [
+        {
+          "heading": "requestIdleCallback usage",
+          "file": "script.js",
+          "language": "JavaScript",
+          "code": "requestIdleCallback((deadline) => {\n  while (deadline.timeRemaining() > 0 && taskQueue.length > 0) {\n    processTask(taskQueue.shift());\n  }\n  if (taskQueue.length > 0) {\n    requestIdleCallback(arguments.callee);  // continue later\n  }\n});\n\n// Practical: prefetch pages during idle time\nfunction prefetchPages(urls) {\n  let index = 0;\n  function doWork(deadline) {\n    while (deadline.timeRemaining() > 0 && index < urls.length) {\n      let link = document.createElement(\"link\");\n      link.rel = \"prefetch\";\n      link.href = urls[index++];\n      document.head.appendChild(link);\n    }\n    if (index < urls.length) {\n      requestIdleCallback(doWork);\n    }\n  }\n  requestIdleCallback(doWork);\n}",
+          "explanation": [
+            "deadline.timeRemaining() tells you how much idle time is left.",
+            "Process as many tasks as time allows, then yield.",
+            "If tasks remain, schedule another idle callback.",
+            "This ensures low-priority work never blocks rendering."
+          ]
+        }
+      ],
+      "practice": {
+        "task": "Use requestIdleCallback to process a queue of 100 items without blocking the main thread. Process items only during idle time.",
+        "hints": [
+          "Check <code>deadline.timeRemaining() > 0</code> before each task.",
+          "If time runs out, schedule another callback.",
+          "Items should be processed gradually, not all at once."
+        ]
+      },
+      "keyTakeaways": [
+        "requestIdleCallback runs work during browser idle time.",
+        "deadline.timeRemaining() tells you how much time you have.",
+        "Never block the main thread — yield when time runs out.",
+        "Perfect for analytics, prefetching and other non-urgent work."
+      ],
+      "challenge": "Build a background data processor that handles 1000 items using requestIdleCallback without blocking the UI."
+    }
+  ]
+}
