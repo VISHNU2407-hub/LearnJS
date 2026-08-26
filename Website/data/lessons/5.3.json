@@ -82,7 +82,8 @@
             "The <code>fetchUser</code> function wraps a callback pattern in a Promise.",
             "Promises let you chain async operations cleanly.",
             "Thrown errors in the executor automatically become rejections."
-          ]
+          ],
+          "output": "> delay(2000).then(() => console.log(\"2 seconds passed!\"));\n\n// After 2 seconds:\n2 seconds passed!\n\n> fetchUser(1).then(console.log);\n{ id: 1, name: \"User 1\" }\n\n> fetchUser(-1).catch(console.error);\nError: Invalid ID"
         }
       ],
       "practice": {

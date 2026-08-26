@@ -115,6 +115,7 @@ function renderProject() {
 
   el("dStartBtn").addEventListener("click", onStart);
   el("dCompleteBtn").addEventListener("click", onComplete);
+  el("dTryBtn").addEventListener("click", onTryYourself);
 }
 
 function renderProgress() {
@@ -178,6 +179,24 @@ async function onComplete() {
   } catch (err) {
     toast("Could not save progress: " + err.message, "error");
   }
+}
+
+/* --- Try Yourself: open the compiler with project workspace --- */
+function onTryYourself() {
+  if (!project) return;
+  // Resolve the playground URL (reuse the existing launcher logic)
+  var candidates = [
+    new URL("../../../Js-compiler/index.html", import.meta.url).href,
+    new URL("/Js-compiler/index.html", window.location.href).href
+  ];
+  var params = new URLSearchParams({
+    project: project.id,
+    uid: currentUser.uid,
+    name: project.title
+  });
+  // Try the first candidate
+  var url = candidates[0] + "?" + params.toString();
+  window.open(url, "_blank", "noopener");
 }
 
 /* ---------- Live progress ---------- */

@@ -125,7 +125,8 @@
             "<code>setInterval</code> repeats the callback at the specified interval.",
             "Always store the ID to clear the timer when needed.",
             "The delay is a minimum — the callback won't run if the thread is blocked."
-          ]
+          ],
+          "output": "> clearTimeout(timerId);\n// (timer cancelled, no output from first setTimeout)\n\n// After 5 seconds:\nTick: 1\nTick: 2\nTick: 3\nTick: 4\nTick: 5"
         }
       ],
       "practice": {

@@ -272,47 +272,45 @@
             </div>
           </div>
 
-          <!-- Question interface — rendered by interview.js from interview_questions.json. -->
+                    <!-- Question interface — rendered by interview.js from interview_questions.json. -->
           <div id="iqContent" hidden>
 
-            <!-- Topic progress -- per-user practice state from Firestore; the
-                 cards also act as the topic selector. Rendered by interview.js. -->
-            <section class="iq-progress" aria-label="Topic progress">
-              <div class="iq-progress-head">
-                <h2 class="iq-progress-title">Topic Progress</h2>
-              </div>
-              <div class="iq-topic-progress" id="iqTopicProgress"></div>
-            </section>
+            <!-- Topic selector (main page: ONLY topic cards) -->
+            <div id="iqTopicSelector">
+              <div class="iq-topic-grid" id="iqTopicProgress"></div>
+            </div>
 
-            <!-- Filters -->
-            <div class="iq-toolbar">
-              <div class="iq-difficulty-filters" role="group" aria-label="Filter by difficulty">
-                <button class="iq-filter active" data-difficulty="all" type="button" aria-pressed="true">All</button>
-                <button class="iq-filter" data-difficulty="easy" type="button" aria-pressed="false">Easy</button>
-                <button class="iq-filter" data-difficulty="medium" type="button" aria-pressed="false">Medium</button>
-                <button class="iq-filter" data-difficulty="hard" type="button" aria-pressed="false">Hard</button>
+            <!-- Topic practice panel (shown when a topic is active) -->
+            <div id="iqTopicPanel" hidden>
+              <div class="iq-panel-header">
+                <button class="iq-back-btn" id="iqBackBtn" type="button" aria-label="Back to topics">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  <span>Interview Topics</span>
+                </button>
+                <h2 class="iq-panel-title" id="iqPanelTitle"></h2>
               </div>
-              <div class="iq-search-row">
-                <div class="iq-search">
-                  <svg class="iq-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-                  <input type="search" id="iqSearch" placeholder="Search questions…" autocomplete="off" aria-label="Search questions">
-                </div>
+              <!-- Difficulty tabs -->
+              <div class="iq-diff-tabs" role="tablist" aria-label="Difficulty levels">
+                <button class="iq-diff-tab active" data-difficulty="easy" role="tab" aria-selected="true" type="button">Easy</button>
+                <button class="iq-diff-tab" data-difficulty="medium" role="tab" aria-selected="false" type="button">Medium</button>
+                <button class="iq-diff-tab" data-difficulty="hard" role="tab" aria-selected="false" type="button">Hard</button>
+              </div>
+              <div class="iq-list-head">
+                <p class="iq-list-range" id="iqListRange"></p>
               </div>
             </div>
 
-            <!-- List head -->
-            <div class="iq-list-head">
-              <h2 class="iq-list-title" id="iqSelectionLabel">All Questions</h2>
-              <p class="iq-list-range" id="iqListRange">Loading…</p>
+            <!-- Question grid -->
+            <div id="iqList" class="iq-question-grid" aria-live="polite">
             </div>
 
-            <!-- Question list -->
-            <div id="iqList" class="iq-list" aria-live="polite">
-              <div class="iq-loading"><span class="iq-spinner"></span> Loading questions…</div>
+            <!-- Navigation: next difficulty / complete topic -->
+            <div class="iq-nav-actions" id="iqNavActions" hidden>
+              <button class="iq-next-btn" id="iqNextBtn" type="button">
+                <span id="iqNextLabel">Move to Medium</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
             </div>
-
-            <!-- Pagination -->
-            <nav class="iq-pagination" id="iqPagination" aria-label="Question pagination"></nav>
 
           </div><!-- /#iqContent -->
         </section>

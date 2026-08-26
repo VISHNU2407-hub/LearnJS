@@ -31,7 +31,8 @@
             "Use <code>super(message)</code> to call the parent Error constructor.",
             "<code>instanceof</code> checks which specific error type was thrown.",
             "This enables targeted error handling for different failure modes."
-          ]
+          ],
+          "output": "> validateAge(-5);\nage: Age must be 0-150"
         }
       ],
       "practice": {

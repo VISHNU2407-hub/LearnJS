@@ -81,7 +81,8 @@
             "The next() method produces values one at a time.",
             "for...of calls next() automatically until done is true.",
             "Destructuring also uses the iterator protocol."
-          ]
+          ],
+          "output": "> for (let word of words) console.log(word);\nHello\nWorld\nfrom\nJavaScript\n\n> let [first, second, ...rest] = words;\nHello World [\"from\", \"JavaScript\"]"
         }
       ],
       "practice": {
