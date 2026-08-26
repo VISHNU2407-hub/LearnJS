@@ -28,7 +28,8 @@
             "Objects are referenced — both variables point to the same heap object.",
             "Stack is fast but limited; heap is flexible but needs garbage collection.",
             "References on the stack point to objects on the heap."
-          ]
+          ],
+          "output": "> console.log(obj2.x);\n2 (both point to same object!)"
         }
       ],
       "practice": {
@@ -37,7 +38,8 @@
           "Primitives: <code>let a = 5; let b = a; a = 10;</code> — b is still 5.",
           "Objects: <code>let o1 = {x:1}; let o2 = o1; o1.x = 2;</code> — o2.x is 2.",
           "Stack vs heap explains the difference."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Primitives live on the stack and are copied by value.",
@@ -82,7 +84,8 @@
           "Create 1000 objects in a loop, return only the last one.",
           "Open DevTools → Memory → take a heap snapshot.",
           "Observe the object count before and after garbage collection."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Mark-and-sweep marks reachable objects and frees unreachable ones.",
@@ -125,9 +128,10 @@
         "task": "Explain why V8 uses generational collection instead of collecting all objects at once.",
         "hints": [
           "Most objects die young — collecting them is cheap.",
-            "Long-lived objects need different collection strategies.",
-            "Separating them optimizes for both cases."
-        ]
+          "Long-lived objects need different collection strategies.",
+          "Separating them optimizes for both cases."
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "V8 separates objects into young and old generations.",

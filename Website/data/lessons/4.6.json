@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is a class?",
-          "paragraphs": ["A class is a blueprint for creating objects. It defines properties and methods that all instances share. Under the hood, classes use prototypes — but the syntax is much cleaner."],
+          "paragraphs": [
+            "A class is a blueprint for creating objects. It defines properties and methods that all instances share. Under the hood, classes use prototypes — but the syntax is much cleaner."
+          ],
           "list": [
             "Declare with <code>class ClassName { }</code>",
             "The <code>constructor()</code> method runs when you create a new instance with <code>new</code>",
@@ -29,7 +31,8 @@
             "<code>constructor(name, age)</code> initializes each new instance.",
             "<code>greet()</code> is a method shared by all User instances.",
             "<code>new User()</code> creates a fresh instance and calls the constructor."
-          ]
+          ],
+          "output": "> console.log(alex.greet());\n> console.log(alex instanceof User);\n\"Hi, I'm Alex, age 25\"\ntrue"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Use <code>constructor(make, model, year)</code> to set properties.",
           "Add <code>describe() { return this.make + \" \" + this.model; }</code>.",
           "Create an instance: <code>let car = new Car(\"Toyota\", \"Camry\", 2024)</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Classes are blueprints for creating objects with shared methods.",
@@ -82,7 +86,8 @@
             "Setters let you validate or transform data before storing it.",
             "Static methods are called on the class: <code>Temperature.fromFahrenheit()</code>.",
             "The convention for internal storage is <code>_propertyName</code>."
-          ]
+          ],
+          "output": "> console.log(temp.fahrenheit);\n> console.log(cold.celsius);\n212 (getter)\n0 (static method)"
         }
       ],
       "practice": {
@@ -91,7 +96,8 @@
           "Getter: <code>get area() { return this.width * this.height; }</code>.",
           "Static: <code>static square(side) { return new Rectangle(side, side); }</code>.",
           "Verify: <code>Rectangle.square(5).area</code> should return 25."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Getters and setters let you add computed properties with custom logic.",
@@ -108,7 +114,9 @@
       "sections": [
         {
           "heading": "Private fields with #",
-          "paragraphs": ["ES2022 introduced truly private class fields using the <code>#</code> prefix. These are completely inaccessible from outside the class — even <code>Object.keys()</code> can't see them."],
+          "paragraphs": [
+            "ES2022 introduced truly private class fields using the <code>#</code> prefix. These are completely inaccessible from outside the class — even <code>Object.keys()</code> can't see them."
+          ],
           "list": [
             "Declare with <code>#fieldName</code> in the class body",
             "Accessible only inside the class methods",
@@ -137,7 +145,8 @@
             "The <code>balance</code> getter provides read-only access without exposing the raw field.",
             "Private fields enforce encapsulation at the language level.",
             "The <code>#</code> is part of the field name — <code>#x</code> and <code>x</code> are different fields."
-          ]
+          ],
+          "output": "> console.log(account.balance);\n> console.log(account.balance);\n1000\n800"
         }
       ],
       "practice": {
@@ -146,7 +155,8 @@
           "Declare <code>#count = 0</code> in the class body.",
           "Add <code>increment() { this.#count++; }</code>.",
           "Verify: <code>obj.#count</code> throws a SyntaxError."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>#</code> prefix creates truly private fields — inaccessible from outside the class.",
@@ -182,7 +192,8 @@
             "<code>super(name)</code> calls the parent constructor — required before using <code>this</code>.",
             "Override methods by redefining them in the child class.",
             "Add new methods that the parent doesn't have."
-          ]
+          ],
+          "output": "> console.log(rex.speak());\n> console.log(rex.fetch(\"ball\"));\n\"Rex barks!\"\n\"Rex fetches the ball\""
         }
       ],
       "practice": {
@@ -191,7 +202,8 @@
           "Call <code>super()</code> in the Truck constructor.",
           "Override: <code>start() { /* check cargo */ super.start(); }</code>.",
           "Add: <code>load(cargo) { this.cargo = cargo; }</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>extends</code> creates an inheritance relationship between classes.",

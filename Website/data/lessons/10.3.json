@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What are Custom Elements?",
-          "paragraphs": ["Custom Elements let you define new HTML tags with their own behavior. They follow the same lifecycle as built-in elements: creation, connection, updates and disconnection."],
+          "paragraphs": [
+            "Custom Elements let you define new HTML tags with their own behavior. They follow the same lifecycle as built-in elements: creation, connection, updates and disconnection."
+          ],
           "list": [
             "<code>customElements.define(\"tag-name\", Class)</code> — registers a custom element",
             "Must contain a hyphen: <code>my-button</code> (not <code>mybutton</code>)",
@@ -29,7 +31,8 @@
             "Constructor sets up the shadow DOM and initial state.",
             "connectedCallback runs when the element is added to the page.",
             "disconnectedCallback runs when it's removed."
-          ]
+          ],
+          "output": "> <my-greeting> created\n> <my-greeting> connected"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Use setInterval in connectedCallback, clearInterval in disconnectedCallback.",
           "Display time in the shadow DOM.",
           "Register with <code>customElements.define(\"my-clock\", MyClock)</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Custom Elements let you create reusable HTML tags with custom behavior.",
@@ -83,7 +87,8 @@
           "Use <code>this.attachShadow({ mode: \"open\" })</code>.",
           "Define styles inside the shadow root.",
           "Test by adding conflicting global CSS — the component should be unaffected."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Shadow DOM isolates a component's DOM and styles from the page.",
@@ -128,7 +133,8 @@
           "Use <code>&lt;slot name=\"header\"&gt;Default Header&lt;/slot&gt;</code>.",
           "Test with and without slot content to verify defaults work.",
           "Style the card with Shadow DOM styles."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Templates define reusable HTML structures that aren't rendered until activated.",

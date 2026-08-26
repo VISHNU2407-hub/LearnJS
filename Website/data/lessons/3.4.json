@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "The three phases of event propagation",
-          "paragraphs": ["When you click an element, the event doesn't just fire on that element — it travels through the entire DOM tree. Understanding these phases prevents confusing bugs."],
+          "paragraphs": [
+            "When you click an element, the event doesn't just fire on that element — it travels through the entire DOM tree. Understanding these phases prevents confusing bugs."
+          ],
           "list": [
             "<b>Capturing phase</b> — the event travels down from the document root to the target element",
             "<b>Target phase</b> — the event reaches the element you actually clicked",
@@ -49,7 +51,8 @@
           "Create three nested divs with different classes.",
           "Add click listeners to each div.",
           "Click the innermost div and note the console output order."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Events propagate in three phases: capturing (down), target, then bubbling (up).",
@@ -66,7 +69,9 @@
       "sections": [
         {
           "heading": "When bubbling causes problems",
-          "paragraphs": ["Sometimes you don't want an event to bubble up. For example, a modal overlay might have its own click handler, but clicking inside the modal content should not trigger the overlay's close handler."],
+          "paragraphs": [
+            "Sometimes you don't want an event to bubble up. For example, a modal overlay might have its own click handler, but clicking inside the modal content should not trigger the overlay's close handler."
+          ],
           "list": [
             "<code>event.stopPropagation()</code> — stops the event from bubbling further",
             "<code>event.stopImmediatePropagation()</code> — stops all remaining listeners on the same element",
@@ -93,7 +98,8 @@
           "In the child's handler: <code>e.stopPropagation()</code>.",
           "Click the child — only the child's message should appear.",
           "Click the parent — the parent's message should still work."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>stopPropagation()</code> prevents the event from reaching parent elements.",
@@ -110,7 +116,9 @@
       "sections": [
         {
           "heading": "Why event delegation?",
-          "paragraphs": ["If you have a list with 100 items, adding a click listener to each one is inefficient. Worse, if you add new items dynamically, they won't have listeners. Event delegation solves both problems by using a single listener on the parent."],
+          "paragraphs": [
+            "If you have a list with 100 items, adding a click listener to each one is inefficient. Worse, if you add new items dynamically, they won't have listeners. Event delegation solves both problems by using a single listener on the parent."
+          ],
           "list": [
             "Attach one listener to a parent element",
             "Use <code>e.target</code> to detect which child was clicked",
@@ -151,7 +159,8 @@
           "Attach the listener to the <code>&lt;ul&gt;</code>, not individual <code>&lt;li&gt;</code> elements.",
           "Check <code>e.target.classList.contains(\"delete-btn\")</code> inside the handler.",
           "Use <code>e.target.closest(\"li\").remove()</code> to find and remove the parent item."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Event delegation uses one parent listener instead of many child listeners.",

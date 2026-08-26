@@ -9,11 +9,15 @@
       "sections": [
         {
           "heading": "What is forEach?",
-          "paragraphs": ["<code>forEach</code> is a method that calls a function once for each element in an array. It's the simplest way to do something with every item without writing a manual loop."]
+          "paragraphs": [
+            "<code>forEach</code> is a method that calls a function once for each element in an array. It's the simplest way to do something with every item without writing a manual loop."
+          ]
         },
         {
           "heading": "How it works",
-          "paragraphs": ["You pass a function (called a <b>callback</b>) to <code>forEach</code>. JavaScript calls that function for each element, passing three arguments: the current element, its index, and the original array."],
+          "paragraphs": [
+            "You pass a function (called a <b>callback</b>) to <code>forEach</code>. JavaScript calls that function for each element, passing three arguments: the current element, its index, and the original array."
+          ],
           "list": [
             "<code>forEach(callback)</code> — runs the callback for each element",
             "The callback receives: <code>(element, index, array)</code>",
@@ -31,7 +35,8 @@
             "The callback function runs once for each element in the array.",
             "Each time, the <code>color</code> parameter holds the current element's value.",
             "The order is always left to right (index 0, then 1, then 2)."
-          ]
+          ],
+          "output": "> colors.forEach(function(color) {\n>   console.log(color);\n> });\nred\ngreen\nblue"
         },
         {
           "heading": "Using the index parameter",
@@ -42,7 +47,8 @@
             "The second parameter gives you the index of the current element.",
             "This is useful when you need to know the position, not just the value.",
             "You can name the parameters anything — <code>(item, i)</code> is also common."
-          ]
+          ],
+          "output": "> fruits.forEach(function(fruit, index) {\n>   console.log(index + \": \" + fruit);\n> });\n0: apple\n1: banana\n2: cherry"
         }
       ],
       "practice": {
@@ -52,7 +58,8 @@
           "Use <code>nums.forEach(function(num) { console.log(num * 2); })</code>",
           "With arrow functions: <code>nums.forEach(num => console.log(num * 2))</code>"
         ],
-        "note": "forEach doesn't return anything — it's for side effects like logging or updating the DOM."
+        "note": "forEach doesn't return anything — it's for side effects like logging or updating the DOM.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>forEach</code> runs a callback on every element — it's the simplest way to iterate an array.",
@@ -68,11 +75,15 @@
       "sections": [
         {
           "heading": "What does map do?",
-          "paragraphs": ["<code>map</code> creates a <b>new array</b> by calling a function on every element of the original. The function's return value becomes the new element at the same position. The original array stays unchanged."]
+          "paragraphs": [
+            "<code>map</code> creates a <b>new array</b> by calling a function on every element of the original. The function's return value becomes the new element at the same position. The original array stays unchanged."
+          ]
         },
         {
           "heading": "Why map is better than a for loop",
-          "paragraphs": ["Instead of pushing to a new array manually, <code>map</code> handles the creation for you. It's shorter, clearer, and less error-prone. Think of it as \"transform each element\" rather than \"loop and build.\""]
+          "paragraphs": [
+            "Instead of pushing to a new array manually, <code>map</code> handles the creation for you. It's shorter, clearer, and less error-prone. Think of it as \"transform each element\" rather than \"loop and build.\""
+          ]
         }
       ],
       "codeExamples": [
@@ -85,7 +96,8 @@
             "The callback returns <code>num * 2</code> for each element, building a new array.",
             "The original <code>numbers</code> array is never modified.",
             "The new array always has the same length as the original."
-          ]
+          ],
+          "output": "> console.log(doubled);   // [2, 4, 6, 8]\n> console.log(numbers);   // [1, 2, 3, 4] — unchanged\n[2, 4, 6, 8]\n[1, 2, 3, 4] — unchanged"
         },
         {
           "heading": "map with arrow functions",
@@ -96,7 +108,8 @@
             "Arrow functions make map calls concise and readable.",
             "<code>name[0].toUpperCase()</code> capitalizes the first letter, and <code>name.slice(1)</code> keeps the rest.",
             "This is a common pattern: extracting or transforming specific parts of each element."
-          ]
+          ],
+          "output": "> console.log(capitalized);  // [\"Alex\", \"Sam\", \"Jordan\"]\n[\"Alex\", \"Sam\", \"Jordan\"]"
         }
       ],
       "practice": {
@@ -106,7 +119,8 @@
           "Use <code>celsius.map(c => c * 9/5 + 32)</code>",
           "Store the result in a new variable and log it."
         ],
-        "note": "map always returns a new array of the same length — it never skips elements or changes the original."
+        "note": "map always returns a new array of the same length — it never skips elements or changes the original.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>map</code> creates a new array by transforming each element with a callback function.",
@@ -122,11 +136,15 @@
       "sections": [
         {
           "heading": "What does filter do?",
-          "paragraphs": ["<code>filter</code> creates a <b>new array</b> containing only the elements that return <code>true</code> from a test function (callback). If the callback returns <code>false</code>, that element is excluded from the new array."]
+          "paragraphs": [
+            "<code>filter</code> creates a <b>new array</b> containing only the elements that return <code>true</code> from a test function (callback). If the callback returns <code>false</code>, that element is excluded from the new array."
+          ]
         },
         {
           "heading": "filter vs forEach",
-          "paragraphs": ["<code>forEach</code> runs code on each element but doesn't return anything useful. <code>filter</code> checks each element and builds a new array from the ones that pass. Use filter when you want to <b>keep a subset</b> of data."]
+          "paragraphs": [
+            "<code>forEach</code> runs code on each element but doesn't return anything useful. <code>filter</code> checks each element and builds a new array from the ones that pass. Use filter when you want to <b>keep a subset</b> of data."
+          ]
         }
       ],
       "codeExamples": [
@@ -139,7 +157,8 @@
             "The callback returns <code>true</code> for even numbers and <code>false</code> for odd ones.",
             "Only elements where the callback returned <code>true</code> end up in the new array.",
             "The original array stays the same — filter is non-destructive."
-          ]
+          ],
+          "output": "> console.log(evens);     // [2, 4, 6]\n> console.log(numbers);   // [1, 2, 3, 4, 5, 6] — unchanged\n[2, 4, 6]\n[1, 2, 3, 4, 5, 6] — unchanged"
         },
         {
           "heading": "filter with objects",
@@ -150,7 +169,8 @@
             "Filter works great with arrays of objects — just access the property in the callback.",
             "Only users where <code>age >= 18</code> is <code>true</code> are included in the result.",
             "This is a common real-world pattern for searching and sorting data."
-          ]
+          ],
+          "output": "> console.log(adults);\n[{ name: \"Alex\", age: 25 }, { name: \"Jordan\", age: 30 }]"
         }
       ],
       "practice": {
@@ -160,7 +180,8 @@
           "The callback checks each word's <code>.length</code> property.",
           "Store the result and log it — you should get <code>[\"hello\", \"goodbye\"]</code>."
         ],
-        "note": "filter can return an empty array <code>[]</code> if nothing matches — that's normal, not an error."
+        "note": "filter can return an empty array <code>[]</code> if nothing matches — that's normal, not an error.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>filter</code> creates a new array with only the elements that pass a test (callback returns <code>true</code>).",
@@ -176,7 +197,9 @@
       "sections": [
         {
           "heading": "What does reduce do?",
-          "paragraphs": ["<code>reduce</code> processes every element in an array and accumulates a single result. It runs a callback that combines the current element with a running total (called the <b>accumulator</b>)."]
+          "paragraphs": [
+            "<code>reduce</code> processes every element in an array and accumulates a single result. It runs a callback that combines the current element with a running total (called the <b>accumulator</b>)."
+          ]
         },
         {
           "heading": "The two required arguments",
@@ -198,7 +221,8 @@
             "The initial value is <code>0</code> — this is the starting point for the accumulator.",
             "Step by step: 0+1=1, 1+2=3, 3+3=6, 6+4=10, 10+5=15.",
             "Each callback return becomes the new <code>acc</code> for the next iteration."
-          ]
+          ],
+          "output": "> console.log(total);  // 15\n15"
         },
         {
           "heading": "Building an object with reduce",
@@ -209,7 +233,8 @@
             "The initial value is <code>{}</code> — an empty object that we build up.",
             "For each fruit, we either increment its count or start it at 1.",
             "<code>(acc[fruit] || 0) + 1</code> handles both existing and new entries cleanly."
-          ]
+          ],
+          "output": "> console.log(counts);  // { apple: 3, banana: 2, orange: 1 }\n{ apple: 3, banana: 2, orange: 1 }"
         }
       ],
       "practice": {
@@ -219,7 +244,8 @@
           "Callback: <code>if (current > acc) return current; return acc;</code>",
           "Or shorter: <code>return current > acc ? current : acc</code>"
         ],
-        "note": "reduce is the most versatile array method — you can implement map, filter, and forEach with it!"
+        "note": "reduce is the most versatile array method — you can implement map, filter, and forEach with it!",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>reduce</code> accumulates all array elements into a single value using a callback.",
@@ -235,7 +261,9 @@
       "sections": [
         {
           "heading": "The five search methods",
-          "paragraphs": ["JavaScript gives you five ways to search arrays, each suited to a different task:"],
+          "paragraphs": [
+            "JavaScript gives you five ways to search arrays, each suited to a different task:"
+          ],
           "list": [
             "<code>find</code> — returns the <b>first matching element</b> (or undefined)",
             "<code>findIndex</code> — returns the <b>index</b> of the first match (or -1)",
@@ -255,7 +283,8 @@
             "<code>find</code> returns the first matching object — the whole element, not just the name.",
             "<code>findIndex</code> returns the position (index) where the match was found.",
             "Both stop searching after the first match — they don't check the rest."
-          ]
+          ],
+          "output": "> console.log(minor);  // { name: \"Sam\", age: 17 }\n> console.log(index);  // 1\n{ name: \"Sam\", age: 17 }\n1"
         },
         {
           "heading": "includes, some, and every",
@@ -266,7 +295,8 @@
             "<code>includes</code> checks for an exact value match — simple and readable.",
             "<code>some</code> is like an \"OR\" check — true if any element satisfies the condition.",
             "<code>every</code> is like an \"AND\" check — true only if all elements satisfy it."
-          ]
+          ],
+          "output": "> console.log(nums.includes(3));     // true\n> console.log(nums.includes(99));    // false\n> console.log(nums.some(n => n > 4));   // true\n> console.log(nums.every(n => n > 0));  // true\n> console.log(nums.every(n => n > 3));  // false\ntrue\nfalse\ntrue\ntrue\nfalse"
         }
       ],
       "practice": {
@@ -276,7 +306,8 @@
           "<code>products.some(p => p.price < 20)</code> returns a boolean.",
           "Remember: find returns the element; some returns true/false."
         ],
-        "note": "find returns undefined and findIndex returns -1 when no match is found — always check for these!"
+        "note": "find returns undefined and findIndex returns -1 when no match is found — always check for these!",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>find</code> returns the first matching element; <code>findIndex</code> returns its index.",
@@ -292,7 +323,9 @@
       "sections": [
         {
           "heading": "How sort works",
-          "paragraphs": ["<code>sort()</code> rearranges elements in place. By default, it converts elements to strings and sorts them alphabetically — which is wrong for numbers. You provide a <b>comparator function</b> to control the order."]
+          "paragraphs": [
+            "<code>sort()</code> rearranges elements in place. By default, it converts elements to strings and sorts them alphabetically — which is wrong for numbers. You provide a <b>comparator function</b> to control the order."
+          ]
         },
         {
           "heading": "The comparator function",
@@ -322,7 +355,8 @@
             "Without a comparator, <code>[40, 1, 5, 200, 10]</code> sorts as strings: \"1\", \"10\", \"200\", \"40\", \"5\".",
             "<code>a - b</code> sorts ascending (smallest first). <code>b - a</code> would sort descending.",
             "The comparator is called multiple times — it should be pure and fast."
-          ]
+          ],
+          "output": "> console.log(nums);  // [1, 5, 10, 40, 200]\n[1, 5, 10, 40, 200]"
         },
         {
           "heading": "toSorted — non-destructive sorting",
@@ -333,7 +367,8 @@
             "<code>toSorted()</code> creates a brand new array — the original stays exactly as it was.",
             "This is the safer choice when you don't want to accidentally change your source data.",
             "Available in modern browsers (2023+). Use <code>[...arr].sort()</code> as a fallback."
-          ]
+          ],
+          "output": "> console.log(sorted);    // [1, 1, 3, 4, 5, 9]\n> console.log(original);  // [3, 1, 4, 1, 5, 9] — unchanged!\n[1, 1, 3, 4, 5, 9]\n[3, 1, 4, 1, 5, 9] — unchanged!"
         }
       ],
       "practice": {
@@ -343,7 +378,8 @@
           "The comparator receives two objects — access the property you want to sort by.",
           "For descending order: <code>(a, b) => b.price - a.price</code>"
         ],
-        "note": "sort is one of the few array methods that <b>modifies the original</b> — use toSorted or [...arr].sort() to keep it safe."
+        "note": "sort is one of the few array methods that <b>modifies the original</b> — use toSorted or [...arr].sort() to keep it safe.",
+        "compiler": true
       },
       "keyTakeaways": [
         "Default <code>sort()</code> treats elements as strings — always use a comparator for numbers.",

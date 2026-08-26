@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "The Clipboard API",
-          "paragraphs": ["The modern Clipboard API lets JavaScript read from and write to the system clipboard. It works with both text and images and requires a user gesture (click) for security."],
+          "paragraphs": [
+            "The modern Clipboard API lets JavaScript read from and write to the system clipboard. It works with both text and images and requires a user gesture (click) for security."
+          ],
           "list": [
             "<code>navigator.clipboard.writeText(text)</code> — copies text to clipboard",
             "<code>navigator.clipboard.readText()</code> — reads text from clipboard",
@@ -38,7 +40,8 @@
           "Use <code>navigator.clipboard.writeText(\"your text\")</code> inside a click handler.",
           "Use <code>await</code> and wrap in try/catch.",
           "After the await, update a message element to show \"Copied!\"."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The Clipboard API uses Promises — always use async/await with try/catch.",
@@ -55,7 +58,9 @@
       "sections": [
         {
           "heading": "How geolocation works",
-          "paragraphs": ["The Geolocation API provides the device's current position using GPS, Wi-Fi or cell tower data. The browser asks the user for permission before sharing location."],
+          "paragraphs": [
+            "The Geolocation API provides the device's current position using GPS, Wi-Fi or cell tower data. The browser asks the user for permission before sharing location."
+          ],
           "list": [
             "<code>navigator.geolocation.getCurrentPosition(success, error)</code> — one-time location",
             "<code>navigator.geolocation.watchPosition(success, error)</code> — continuous tracking",
@@ -84,7 +89,8 @@
           "Check <code>navigator.geolocation</code> exists first.",
           "Use <code>getCurrentPosition(success, error)</code>.",
           "Log <code>position.coords.latitude</code> and <code>position.coords.longitude</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The Geolocation API requires user permission before sharing location.",
@@ -101,7 +107,9 @@
       "sections": [
         {
           "heading": "The Notification API",
-          "paragraphs": ["Notifications let your web page send desktop-style alerts even when the tab isn't focused. They're great for new messages, updates or reminders."],
+          "paragraphs": [
+            "Notifications let your web page send desktop-style alerts even when the tab isn't focused. They're great for new messages, updates or reminders."
+          ],
           "list": [
             "<code>Notification.requestPermission()</code> — asks user for permission",
             "<code>new Notification(title, options)</code> — shows a notification",
@@ -130,7 +138,8 @@
           "Use <code>await Notification.requestPermission()</code> inside a click handler.",
           "Check if permission is <code>\"granted\"</code> before showing.",
           "Use <code>new Notification(\"Title\", { body: \"Message\" })</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Notifications require explicit user permission via <code>requestPermission()</code>.",

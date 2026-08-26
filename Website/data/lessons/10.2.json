@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What are Web Workers?",
-          "paragraphs": ["Web Workers run JavaScript in a separate thread, keeping the main thread free for UI updates. They communicate with the main thread via messages."],
+          "paragraphs": [
+            "Web Workers run JavaScript in a separate thread, keeping the main thread free for UI updates. They communicate with the main thread via messages."
+          ],
           "list": [
             "Runs in a separate thread — doesn't block the UI",
             "No access to the DOM — only communicates via messages",
@@ -29,7 +31,8 @@
             "postMessage() sends data to the worker.",
             "onmessage receives the worker's response.",
             "The worker runs independently — the UI stays responsive."
-          ]
+          ],
+          "output": "> console.log(\"Result:\", e.data.sum);\n15"
         }
       ],
       "practice": {
@@ -74,7 +77,8 @@
             "Maps, Sets and Dates survive the clone — they're real instances.",
             "Functions and DOM nodes cannot be cloned.",
             "Transferable objects are moved (zero-copy) instead of cloned."
-          ]
+          ],
+          "output": "> console.log(buffer.byteLength);\n> console.log(e.data.users[0].name);\n0 — transferred!\n\"Alex\""
         }
       ],
       "practice": {
@@ -83,7 +87,8 @@
           "Create an object with nested structures and a Map.",
           "Send via postMessage.",
           "In the worker, modify the data and verify the original is unchanged."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Structured clone creates deep copies of complex objects for postMessage.",
@@ -119,7 +124,8 @@
             "Atomics operations are thread-safe — they can't be interrupted.",
             "Atomics.wait() blocks a thread until a condition is met.",
             "Atomics.add() atomically increments a value — no race conditions."
-          ]
+          ],
+          "output": "> console.log(Atomics.load(view, 0));\nvalue in shared memory"
         }
       ],
       "practice": {
@@ -128,7 +134,8 @@
           "Create: <code>new SharedArrayBuffer(4)</code>.",
           "Use <code>Atomics.add()</code> for thread-safe increments.",
           "Use <code>Atomics.wait()</code> and <code>Atomics.notify()</code> for coordination."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "SharedArrayBuffer enables true shared memory between threads.",

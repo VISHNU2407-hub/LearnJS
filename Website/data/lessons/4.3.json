@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is a closure?",
-          "paragraphs": ["A closure is formed when a function is defined inside another function and the inner function references variables from the outer function's scope. Even after the outer function has returned, the inner function retains access to those variables."],
+          "paragraphs": [
+            "A closure is formed when a function is defined inside another function and the inner function references variables from the outer function's scope. Even after the outer function has returned, the inner function retains access to those variables."
+          ],
           "list": [
             "A closure = function + its lexical environment",
             "The inner function 'closes over' the outer variables",
@@ -29,7 +31,8 @@
             "Even after <code>createGreeting</code> returns, the inner function remembers <code>greeting</code>.",
             "Each call to <code>createGreeting</code> creates a new closure with its own <code>greeting</code> value.",
             "This is the power of closures — they preserve state across function calls."
-          ]
+          ],
+          "output": "> console.log(sayHello(\"Alex\"));\n> console.log(sayHi(\"Sam\"));\n\"Hello, Alex!\"\n\"Hi, Sam!\""
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Return a function that takes a number and returns <code>number * factor</code>.",
           "The factor is captured via closure.",
           "createMultiplier(2)(5) should return 10."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "A closure is a function that remembers the variables from its creation scope.",
@@ -55,7 +59,9 @@
       "sections": [
         {
           "heading": "Private variables with closures",
-          "paragraphs": ["JavaScript objects don't have built-in private properties. Closures solve this by keeping variables in the outer function's scope — completely inaccessible from outside."],
+          "paragraphs": [
+            "JavaScript objects don't have built-in private properties. Closures solve this by keeping variables in the outer function's scope — completely inaccessible from outside."
+          ],
           "list": [
             "Variables in the outer function are invisible to external code",
             "Only the returned functions can access them",
@@ -75,7 +81,8 @@
             "The returned object provides controlled access via methods.",
             "External code cannot modify <code>balance</code> directly — only through the methods.",
             "This is true data encapsulation without class syntax."
-          ]
+          ],
+          "output": "> console.log(account.getBalance());\n> console.log(account.getBalance());\n100\n150"
         }
       ],
       "practice": {
@@ -84,7 +91,8 @@
           "Store minLength in the outer function scope.",
           "Return an object with methods that close over minLength.",
           "The <code>validate</code> method should return true if password.length >= minLength."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Closures create true private variables — external code cannot access them.",
@@ -101,7 +109,9 @@
       "sections": [
         {
           "heading": "Factory functions",
-          "paragraphs": ["A factory function creates and returns new objects each time it's called. Closures let each object maintain its own private state."],
+          "paragraphs": [
+            "A factory function creates and returns new objects each time it's called. Closures let each object maintain its own private state."
+          ],
           "list": [
             "Each call creates a fresh set of private variables",
             "Returned objects are independent of each other",
@@ -110,7 +120,9 @@
         },
         {
           "heading": "Memoization",
-          "paragraphs": ["Memoization caches the results of expensive function calls. Closures store the cache between calls."],
+          "paragraphs": [
+            "Memoization caches the results of expensive function calls. Closures store the cache between calls."
+          ],
           "list": [
             "The cache lives in the closure — invisible to external code",
             "Subsequent calls with the same arguments return the cached result",
@@ -129,7 +141,8 @@
             "The memoize function wraps any function with a cache stored in its closure.",
             "Second call with the same args returns the cached result instantly.",
             "Both patterns rely on closures to maintain private state."
-          ]
+          ],
+          "output": "> console.log(slowSquare(5));\n> console.log(slowSquare(5));\n25 (computed)\n25 (cached!)"
         }
       ],
       "practice": {
@@ -138,7 +151,8 @@
           "Wrap the factorial function with <code>memoize()</code>.",
           "Add a console.log inside the factorial to see if it's actually computing.",
           "The second call should not log anything — it's cached."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Factory functions use closures to create objects with independent private state.",

@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What are events?",
-          "paragraphs": ["An event is anything that happens in the browser — a click, a key press, a form submission, a page load. JavaScript can listen for these events and run code in response. This is how pages become interactive."],
+          "paragraphs": [
+            "An event is anything that happens in the browser — a click, a key press, a form submission, a page load. JavaScript can listen for these events and run code in response. This is how pages become interactive."
+          ],
           "list": [
             "Events are triggered by user actions or the browser itself",
             "You attach a listener with <code>element.addEventListener(event, handler)</code>",
@@ -56,7 +58,8 @@
           "Use <code>button.addEventListener(\"click\", ...)</code> twice.",
           "Inside the second handler, use <code>button.textContent = \"Clicked!\"</code>.",
           "Both listeners will fire on each click."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>addEventListener(event, handler)</code> is the standard way to respond to events.",
@@ -129,7 +132,8 @@
           "Use <code>form.addEventListener(\"submit\", (e) => { e.preventDefault(); ... })</code>.",
           "Read the value with <code>input.value</code> inside the handler.",
           "Test that the page doesn't reload when you submit."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Mouse events: <code>click</code>, <code>mouseover</code>, <code>mouseout</code> handle pointer interactions.",
@@ -146,7 +150,9 @@
       "sections": [
         {
           "heading": "The event parameter",
-          "paragraphs": ["Every event handler receives an event object as its first argument. This object tells you exactly what happened, where it happened, and gives you control over it."],
+          "paragraphs": [
+            "Every event handler receives an event object as its first argument. This object tells you exactly what happened, where it happened, and gives you control over it."
+          ],
           "list": [
             "<code>e.target</code> — the element that triggered the event",
             "<code>e.currentTarget</code> — the element the listener is attached to",
@@ -183,7 +189,8 @@
           "Attach the listener to the parent <code>&lt;ul&gt;</code>.",
           "Check <code>e.target.tagName === \"LI\"</code> inside the handler.",
           "Read the text with <code>e.target.textContent</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>e.target</code> is the element that actually received the event.",
@@ -200,7 +207,9 @@
       "sections": [
         {
           "heading": "What is default behavior?",
-          "paragraphs": ["The browser has built-in actions for many elements — clicking a link navigates, submitting a form reloads the page, right-clicking shows a context menu. <code>preventDefault()</code> stops these from happening."],
+          "paragraphs": [
+            "The browser has built-in actions for many elements — clicking a link navigates, submitting a form reloads the page, right-clicking shows a context menu. <code>preventDefault()</code> stops these from happening."
+          ],
           "list": [
             "Form submit → page reload (prevent to handle with JavaScript)",
             "Link click → navigation (prevent for SPA routing or analytics)",
@@ -230,7 +239,8 @@
           "Use <code>e.preventDefault()</code> inside the submit handler.",
           "Check the value with <code>emailInput.value.includes(\"@\")</code>.",
           "Show errors by updating a <code>&lt;p&gt;</code> element's textContent."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>preventDefault()</code> stops the browser's built-in action for an event.",

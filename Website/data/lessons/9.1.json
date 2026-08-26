@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is Node.js?",
-          "paragraphs": ["Node.js is a JavaScript runtime built on V8 that runs outside the browser. It gives you access to the file system, network, operating system and more — everything you need to build server-side applications."],
+          "paragraphs": [
+            "Node.js is a JavaScript runtime built on V8 that runs outside the browser. It gives you access to the file system, network, operating system and more — everything you need to build server-side applications."
+          ],
           "list": [
             "Runs JavaScript outside the browser using the V8 engine",
             "Provides APIs for file I/O, networking, processes and more",
@@ -29,7 +31,8 @@
             "fs.readFile reads files asynchronously with a callback.",
             "__dirname gives you the current script's directory.",
             "process.version shows the Node.js version."
-          ]
+          ],
+          "output": "> Hello from Node.js!\n> Platform: win32\n> Node version: v18.x"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Use <code>require(\"fs\").readFileSync(\"file.json\", \"utf8\")</code>.",
           "Parse with <code>JSON.parse(data)</code>.",
           "Log the parsed object."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Node.js runs JavaScript outside the browser using the V8 engine.",
@@ -75,7 +79,8 @@
             "The callback receives every request with req and res objects.",
             "fs/promises reads files asynchronously with async/await.",
             "path.join constructs cross-platform file paths."
-          ]
+          ],
+          "output": "> Server running on http://localhost:3000"
         }
       ],
       "practice": {
@@ -84,7 +89,8 @@
           "Check <code>req.url</code> to determine the route.",
           "Set appropriate Content-Type headers.",
           "/api/time should return the current time as JSON."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "fs/promises provides async file operations with modern async/await.",
@@ -130,7 +136,8 @@
           "Use <code>app.get/post/put/delete()</code> for each operation.",
           "Parse JSON body with <code>express.json()</code>.",
           "Return appropriate status codes: 200, 201, 404."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Express simplifies HTTP server creation with clean routing syntax.",

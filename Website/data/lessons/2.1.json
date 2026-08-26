@@ -9,11 +9,15 @@
       "sections": [
         {
           "heading": "What is a function?",
-          "paragraphs": ["A function is a <b>named block of code</b> that you can run whenever you want. Instead of writing the same logic multiple times, you write it once inside a function and call it by name whenever you need it. Functions are the foundation of reusable, organized code."]
+          "paragraphs": [
+            "A function is a <b>named block of code</b> that you can run whenever you want. Instead of writing the same logic multiple times, you write it once inside a function and call it by name whenever you need it. Functions are the foundation of reusable, organized code."
+          ]
         },
         {
           "heading": "Declaring a function",
-          "paragraphs": ["To create a function, use the <code>function</code> keyword followed by a name, parentheses, and curly braces. The code inside the braces only runs when you <b>call</b> the function."],
+          "paragraphs": [
+            "To create a function, use the <code>function</code> keyword followed by a name, parentheses, and curly braces. The code inside the braces only runs when you <b>call</b> the function."
+          ],
           "list": [
             "<b>function</b> — the keyword that starts the declaration",
             "<b>name</b> — follows camelCase rules (e.g. <code>sayHello</code>)",
@@ -23,7 +27,9 @@
         },
         {
           "heading": "Calling a function",
-          "paragraphs": ["To run a function, write its name followed by parentheses: <code>sayHello()</code>. This is called <b>calling</b> or <b>invoking</b> the function. The code inside executes, and then the program continues after the call."]
+          "paragraphs": [
+            "To run a function, write its name followed by parentheses: <code>sayHello()</code>. This is called <b>calling</b> or <b>invoking</b> the function. The code inside executes, and then the program continues after the call."
+          ]
         }
       ],
       "codeExamples": [
@@ -36,7 +42,8 @@
             "The function <code>sayHello</code> is defined once but called twice.",
             "Each call runs both <code>console.log</code> lines inside the function.",
             "Notice the function is defined <b>before</b> it is called — this matters for function declarations."
-          ]
+          ],
+          "output": "> console.log(\"Hello, world!\");\n> console.log(\"Welcome to JavaScript!\");\nHello, world!\nWelcome to JavaScript!"
         },
         {
           "heading": "Functions that do different things",
@@ -47,7 +54,8 @@
             "Each function has its own code block that runs independently.",
             "<code>calculateArea</code> declares its own variables inside — they only exist while the function runs.",
             "Functions can do anything: calculate values, print messages, or perform complex tasks."
-          ]
+          ],
+          "output": "> console.log(\"Hi there!\");\n> console.log(\"Area:\", area);  // Area: 15\nArea: 15"
         }
       ],
       "practice": {
@@ -57,7 +65,8 @@
           "Inside, use <code>console.log(new Date());</code>",
           "Close with <code>}</code> and then call <code>printDate();</code> three times."
         ],
-        "note": "Try adding a second function that prints a different message, then alternate calling both."
+        "note": "Try adding a second function that prints a different message, then alternate calling both.",
+        "compiler": true
       },
       "keyTakeaways": [
         "A function is a reusable block of code defined with <code>function name() { }</code>.",
@@ -73,11 +82,15 @@
       "sections": [
         {
           "heading": "Two ways to make a function",
-          "paragraphs": ["JavaScript gives you two syntaxes for creating functions: <b>declarations</b> and <b>expressions</b>. Both produce the same kind of function, but they behave differently in one important way — <b>hoisting</b>."]
+          "paragraphs": [
+            "JavaScript gives you two syntaxes for creating functions: <b>declarations</b> and <b>expressions</b>. Both produce the same kind of function, but they behave differently in one important way — <b>hoisting</b>."
+          ]
         },
         {
           "heading": "Function declarations",
-          "paragraphs": ["A function declaration starts with <code>function</code> followed by a name. Declarations are <b>hoisted</b>, meaning you can call the function before the line where it is defined. JavaScript moves declarations to the top of their scope behind the scenes."],
+          "paragraphs": [
+            "A function declaration starts with <code>function</code> followed by a name. Declarations are <b>hoisted</b>, meaning you can call the function before the line where it is defined. JavaScript moves declarations to the top of their scope behind the scenes."
+          ],
           "list": [
             "Starts with <code>function</code> keyword and a name",
             "Hoisted — can be called before the definition line",
@@ -86,7 +99,9 @@
         },
         {
           "heading": "Function expressions",
-          "paragraphs": ["A function expression assigns an anonymous (or named) function to a variable. They are <b>not</b> hoisted — you must define them before you call them. Function expressions are often used for short, one-time callbacks."],
+          "paragraphs": [
+            "A function expression assigns an anonymous (or named) function to a variable. They are <b>not</b> hoisted — you must define them before you call them. Function expressions are often used for short, one-time callbacks."
+          ],
           "list": [
             "Stored in a variable like <code>const fn = function() { }</code>",
             "Not hoisted — must be defined before use",
@@ -104,7 +119,8 @@
             "<code>greet()</code> works before its definition because declarations are hoisted.",
             "<code>farewell()</code> throws an error because the variable exists but has not been assigned yet.",
             "With <code>const</code>, the variable is in the <b>temporal dead zone</b> until the assignment line."
-          ]
+          ],
+          "output": "> greet();\nHello!\n> farewell();\nReferenceError: Cannot access 'farewell' before initialization"
         },
         {
           "heading": "When to use each one",
@@ -115,7 +131,8 @@
             "<code>double</code> is a declaration — it is named, reusable, and can be called anywhere in its scope.",
             "The anonymous function inside <code>.map()</code> is an expression — it is short, unnamed, and used once.",
             "In modern code, arrow functions (covered in topic 2.2) are usually preferred for expressions."
-          ]
+          ],
+          "output": "> console.log(doubled);  // [2, 4, 6]\n[2, 4, 6]"
         }
       ],
       "practice": {
@@ -125,7 +142,8 @@
           "Expression: <code>const multiply = function(a, b) { console.log(a * b); };</code>",
           "Call them: <code>add(2, 3);</code> and <code>multiply(4, 5);</code>"
         ],
-        "note": "Try calling the function expression before you define it — what error do you get?"
+        "note": "Try calling the function expression before you define it — what error do you get?",
+        "compiler": true
       },
       "keyTakeaways": [
         "Function <b>declarations</b> (<code>function name() { }</code>) are hoisted — you can call them before the definition line.",
@@ -141,15 +159,21 @@
       "sections": [
         {
           "heading": "Parameters vs arguments",
-          "paragraphs": ["A <b>parameter</b> is a variable listed in the function definition: <code>function greet(name)</code>. An <b>argument</b> is the actual value you pass when calling: <code>greet(\"Alex\")</code>. The parameter <code>name</code> receives the argument <code>\"Alex\"</code> inside the function."]
+          "paragraphs": [
+            "A <b>parameter</b> is a variable listed in the function definition: <code>function greet(name)</code>. An <b>argument</b> is the actual value you pass when calling: <code>greet(\"Alex\")</code>. The parameter <code>name</code> receives the argument <code>\"Alex\"</code> inside the function."
+          ]
         },
         {
           "heading": "Multiple parameters",
-          "paragraphs": ["Separate parameters with commas. The order matters — the first argument goes to the first parameter, the second to the second, and so on. If you pass fewer arguments than parameters, the missing ones become <code>undefined</code>."]
+          "paragraphs": [
+            "Separate parameters with commas. The order matters — the first argument goes to the first parameter, the second to the second, and so on. If you pass fewer arguments than parameters, the missing ones become <code>undefined</code>."
+          ]
         },
         {
           "heading": "Default parameters",
-          "paragraphs": ["You can give parameters default values using <code>=</code>. If the caller does not provide that argument, the default is used. This makes functions easier to call and prevents <code>undefined</code> bugs."],
+          "paragraphs": [
+            "You can give parameters default values using <code>=</code>. If the caller does not provide that argument, the default is used. This makes functions easier to call and prevents <code>undefined</code> bugs."
+          ],
           "list": [
             "<code>function greet(name = \"Guest\")</code> — defaults to \"Guest\" if no argument is passed",
             "Defaults apply when the argument is <code>undefined</code> (not when it is <code>null</code> or <code>0</code>)",
@@ -167,7 +191,8 @@
             "The first argument <code>\"Alex\"</code> goes to the first parameter <code>name</code>.",
             "When <code>timeOfDay</code> is not provided, it becomes <code>undefined</code>.",
             "This is why default parameters are useful — they fill in missing values automatically."
-          ]
+          ],
+          "output": "> greet(\"Alex\", \"morning\");\nGood morning, Alex!\n> greet(\"Vishnu\", \"evening\");\nGood evening, Vishnu!\n> greet(\"Sam\");\nGood undefined, Sam!"
         },
         {
           "heading": "Default parameters prevent undefined",
@@ -178,7 +203,8 @@
             "When <code>\"Sam\"</code> is passed, only <code>name</code> gets a value — <code>timeOfDay</code> uses its default.",
             "With no arguments, both parameters use their defaults.",
             "<code>undefined</code> as an argument also triggers the default — useful for skipping middle parameters."
-          ]
+          ],
+          "output": "> greet(\"Alex\", \"evening\");\nGood evening, Alex!\n> greet(\"Sam\");\nGood morning, Sam!\n> greet();\nGood morning, Guest!\n> greet(undefined, \"night\");\nGood night, Guest!"
         }
       ],
       "practice": {
@@ -188,7 +214,8 @@
           "Then log it: <code>console.log(\"Total: $\" + total);</code>",
           "The default <code>taxRate = 0.1</code> means 10% tax when no second argument is passed."
         ],
-        "note": "What happens if you call <code>calculateTotal(\"100\")</code>? JavaScript will try to add a string and a number."
+        "note": "What happens if you call <code>calculateTotal(\"100\")</code>? JavaScript will try to add a string and a number.",
+        "compiler": true
       },
       "keyTakeaways": [
         "Parameters are in the definition; arguments are what you pass when calling.",
@@ -205,11 +232,15 @@
       "sections": [
         {
           "heading": "Why rest parameters?",
-          "paragraphs": ["Sometimes you do not know how many arguments a function will receive. A function that adds two numbers is easy — but what about one that adds five, or ten, or a hundred? Rest parameters let you collect <b>any number of arguments</b> into a single array."]
+          "paragraphs": [
+            "Sometimes you do not know how many arguments a function will receive. A function that adds two numbers is easy — but what about one that adds five, or ten, or a hundred? Rest parameters let you collect <b>any number of arguments</b> into a single array."
+          ]
         },
         {
           "heading": "The syntax",
-          "paragraphs": ["Put <code>...</code> before the last parameter name. That parameter becomes an <b>array</b> containing all remaining arguments. It must be the last parameter — you cannot have anything after it."],
+          "paragraphs": [
+            "Put <code>...</code> before the last parameter name. That parameter becomes an <b>array</b> containing all remaining arguments. It must be the last parameter — you cannot have anything after it."
+          ],
           "list": [
             "<code>function sum(...numbers)</code> — <code>numbers</code> is an array of all arguments",
             "<code>function log(first, ...rest)</code> — <code>first</code> gets the first argument, <code>rest</code> gets the rest as an array",
@@ -218,7 +249,9 @@
         },
         {
           "heading": "Rest vs arguments object",
-          "paragraphs": ["JavaScript also has an old <code>arguments</code> object inside every function. Rest parameters are better: they give you a real array (with <code>.map()</code>, <code>.filter()</code>, etc.), they work with arrow functions, and their intent is clearer. Always prefer rest parameters over <code>arguments</code>."]
+          "paragraphs": [
+            "JavaScript also has an old <code>arguments</code> object inside every function. Rest parameters are better: they give you a real array (with <code>.map()</code>, <code>.filter()</code>, etc.), they work with arrow functions, and their intent is clearer. Always prefer rest parameters over <code>arguments</code>."
+          ]
         }
       ],
       "codeExamples": [
@@ -231,7 +264,8 @@
             "<code>...numbers</code> collects all arguments into an array — <code>sum(1, 2, 3)</code> gives <code>numbers = [1, 2, 3]</code>.",
             "The <code>for...of</code> loop iterates over every number in the array.",
             "With no arguments, <code>numbers</code> is an empty array, so the sum is 0."
-          ]
+          ],
+          "output": "> console.log(sum(1, 2));       // 3\n> console.log(sum(1, 2, 3, 4)); // 10\n> console.log(sum(5));          // 5\n> console.log(sum());           // 0\n3\n10\n5\n0"
         },
         {
           "heading": "Combining named and rest parameters",
@@ -242,7 +276,8 @@
             "<code>prefix</code> captures the first argument — it is a regular named parameter.",
             "<code>...messages</code> captures all remaining arguments as an array.",
             "This pattern is common in logging utilities — a category label plus any number of messages."
-          ]
+          ],
+          "output": "> logWithPrefix(\"INFO\", \"Server started\", \"Listening on port 3000\");\nINFO: Server started\nINFO: Listening on port 3000\n> logWithPrefix(\"ERROR\", \"File not found\");\nERROR: File not found"
         }
       ],
       "practice": {
@@ -252,7 +287,8 @@
           "Use <code>Math.max(...nums)</code> to find the maximum — the spread operator passes the array as individual arguments.",
           "Alternatively, loop through <code>nums</code> and track the largest value manually."
         ],
-        "note": "Try passing strings like <code>findMax(\"3\", \"7\", \"2\")</code> — what does <code>Math.max</code> return?"
+        "note": "Try passing strings like <code>findMax(\"3\", \"7\", \"2\")</code> — what does <code>Math.max</code> return?",
+        "compiler": true
       },
       "keyTakeaways": [
         "Rest parameters (<code>...param</code>) collect any number of arguments into a real array.",
@@ -269,15 +305,21 @@
       "sections": [
         {
           "heading": "Why return values?",
-          "paragraphs": ["A function that only logs to the console is limited. To reuse a calculation or transformation, the function must <b>send the result back</b> to wherever it was called. The <code>return</code> keyword does this — it stops the function and gives back a value."]
+          "paragraphs": [
+            "A function that only logs to the console is limited. To reuse a calculation or transformation, the function must <b>send the result back</b> to wherever it was called. The <code>return</code> keyword does this — it stops the function and gives back a value."
+          ]
         },
         {
           "heading": "How return works",
-          "paragraphs": ["When JavaScript hits a <code>return</code> statement, it immediately exits the function and produces the given value. Any code after <code>return</code> is never reached. If <code>return</code> is used without a value (or not used at all), the function returns <code>undefined</code>."]
+          "paragraphs": [
+            "When JavaScript hits a <code>return</code> statement, it immediately exits the function and produces the given value. Any code after <code>return</code> is never reached. If <code>return</code> is used without a value (or not used at all), the function returns <code>undefined</code>."
+          ]
         },
         {
           "heading": "Implicit undefined",
-          "paragraphs": ["Every function that does not explicitly return a value gives back <code>undefined</code>. This is not an error — it just means the function was written for its <b>side effects</b> (like logging or modifying the DOM) rather than producing a result. Knowing when to return and when to just execute is a key skill."]
+          "paragraphs": [
+            "Every function that does not explicitly return a value gives back <code>undefined</code>. This is not an error — it just means the function was written for its <b>side effects</b> (like logging or modifying the DOM) rather than producing a result. Knowing when to return and when to just execute is a key skill."
+          ]
         }
       ],
       "codeExamples": [
@@ -290,7 +332,8 @@
             "<code>return a + b;</code> sends the result back to wherever the function was called.",
             "The returned value can be stored in a variable or used directly in expressions.",
             "The first <code>return</code> in <code>checkAge</code> exits early — the second <code>return</code> is never reached when age is negative."
-          ]
+          ],
+          "output": "> console.log(result);  // 10\n> console.log(add(5, 5));  // 10\n> console.log(checkAge(-1));   // \"Invalid age\"\n> console.log(checkAge(20));   // \"Adult\"\n> console.log(checkAge(15));   // \"Minor\"\n10\n10\n\"Invalid age\"\n\"Adult\"\n\"Minor\""
         },
         {
           "heading": "Functions without return return undefined",
@@ -301,7 +344,8 @@
             "<code>sayHello()</code> prints \"Hello!\" but returns <code>undefined</code> because there is no return.",
             "<code>multiply</code> calculates the product but never returns it — the result is lost.",
             "This is a common beginner mistake. If a function should produce a result, always use <code>return</code>."
-          ]
+          ],
+          "output": "> console.log(\"Hello!\");\n> console.log(value);  // undefined\n> console.log(multiply(3, 4));  // undefined (not 12!)\nundefined\nundefined (not 12!)"
         }
       ],
       "practice": {
@@ -311,7 +355,8 @@
           "For <code>doubleAll</code>: create an empty array, loop through the input, push doubled values, and <code>return</code> the new array.",
           "Remember: if you forget the return, the function gives back <code>undefined</code>."
         ],
-        "note": "Test <code>isEven(0)</code> — zero is even! <code>0 % 2 === 0</code> is <code>true</code>."
+        "note": "Test <code>isEven(0)</code> — zero is even! <code>0 % 2 === 0</code> is <code>true</code>.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>return</code> sends a value back from the function and immediately exits it.",

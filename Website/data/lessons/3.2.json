@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "Creating elements",
-          "paragraphs": ["JavaScript can create brand-new HTML elements using <code>document.createElement()</code>. The element exists in memory but isn't on the page yet — you must attach it to a parent node to make it visible."],
+          "paragraphs": [
+            "JavaScript can create brand-new HTML elements using <code>document.createElement()</code>. The element exists in memory but isn't on the page yet — you must attach it to a parent node to make it visible."
+          ],
           "list": [
             "<code>document.createElement(\"tag\")</code> — creates an element in memory",
             "<code>parent.appendChild(child)</code> — adds element at the end of parent",
@@ -38,7 +40,8 @@
           "Use <code>document.createElement(\"li\")</code>.",
           "Set its text with <code>.textContent = \"Hello\"</code>.",
           "Append with <code>ul.appendChild(li)</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>createElement()</code> creates an element in memory, not on the page.",
@@ -55,7 +58,9 @@
       "sections": [
         {
           "heading": "textContent — safe text replacement",
-          "paragraphs": ["<code>textContent</code> sets or reads the plain text inside an element. It automatically escapes HTML, so user input can never accidentally become executable markup."],
+          "paragraphs": [
+            "<code>textContent</code> sets or reads the plain text inside an element. It automatically escapes HTML, so user input can never accidentally become executable markup."
+          ],
           "list": [
             "<code>element.textContent = \"Hello\"</code> — sets plain text, escaping any HTML",
             "<code>element.textContent</code> — reads all text including hidden elements",
@@ -64,7 +69,9 @@
         },
         {
           "heading": "innerHTML — powerful but risky",
-          "paragraphs": ["<code>innerHTML</code> lets you set raw HTML inside an element. It's useful for inserting formatted content but dangerous when used with untrusted input — malicious scripts can slip in."],
+          "paragraphs": [
+            "<code>innerHTML</code> lets you set raw HTML inside an element. It's useful for inserting formatted content but dangerous when used with untrusted input — malicious scripts can slip in."
+          ],
           "list": [
             "<code>element.innerHTML = \"&lt;b&gt;Bold&lt;/b&gt;\"</code> — renders as bold text",
             "Never use innerHTML with user input unless you sanitize it first",
@@ -92,7 +99,8 @@
           "Create an element: <code>let el = document.createElement(\"div\")</code>.",
           "Set <code>el.textContent = \"&lt;b&gt;Bold&lt;/b&gt;\"</code> — tags show as text.",
           "Set <code>el.innerHTML = \"&lt;b&gt;Bold&lt;/b&gt;\"</code> — text becomes bold."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>textContent</code> is safe — it escapes HTML automatically.",
@@ -109,7 +117,9 @@
       "sections": [
         {
           "heading": "The classList API",
-          "paragraphs": ["Rather than setting <code>element.className</code> (which replaces all classes), use the <code>classList</code> property to add, remove or toggle individual classes. It's safer and more convenient."],
+          "paragraphs": [
+            "Rather than setting <code>element.className</code> (which replaces all classes), use the <code>classList</code> property to add, remove or toggle individual classes. It's safer and more convenient."
+          ],
           "list": [
             "<code>classList.add(\"class\")</code> — adds one or more classes",
             "<code>classList.remove(\"class\")</code> — removes classes",
@@ -139,7 +149,8 @@
           "Use <code>document.body.classList.toggle(\"dark-mode\")</code> inside a click handler.",
           "Define CSS: <code>.dark-mode { background: #333; color: white; }</code>",
           "The toggle approach means one click enables it, another click disables it."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>classList.add()</code>, <code>.remove()</code> and <code>.toggle()</code> manage individual classes safely.",
@@ -156,7 +167,9 @@
       "sections": [
         {
           "heading": "Working with attributes",
-          "paragraphs": ["Elements have attributes like <code>id</code>, <code>class</code>, <code>href</code> and <code>src</code>. JavaScript can read and write any attribute using <code>getAttribute()</code> and <code>setAttribute()</code>."],
+          "paragraphs": [
+            "Elements have attributes like <code>id</code>, <code>class</code>, <code>href</code> and <code>src</code>. JavaScript can read and write any attribute using <code>getAttribute()</code> and <code>setAttribute()</code>."
+          ],
           "list": [
             "<code>getAttribute(\"name\")</code> — reads an attribute value",
             "<code>setAttribute(\"name\", value)</code> — sets or creates an attribute",
@@ -166,7 +179,9 @@
         },
         {
           "heading": "Custom data attributes",
-          "paragraphs": ["HTML5 lets you store custom data on elements using <code>data-*</code> attributes. JavaScript accesses them through the <code>dataset</code> property."],
+          "paragraphs": [
+            "HTML5 lets you store custom data on elements using <code>data-*</code> attributes. JavaScript accesses them through the <code>dataset</code> property."
+          ],
           "list": [
             "In HTML: <code>&lt;div data-user-id=\"42\"&gt;</code>",
             "In JS: <code>element.dataset.userId</code> — camelCase conversion",
@@ -186,7 +201,8 @@
             "<code>setAttribute</code> can create new attributes that don't exist yet.",
             "<code>dataset</code> provides camelCase access to <code>data-*</code> attributes.",
             "Hyphenated names like <code>data-user-id</code> become <code>dataset.userId</code>."
-          ]
+          ],
+          "output": "> console.log(img.dataset.id);\n> console.log(img.dataset.category);\n\"5\"\n\"shoes\""
         }
       ],
       "practice": {
@@ -195,7 +211,8 @@
           "HTML: <code>&lt;a data-url=\"https://example.com\"&gt;Click&lt;/a&gt;</code>",
           "Read: <code>link.dataset.url</code> or <code>link.getAttribute(\"data-url\")</code>",
           "Set href: <code>link.setAttribute(\"href\", link.dataset.url)</code>"
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>getAttribute()</code> and <code>setAttribute()</code> read and write any HTML attribute.",
@@ -212,7 +229,9 @@
       "sections": [
         {
           "heading": "Removing elements",
-          "paragraphs": ["Removing elements from the DOM is as simple as adding them. The <code>.remove()</code> method deletes an element directly, while <code>removeChild()</code> removes a specific child from a parent."],
+          "paragraphs": [
+            "Removing elements from the DOM is as simple as adding them. The <code>.remove()</code> method deletes an element directly, while <code>removeChild()</code> removes a specific child from a parent."
+          ],
           "list": [
             "<code>element.remove()</code> — removes the element itself",
             "<code>parent.removeChild(child)</code> — removes a specific child",
@@ -231,7 +250,8 @@
             "<code>.remove()</code> is the simplest — just call it on the element.",
             "<code>removeChild()</code> returns the removed node, which you can re-insert elsewhere.",
             "When removing multiple children, always remove from the front to avoid index shifting issues."
-          ]
+          ],
+          "output": "> console.log(removed.textContent);\ntext of removed item"
         }
       ],
       "practice": {
@@ -240,7 +260,8 @@
           "Use <code>list.lastChild</code> or <code>list.lastElementChild</code> to get the last item.",
           "Call <code>.remove()</code> on it inside a click handler.",
           "Add a check: <code>if (list.lastElementChild)</code> before removing."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>.remove()</code> is the cleanest way to delete an element from the DOM.",

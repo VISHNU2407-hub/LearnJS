@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "The three states",
-          "paragraphs": ["A Promise represents an async operation that hasn't completed yet. It starts in a pending state and can transition to one of two final states."],
+          "paragraphs": [
+            "A Promise represents an async operation that hasn't completed yet. It starts in a pending state and can transition to one of two final states."
+          ],
           "list": [
             "<b>Pending</b> — the operation is still in progress",
             "<b>Fulfilled</b> — the operation completed successfully with a result value",
@@ -29,7 +31,8 @@
             "Calling <code>resolve()</code> transitions to fulfilled state.",
             "Calling <code>reject()</code> transitions to rejected state.",
             "The state change is irreversible — a fulfilled promise stays fulfilled."
-          ]
+          ],
+          "output": "> resolve(\"Data loaded!\")\n> reject(new Error(\"Failed\"))\nfulfilled\nrejected"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Use <code>new Promise((resolve) => { setTimeout(() => resolve(\"Done!\"), 2000) })</code>.",
           "Chain <code>.then(value => console.log(value))</code>.",
           "The message should appear after 2 seconds."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Promises have three states: pending, fulfilled, and rejected.",
@@ -55,7 +59,9 @@
       "sections": [
         {
           "heading": "The Promise constructor",
-          "paragraphs": ["You create a Promise with <code>new Promise(executor)</code>. The executor function receives two callbacks: <code>resolve</code> to signal success and <code>reject</code> to signal failure."],
+          "paragraphs": [
+            "You create a Promise with <code>new Promise(executor)</code>. The executor function receives two callbacks: <code>resolve</code> to signal success and <code>reject</code> to signal failure."
+          ],
           "list": [
             "The executor runs immediately when the Promise is created",
             "<code>resolve(value)</code> — fulfills the Promise with a value",
@@ -85,7 +91,8 @@
           "Return <code>new Promise((resolve, reject) => { ... })</code>.",
           "Use <code>Math.random()</code> to determine success or failure.",
           "Resolve with file content or reject with an error."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>new Promise(executor)</code> creates a new Promise.",
@@ -102,7 +109,9 @@
       "sections": [
         {
           "heading": "How promise chaining works",
-          "paragraphs": [".then() returns a new Promise, so you can chain multiple operations. Each .then() receives the resolved value from the previous one."],
+          "paragraphs": [
+            ".then() returns a new Promise, so you can chain multiple operations. Each .then() receives the resolved value from the previous one."
+          ],
           "list": [
             "<code>.then(fn)</code> — runs when the Promise resolves, returns a new Promise",
             "<code>.catch(fn)</code> — runs on any rejection in the chain",
@@ -122,7 +131,8 @@
             "Return a Promise from <code>.then()</code> to chain async operations.",
             "Errors bubble to the nearest <code>.catch()</code> in the chain.",
             "<code>.finally()</code> runs whether the chain succeeded or failed."
-          ]
+          ],
+          "output": "> Step 1: 1\n> Step 2: 2\n> Step 3: 3"
         }
       ],
       "practice": {
@@ -131,7 +141,8 @@
           "Each .then() should return the next Promise.",
           "Pass the result to the next .then() via the return value.",
           "One .catch() at the end handles errors from any step."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Each <code>.then()</code> returns a new Promise, enabling chaining.",
@@ -167,7 +178,8 @@
             "<code>Promise.reject()</code> creates an already-rejected Promise.",
             "<code>Promise.withResolvers()</code> gives you the resolve/reject functions externally.",
             "withResolvers is great for wrapping event-based or callback-based APIs."
-          ]
+          ],
+          "output": "> 1\n> [1, 2, 3]\n> First resolved: one"
         }
       ],
       "practice": {
@@ -176,7 +188,8 @@
           "Create: <code>let { promise, resolve } = Promise.withResolvers()</code>.",
           "Add click listener: <code>button.addEventListener(\"click\", resolve)</code>.",
           "Use: <code>promise.then(() => console.log(\"clicked!\"))</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>Promise.resolve()</code> and <code>Promise.reject()</code> create pre-settled Promises.",

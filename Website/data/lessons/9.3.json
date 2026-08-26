@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "Why mock?",
-          "paragraphs": ["Unit tests should test your code, not its dependencies. Mocks replace external services, APIs and modules with controlled fakes that behave predictably."],
+          "paragraphs": [
+            "Unit tests should test your code, not its dependencies. Mocks replace external services, APIs and modules with controlled fakes that behave predictably."
+          ],
           "list": [
             "<code>vi.fn()</code> — creates a mock function you can configure",
             "<code>vi.mock(\"module\")</code> — replaces an entire module",
@@ -29,7 +31,8 @@
             "mockReturnValue/configure return values for testing.",
             "vi.mock() replaces entire modules with controlled fakes.",
             "This ensures tests are isolated and predictable."
-          ]
+          ],
+          "output": "> console.log(mockFn());\n42"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Create: <code>vi.fn().mockResolvedValue({ ok: true, json: () => ({}) })</code>.",
           "Pass the mock to your function.",
           "Assert: <code>expect(mockFetch).toHaveBeenCalledWith(expectedUrl)</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Mocks replace real dependencies with controlled fakes.",
@@ -84,7 +88,8 @@
           "Call the debounced function.",
           "Advance time: <code>vi.advanceTimersByTime(300)</code>.",
           "Assert the callback was called."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Spies observe method calls without replacing the original behavior.",
@@ -101,7 +106,9 @@
       "sections": [
         {
           "heading": "What is MSW?",
-          "paragraphs": ["Mock Service Worker intercepts requests at the network level using a Service Worker. Your application makes real fetch calls — MSW intercepts them and returns fake responses."],
+          "paragraphs": [
+            "Mock Service Worker intercepts requests at the network level using a Service Worker. Your application makes real fetch calls — MSW intercepts them and returns fake responses."
+          ],
           "list": [
             "Intercepts requests at the network level — no code changes needed",
             "Works in both browser and Node.js",
@@ -130,7 +137,8 @@
           "Install: <code>npm install -D msw</code>.",
           "Define handlers for your API endpoints.",
           "Start MSW in your test setup or browser."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "MSW intercepts network requests at the network level — no code changes needed.",

@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is Playwright?",
-          "paragraphs": ["Playwright is a browser automation framework that tests your application in real browsers. It simulates user interactions and verifies the complete user experience."],
+          "paragraphs": [
+            "Playwright is a browser automation framework that tests your application in real browsers. It simulates user interactions and verifies the complete user experience."
+          ],
           "list": [
             "Automates Chromium, Firefox and WebKit",
             "Auto-waits for elements — no manual waits or sleeps",
@@ -39,7 +41,8 @@
           "Use <code>page.goto()</code> to navigate.",
           "Fill inputs with <code>page.fill(\"selector\", value)</code>.",
           "Submit with <code>page.click(\"button\")</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Playwright tests run in real browsers — testing the complete user experience.",
@@ -85,7 +88,8 @@
           "Fill the search input and click search.",
           "Click the first result's add-to-cart button.",
           "Assert the cart total contains the expected price."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Playwright auto-waits for elements before interacting — no manual waits.",
@@ -130,7 +134,8 @@
           "Create <code>.github/workflows/test.yml</code>.",
           "Use actions/checkout, setup-node and playwright install.",
           "Run <code>npx playwright test</code> as the test step."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Playwright runs headless in CI — no display server needed.",

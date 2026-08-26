@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "Single-threaded by design",
-          "paragraphs": ["JavaScript runs one piece of code at a time on a single thread. If a slow operation blocks the thread, the entire page freezes. Asynchronous code solves this by letting the engine handle other work while waiting."],
+          "paragraphs": [
+            "JavaScript runs one piece of code at a time on a single thread. If a slow operation blocks the thread, the entire page freezes. Asynchronous code solves this by letting the engine handle other work while waiting."
+          ],
           "list": [
             "The main thread runs your code one line at a time",
             "Blocking operations (network, file I/O) would freeze the UI",
@@ -29,7 +31,8 @@
             "<code>setTimeout</code> is asynchronous — it schedules a callback and moves on.",
             "The main thread continues to <code>console.log(\"3\")</code> without waiting.",
             "The callback runs later when the timer expires and the thread is free."
-          ]
+          ],
+          "output": "1, 2, 3 (fast, no delay)\n1, 3, then after 3s: 2"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Synchronous code runs immediately.",
           "setTimeout is asynchronous — it runs after the synchronous code finishes.",
           "The output should be: 1, 3, (wait 2s), 2."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "JavaScript is single-threaded — it runs one piece of code at a time.",
@@ -74,7 +78,8 @@
             "The fetch is I/O-bound — the thread continues while the network request happens.",
             "I/O operations use the event loop to stay non-blocking.",
             "For heavy CPU work, use Web Workers to offload to a separate thread."
-          ]
+          ],
+          "output": "> console.log(\"done: \" + sum);\n> console.log(\"fetch initiated\");\npage freezes until complete\nruns immediately!"
         }
       ],
       "practice": {
@@ -83,7 +88,8 @@
           "Use a large loop count: <code>for (let i = 0; i < 1e9; i++) {}</code>.",
           "Observe the page becomes unresponsive during the loop.",
           "Replace with <code>setTimeout(() => { ... }, 2000)</code> — the page stays responsive."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "CPU-bound operations block the main thread — keep them short or offload to Web Workers.",
@@ -128,7 +134,8 @@
           "Start with count = 5.",
           "Use setInterval with a 1-second delay.",
           "Decrement count each tick and clear the interval when count reaches 0."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>setTimeout</code> runs code once after a delay; <code>setInterval</code> repeats.",

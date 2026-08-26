@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is IntersectionObserver?",
-          "paragraphs": ["IntersectionObserver asynchronously observes changes in the intersection of an element with its ancestor or the viewport. It's the modern way to implement lazy loading and infinite scroll."],
+          "paragraphs": [
+            "IntersectionObserver asynchronously observes changes in the intersection of an element with its ancestor or the viewport. It's the modern way to implement lazy loading and infinite scroll."
+          ],
           "list": [
             "Replaces scroll event listeners for viewport detection",
             "Runs off the main thread — no performance impact",
@@ -38,7 +40,8 @@
           "Set <code>data-src</code> on images with a placeholder <code>src</code>.",
           "Create an observer that loads <code>data-src</code> when intersecting.",
           "Add rootMargin to preload images before they're visible."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "IntersectionObserver detects when elements enter the viewport.",
@@ -83,7 +86,8 @@
           "Create an observer: <code>new ResizeObserver(callback)</code>.",
           "Read: <code>entry.contentRect.width</code> and <code>.height</code>.",
           "Display the dimensions in a fixed-position element."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "ResizeObserver detects when an element's size changes.",
@@ -119,7 +123,8 @@
             "LCP measures when the largest visible element finishes painting.",
             "CLS measures layout shifts that happen without user input.",
             "buffered: true includes events that already happened."
-          ]
+          ],
+          "output": "> LCP: 1200ms\n> FID: 50ms\n> CLS: 0.05"
         }
       ],
       "practice": {
@@ -128,7 +133,8 @@
           "Create observers for 'largest-contentful-paint' and 'layout-shift'.",
           "Log the values: <code>entry.startTime</code> for LCP, <code>entry.value</code> for CLS.",
           "Good LCP: < 2.5s. Good CLS: < 0.1."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Core Web Vitals measure real user experience: loading speed, responsiveness, visual stability.",
@@ -173,7 +179,8 @@
           "Check <code>deadline.timeRemaining() > 0</code> before each task.",
           "If time runs out, schedule another callback.",
           "Items should be processed gradually, not all at once."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "requestIdleCallback runs work during browser idle time.",

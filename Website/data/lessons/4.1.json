@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "Two distinct phases",
-          "paragraphs": ["When JavaScript runs your code, it goes through two phases before any code actually executes. Understanding this explains why some things work even before they're defined."],
+          "paragraphs": [
+            "When JavaScript runs your code, it goes through two phases before any code actually executes. Understanding this explains why some things work even before they're defined."
+          ],
           "list": [
             "<b>Creation phase</b> — the engine scans for declarations (variables, functions) and sets up memory",
             "<b>Execution phase</b> — the engine runs the code line by line",
@@ -28,7 +30,8 @@
             "During creation, the engine stores the function body — so it's available before the line.",
             "Variables declared with let/const are created but not initialized — reading them throws an error.",
             "This two-phase behavior is the engine's way of preparing memory before running code."
-          ]
+          ],
+          "output": "> sayHello();\nHello!\n> // console.log(x);\nReferenceError: Cannot access 'x' before initialization"
         }
       ],
       "practice": {
@@ -37,7 +40,8 @@
           "Define a function declaration and call it above the definition.",
           "Define a let variable and try to log it above the declaration.",
           "Note the function works but the variable throws an error."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "JavaScript has a creation phase (memory setup) and an execution phase (line-by-line running).",
@@ -54,7 +58,9 @@
       "sections": [
         {
           "heading": "What is an execution context?",
-          "paragraphs": ["An execution context is like a box that holds everything needed to run a piece of code: the variables, the scope, and the <code>this</code> value. There are three types."],
+          "paragraphs": [
+            "An execution context is like a box that holds everything needed to run a piece of code: the variables, the scope, and the <code>this</code> value. There are three types."
+          ],
           "list": [
             "<b>Global execution context</b> — created when the script starts; one per program",
             "<b>Function execution context</b> — created each time a function is called",
@@ -74,7 +80,8 @@
             "Calling <code>outer()</code> creates a new execution context for that function.",
             "Calling <code>inner()</code> inside outer creates a third context.",
             "When each function returns, its context is destroyed and its local variables are freed."
-          ]
+          ],
+          "output": "> console.log(globalVar);\n> console.log(outerVar);\n> console.log(innerVar);\n✓ accessible\n✓ accessible\n✓ accessible"
         }
       ],
       "practice": {
@@ -83,7 +90,8 @@
           "Create global, outer and inner functions with variables at each level.",
           "Call the inner function from outer, and outer from global.",
           "Inside inner, log variables from all three levels."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The global execution context is created once when the script starts.",
@@ -100,7 +108,9 @@
       "sections": [
         {
           "heading": "The call stack",
-          "paragraphs": ["The call stack is a data structure that tracks function calls. Each time a function is called, a new frame is pushed on top. When it returns, the frame is popped off."],
+          "paragraphs": [
+            "The call stack is a data structure that tracks function calls. Each time a function is called, a new frame is pushed on top. When it returns, the frame is popped off."
+          ],
           "list": [
             "Stacks are LIFO — Last In, First Out",
             "The function on top is the one currently executing",
@@ -120,7 +130,8 @@
             "It calls <code>second()</code> — pushed on top of first.",
             "<code>second()</code> calls <code>third()</code> — pushed on top.",
             "When <code>third()</code> returns, it's popped. Then second returns, then first."
-          ]
+          ],
+          "output": "> first();\nfirst start\nsecond start\nthird\nsecond end\nfirst end"
         }
       ],
       "practice": {
@@ -129,7 +140,8 @@
           "Log \"A start\" then call B, then log \"A end\".",
           "Do the same for B calling C.",
           "The output should nest: A start → B start → C → B end → A end."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The call stack tracks function execution using LIFO order (Last In, First Out).",
@@ -146,7 +158,9 @@
       "sections": [
         {
           "heading": "What causes a stack overflow?",
-          "paragraphs": ["Every call stack has a fixed size. If a function keeps calling itself without stopping, the stack grows until it exceeds the limit and throws a <b>RangeError: Maximum call stack size exceeded</b>."],
+          "paragraphs": [
+            "Every call stack has a fixed size. If a function keeps calling itself without stopping, the stack grows until it exceeds the limit and throws a <b>RangeError: Maximum call stack size exceeded</b>."
+          ],
           "list": [
             "Infinite recursion: a function that calls itself without a base case",
             "Deep recursion: a function calling itself thousands of times",
@@ -166,7 +180,8 @@
             "The second function checks <code>n <= 0</code> before recursing — this is the base case.",
             "Every recursive function needs a base case to prevent stack overflow.",
             "Think of it as: \"When should I stop?\" — that's your base case."
-          ]
+          ],
+          "output": "> countDown(3);\n3\n2\n1\n0\n-1\n...\nRangeError: Maximum call stack size exceeded"
         }
       ],
       "practice": {
@@ -175,7 +190,8 @@
           "Base case: <code>if (n <= 1) return 1</code>.",
           "Recursive case: <code>return n * factorial(n - 1)</code>.",
           "factorial(5) = 5 × 4 × 3 × 2 × 1 = 120."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The call stack has a fixed size — infinite recursion causes a stack overflow.",

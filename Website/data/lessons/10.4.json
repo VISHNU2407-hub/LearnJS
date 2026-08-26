@@ -38,13 +38,14 @@
           "Visit tc39.es/ecma262 for the main spec.",
           "Look at tc39.es/proposals for active proposals.",
           "Stage 4 proposals are the most likely to be available soon."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "TC39 is the committee that governs JavaScript's evolution.",
-            "Proposals go through 5 stages: idea → draft → candidate → finished.",
-            "Stage 4 features are guaranteed to be in the next ECMAScript release.",
-            "Understanding the process helps you prepare for upcoming language features."
+        "Proposals go through 5 stages: idea → draft → candidate → finished.",
+        "Stage 4 features are guaranteed to be in the next ECMAScript release.",
+        "Understanding the process helps you prepare for upcoming language features."
       ],
       "challenge": "Track a Stage 2 proposal over 6 months and document its progress through the stages."
     },
@@ -74,7 +75,8 @@
             "The resource implements [Symbol.dispose]() for cleanup logic.",
             "Disposal happens automatically — no need for try/finally.",
             "await using handles async cleanup (e.g., closing database connections)."
-          ]
+          ],
+          "output": "> Module A initialized\n> Module B initialized"
         }
       ],
       "practice": {
@@ -83,7 +85,8 @@
           "Implement <code>[Symbol.dispose]()</code> for cleanup.",
           "Use <code>using resource = new MyResource()</code> inside a function.",
           "Verify the cleanup log appears when the function ends."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The 'using' keyword automatically cleans up resources on scope exit.",
@@ -119,7 +122,8 @@
             "Full timezone support with IANA names (Asia/Kolkata, America/New_York).",
             "Plain types (PlainDate, PlainTime) handle dates without timezones.",
             "Duration objects represent spans of time for calculations."
-          ]
+          ],
+          "output": "> console.log(tokyo.hour);\ndifferent hour!"
         }
       ],
       "practice": {
@@ -128,7 +132,8 @@
           "Create dates: <code>Temporal.PlainDate.from(\"2024-01-01\")</code>.",
           "Calculate: <code>date1.until(date2).days</code>.",
           "Convert: <code>zonedDateTime.withTimeZone(\"America/New_York\")</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Temporal replaces Date with immutable, timezone-aware date/time objects.",

@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "How parsing works",
-          "paragraphs": ["When V8 receives your JavaScript code, the first step is parsing: it reads the source code and builds an Abstract Syntax Tree (AST). The AST is a structured representation of your code that the engine can understand and optimize."],
+          "paragraphs": [
+            "When V8 receives your JavaScript code, the first step is parsing: it reads the source code and builds an Abstract Syntax Tree (AST). The AST is a structured representation of your code that the engine can understand and optimize."
+          ],
           "list": [
             "<b>Lexical analysis</b> — tokenizes the source into keywords, identifiers and operators",
             "<b>Syntactic analysis</b> — organizes tokens into a tree structure (AST)",
@@ -38,7 +40,8 @@
           "Go to astexplorer.net and select JavaScript.",
           "Type a function: <code>function add(a, b) { return a + b; }</code>.",
           "Explore the tree structure and node types."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "V8 parses source code into an Abstract Syntax Tree (AST) before execution.",
@@ -55,7 +58,9 @@
       "sections": [
         {
           "heading": "The Ignition interpreter",
-          "paragraphs": ["After parsing, V8's Ignition interpreter compiles the AST into bytecode — a compact, machine-efficient representation. This bytecode runs immediately without waiting for full optimization."],
+          "paragraphs": [
+            "After parsing, V8's Ignition interpreter compiles the AST into bytecode — a compact, machine-efficient representation. This bytecode runs immediately without waiting for full optimization."
+          ],
           "list": [
             "AST → bytecode compilation is fast",
             "Bytecode is more compact than machine code",
@@ -84,7 +89,8 @@
           "Consider startup time vs execution speed.",
           "Bytecode compiles faster than machine code.",
           "Type feedback during execution helps optimize later."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Ignition compiles AST to compact bytecode for fast startup.",
@@ -130,7 +136,8 @@
           "First 10000 calls: V8 collects type feedback (numbers).",
           "TurboFan optimizes: generates integer-specific machine code.",
           "String call: deoptimization — falls back to bytecode."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "TurboFan compiles hot functions to optimized machine code.",
@@ -176,7 +183,8 @@
           "Look for dynamic property addition on objects.",
           "Check for mixed-type arrays.",
           "Find try-catch blocks inside frequently-called functions."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "V8 deoptimizes when it encounters unexpected types or object shapes.",

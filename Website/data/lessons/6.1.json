@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "The global scope problem",
-          "paragraphs": ["Early JavaScript had no module system — all scripts shared the global scope. This led to naming conflicts, hard-to-debug dependencies and tangled code."],
+          "paragraphs": [
+            "Early JavaScript had no module system — all scripts shared the global scope. This led to naming conflicts, hard-to-debug dependencies and tangled code."
+          ],
           "list": [
             "Every variable and function declared in a script becomes global",
             "Script loading order matters — later scripts depend on earlier ones",
@@ -29,7 +31,8 @@
             "Variables inside are invisible to the outside — a makeshift module.",
             "The module pattern returns an object with public methods.",
             "This was the standard before official module systems existed."
-          ]
+          ],
+          "output": "> console.log(secret);\n> console.log(counter.getCount());\n\"hidden\"\n1"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Wrap code in <code>(function() { ... })()</code>.",
           "Return an object with methods that close over the private variable.",
           "Try accessing the variable directly from outside — it should fail."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Before modules, all JavaScript shared the global scope — causing naming conflicts.",
@@ -55,7 +59,9 @@
       "sections": [
         {
           "heading": "How CommonJS works",
-          "paragraphs": ["CommonJS was designed for Node.js server-side JavaScript. It uses <code>require()</code> to import and <code>module.exports</code> to export. Loading is synchronous."],
+          "paragraphs": [
+            "CommonJS was designed for Node.js server-side JavaScript. It uses <code>require()</code> to import and <code>module.exports</code> to export. Loading is synchronous."
+          ],
           "list": [
             "<code>require(\"./module\")</code> — imports a module synchronously",
             "<code>module.exports = value</code> — exports from a module",
@@ -75,7 +81,8 @@
             "<code>require()</code> loads and returns the exported value.",
             "You can import the whole module or destructure specific exports.",
             "CommonJS is synchronous — it blocks until the module is loaded."
-          ]
+          ],
+          "output": "> console.log(math.add(2, 3));\n> console.log(math.multiply(2, 3));\n5\n6"
         }
       ],
       "practice": {
@@ -84,7 +91,8 @@
           "Export: <code>module.exports = { fn1, fn2, fn3 }</code>.",
           "Import: <code>const { fn1 } = require(\"./utils\")</code>.",
           "Test each function in the importing file."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "CommonJS uses <code>require()</code> for imports and <code>module.exports</code> for exports.",
@@ -101,7 +109,9 @@
       "sections": [
         {
           "heading": "ES Modules syntax",
-          "paragraphs": ["ES Modules (ESM) are the official standard for JavaScript modules. They use static import/export syntax that enables tree-shaking and browser support."],
+          "paragraphs": [
+            "ES Modules (ESM) are the official standard for JavaScript modules. They use static import/export syntax that enables tree-shaking and browser support."
+          ],
           "list": [
             "<code>export const name = value</code> — named export",
             "<code>export default value</code> — default export (one per module)",
@@ -122,7 +132,8 @@
             "Named imports let you cherry-pick what you need.",
             "Import all with <code>import * as name</code>.",
             "File extension is required in browser ESM: <code>./math.js</code>."
-          ]
+          ],
+          "output": "> console.log(add(2, 3));\n5"
         }
       ],
       "practice": {
@@ -131,7 +142,8 @@
           "Export: <code>export function fn1() {}</code> and <code>export default class MyClass {}</code>.",
           "Import: <code>import MyClass, { fn1 } from \"./module.js\"</code>.",
           "Remember to add <code>type=\"module\"</code> to the script tag."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "ES Modules use <code>import</code>/<code>export</code> — the official JavaScript standard.",
@@ -148,7 +160,9 @@
       "sections": [
         {
           "heading": "Dynamic import()",
-          "paragraphs": ["Static imports load everything upfront. Dynamic <code>import()</code> loads a module on demand — it returns a Promise that resolves to the module's exports."],
+          "paragraphs": [
+            "Static imports load everything upfront. Dynamic <code>import()</code> loads a module on demand — it returns a Promise that resolves to the module's exports."
+          ],
           "list": [
             "<code>import(\"./module.js\")</code> — returns a Promise",
             "Useful for code splitting and lazy loading",
@@ -177,7 +191,8 @@
           "Use <code>import(\"./module.js\")</code> inside an async click handler.",
           "The module loads only when the button is clicked.",
           "Log a confirmation message after the import resolves."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Dynamic <code>import()</code> loads modules on demand — returns a Promise.",

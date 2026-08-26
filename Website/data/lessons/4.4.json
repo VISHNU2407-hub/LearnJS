@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is 'this'?",
-          "paragraphs": ["<code>this</code> is a special keyword that refers to the object the function is called on. Its value depends on <i>how</i> the function is called — not where it's defined. This is called dynamic binding."],
+          "paragraphs": [
+            "<code>this</code> is a special keyword that refers to the object the function is called on. Its value depends on <i>how</i> the function is called — not where it's defined. This is called dynamic binding."
+          ],
           "list": [
             "In a method call (<code>obj.method()</code>), <code>this</code> = the object (<code>obj</code>)",
             "In a plain function call, <code>this</code> = global object (or undefined in strict mode)",
@@ -29,7 +31,8 @@
             "When the function is detached and called alone, <code>this</code> loses the binding.",
             "This is the most common <code>this</code> bug — losing implicit binding.",
             "Arrow functions fix this by inheriting <code>this</code> from the enclosing scope."
-          ]
+          ],
+          "output": "> user.greet();\nHello, Alex!"
         }
       ],
       "practice": {
@@ -37,7 +40,8 @@
         "hints": [
           "Direct call: <code>obj.method()</code> — this = obj.",
           "Detached call: <code>let fn = obj.method; fn()</code> — this = undefined (strict) or global."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>this</code> depends on how a function is called, not where it's defined.",
@@ -73,7 +77,8 @@
             "<code>apply</code> is identical to call but takes arguments as an array.",
             "<code>bind</code> doesn't call the function — it returns a new one with <code>this</code> locked in.",
             "bind is most useful for callbacks where you need a consistent <code>this</code>."
-          ]
+          ],
+          "output": "> greet.call(user, \"Hi\");\nHi, Alex!\n> greet.apply(user, [\"Hey\"]);\nHey, Alex!\n> let boundGreet = greet.bind(user);\n> boundGreet(\"Yo\");\nYo, Alex!"
         }
       ],
       "practice": {
@@ -82,7 +87,8 @@
           "Create 3 objects: <code>{value: 1}</code>, <code>{value: 2}</code>, <code>{value: 3}</code>.",
           "Use <code>func.call(obj, ...)</code> for immediate calls.",
           "Use <code>func.bind(obj)</code> to create a permanently bound function."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>call()</code> and <code>apply()</code> invoke the function immediately with a custom <code>this</code>.",
@@ -99,7 +105,9 @@
       "sections": [
         {
           "heading": "How 'new' works",
-          "paragraphs": ["When you call a function with <code>new</code>, JavaScript does four things: creates a new empty object, sets <code>this</code> to that object, links the prototype, and returns the object."],
+          "paragraphs": [
+            "When you call a function with <code>new</code>, JavaScript does four things: creates a new empty object, sets <code>this</code> to that object, links the prototype, and returns the object."
+          ],
           "list": [
             "Creates a new empty object <code>{}</code>",
             "Sets <code>this</code> inside the function to the new object",
@@ -119,7 +127,8 @@
             "Each <code>new</code> call creates an independent object.",
             "<code>instanceof</code> confirms the object was created by that constructor.",
             "This is the pre-ES6 way to create objects — classes are syntactic sugar over this pattern."
-          ]
+          ],
+          "output": "> console.log(alex instanceof User);\ntrue"
         }
       ],
       "practice": {
@@ -128,7 +137,8 @@
           "Define <code>function Book(title, author) { this.title = title; this.author = author; }</code>.",
           "Create instances: <code>let b1 = new Book(\"JS\", \"Author\")</code>.",
           "Log: <code>b1.title</code> and <code>b1.author</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>new</code> creates a fresh object and sets <code>this</code> to it.",
@@ -145,7 +155,9 @@
       "sections": [
         {
           "heading": "Arrow functions and 'this'",
-          "paragraphs": ["Arrow functions were designed to solve the <code>this</code> problem. They don't create their own <code>this</code> — instead, they use the <code>this</code> of the enclosing scope (lexical <code>this</code>)."],
+          "paragraphs": [
+            "Arrow functions were designed to solve the <code>this</code> problem. They don't create their own <code>this</code> — instead, they use the <code>this</code> of the enclosing scope (lexical <code>this</code>)."
+          ],
           "list": [
             "Arrow functions inherit <code>this</code> from the parent scope",
             "They don't have their own <code>this</code>, even when used as methods",
@@ -165,7 +177,8 @@
             "The arrow function doesn't create its own <code>this</code> — it inherits <code>this</code> from <code>showHobbiesNew</code>.",
             "This is the primary use case for arrow functions — callbacks that need the outer <code>this</code>.",
             "Don't use arrow functions as object methods — they lose implicit binding."
-          ]
+          ],
+          "output": "> user.greet();\nHello, global!"
         }
       ],
       "practice": {
@@ -174,7 +187,8 @@
           "Regular: <code>setInterval(function() { console.log(this.name); }, 1000)</code> — undefined.",
           "Arrow: <code>setInterval(() => { console.log(this.name); }, 1000)</code> — works.",
           "Arrow functions inherit <code>this</code> from the enclosing method."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Arrow functions don't have their own <code>this</code> — they inherit from the enclosing scope.",

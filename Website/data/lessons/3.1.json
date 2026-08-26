@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is the DOM?",
-          "paragraphs": ["When the browser loads an HTML file, it converts every tag into a JavaScript object arranged in a tree. That tree is the <b>Document Object Model (DOM)</b> — your JavaScript's live view of the page."],
+          "paragraphs": [
+            "When the browser loads an HTML file, it converts every tag into a JavaScript object arranged in a tree. That tree is the <b>Document Object Model (DOM)</b> — your JavaScript's live view of the page."
+          ],
           "list": [
             "Every HTML element becomes a node object in the tree",
             "The document node sits at the root — the entry point to everything",
@@ -19,7 +21,9 @@
         },
         {
           "heading": "Why the DOM matters",
-          "paragraphs": ["Without the DOM, JavaScript would have no way to interact with the page. The DOM bridges your code and the visual elements the user sees. Every button click handler, every dynamic text update, every animation triggers through DOM manipulation."]
+          "paragraphs": [
+            "Without the DOM, JavaScript would have no way to interact with the page. The DOM bridges your code and the visual elements the user sees. Every button click handler, every dynamic text update, every animation triggers through DOM manipulation."
+          ]
         }
       ],
       "codeExamples": [
@@ -44,7 +48,8 @@
             "<code>children</code> returns all direct child elements.",
             "<code>firstElementChild</code> and <code>lastElementChild</code> grab the first and last children.",
             "These properties work in all directions — you can walk the tree freely."
-          ]
+          ],
+          "output": "> console.log(list.parentElement);\n> console.log(list.children);\n> console.log(list.firstElementChild);\n> console.log(list.lastElementChild);\nthe <ul>'s parent\nall direct child <li>s\nfirst <li>\nlast <li>"
         }
       ],
       "practice": {
@@ -53,7 +58,8 @@
           "Press F12 to open DevTools, then click the Console tab.",
           "Type <code>document.body.children</code> and press Enter.",
           "Try <code>document.body.children[0].tagName</code> to see the tag name."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The DOM is a tree of JavaScript objects representing your HTML elements.",
@@ -70,7 +76,9 @@
       "sections": [
         {
           "heading": "querySelector — find one element",
-          "paragraphs": ["<code>document.querySelector(selector)</code> returns the <b>first</b> element that matches a CSS selector. If nothing matches, it returns <code>null</code>. This is the most flexible and modern way to grab elements."],
+          "paragraphs": [
+            "<code>document.querySelector(selector)</code> returns the <b>first</b> element that matches a CSS selector. If nothing matches, it returns <code>null</code>. This is the most flexible and modern way to grab elements."
+          ],
           "list": [
             "Pass any CSS selector: tag names, classes, IDs, attributes, combinators",
             "Returns a single Element or null",
@@ -79,7 +87,9 @@
         },
         {
           "heading": "querySelectorAll — find all matches",
-          "paragraphs": ["<code>document.querySelectorAll(selector)</code> returns <b>all</b> matching elements as a static NodeList. Unlike HTMLCollections, NodeLists are snapshots — they won't change if the DOM changes after selection."],
+          "paragraphs": [
+            "<code>document.querySelectorAll(selector)</code> returns <b>all</b> matching elements as a static NodeList. Unlike HTMLCollections, NodeLists are snapshots — they won't change if the DOM changes after selection."
+          ],
           "list": [
             "Returns a NodeList (array-like collection)",
             "Use <code>.forEach()</code> or convert with <code>[...nodeList]</code> for array methods",
@@ -97,7 +107,8 @@
             "Use <code>#id</code> for ID selectors, <code>.class</code> for class selectors.",
             "The selector syntax is identical to what you'd write in CSS.",
             "Only the first match is returned — even if multiple elements match."
-          ]
+          ],
+          "output": "> console.log(header);\nthe #header element"
         },
         {
           "heading": "Scoping and querying all matches",
@@ -108,7 +119,8 @@
             "Calling <code>querySelector</code> on an element scopes the search to its descendants.",
             "<code>querySelectorAll</code> gives you a NodeList with all matches.",
             "NodeList supports <code>.forEach()</code> — no conversion needed for simple loops."
-          ]
+          ],
+          "output": "> console.log(allCards.length);\ntotal number of cards"
         }
       ],
       "practice": {
@@ -117,7 +129,8 @@
           "Use <code>document.querySelectorAll(\"li\")</code>.",
           "Call <code>.forEach()</code> on the result.",
           "Inside forEach, use <code>li.textContent</code> to get the text."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>querySelector()</code> returns the first matching element using CSS selectors.",
@@ -134,7 +147,9 @@
       "sections": [
         {
           "heading": "Legacy methods",
-          "paragraphs": ["Before <code>querySelector</code> existed, developers used these methods to find elements. They still work and you'll encounter them in older code and tutorials."],
+          "paragraphs": [
+            "Before <code>querySelector</code> existed, developers used these methods to find elements. They still work and you'll encounter them in older code and tutorials."
+          ],
           "list": [
             "<code>getElementById(\"id\")</code> — returns a single element by its ID",
             "<code>getElementsByClassName(\"class\")</code> — returns a live HTMLCollection",
@@ -153,7 +168,8 @@
             "<code>getElementById</code> is the fastest method — browsers optimize ID lookups.",
             "<code>getElementsByClassName</code> returns a live HTMLCollection that updates when the DOM changes.",
             "HTMLCollection is not an array — use <code>[...collection]</code> to convert for map/filter."
-          ]
+          ],
+          "output": "> console.log(items.length);\nnumber of .item elements"
         }
       ],
       "practice": {
@@ -162,7 +178,8 @@
           "You need an HTML page with at least one element that has an ID and several elements with the same class.",
           "Use <code>document.getElementById(\"myId\")</code>.",
           "Use <code>document.getElementsByClassName(\"myClass\").length</code> to count."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>getElementById</code> is the fastest legacy method — one element by ID.",
@@ -178,7 +195,9 @@
       "sections": [
         {
           "heading": "Live vs static collections",
-          "paragraphs": ["Some DOM methods return collections that update automatically when the DOM changes (live), while others return snapshots (static). This difference causes surprising bugs if you don't understand it."],
+          "paragraphs": [
+            "Some DOM methods return collections that update automatically when the DOM changes (live), while others return snapshots (static). This difference causes surprising bugs if you don't understand it."
+          ],
           "list": [
             "<b>Live HTMLCollection</b> — updates automatically when elements are added or removed",
             "<b>Static NodeList</b> — a snapshot that doesn't change after creation",
@@ -197,7 +216,8 @@
             "The live HTMLCollection automatically picks up the newly added <code>.item</code> element.",
             "The static NodeList is a snapshot from the moment of selection — it stays at 3.",
             "Live collections are convenient but can cause surprises in loops if elements change during iteration."
-          ]
+          ],
+          "output": "> console.log(\"Before: \" + liveItems.length);\n> console.log(\"Before: \" + staticItems.length);\n> console.log(\"After live: \" + liveItems.length);\n> console.log(\"After static: \" + staticItems.length);\n3\n3\n4 (updated!)\n3 (same snapshot)"
         }
       ],
       "practice": {
@@ -206,7 +226,8 @@
           "Use <code>document.createElement(\"li\")</code> to create a new element.",
           "Add a class with <code>newItem.className = \"item\"</code>.",
           "Append with <code>document.querySelector(\"ul\").appendChild(newItem)</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Live HTMLCollections update automatically when the DOM changes.",

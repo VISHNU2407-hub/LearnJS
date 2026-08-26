@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "Conditional breakpoints",
-          "paragraphs": ["Instead of pausing on every execution, conditional breakpoints pause only when a condition is true. This saves enormous time when debugging loops or frequent function calls."],
+          "paragraphs": [
+            "Instead of pausing on every execution, conditional breakpoints pause only when a condition is true. This saves enormous time when debugging loops or frequent function calls."
+          ],
           "list": [
             "Right-click a line number → \"Add conditional breakpoint\"",
             "Enter a JavaScript expression — pause only when it's truthy",
@@ -38,7 +40,8 @@
           "Right-click the line number in the Sources panel.",
           "Select \"Add conditional breakpoint\".",
           "Enter a condition like <code>count > 10</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Conditional breakpoints pause only when a specific condition is met.",
@@ -55,7 +58,9 @@
       "sections": [
         {
           "heading": "DOM mutation breakpoints",
-          "paragraphs": ["DevTools can pause when specific DOM changes occur. This is invaluable for debugging dynamic UI updates where you don't know which code is making the change."],
+          "paragraphs": [
+            "DevTools can pause when specific DOM changes occur. This is invaluable for debugging dynamic UI updates where you don't know which code is making the change."
+          ],
           "list": [
             "Right-click an element → \"Break on\" → subtree/attribute/removal",
             "Pauses on the exact line that modifies the DOM",
@@ -84,7 +89,8 @@
           "Right-click the div in Elements panel → Break on → subtree modifications.",
           "In the console: <code>div.innerHTML = \"changed\"</code>.",
           "The debugger should pause on the line that makes the change."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "DOM mutation breakpoints pause when an element's subtree, attributes or presence changes.",
@@ -129,7 +135,8 @@
           "Write a function that calls another function that calls a third.",
           "Put <code>debugger;</code> in the innermost function.",
           "In DevTools, examine the Call Stack panel."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The Call Stack shows the chain of function calls that led to the current line.",

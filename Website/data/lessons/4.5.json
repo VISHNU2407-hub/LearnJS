@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is a prototype?",
-          "paragraphs": ["A prototype is another object that your object can delegate property lookups to. When you access a property that doesn't exist on an object, JavaScript walks up the prototype chain until it finds it or reaches the end."],
+          "paragraphs": [
+            "A prototype is another object that your object can delegate property lookups to. When you access a property that doesn't exist on an object, JavaScript walks up the prototype chain until it finds it or reaches the end."
+          ],
           "list": [
             "Every object has an internal <code>[[Prototype]]</code> link",
             "Access it with <code>Object.getPrototypeOf(obj)</code>",
@@ -29,7 +31,8 @@
             "When <code>rabbit.eats</code> is accessed, it's not found on rabbit, so JavaScript looks at <code>animal</code>.",
             "The chain continues until the property is found or the end is reached.",
             "This is how JavaScript implements inheritance without classes."
-          ]
+          ],
+          "output": "> console.log(rabbit.eats);\n> console.log(rabbit.jumps);\n> console.log(Object.getPrototypeOf(rabbit) === animal);\n> console.log(Object.getPrototypeOf(animal) === Object.prototype);\ntrue (inherited from animal!)\nundefined\ntrue\ntrue"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Create <code>let base = { greet() { return \"Hi!\"; } }</code>.",
           "Create children: <code>let child1 = Object.create(base)</code>.",
           "Call <code>child1.greet()</code> — it works via the prototype chain."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Every object has an internal link to its prototype via <code>[[Prototype]]</code>.",
@@ -55,7 +59,9 @@
       "sections": [
         {
           "heading": "Property shadowing",
-          "paragraphs": ["If you set a property on an object that already exists on its prototype, the new property is created directly on the object — 'shadowing' the prototype version."],
+          "paragraphs": [
+            "If you set a property on an object that already exists on its prototype, the new property is created directly on the object — 'shadowing' the prototype version."
+          ],
           "list": [
             "Own properties always shadow prototype properties",
             "The prototype property is not modified — it's just hidden",
@@ -75,7 +81,8 @@
             "After setting it, <code>child</code> has its own <code>color</code> property that shadows the prototype.",
             "<code>hasOwnProperty()</code> returns true only for the object's own properties.",
             "<code>in</code> checks the entire chain — own and inherited properties."
-          ]
+          ],
+          "output": "> console.log(child.color);\n> console.log(child.color);\n> console.log(parent.color);\n> console.log(child.hasOwnProperty(\"color\"));\n> console.log(\"color\" in child);\n> console.log(\"color\" in parent);\n\"red\" (from parent)\n\"blue\" (own property shadows parent)\n\"red\" (parent unchanged)\ntrue\ntrue\ntrue"
         }
       ],
       "practice": {
@@ -84,7 +91,8 @@
           "Create a parent with <code>{ type: \"animal\" }</code>.",
           "Create a child via Object.create and set <code>child.type = \"pet\"</code>.",
           "Check <code>child.hasOwnProperty(\"type\")</code> vs <code>\"type\" in child</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Own properties always take priority over prototype properties.",
@@ -101,7 +109,9 @@
       "sections": [
         {
           "heading": "Two different prototypes",
-          "paragraphs": ["There are two properties that confuse beginners: <code>.prototype</code> (on functions) and <code>__proto__</code> (on instances). Understanding the difference is key."],
+          "paragraphs": [
+            "There are two properties that confuse beginners: <code>.prototype</code> (on functions) and <code>__proto__</code> (on instances). Understanding the difference is key."
+          ],
           "list": [
             "<code>func.prototype</code> — an object that becomes the prototype of instances created with <code>new</code>",
             "<code>instance.__proto__</code> — the internal link to the prototype (same as <code>func.prototype</code>)",
@@ -121,7 +131,8 @@
             "<code>rex.__proto__</code> points to <code>Dog.prototype</code> — that's how <code>rex</code> inherits <code>bark</code>.",
             "Use <code>Object.getPrototypeOf()</code> instead of <code>__proto__</code> — it's the official API.",
             "Methods defined on <code>.prototype</code> are shared by all instances — efficient memory."
-          ]
+          ],
+          "output": "> console.log(rex.bark());\n> console.log(rex.__proto__ === Dog.prototype);\n> console.log(Object.getPrototypeOf(rex) === Dog.prototype);\n\"Rex says woof!\"\ntrue\ntrue"
         }
       ],
       "practice": {
@@ -130,7 +141,8 @@
           "Define a method on <code>Constructor.prototype.methodName</code>.",
           "Create instances with <code>new Constructor()</code>.",
           "Verify: <code>Object.getPrototypeOf(a) === Object.getPrototypeOf(b)</code> should be true."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>.prototype</code> is on the function and becomes the prototype of new instances.",
@@ -147,7 +159,9 @@
       "sections": [
         {
           "heading": "Object.create() for inheritance",
-          "paragraphs": ["<code>Object.create()</code> creates a new object with a specified prototype. This lets you build inheritance relationships directly between objects — no constructors needed."],
+          "paragraphs": [
+            "<code>Object.create()</code> creates a new object with a specified prototype. This lets you build inheritance relationships directly between objects — no constructors needed."
+          ],
           "list": [
             "<code>Object.create(prototype)</code> — creates object with given prototype",
             "<code>Object.create(prototype, descriptors)</code> — also define properties",
@@ -167,7 +181,8 @@
             "The <code>init</code> method acts as a constructor for setting up instance data.",
             "<code>rex</code> inherits from <code>dog</code>, which inherits from <code>animal</code>.",
             "This is pure prototypal inheritance — objects inherit directly from other objects."
-          ]
+          ],
+          "output": "> console.log(rex.speak());\n> console.log(rex.bark());\n\"Rex makes a noise.\"\n\"Rex barks!\""
         }
       ],
       "practice": {
@@ -176,7 +191,8 @@
           "Create <code>shape</code> with <code>describe()</code> and default properties.",
           "Create <code>circle = Object.create(shape)</code> and add <code>area()</code>.",
           "Verify: <code>circle.describe()</code> works through the chain."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>Object.create()</code> creates objects with a specified prototype — clean inheritance.",

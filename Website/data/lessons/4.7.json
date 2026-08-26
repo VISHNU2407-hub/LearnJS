@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is a pure function?",
-          "paragraphs": ["A pure function is predictable: given the same inputs, it always returns the same output and never modifies anything outside itself. Pure functions are the building blocks of reliable, testable code."],
+          "paragraphs": [
+            "A pure function is predictable: given the same inputs, it always returns the same output and never modifies anything outside itself. Pure functions are the building blocks of reliable, testable code."
+          ],
           "list": [
             "Same input → same output, always",
             "No side effects: no modifying globals, no DOM changes, no network calls",
@@ -29,7 +31,8 @@
             "Impure functions read or modify external state, making behavior unpredictable.",
             "Pure functions are trivial to test: just call and check the return value.",
             "In FP, you pass data into functions and get new data back — no mutations."
-          ]
+          ],
+          "output": "> console.log(incrementPure(5));\n6"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Identify every external variable the function reads.",
           "Add those values as function parameters.",
           "Remove any mutations — return new values instead."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Pure functions always return the same output for the same input.",
@@ -55,7 +59,9 @@
       "sections": [
         {
           "heading": "Why immutability?",
-          "paragraphs": ["When you mutate data, every function that touches it could potentially change it. Immutability means creating new values instead of modifying existing ones — this eliminates an entire class of bugs."],
+          "paragraphs": [
+            "When you mutate data, every function that touches it could potentially change it. Immutability means creating new values instead of modifying existing ones — this eliminates an entire class of bugs."
+          ],
           "list": [
             "Never modify objects or arrays directly — create new ones",
             "Use spread operator <code>...</code> to copy and update",
@@ -75,7 +81,8 @@
             "For objects, override properties after spreading: <code>{...obj, newProp: val}</code>.",
             "For arrays, use <code>filter()</code> to remove, <code>map()</code> to update, <code>...</code> to add.",
             "The original data is never modified — all operations return new values."
-          ]
+          ],
+          "output": "> console.log(user);\n> console.log(user2);\n{ name: \"Alex\", age: 25 }\n{ name: \"Alex\", age: 26 }"
         }
       ],
       "practice": {
@@ -84,7 +91,8 @@
           "Add: <code>[...users, newUser]</code>.",
           "Update: <code>users.map(u => u.id === id ? {...u, name: \"New\"} : u)</code>.",
           "Remove: <code>users.filter(u => u.id !== id)</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Immutability means creating new values instead of modifying existing ones.",
@@ -101,7 +109,9 @@
       "sections": [
         {
           "heading": "Higher-order functions",
-          "paragraphs": ["A higher-order function either takes a function as an argument or returns a function. Array methods like <code>map()</code>, <code>filter()</code>, and <code>reduce()</code> are all higher-order functions."],
+          "paragraphs": [
+            "A higher-order function either takes a function as an argument or returns a function. Array methods like <code>map()</code>, <code>filter()</code>, and <code>reduce()</code> are all higher-order functions."
+          ],
           "list": [
             "Accept a function as a parameter: <code>map(fn)</code>, <code>filter(fn)</code>",
             "Return a function: <code>function multiply(n) { return (x) => x * n; }</code>",
@@ -129,7 +139,8 @@
             "<code>multiply(2)</code> returns a new function that doubles any input — currying.",
             "Currying creates specialized functions from general ones.",
             "This pattern makes code composable and reusable."
-          ]
+          ],
+          "output": "> console.log(double(5));\n> console.log(triple(5));\n> console.log(numbers.map(add10));\n10\n15\n[11, 12, 13]"
         }
       ],
       "practice": {
@@ -138,7 +149,8 @@
           "Outer function takes the currency symbol.",
           "Inner function takes the amount.",
           "Return the formatted string using the captured symbol."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Higher-order functions take or return functions — enabling behavior abstraction.",
@@ -155,7 +167,9 @@
       "sections": [
         {
           "heading": "Function composition",
-          "paragraphs": ["Composition is building complex operations by combining simple functions. The output of one function becomes the input of the next. This creates readable, maintainable code."],
+          "paragraphs": [
+            "Composition is building complex operations by combining simple functions. The output of one function becomes the input of the next. This creates readable, maintainable code."
+          ],
           "list": [
             "Compose: <code>compose(f, g)(x)</code> = <code>f(g(x))</code>",
             "Pipe: <code>pipe(g, f)(x)</code> = <code>f(g(x))</code> (left-to-right)",
@@ -175,7 +189,8 @@
             "<code>pipe</code> applies functions left to right: addTax → applyDiscount → round.",
             "Each small function is pure and does one thing.",
             "The composed function reads like a data pipeline."
-          ]
+          ],
+          "output": "> console.log(processPrice(100));\n> console.log(processPricePipe(100));\n99\n99"
         }
       ],
       "practice": {
@@ -185,7 +200,8 @@
           "lowercase: <code>(s) => s.toLowerCase()</code>.",
           "dashes: <code>(s) => s.replace(/\\s+/g, \"-\")</code>.",
           "Pipe: <code>pipe(trim, toLower, toDashes)(\"  Hello World  \")</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Function composition combines small functions into larger ones.",

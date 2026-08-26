@@ -1277,6 +1277,7 @@ export const LESSON_CONTENT = {
       "Use parentheses for zero or multiple parameters; skip them for one parameter."
     ],
     practice: {
+      compiler: true,
       task: "Convert these to arrow functions: (1) <code>function square(n) { return n * n; }</code>, (2) <code>function greet(name) { return \"Hello, \" + name; }</code>, (3) <code>function isValid(str) { return str.length > 0; }</code>.",
       hints: [
         "<code>const square = n => n * n;</code>",
@@ -1339,6 +1340,7 @@ export const LESSON_CONTENT = {
       "To return an object from an arrow function, wrap it in parentheses: <code>() => ({...})</code>."
     ],
     practice: {
+      compiler: true,
       task: "Write an arrow function <code>createUser</code> that takes a name and returns an object <code>{ name, active: true }</code> using implicit return.",
       hints: [
         "Remember to wrap the object in parentheses: <code>() => ({...})</code>.",
@@ -1394,6 +1396,7 @@ export const LESSON_CONTENT = {
       "They're commonly used with array methods, event listeners, and timers."
     ],
     practice: {
+      compiler: true,
       task: "Given <code>const words = [\"hello\", \"world\", \"js\"]</code>, use <code>.map()</code> with an arrow function to create an array of uppercase strings.",
       hints: [
         "<code>.map(w => w.toUpperCase())</code>",
@@ -1455,6 +1458,7 @@ export const LESSON_CONTENT = {
       "Access array elements with <code>array[i]</code> inside the loop."
     ],
     practice: {
+      compiler: true,
       task: "Write a for loop that prints the numbers 1 through 10.",
       hints: [
         "Start at 1: <code>let i = 1</code>",
@@ -1512,6 +1516,7 @@ export const LESSON_CONTENT = {
       "Always update a variable inside the loop to avoid infinite loops."
     ],
     practice: {
+      compiler: true,
       task: "Write a while loop that counts down from 5 to 1, then prints \"Go!\".",
       hints: [
         "Start: <code>let i = 5</code>",
@@ -1570,6 +1575,7 @@ export const LESSON_CONTENT = {
       "Both work in for, while, and do...while loops."
     ],
     practice: {
+      compiler: true,
       task: "Write a for loop from 1 to 10 that skips multiples of 3 and stops when it reaches 8.",
       hints: [
         "Use <code>continue</code> when <code>i % 3 === 0</code>.",
@@ -1626,6 +1632,7 @@ export const LESSON_CONTENT = {
       "Use <code>.entries()</code> if you need both index and value."
     ],
     practice: {
+      compiler: true,
       task: "Use <code>for...of</code> to loop through <code>[\"a\", \"b\", \"c\"]</code> and print each letter with its position (1, 2, 3).",
       hints: [
         "Use <code>.entries()</code> to get index-value pairs.",
@@ -1671,6 +1678,7 @@ export const LESSON_CONTENT = {
       "Prefer <code>Object.entries()</code> for modern code — it gives you both key and value directly."
     ],
     practice: {
+      compiler: true,
       task: "Given <code>const scores = { math: 95, science: 88, english: 92 }</code>, use <code>for...in</code> to print each subject and its score.",
       hints: [
         "<code>for (const subject in scores)</code>",

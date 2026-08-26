@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "How client-server communication works",
-          "paragraphs": ["Web applications follow a client-server model. Your browser (client) sends HTTP requests to a server, which responds with data. REST is a set of conventions for structuring these requests."],
+          "paragraphs": [
+            "Web applications follow a client-server model. Your browser (client) sends HTTP requests to a server, which responds with data. REST is a set of conventions for structuring these requests."
+          ],
           "list": [
             "Client sends a request → Server processes it → Server sends a response",
             "HTTP methods define the action: GET (read), POST (create), PUT (update), DELETE (remove)",
@@ -39,7 +41,8 @@
           "Posts: GET /api/posts, POST /api/posts, GET /api/posts/:id, etc.",
           "Each resource gets its own URL pattern.",
           "Use HTTP methods to indicate the action."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "REST is a convention for structuring HTTP requests and responses.",
@@ -56,7 +59,9 @@
       "sections": [
         {
           "heading": "The fetch API",
-          "paragraphs": ["<code>fetch()</code> is the modern way to make HTTP requests. It returns a Promise that resolves to a Response object — you then parse the body as JSON or text."],
+          "paragraphs": [
+            "<code>fetch()</code> is the modern way to make HTTP requests. It returns a Promise that resolves to a Response object — you then parse the body as JSON or text."
+          ],
           "list": [
             "<code>fetch(url)</code> — returns a Promise resolving to a Response object",
             "<code>response.json()</code> — parses the body as JSON (also returns a Promise)",
@@ -76,7 +81,8 @@
             "You must call <code>.json()</code> (or <code>.text()</code>) to parse the body.",
             "Always check <code>response.ok</code> — fetch doesn't reject on HTTP errors.",
             "Both fetch and .json() are async — use await on each."
-          ]
+          ],
+          "output": "> Data: { ... }"
         }
       ],
       "practice": {
@@ -85,7 +91,8 @@
           "Use <code>await fetch(\"https://jsonplaceholder.typicode.com/posts\")</code>.",
           "Parse: <code>let posts = await response.json()</code>.",
           "Loop: <code>posts.forEach(p => console.log(p.title))</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "fetch() returns a Promise that resolves to a Response object.",
@@ -102,7 +109,9 @@
       "sections": [
         {
           "heading": "Fetch options",
-          "paragraphs": ["The second argument to fetch() is an options object where you specify the HTTP method, headers, body and other request details."],
+          "paragraphs": [
+            "The second argument to fetch() is an options object where you specify the HTTP method, headers, body and other request details."
+          ],
           "list": [
             "<code>method</code> — HTTP verb: GET, POST, PUT, DELETE, PATCH",
             "<code>headers</code> — object with request headers",
@@ -131,7 +140,8 @@
           "Set <code>method: \"POST\"</code> in the options.",
           "Set headers: <code>{\"Content-Type\": \"application/json\"}</code>.",
           "Stringify the body: <code>JSON.stringify({title: \"...\", body: \"...\"})</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Specify the HTTP method in fetch options: GET, POST, PUT, DELETE.",
@@ -148,7 +158,9 @@
       "sections": [
         {
           "heading": "Request headers",
-          "paragraphs": ["Headers carry metadata about the request — content type, authorization tokens, custom application data and more."],
+          "paragraphs": [
+            "Headers carry metadata about the request — content type, authorization tokens, custom application data and more."
+          ],
           "list": [
             "<code>Content-Type</code> — tells the server what format the body is in",
             "<code>Authorization</code> — carries authentication tokens (Bearer tokens)",
@@ -177,7 +189,8 @@
           "Set headers as an object: <code>{ \"Authorization\": \"Bearer mytoken\", \"Accept\": \"application/json\" }</code>.",
           "Pass headers in the fetch options: <code>fetch(url, { headers })</code>.",
           "Always include error handling for 401/403 responses."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Headers carry metadata: content type, authentication, custom data.",
@@ -194,7 +207,9 @@
       "sections": [
         {
           "heading": "Why cancel requests?",
-          "paragraphs": ["When a user types in a search box, each keystroke fires a new request. Without cancellation, old requests still complete and their results may overwrite newer ones. AbortController lets you cancel stale requests."],
+          "paragraphs": [
+            "When a user types in a search box, each keystroke fires a new request. Without cancellation, old requests still complete and their results may overwrite newer ones. AbortController lets you cancel stale requests."
+          ],
           "list": [
             "<code>new AbortController()</code> — creates a controller",
             "<code>controller.signal</code> — a signal object passed to fetch",
@@ -214,7 +229,8 @@
             "The abort signal is passed to fetch via the options object.",
             "Aborted fetches throw an AbortError — catch it specifically.",
             "This pattern is essential for search-as-you-type functionality."
-          ]
+          ],
+          "output": "> Request cancelled"
         }
       ],
       "practice": {
@@ -224,7 +240,8 @@
           "Call <code>controller.abort()</code> at the start of each new search.",
           "Pass <code>signal: controller.signal</code> in the fetch options.",
           "Catch AbortError specifically to suppress cancellation errors."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "AbortController cancels ongoing fetch requests.",

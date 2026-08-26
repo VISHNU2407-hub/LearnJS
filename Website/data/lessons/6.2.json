@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is package.json?",
-          "paragraphs": ["Every Node.js project starts with a package.json file. It defines your project name, version, dependencies, scripts, and configuration. It's the control center for your project."],
+          "paragraphs": [
+            "Every Node.js project starts with a package.json file. It defines your project name, version, dependencies, scripts, and configuration. It's the control center for your project."
+          ],
           "list": [
             "<code>npm init</code> — creates a new package.json",
             "<code>dependencies</code> — packages needed in production",
@@ -47,7 +49,8 @@
           "Run <code>npm init -y</code> for defaults.",
           "Add to scripts: <code>\"hello\": \"node -e \\\"console.log('Hello')\\\"\"</code>.",
           "Run with <code>npm run hello</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "package.json is the manifest for every Node.js project.",
@@ -64,7 +67,9 @@
       "sections": [
         {
           "heading": "SemVer explained",
-          "paragraphs": ["Semantic Versioning (SemVer) uses three numbers: MAJOR.MINOR.PATCH. Each number has a specific meaning about the type of changes in the release."],
+          "paragraphs": [
+            "Semantic Versioning (SemVer) uses three numbers: MAJOR.MINOR.PATCH. Each number has a specific meaning about the type of changes in the release."
+          ],
           "list": [
             "<b>MAJOR</b> — breaking changes (API incompatible with previous version)",
             "<b>MINOR</b> — new features (backward compatible)",
@@ -138,7 +143,8 @@
           "Time each install: <code>time npm install</code>.",
           "Check node_modules size: <code>du -sh node_modules</code>.",
           "Note that bun is typically the fastest."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "npm, pnpm, and bun are compatible with the same package.json format.",
@@ -155,7 +161,9 @@
       "sections": [
         {
           "heading": "What is a monorepo?",
-          "paragraphs": ["A monorepo puts multiple packages or apps in a single repository. Workspaces let them share dependencies and scripts while remaining independent."],
+          "paragraphs": [
+            "A monorepo puts multiple packages or apps in a single repository. Workspaces let them share dependencies and scripts while remaining independent."
+          ],
           "list": [
             "All packages live in one repo with a root package.json",
             "Workspaces define where packages live: <code>\"workspaces\": [\"packages/*\"]</code>",
@@ -184,7 +192,8 @@
           "Create root package.json with <code>\"workspaces\": [\"packages/*\"]</code>.",
           "Create packages/utils and packages/app directories.",
           "Each with their own package.json."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Monorepos organize multiple packages in a single repository.",

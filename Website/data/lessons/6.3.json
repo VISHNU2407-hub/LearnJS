@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "The TDD cycle",
-          "paragraphs": ["Test-Driven Development flips the normal workflow: you write a failing test first, write the minimum code to make it pass, then refactor. This cycle repeats for every feature."],
+          "paragraphs": [
+            "Test-Driven Development flips the normal workflow: you write a failing test first, write the minimum code to make it pass, then refactor. This cycle repeats for every feature."
+          ],
           "list": [
             "<b>Red</b> — write a test that fails (no implementation yet)",
             "<b>Green</b> — write the simplest code that makes the test pass",
@@ -38,7 +40,8 @@
           "Test: <code>expect(multiply(3, 4)).toBe(12)</code>.",
           "Implement: <code>function multiply(a, b) { return a * b; }</code>.",
           "Add more test cases for edge cases: 0, negative numbers."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "TDD: Red (failing test) → Green (passing code) → Refactor (clean up).",
@@ -93,7 +96,8 @@
           "Use describe(\"Calculator\", () => { ... }).",
           "Each method gets its own describe block.",
           "Test normal cases, edge cases and error cases."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>describe</code> groups related tests; <code>it</code> defines individual test cases.",
@@ -138,7 +142,8 @@
           "Mock fetch with <code>vi.fn()</code> to simulate responses.",
           "Test success: mock returns { ok: true, json: () => data }.",
           "Test failure: mock returns { ok: false }."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Use async/await in test functions for clean async test code.",
@@ -155,7 +160,9 @@
       "sections": [
         {
           "heading": "DOM testing environments",
-          "paragraphs": ["JSDOM and HappyDOM provide a lightweight implementation of the DOM in Node.js. This lets you test code that manipulates HTML elements without opening a browser."],
+          "paragraphs": [
+            "JSDOM and HappyDOM provide a lightweight implementation of the DOM in Node.js. This lets you test code that manipulates HTML elements without opening a browser."
+          ],
           "list": [
             "JSDOM — full DOM implementation in JavaScript, slower but complete",
             "HappyDOM — lighter and faster alternative to JSDOM",
@@ -184,7 +191,8 @@
           "Clear the DOM in beforeEach: <code>document.body.innerHTML = \"\"</code>.",
           "Create the button programmatically or set innerHTML.",
           "Simulate click and check body.classList."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "JSDOM and HappyDOM let you test DOM code without a real browser.",

@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What are detached DOM leaks?",
-          "paragraphs": ["When you remove an element from the DOM but still hold a reference to it in JavaScript, the element can't be garbage collected. This is called a detached DOM leak."],
+          "paragraphs": [
+            "When you remove an element from the DOM but still hold a reference to it in JavaScript, the element can't be garbage collected. This is called a detached DOM leak."
+          ],
           "list": [
             "Removed from DOM but referenced in JavaScript",
             "Each detached node keeps its children and event listeners in memory",
@@ -38,7 +40,8 @@
           "Add elements to the DOM and push to an array.",
           "Remove from DOM but keep in array.",
           "Take heap snapshot and filter by 'Detached' elements."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Detached DOM nodes are removed from the page but still referenced in JavaScript.",
@@ -55,7 +58,9 @@
       "sections": [
         {
           "heading": "Closure memory leaks",
-          "paragraphs": ["A closure retains everything in its enclosing scope, even variables it doesn't use. If a closure references a large object, that object stays in memory as long as the closure exists."],
+          "paragraphs": [
+            "A closure retains everything in its enclosing scope, even variables it doesn't use. If a closure references a large object, that object stays in memory as long as the closure exists."
+          ],
           "list": [
             "Closures retain the entire enclosing scope",
             "Unused variables in the scope are still retained",
@@ -75,7 +80,8 @@
             "Even though increment doesn't use hugeData, it's still in memory.",
             "Setting hugeData to null explicitly releases it from the closure scope.",
             "DevTools Memory snapshots show retained objects in closure scope."
-          ]
+          ],
+          "output": "> Closure retains reference"
         }
       ],
       "practice": {
@@ -84,7 +90,8 @@
           "Create a function with a large local variable.",
           "Return a closure that doesn't use the large variable.",
           "Check DevTools Memory → Closure section in heap snapshot."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Closures retain the entire enclosing scope — even unused variables.",
@@ -130,7 +137,8 @@
           "Add 1000 elements, take snapshot 2.",
           "Remove elements, take snapshot 3.",
           "Compare snapshots 1 and 3 to verify cleanup."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Heap snapshots capture all objects in memory at a point in time.",

@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is ArrayBuffer?",
-          "paragraphs": ["An ArrayBuffer is a fixed-length raw binary data buffer. You can't read or write it directly — you must create a typed view to interpret the bytes."],
+          "paragraphs": [
+            "An ArrayBuffer is a fixed-length raw binary data buffer. You can't read or write it directly — you must create a typed view to interpret the bytes."
+          ],
           "list": [
             "<code>new ArrayBuffer(length)</code> — allocates 'length' bytes of memory",
             "All bytes initialized to zero",
@@ -29,7 +31,8 @@
             "TypedArray views interpret the bytes as specific data types.",
             "Uint8Array treats each byte as an unsigned 8-bit integer (0–255).",
             "The same buffer can have multiple views with different interpretations."
-          ]
+          ],
+          "output": "> console.log(buffer.byteLength);\n> console.log(view);\n> console.log(view.slice(0, 2));\n16\nUint8Array(16) [0, 0, 0, ..., 0]\n[72, 105]"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Allocate: <code>new ArrayBuffer(8)</code>.",
           "Create view: <code>new Uint8Array(buffer)</code>.",
           "Store ASCII: 72, 101, 108, 108, 111, 33."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "ArrayBuffer allocates fixed-length raw binary memory.",
@@ -75,7 +79,8 @@
             "They behave like arrays but are fixed-length and type-restricted.",
             "Use TextDecoder to convert bytes to strings.",
             "Different types have different byte sizes and value ranges."
-          ]
+          ],
+          "output": "> console.log(doubled);\n> console.log(text);\nFloat64Array [3, 4, 7, 8, 0, 0]\n\"Hello\""
         }
       ],
       "practice": {
@@ -84,7 +89,8 @@
           "Encode: <code>new TextEncoder().encode(\"Hello\")</code>.",
           "Decode: <code>new TextDecoder().decode(bytes)</code>.",
           "Verify the round-trip produces the original string."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "TypedArrays provide typed views over binary data.",
@@ -101,7 +107,9 @@
       "sections": [
         {
           "heading": "What is DataView?",
-          "paragraphs": ["DataView provides fine-grained control over reading and writing binary data. Unlike TypedArrays, it can read different types from the same buffer and control byte order (endianness)."],
+          "paragraphs": [
+            "DataView provides fine-grained control over reading and writing binary data. Unlike TypedArrays, it can read different types from the same buffer and control byte order (endianness)."
+          ],
           "list": [
             "<code>new DataView(buffer, offset, length)</code> — creates a view into a buffer",
             "Read/write specific types at specific offsets",
@@ -121,7 +129,8 @@
             "The boolean parameter controls endianness (byte order).",
             "Big-endian: most significant byte first. Little-endian: least significant first.",
             "Different systems use different endianness — DataView handles both."
-          ]
+          ],
+          "output": "> console.log(view.getInt32(0, false));\n> console.log(view.getInt16(4, true));\n1000\n256"
         }
       ],
       "practice": {
@@ -130,7 +139,8 @@
           "Use <code>view.setUint8(i, charCode)</code> for each character.",
           "Read back with <code>view.getUint8(i)</code>.",
           "Convert bytes to string with <code>String.fromCharCode()</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "DataView provides fine-grained control over binary data access.",
@@ -166,7 +176,8 @@
             "Chinese/Japanese characters use 3 bytes in UTF-8.",
             "TextDecoder can handle different encodings: UTF-8, UTF-16, etc.",
             "The byte length differs from the string length for multi-byte characters."
-          ]
+          ],
+          "output": "> console.log(encoded);\n> console.log(encoded.length);\n> console.log(decoded);\n> console.log(utf16decoder.decode(utf16bytes));\nUint8Array(13) [72, 101, ...]\n13 bytes (not 9 chars!)\n\"Hello, 世界!\"\n\"Hi\""
         }
       ],
       "practice": {
@@ -175,7 +186,8 @@
           "Encode: <code>encoder.encode(\"Hello 🌍\")</code>.",
           "Check: <code>encoded.length</code> vs <code>\"Hello 🌍\".length</code>.",
           "Decode: <code>decoder.decode(encoded)</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "TextEncoder converts strings to UTF-8 bytes (Uint8Array).",

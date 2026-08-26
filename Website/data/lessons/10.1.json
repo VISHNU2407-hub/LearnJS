@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is XSS?",
-          "paragraphs": ["Cross-Site Scripting (XSS) allows attackers to inject malicious scripts into web pages viewed by other users. It's one of the most common web vulnerabilities."],
+          "paragraphs": [
+            "Cross-Site Scripting (XSS) allows attackers to inject malicious scripts into web pages viewed by other users. It's one of the most common web vulnerabilities."
+          ],
           "list": [
             "<b>Stored XSS</b> — malicious script saved on the server (e.g., in comments)",
             "<b>Reflected XSS</b> — script reflected in URL parameters",
@@ -38,7 +40,8 @@
           "Use <code>textContent</code> or DOMPurify to sanitize input.",
           "Test with <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> as input.",
           "Verify the script doesn't execute."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "XSS injects malicious scripts into your pages through user input.",
@@ -55,7 +58,9 @@
       "sections": [
         {
           "heading": "What is CSRF?",
-          "paragraphs": ["CSRF forces an authenticated user's browser to send requests to a site where they're logged in. The browser automatically includes cookies, so the request appears legitimate."],
+          "paragraphs": [
+            "CSRF forces an authenticated user's browser to send requests to a site where they're logged in. The browser automatically includes cookies, so the request appears legitimate."
+          ],
           "list": [
             "Attacker creates a form that submits to your site",
             "User's browser sends cookies automatically with the request",
@@ -84,7 +89,8 @@
           "Generate a token: <code>crypto.randomBytes(32).toString(\"hex\")</code>.",
           "Store in session and embed in a hidden form field.",
           "Verify on submission: <code>if (token !== sessionToken) reject</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "CSRF tricks authenticated users into performing unwanted actions.",
@@ -129,7 +135,8 @@
           "CORS: <code>origin: \"https://yourapp.com\"</code>.",
           "CSP: <code>script-src 'self'</code> blocks inline and external scripts.",
           "Test with a script from a different origin — it should be blocked."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "CORS controls which origins can access your API.",

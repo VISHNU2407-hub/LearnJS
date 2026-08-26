@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is localStorage?",
-          "paragraphs": ["localStorage lets you store key-value pairs in the browser. The data persists indefinitely — it survives page refreshes, browser restarts and even computer restarts until explicitly deleted."],
+          "paragraphs": [
+            "localStorage lets you store key-value pairs in the browser. The data persists indefinitely — it survives page refreshes, browser restarts and even computer restarts until explicitly deleted."
+          ],
           "list": [
             "Stores only strings — numbers and objects must be serialized",
             "Capacity: about 5–10 MB depending on the browser",
@@ -39,7 +41,8 @@
             "<code>getItem</code> returns <code>null</code> if the key doesn't exist.",
             "<code>clear()</code> removes everything — use <code>removeItem</code> for selective deletion.",
             "Data persists across browser sessions."
-          ]
+          ],
+          "output": "> console.log(name);\n> console.log(localStorage.length);\n> console.log(localStorage.key(0));\n\"Alex\"\n1\n\"username\""
         }
       ],
       "practice": {
@@ -48,7 +51,8 @@
           "Use <code>localStorage.setItem(\"name\", \"yourName\")</code>.",
           "Retrieve with <code>localStorage.getItem(\"name\")</code>.",
           "Display with <code>document.body.textContent</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "localStorage persists data across browser sessions — it never expires automatically.",
@@ -65,7 +69,9 @@
       "sections": [
         {
           "heading": "sessionStorage vs localStorage",
-          "paragraphs": ["sessionStorage works exactly like localStorage but with one key difference: data is cleared when the browser tab or window is closed. It's perfect for temporary state like form progress or wizard steps."],
+          "paragraphs": [
+            "sessionStorage works exactly like localStorage but with one key difference: data is cleared when the browser tab or window is closed. It's perfect for temporary state like form progress or wizard steps."
+          ],
           "list": [
             "Same API as localStorage: <code>setItem</code>, <code>getItem</code>, <code>removeItem</code>, <code>clear</code>",
             "Data is cleared when the tab/window closes",
@@ -85,7 +91,8 @@
             "Each browser tab maintains its own independent sessionStorage.",
             "Data is cleared automatically when the tab closes.",
             "Perfect for temporary, per-session data like multi-step forms."
-          ]
+          ],
+          "output": "> console.log(sessionStorage.getItem(\"step\"));\n\"2\""
         }
       ],
       "practice": {
@@ -94,7 +101,8 @@
           "Use <code>sessionStorage.setItem(\"step\", \"1\")</code> after each step.",
           "On page load, check <code>sessionStorage.getItem(\"step\")</code> to restore.",
           "Clear with <code>sessionStorage.removeItem(\"step\")</code> when done."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "sessionStorage has the same API as localStorage but data is tab-scoped and temporary.",
@@ -111,7 +119,9 @@
       "sections": [
         {
           "heading": "The serialization problem",
-          "paragraphs": ["localStorage only stores strings. To save arrays, objects or other complex data, you must serialize them to JSON strings with <code>JSON.stringify()</code> and deserialize them back with <code>JSON.parse()</code>."],
+          "paragraphs": [
+            "localStorage only stores strings. To save arrays, objects or other complex data, you must serialize them to JSON strings with <code>JSON.stringify()</code> and deserialize them back with <code>JSON.parse()</code>."
+          ],
           "list": [
             "<code>JSON.stringify(object)</code> — converts an object to a JSON string",
             "<code>JSON.parse(string)</code> — converts a JSON string back to an object",
@@ -131,7 +141,8 @@
             "<code>JSON.parse()</code> converts it back into a usable JavaScript array.",
             "Always use try/catch around <code>JSON.parse()</code> — corrupted data will crash your app.",
             "This pattern works for any JavaScript value: objects, arrays, nested structures."
-          ]
+          ],
+          "output": "> console.log(stored[0].text);\n\"Learn JS\""
         }
       ],
       "practice": {
@@ -140,7 +151,8 @@
           "Save: <code>localStorage.setItem(\"count\", JSON.stringify(count))</code>.",
           "Load: <code>let count = JSON.parse(localStorage.getItem(\"count\")) || 0</code>.",
           "The <code>|| 0</code> handles the case where nothing is stored yet."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "localStorage stores only strings — use <code>JSON.stringify()</code> to save objects.",

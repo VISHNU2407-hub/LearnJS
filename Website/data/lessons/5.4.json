@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What async does",
-          "paragraphs": ["The <code>async</code> keyword before a function declaration does two things: it lets you use <code>await</code> inside, and it automatically wraps the return value in a Promise."],
+          "paragraphs": [
+            "The <code>async</code> keyword before a function declaration does two things: it lets you use <code>await</code> inside, and it automatically wraps the return value in a Promise."
+          ],
           "list": [
             "An async function always returns a Promise",
             "If you return a plain value, it's wrapped in <code>Promise.resolve()</code>",
@@ -29,7 +31,8 @@
             "Returning 42 is the same as returning <code>Promise.resolve(42)</code>.",
             "Throwing an error creates a rejected Promise.",
             "This lets you use <code>await</code> to wait for other Promises inside."
-          ]
+          ],
+          "output": "> Loading...\n> Data loaded!"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Define: <code>async function getMessage() { return \"Hello\"; }</code>.",
           "Call: <code>getMessage().then(v => console.log(v))</code>.",
           "The output should be \"Hello\"."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The <code>async</code> keyword makes a function return a Promise automatically.",
@@ -55,7 +59,9 @@
       "sections": [
         {
           "heading": "How await works",
-          "paragraphs": ["The <code>await</code> keyword pauses the async function until the Promise resolves, then returns the resolved value. If the Promise rejects, it throws an error."],
+          "paragraphs": [
+            "The <code>await</code> keyword pauses the async function until the Promise resolves, then returns the resolved value. If the Promise rejects, it throws an error."
+          ],
           "list": [
             "<code>await promise</code> — pauses until the Promise resolves",
             "Returns the resolved value — no .then() needed",
@@ -75,7 +81,8 @@
             "The resolved value (the user object) is assigned directly to <code>user</code>.",
             "The code reads top-to-bottom like synchronous code.",
             "This is dramatically cleaner than .then() chaining."
-          ]
+          ],
+          "output": "> console.log(\"User: \" + user.name);\n\"User: Alex\""
         }
       ],
       "practice": {
@@ -84,7 +91,8 @@
           "Create a <code>delay(ms)</code> function that returns a Promise.",
           "Use <code>await delay(1000)</code> between steps.",
           "Total time should be about 2 seconds."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>await</code> pauses the async function until the Promise settles.",
@@ -101,7 +109,9 @@
       "sections": [
         {
           "heading": "try/catch with async/await",
-          "paragraphs": ["When an awaited Promise rejects, it throws an error. Wrap await calls in try/catch to handle errors gracefully — just like synchronous code."],
+          "paragraphs": [
+            "When an awaited Promise rejects, it throws an error. Wrap await calls in try/catch to handle errors gracefully — just like synchronous code."
+          ],
           "list": [
             "<code>try</code> — contains the code that might throw",
             "<code>catch (error)</code> — handles the error if one occurs",
@@ -121,7 +131,8 @@
             "The catch block receives any error from awaited Promises.",
             "finally runs whether the operation succeeded or failed.",
             "For parallel operations, wrap Promise.all in try/catch."
-          ]
+          ],
+          "output": "> Result: 42\n> Error: Invalid input"
         }
       ],
       "practice": {
@@ -130,7 +141,8 @@
           "Use <code>try { let data = await fetch(url); ... } catch (e) { ... }</code>.",
           "Simulate failure by fetching from an invalid URL.",
           "Log different messages for success and error cases."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "try/catch handles errors from awaited Promises — the same pattern as synchronous code.",
@@ -147,7 +159,9 @@
       "sections": [
         {
           "heading": "Top-level await",
-          "paragraphs": ["In ES modules (files with <code>type=\"module\"</code>), you can use <code>await</code> at the top level without wrapping it in an async function."],
+          "paragraphs": [
+            "In ES modules (files with <code>type=\"module\"</code>), you can use <code>await</code> at the top level without wrapping it in an async function."
+          ],
           "list": [
             "Only works in ES modules (<code>&lt;script type=\"module\"&gt;</code> or .mjs files)",
             "The module execution pauses until the awaited Promise resolves",
@@ -167,7 +181,8 @@
             "The module pauses execution until the Promise resolves.",
             "Importing modules wait for the imported module to finish its top-level await.",
             "This simplifies module initialization that requires async data."
-          ]
+          ],
+          "output": "> Module loaded"
         }
       ],
       "practice": {
@@ -176,7 +191,8 @@
           "Use <code>&lt;script type=\"module\" src=\"app.js\"&gt;</code>.",
           "In app.js: <code>let data = await fetch(url).then(r => r.json())</code>.",
           "No async function wrapper needed."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Top-level await lets you use await directly in ES modules.",

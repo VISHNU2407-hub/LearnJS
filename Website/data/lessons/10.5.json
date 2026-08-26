@@ -46,7 +46,8 @@
             "Singleton: ensures only one instance exists via static method.",
             "Builder: step-by-step construction with method chaining.",
             "Each pattern solves a specific object creation problem."
-          ]
+          ],
+          "output": "> console.log(db1 === db2);\ntrue"
         }
       ],
       "practice": {
@@ -55,7 +56,8 @@
           "Factory function: <code>createNotification(type, message)</code>.",
           "Each type has different properties: to, phone, token.",
           "Return the appropriate notification object."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Factory: creates objects without using 'new' — decouples creation from usage.",
@@ -94,7 +96,8 @@
             "Proxy: intercepts operations for logging, validation or caching.",
             "Decorator: wraps a function to add behavior without changing it.",
             "All three modify objects without changing their core implementation."
-          ]
+          ],
+          "output": "> Singleton: same instance\n> Factory: new instance each time\n> Module: exports object"
         }
       ],
       "practice": {
@@ -103,7 +106,8 @@
           "Use a Proxy with a get trap.",
           "Check if the result is cached before computing.",
           "Store results in a Map keyed by arguments."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Adapter: converts one interface to another — bridges incompatible APIs.",
@@ -142,7 +146,8 @@
             "Strategy: swap algorithms by passing different functions.",
             "Command: encapsulate actions as objects with execute/undo.",
             "Each pattern handles communication and behavior differently."
-          ]
+          ],
+          "output": "> console.log(sort([3, 1, 2], byNumber));\n> console.log(sort([\"b\", \"aa\", \"c\"], byLength));\n> console.log(calc.current);\n> console.log(calc.current);\n[1, 2, 3]\n[\"b\", \"c\", \"aa\"]\n5\n0"
         }
       ],
       "practice": {
@@ -151,7 +156,8 @@
           "on(event, fn) subscribes; off(event, fn) unsubscribes; emit(event, data) notifies.",
           "Store listeners in an object keyed by event name.",
           "Emit calls all registered listeners for that event."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "PubSub: decouples event producers from consumers — foundation of event-driven architecture.",
@@ -196,7 +202,8 @@
             "dispatch sends actions to the reducer — the only way to change state.",
             "The reducer is a pure function: (state, action) => newState.",
             "subscribe lets components react to state changes."
-          ]
+          ],
+          "output": "> Count: 1\n> Count: 2"
         }
       ],
       "practice": {
@@ -205,7 +212,8 @@
           "Create <code>createStore(reducer, initialState)</code>.",
           "Reducer handles INCREMENT, DECREMENT and RESET actions.",
           "Subscribe to log state changes on each dispatch."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The Store pattern provides a single source of truth for application state.",

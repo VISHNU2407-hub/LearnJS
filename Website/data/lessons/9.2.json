@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "Why bundlers?",
-          "paragraphs": ["Browsers can't efficiently load hundreds of separate JavaScript files. Bundlers combine them into optimized files, transforming modern syntax and handling dependencies."],
+          "paragraphs": [
+            "Browsers can't efficiently load hundreds of separate JavaScript files. Bundlers combine them into optimized files, transforming modern syntax and handling dependencies."
+          ],
           "list": [
             "Combine many files into one or a few optimized bundles",
             "Transform modern syntax for browser compatibility",
@@ -38,7 +40,8 @@
           "Run <code>npm create vite@latest my-app -- --template vanilla</code>.",
           "Start with <code>npm run dev</code>.",
           "Edit a module and observe the instant update."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Bundlers combine many files into optimized bundles for the browser.",
@@ -83,7 +86,8 @@
           "Install: <code>npm install -D @babel/core @babel/cli @babel/preset-env</code>.",
           "Create <code>.babelrc</code> with <code>{ \"presets\": [\"@babel/preset-env\"] }</code>.",
           "Compile: <code>npx babel input.js -o output.js</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Babel transforms modern JavaScript into compatible syntax for older browsers.",
@@ -128,7 +132,8 @@
           "Run <code>npm run build</code> and check the dist/ folder.",
           "Import only 1 of 5 functions from a module.",
           "Verify the unused functions are not in the bundle."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Minification removes whitespace and shortens names — reduces file size.",

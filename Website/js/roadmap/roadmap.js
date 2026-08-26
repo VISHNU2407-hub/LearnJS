@@ -366,10 +366,26 @@ function bindEvents() {
       // like the course sidebar). expandedNodes stays in sync so later
       // full renders (progress updates, filter changes) rebuild with
       // exactly the same open/closed state.
+      // Levels use a single-open accordion: opening one level closes all others.
       let changed = false;
       if (hasChildren) {
         changed = true;
         const open = !expandedNodes.has(id);
+
+        // Single-open accordion for levels: close all other levels when opening
+        if (open && type === "level") {
+          const toClose = [...expandedNodes].filter((nid) => nid !== id);
+          toClose.forEach((nodeId) => {
+            const otherRow = tree.querySelector(`[data-node="${nodeId}"][data-node-type="level"]`);
+            if (otherRow) {
+              otherRow.classList.remove("open");
+              const otherHead = otherRow.querySelector("[aria-expanded]");
+              if (otherHead) otherHead.setAttribute("aria-expanded", "false");
+            }
+            expandedNodes.delete(nodeId);
+          });
+        }
+
         if (open) expandedNodes.add(id);
         else expandedNodes.delete(id);
         row.classList.toggle("open", open);

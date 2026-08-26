@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "The rendering pipeline",
-          "paragraphs": ["When the browser renders a page, it goes through several steps: parsing HTML into the DOM, CSS into the CSSOM, combining them into a render tree, calculating layout, painting pixels, and compositing layers."],
+          "paragraphs": [
+            "When the browser renders a page, it goes through several steps: parsing HTML into the DOM, CSS into the CSSOM, combining them into a render tree, calculating layout, painting pixels, and compositing layers."
+          ],
           "list": [
             "<b>DOM</b> — HTML is parsed into a tree of nodes",
             "<b>CSSOM</b> — CSS rules are parsed into a tree of styles",
@@ -40,7 +42,8 @@
           "Thrashing: <code>for (let el of elements) { el.offsetWidth; el.style.width = \"100px\"; }</code>.",
           "Batched: read all widths first, then write all styles.",
           "Measure both approaches with performance.now()."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The rendering pipeline: DOM → CSSOM → Render Tree → Layout → Paint → Composite.",
@@ -95,7 +98,8 @@
           "Time innerHTML approach: <code>console.time(\"innerHTML\")</code>.",
           "Time DocumentFragment approach: <code>console.time(\"fragment\")</code>.",
           "Compare the timings."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Reflow recalculates layout (expensive); repaint redraws pixels (cheaper).",
@@ -140,7 +144,8 @@
           "Use <code>requestAnimationFrame(callback)</code> in a loop.",
           "Calculate progress: <code>(now - start) / duration</code>.",
           "Apply easing for a natural feel."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "requestAnimationFrame syncs your code with the browser's paint cycle.",

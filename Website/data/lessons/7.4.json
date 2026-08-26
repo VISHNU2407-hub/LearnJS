@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "Why Map over Object?",
-          "paragraphs": ["Objects only accept string/symbol keys. Maps accept any value — objects, functions, primitives — as keys. They also maintain insertion order and have a size property."],
+          "paragraphs": [
+            "Objects only accept string/symbol keys. Maps accept any value — objects, functions, primitives — as keys. They also maintain insertion order and have a size property."
+          ],
           "list": [
             "Map keys can be any type; Object keys are strings/symbols only",
             "Map has a <code>.size</code> property; objects need <code>Object.keys().length</code>",
@@ -29,7 +31,8 @@
             ".set() adds entries, .get() retrieves them, .has() checks existence.",
             ".size gives the count directly — no extra calculation needed.",
             "Maps are iterable — use for...of, forEach, or spread."
-          ]
+          ],
+          "output": "> console.log(map.get(\"name\"));\n> console.log(map.get(obj));\n> console.log(map.size);\n> console.log(map.has(\"name\"));\n\"Alex\"\n\"object as key!\"\n4\ntrue"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Use <code>map.set(userObj, \"admin\")</code>.",
           "Iterate with <code>for (let [key, val] of map)</code>.",
           "Check: <code>map.has(userObj)</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Maps accept any value as a key — objects, functions, primitives.",
@@ -75,7 +79,8 @@
             "Filter for intersection: keep values both sets have.",
             "Spread both sets for union: combine all values.",
             "Sets make these operations clean and readable."
-          ]
+          ],
+          "output": "> console.log(unique);\n> console.log(intersection);\n> console.log(union);\n[1, 2, 3, 4]\nSet {3, 4}\nSet {1, 2, 3, 4, 5, 6}"
         }
       ],
       "practice": {
@@ -84,7 +89,8 @@
           "Create sets: <code>new Set(arr1)</code> and <code>new Set(arr2)</code>.",
           "Common: <code>[...setA].filter(x => setB.has(x))</code>.",
           "Unique to A: <code>[...setA].filter(x => !setB.has(x))</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Sets store only unique values — duplicates are automatically removed.",
@@ -120,7 +126,8 @@
             "When the object is garbage collected, the WeakMap entry is automatically removed.",
             "This prevents memory leaks — no cleanup code needed.",
             "WeakMap is not iterable — it's designed for private/hidden data."
-          ]
+          ],
+          "output": "> console.log(user.checkPassword(\"secret123\"));\ntrue"
         }
       ],
       "practice": {
@@ -129,7 +136,8 @@
           "Create: <code>let timestamps = new WeakMap()</code>.",
           "Store: <code>timestamps.set(obj, Date.now())</code>.",
           "Retrieve: <code>timestamps.get(obj)</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "WeakMap and WeakSet hold weak references — entries are garbage collected when unreferenced.",

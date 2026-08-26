@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "How the event loop works",
-          "paragraphs": ["The event loop is a continuously running process that checks if the call stack is empty, then processes tasks from the microtask queue, then the macrotask queue."],
+          "paragraphs": [
+            "The event loop is a continuously running process that checks if the call stack is empty, then processes tasks from the microtask queue, then the macrotask queue."
+          ],
           "list": [
             "The call stack runs synchronous code one at a time",
             "When the stack is empty, the event loop checks the microtask queue",
@@ -29,7 +31,8 @@
             "Microtasks (Promise.then) run before macrotasks (setTimeout).",
             "Macrotasks run after all microtasks are cleared.",
             "This order is guaranteed by the event loop specification."
-          ]
+          ],
+          "output": "1, 4, 3, 2"
         }
       ],
       "practice": {
@@ -39,7 +42,8 @@
           "Promise.then and queueMicrotask are microtasks.",
           "setTimeout and setInterval are macrotasks.",
           "Microtasks always clear before the next macrotask."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The event loop coordinates between the call stack and task queues.",
@@ -75,7 +79,8 @@
             "queueMicrotask adds to the same microtask queue as Promises.",
             "Microtasks are processed in FIFO order until the queue is empty.",
             "Only then does the event loop pick up the next macrotask."
-          ]
+          ],
+          "output": "start, end, micro 1, micro 3, micro 2, macrotask"
         }
       ],
       "practice": {
@@ -84,7 +89,8 @@
           "Use <code>queueMicrotask(() => { ...; queueMicrotask(() => { ... }) })</code>.",
           "Add a setTimeout to show when the macrotask runs.",
           "All microtasks should appear before the macrotask."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Microtasks include Promise callbacks and queueMicrotask() calls.",
@@ -121,7 +127,8 @@
             "The microtask runs first because microtasks have higher priority.",
             "Macrotasks run one at a time, with microtask checks between each.",
             "Each timer callback is a separate macrotask."
-          ]
+          ],
+          "output": "sync, micro, timer 1, timer 2, timer 3"
         }
       ],
       "practice": {
@@ -130,7 +137,8 @@
           "Promise.then is a microtask — runs before all setTimeouts.",
           "setTimeouts are macrotasks — run in FIFO order after microtasks.",
           "Output: micro → timer 1 → timer 2 → timer 3."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Macrotasks include setTimeout, setInterval, I/O and UI events.",
@@ -166,7 +174,8 @@
             "Chunked work processes items in batches, yielding between chunks.",
             "requestAnimationFrame ensures each chunk runs before the next paint.",
             "This keeps the page responsive during heavy computation."
-          ]
+          ],
+          "output": "> Starting...\n> Processing..."
         }
       ],
       "practice": {
@@ -175,13 +184,14 @@
           "Process items in chunks of 100-200.",
           "Use <code>requestAnimationFrame(processChunk)</code> between chunks.",
           "Each chunk takes less than 16ms — the page stays responsive."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Each frame has a 16.6ms budget at 60fps.",
-            "Long tasks block rendering — causing jank and unresponsiveness.",
-            "Chunk heavy work with requestAnimationFrame to stay within frame budgets.",
-            "requestIdleCallback runs tasks during idle time between frames."
+        "Long tasks block rendering — causing jank and unresponsiveness.",
+        "Chunk heavy work with requestAnimationFrame to stay within frame budgets.",
+        "requestIdleCallback runs tasks during idle time between frames."
       ],
       "challenge": "Profile a page with heavy computation and use chunking to eliminate frame drops."
     }

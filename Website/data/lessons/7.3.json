@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is an iterator?",
-          "paragraphs": ["An iterator is an object with a <code>next()</code> method that returns <code>{ value, done }</code>. It produces values one at a time, tracking its position internally."],
+          "paragraphs": [
+            "An iterator is an object with a <code>next()</code> method that returns <code>{ value, done }</code>. It produces values one at a time, tracking its position internally."
+          ],
           "list": [
             "<code>next()</code> returns <code>{ value, done: false }</code> for each item",
             "Returns <code>{ done: true }</code> when iteration is complete",
@@ -29,7 +31,8 @@
             "The current value is tracked internally (closure).",
             "When done is true, iteration is complete.",
             "You call next() manually — for...of automates this."
-          ]
+          ],
+          "output": "> console.log(counter.next());\n> console.log(counter.next());\n> console.log(counter.next());\n> console.log(counter.next());\n{ value: 1, done: false }\n{ value: 2, done: false }\n{ value: 3, done: false }\n{ value: undefined, done: true }"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Store the string and an index in a closure.",
           "Each next() returns the letter at the current index.",
           "When index >= string.length, return { done: true }."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "An iterator has a next() method returning { value, done }.",
@@ -55,7 +59,9 @@
       "sections": [
         {
           "heading": "The iterable protocol",
-          "paragraphs": ["An iterable is an object that implements <code>[Symbol.iterator]</code>, returning an iterator. This lets your objects work with for...of, spread and destructuring."],
+          "paragraphs": [
+            "An iterable is an object that implements <code>[Symbol.iterator]</code>, returning an iterator. This lets your objects work with for...of, spread and destructuring."
+          ],
           "list": [
             "Implement <code>[Symbol.iterator]()</code> that returns an iterator",
             "The iterator must have a <code>next()</code> method",
@@ -84,7 +90,8 @@
           "Implement [Symbol.iterator]() that returns an iterator.",
           "Track the current index internally.",
           "Each next() returns the element at the current index."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Implement <code>[Symbol.iterator]</code> to make any object iterable.",
@@ -101,7 +108,9 @@
       "sections": [
         {
           "heading": "What are generators?",
-          "paragraphs": ["Generator functions use <code>function*</code> syntax and the <code>yield</code> keyword to produce values lazily. They pause execution at each yield and resume when the next value is requested."],
+          "paragraphs": [
+            "Generator functions use <code>function*</code> syntax and the <code>yield</code> keyword to produce values lazily. They pause execution at each yield and resume when the next value is requested."
+          ],
           "list": [
             "Declare with <code>function* name() { }</code>",
             "Call the function to get a generator object (doesn't execute yet)",
@@ -122,7 +131,8 @@
             "Each .next() runs until the next yield, producing a value.",
             "The function's state (variables, position) is preserved between yields.",
             "Generators are automatically iterable — use with for...of."
-          ]
+          ],
+          "output": "> console.log(gen.next());\n> console.log(gen.next());\n> console.log(gen.next());\n> console.log(gen.next());\n> console.log(num);\n{ value: 1, done: false }\n{ value: 2, done: false }\n{ value: 3, done: false }\n{ value: undefined, done: true }\n1, 2, 3, 4, 5"
         }
       ],
       "practice": {
@@ -131,7 +141,8 @@
           "Declare: <code>function* fibonacci()</code>.",
           "Track <code>a</code> and <code>b</code>, yield <code>a</code>, then update.",
           "Use: <code>for (let n of fibonacci()) { ... }</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Generators use <code>function*</code> and <code>yield</code> to produce values lazily.",
@@ -148,7 +159,9 @@
       "sections": [
         {
           "heading": "Async generators",
-          "paragraphs": ["Async generators use <code>async function*</code> and yield Promises. Use <code>for await...of</code> to iterate over them — each value is awaited before processing."],
+          "paragraphs": [
+            "Async generators use <code>async function*</code> and yield Promises. Use <code>for await...of</code> to iterate over them — each value is awaited before processing."
+          ],
           "list": [
             "<code>async function* name() { }</code> — declares an async generator",
             "<code>yield promise</code> — yields a Promise that is awaited",
@@ -168,7 +181,8 @@
             "Each yield produces a Promise that for await...of automatically awaits.",
             "The generator pauses until the next page is fetched.",
             "When the generator returns, the loop ends."
-          ]
+          ],
+          "output": "> Page 1: [1, 2, 3]\n> Page 2: [4, 5, 6]"
         }
       ],
       "practice": {
@@ -177,7 +191,8 @@
           "Use <code>async function* countdown()</code>.",
           "Use <code>await new Promise(r => setTimeout(r, 1000))</code> for delays.",
           "Yield each number: <code>yield i</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Async generators use <code>async function*</code> and yield Promises.",

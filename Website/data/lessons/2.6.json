@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is an object?",
-          "paragraphs": ["An object is a collection of properties, where each property has a key (name) and a value. Think of it like a real-world object — a car has a color, a brand, and a speed. In code, those become key-value pairs."],
+          "paragraphs": [
+            "An object is a collection of properties, where each property has a key (name) and a value. Think of it like a real-world object — a car has a color, a brand, and a speed. In code, those become key-value pairs."
+          ],
           "list": [
             "Keys are always strings (or symbols)",
             "Values can be any data type: strings, numbers, booleans, arrays, functions, or even other objects",
@@ -18,7 +20,9 @@
         },
         {
           "heading": "Creating objects",
-          "paragraphs": ["You create an object using literal syntax — just curly braces with key-value pairs separated by commas. Each key is followed by a colon and its value."],
+          "paragraphs": [
+            "You create an object using literal syntax — just curly braces with key-value pairs separated by commas. Each key is followed by a colon and its value."
+          ],
           "list": [
             "Use colons <code>:</code> to separate key from value",
             "Separate properties with commas <code>,</code>",
@@ -36,7 +40,8 @@
             "Each property is a key-value pair: <code>name: \"Alex\"</code>.",
             "Access values using dot notation: <code>person.name</code>.",
             "Objects can mix different value types — strings, numbers, and booleans in one object."
-          ]
+          ],
+          "output": "> console.log(person.name);   // \"Alex\"\n> console.log(person.age);    // 25\n> console.log(person.isStudent); // true\n\"Alex\"\n25\ntrue"
         },
         {
           "heading": "Adding and updating properties",
@@ -47,7 +52,8 @@
             "Add properties by assigning to a new key: <code>car.color = \"blue\"</code>.",
             "Update by reassigning to an existing key: <code>car.year = 2022</code>.",
             "Remove with <code>delete</code>: <code>delete car.color</code>."
-          ]
+          ],
+          "output": "> console.log(car);  // { brand: \"Toyota\", year: 2020, color: \"blue\" }\n> console.log(car.year);  // 2022\n> console.log(car);  // { brand: \"Toyota\", year: 2022 }\n{ brand: \"Toyota\", year: 2020, color: \"blue\" }\n2022\n{ brand: \"Toyota\", year: 2022 }"
         }
       ],
       "practice": {
@@ -57,7 +63,8 @@
           "Add genre: <code>book.genre = \"fiction\";</code>",
           "Update pages: <code>book.pages = 250;</code>"
         ],
-        "note": "Objects are mutable — you can add, change, and remove properties at any time."
+        "note": "Objects are mutable — you can add, change, and remove properties at any time.",
+        "compiler": true
       },
       "keyTakeaways": [
         "Objects store data as key-value pairs using curly braces <code>{}</code>.",
@@ -73,7 +80,9 @@
       "sections": [
         {
           "heading": "Dot notation",
-          "paragraphs": ["Dot notation is the simplest way to access properties — just put a dot after the object name and the key. It's clean and easy to read when you know the exact property name."],
+          "paragraphs": [
+            "Dot notation is the simplest way to access properties — just put a dot after the object name and the key. It's clean and easy to read when you know the exact property name."
+          ],
           "list": [
             "Use when the property name is known and simple",
             "Syntax: <code>object.propertyName</code>",
@@ -82,7 +91,9 @@
         },
         {
           "heading": "Bracket notation",
-          "paragraphs": ["Bracket notation uses square brackets and a string. It's more powerful because you can use variables, computed expressions, or keys with special characters."],
+          "paragraphs": [
+            "Bracket notation uses square brackets and a string. It's more powerful because you can use variables, computed expressions, or keys with special characters."
+          ],
           "list": [
             "Use when the key is stored in a variable",
             "Syntax: <code>object[\"propertyName\"]</code> or <code>object[variableName]</code>",
@@ -100,7 +111,8 @@
             "Dot notation is cleaner for known, simple keys like <code>firstName</code>.",
             "Bracket notation is required for keys with spaces like <code>\"last name\"</code>.",
             "Bracket notation with a variable lets you access properties dynamically — the key is determined at runtime."
-          ]
+          ],
+          "output": "> console.log(user.firstName);  // \"Alex\"\n> console.log(user.age);       // 30\n> console.log(user[\"last name\"]);  // \"Johnson\"\n> console.log(user[field]);  // 30\n\"Alex\"\n30\n\"Johnson\"\n30"
         },
         {
           "heading": "Dynamic property access",
@@ -111,7 +123,8 @@
             "When you use a variable in brackets, JavaScript looks up its value and uses that as the key.",
             "You can build key names dynamically: <code>\"font\" + \"Size\"</code> becomes <code>\"fontSize\"</code>.",
             "Bracket notation also works for adding new properties: <code>settings[\"maxWidth\"] = 1200</code>."
-          ]
+          ],
+          "output": "> console.log(settings[key]);  // \"dark\"\n> console.log(settings[property]);  // 14\n> console.log(settings.maxWidth);  // 1200\n\"dark\"\n14\n1200"
         }
       ],
       "practice": {
@@ -121,7 +134,8 @@
           "For the hyphenated key: <code>config[\"max-retries\"] = 3;</code>",
           "Dot notation can't handle the hyphen — that's why bracket notation exists."
         ],
-        "note": "Use dot notation by default — switch to bracket notation only when you need dynamic keys or keys with special characters."
+        "note": "Use dot notation by default — switch to bracket notation only when you need dynamic keys or keys with special characters.",
+        "compiler": true
       },
       "keyTakeaways": [
         "Dot notation (<code>obj.key</code>) is clean and preferred for known property names.",
@@ -137,7 +151,9 @@
       "sections": [
         {
           "heading": "What is destructuring?",
-          "paragraphs": ["Destructuring lets you pull values out of an object and assign them to variables in a single statement. Instead of writing <code>obj.name</code> repeatedly, you extract <code>name</code> once and use it directly."],
+          "paragraphs": [
+            "Destructuring lets you pull values out of an object and assign them to variables in a single statement. Instead of writing <code>obj.name</code> repeatedly, you extract <code>name</code> once and use it directly."
+          ],
           "list": [
             "Syntax: <code>const { name, age } = obj;</code>",
             "Creates variables matching the property names",
@@ -147,7 +163,9 @@
         },
         {
           "heading": "Shorthand property syntax",
-          "paragraphs": ["When creating an object, if the variable name matches the property name, you can skip the colon and value — just use the variable name."],
+          "paragraphs": [
+            "When creating an object, if the variable name matches the property name, you can skip the colon and value — just use the variable name."
+          ],
           "list": [
             "Instead of <code>{ name: name }</code>, write <code>{ name }</code>",
             "Instead of <code>{ age: age, role: role }</code>, write <code>{ age, role }</code>",
@@ -165,7 +183,8 @@
             "<code>const { name, age } = user;</code> creates two variables with values from the object.",
             "Renaming uses a colon after the key: <code>name: userName</code> means \"take user.name and put it in userName\".",
             "The original object is not modified — destructuring only reads values."
-          ]
+          ],
+          "output": "> console.log(name);  // \"Alex\"\n> console.log(age);   // 25\n> console.log(userName);  // \"Alex\"\n> console.log(location);  // \"New York\"\n\"Alex\"\n25\n\"Alex\"\n\"New York\""
         },
         {
           "heading": "Shorthand properties and defaults",
@@ -176,7 +195,8 @@
             "Shorthand: <code>{ name, age, role }</code> is the same as <code>{ name: name, age: age, role: role }</code>.",
             "Defaults: <code>port = 3000</code> means if port is missing, use 3000.",
             "Defaults only kick in for <code>undefined</code> values — they won't override <code>null</code>."
-          ]
+          ],
+          "output": "> console.log(user);  // { name: \"Alex\", age: 25, role: \"student\" }\n> console.log(port);   // 3000 (default)\n> console.log(debug);  // false (default)\n{ name: \"Alex\", age: 25, role: \"student\" }\n3000 (default)\nfalse (default)"
         }
       ],
       "practice": {
@@ -186,7 +206,8 @@
           "Shorthand: <code>let mySettings = { theme, fontSize, language };</code>",
           "This is how React components commonly pass props."
         ],
-        "note": "Destructuring with <code>const</code> prevents accidental reassignment of extracted values."
+        "note": "Destructuring with <code>const</code> prevents accidental reassignment of extracted values.",
+        "compiler": true
       },
       "keyTakeaways": [
         "Destructuring extracts object properties into variables: <code>const { name, age } = obj;</code>.",
@@ -202,7 +223,9 @@
       "sections": [
         {
           "heading": "Why convert objects to arrays?",
-          "paragraphs": ["Objects aren't arrays — you can't use forEach, map, or filter directly on them. But <code>Object.keys()</code>, <code>Object.values()</code>, and <code>Object.entries()</code> convert objects into arrays so you can use all array methods."],
+          "paragraphs": [
+            "Objects aren't arrays — you can't use forEach, map, or filter directly on them. But <code>Object.keys()</code>, <code>Object.values()</code>, and <code>Object.entries()</code> convert objects into arrays so you can use all array methods."
+          ],
           "list": [
             "<code>Object.keys(obj)</code> — returns an array of all property names (keys)",
             "<code>Object.values(obj)</code> — returns an array of all property values",
@@ -211,7 +234,9 @@
         },
         {
           "heading": "Working with the results",
-          "paragraphs": ["These methods return arrays, so you can chain array methods like map, filter, and forEach on them. This is the standard way to iterate over object properties in modern JavaScript."],
+          "paragraphs": [
+            "These methods return arrays, so you can chain array methods like map, filter, and forEach on them. This is the standard way to iterate over object properties in modern JavaScript."
+          ],
           "list": [
             "Use <code>.map()</code> to transform keys or values",
             "Use <code>.filter()</code> to keep specific entries",
@@ -229,7 +254,8 @@
             "<code>Object.keys()</code> gives you the property names as an array.",
             "<code>Object.values()</code> gives you the property values as an array.",
             "<code>Object.entries()</code> gives you [key, value] pairs — useful when you need both."
-          ]
+          ],
+          "output": "> console.log(Object.keys(user));\n[\"name\", \"age\", \"city\"]\n> console.log(Object.values(user));\n[\"Alex\", 25, \"New York\"]\n> console.log(Object.entries(user));\n[[\"name\", \"Alex\"], [\"age\", 25], [\"city\", \"New York\"]]"
         },
         {
           "heading": "Iterating with entries",
@@ -240,7 +266,8 @@
             "<code>Object.entries(scores)</code> creates an array of [subject, score] pairs.",
             "Destructuring in forEach: <code>([subject, score])</code> unpacks each pair.",
             "<code>.filter()</code> works on the array, keeping only pairs where score > 90."
-          ]
+          ],
+          "output": "> for (const [key, value] of Object.entries(user)) {\n>   console.log(key + \": \" + value);\n> }\nname: Alex\nage: 25\ncity: New York"
         }
       ],
       "practice": {
@@ -250,7 +277,8 @@
           "Filter: <code>Object.entries(prices).filter(([fruit, price]) => price < 1)</code>",
           "Remember: entries gives you [key, value] arrays — destructure them!"
         ],
-        "note": "Object.keys and Object.values are simpler when you only need one half of the data."
+        "note": "Object.keys and Object.values are simpler when you only need one half of the data.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>Object.keys()</code> returns property names, <code>Object.values()</code> returns values, <code>Object.entries()</code> returns [key, value] pairs.",
@@ -266,7 +294,9 @@
       "sections": [
         {
           "heading": "What is JSON?",
-          "paragraphs": ["JSON (JavaScript Object Notation) is a text format that looks like a JavaScript object but is just a string. APIs send data as JSON strings, and you need to convert them to objects to use them in your code."],
+          "paragraphs": [
+            "JSON (JavaScript Object Notation) is a text format that looks like a JavaScript object but is just a string. APIs send data as JSON strings, and you need to convert them to objects to use them in your code."
+          ],
           "list": [
             "JSON only supports strings, numbers, booleans, null, arrays, and objects",
             "Keys must be double-quoted strings: <code>{\"name\": \"Alex\"}</code>",
@@ -292,7 +322,8 @@
             "<code>JSON.parse()</code> turns the string into a real object you can use with dot notation.",
             "<code>JSON.stringify()</code> turns an object into a string — useful for sending to a server or saving.",
             "The stringified version has no spaces between properties by default."
-          ]
+          ],
+          "output": "> console.log(user.name);  // \"Alex\"\n> console.log(user.age);   // 25\n> console.log(json);  // '{\"name\":\"Sam\",\"age\":30}'\n> console.log(typeof json);  // \"string\"\n\"Alex\"\n25\n'{\"name\":\"Sam\",\"age\":30}'\n\"string\""
         },
         {
           "heading": "Pretty-printing and nested objects",
@@ -303,7 +334,8 @@
             "Adding <code>null, 2</code> as arguments to stringify formats the output with 2-space indentation.",
             "JSON handles nested objects and arrays perfectly.",
             "You can round-trip data: stringify then parse to get a deep copy."
-          ]
+          ],
+          "output": "> console.log(pretty);\n> console.log(parsed.users[0].name);  // \"Alex\"\n\"Alex\""
         }
       ],
       "practice": {
@@ -313,7 +345,8 @@
           "Stringify: <code>let str = JSON.stringify(original);</code>",
           "Parse: <code>let copy = JSON.parse(str);</code>"
         ],
-        "note": "JSON.stringify can't handle functions, undefined, or symbols — they get dropped or converted."
+        "note": "JSON.stringify can't handle functions, undefined, or symbols — they get dropped or converted.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>JSON.parse()</code> converts a JSON string into a JavaScript object.",
@@ -329,7 +362,9 @@
       "sections": [
         {
           "heading": "Why use the URL API?",
-          "paragraphs": ["URLs are strings, but manually parsing them with string methods is error-prone. The built-in <code>URL</code> and <code>URLSearchParams</code> APIs give you a clean, structured way to work with URLs — extracting parts, modifying parameters, and building new URLs."],
+          "paragraphs": [
+            "URLs are strings, but manually parsing them with string methods is error-prone. The built-in <code>URL</code> and <code>URLSearchParams</code> APIs give you a clean, structured way to work with URLs — extracting parts, modifying parameters, and building new URLs."
+          ],
           "list": [
             "<code>new URL(string)</code> — parses a URL string into parts",
             "<code>URLSearchParams</code> — reads and modifies query parameters",
@@ -358,7 +393,8 @@
             "<code>new URL()</code> automatically parses the string into structured parts.",
             "Each part is accessible as a property — no manual string splitting needed.",
             "This works with any valid URL, even complex ones with ports and fragments."
-          ]
+          ],
+          "output": "> console.log(url.hostname);  // \"example.com\"\n> console.log(url.port);      // \"8080\"\n> console.log(url.pathname);  // \"/products\"\n> console.log(url.search);    // \"?color=red&size=large\"\n> console.log(url.hash);      // \"#reviews\"\n> console.log(url.origin);    // \"https://example.com:8080\"\n\"example.com\"\n\"8080\"\n\"/products\"\n\"?color=red&size=large\"\n\"#reviews\"\n\"https://example.com:8080\""
         },
         {
           "heading": "Working with query parameters",
@@ -369,7 +405,8 @@
             "<code>url.searchParams</code> gives you a URLSearchParams object for easy access.",
             "<code>.get()</code> reads a single parameter; <code>.set()</code> adds or updates one.",
             "Changes to searchParams automatically update the URL string (<code>.href</code>)."
-          ]
+          ],
+          "output": "> console.log(params.get(\"q\"));       // \"javascript\"\n> console.log(params.get(\"page\"));    // \"2\"\n> console.log(url.href);\n> console.log(url.href);\n> console.log(params.has(\"q\"));  // true\n\"javascript\"\n\"2\"\ntrue"
         }
       ],
       "practice": {
@@ -379,7 +416,8 @@
           "Pathname: <code>url.pathname</code> gives \"/users\".",
           "Add param: <code>url.searchParams.set(\"sort\", \"name\");</code>"
         ],
-        "note": "URLSearchParams also supports .append(), .keys(), .values(), and .forEach() for iteration."
+        "note": "URLSearchParams also supports .append(), .keys(), .values(), and .forEach() for iteration.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>new URL()</code> parses a URL string into a structured object with hostname, pathname, search, and more.",

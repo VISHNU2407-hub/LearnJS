@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is scope?",
-          "paragraphs": ["Scope determines where a variable can be accessed in your code. Think of it as boundaries — a variable lives in its scope and can be reached from nested scopes, but not from outside."],
+          "paragraphs": [
+            "Scope determines where a variable can be accessed in your code. Think of it as boundaries — a variable lives in its scope and can be reached from nested scopes, but not from outside."
+          ],
           "list": [
             "<b>Global scope</b> — variables declared outside any function or block; accessible everywhere",
             "<b>Function scope</b> — variables declared inside a function; only accessible within that function",
@@ -29,7 +31,8 @@
             "var is function-scoped — it leaks out of blocks into the function.",
             "Global variables are accessible from any scope.",
             "Inner scopes can access outer scopes, but not the reverse."
-          ]
+          ],
+          "output": "> console.log(global);\n> console.log(outerVar);\n> console.log(blockVar);\n> console.log(funcVar);\n✓ accessible\n✓ accessible\n✓ accessible\n✓ accessible (var is function-scoped)"
         }
       ],
       "practice": {
@@ -39,7 +42,8 @@
           "Declare a function-scoped variable with let inside a function.",
           "Declare a block-scoped variable inside an if statement.",
           "Try accessing each from the others."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Global scope variables are accessible everywhere in your code.",
@@ -56,7 +60,9 @@
       "sections": [
         {
           "heading": "How scope lookup works",
-          "paragraphs": ["When JavaScript encounters a variable, it searches from the current scope outward. If the variable isn't found in any scope up to the global scope, it throws a ReferenceError. This chain is called the <b>scope chain</b>."],
+          "paragraphs": [
+            "When JavaScript encounters a variable, it searches from the current scope outward. If the variable isn't found in any scope up to the global scope, it throws a ReferenceError. This chain is called the <b>scope chain</b>."
+          ],
           "list": [
             "JavaScript searches inward-to-outward: current scope → parent → grandparent → global",
             "Once found, the search stops — inner scopes can shadow outer variables",
@@ -76,7 +82,8 @@
             "It finds <code>b</code> in <code>outer</code>'s scope and <code>a</code> in global scope.",
             "The scope chain is: inner → outer → global.",
             "JavaScript resolves variables by walking up this chain until it finds a match."
-          ]
+          ],
+          "output": "> console.log(a + b + c);\n6 — looks up the chain"
         }
       ],
       "practice": {
@@ -85,7 +92,8 @@
           "Create global, function, and inner function with variables at each level.",
           "From the innermost function, log the global variable.",
           "JavaScript walks up: inner → outer → global to find it."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Scope lookup goes from inner to outer until the variable is found or a ReferenceError is thrown.",
@@ -102,7 +110,9 @@
       "sections": [
         {
           "heading": "What is hoisting?",
-          "paragraphs": ["Hoisting is JavaScript's behavior of moving declarations to the top of their scope during the creation phase. But not all declarations are hoisted the same way."],
+          "paragraphs": [
+            "Hoisting is JavaScript's behavior of moving declarations to the top of their scope during the creation phase. But not all declarations are hoisted the same way."
+          ],
           "list": [
             "Function declarations are fully hoisted — name and body are available immediately",
             "var is hoisted but initialized as <code>undefined</code>",
@@ -122,7 +132,8 @@
             "var variables are hoisted but start as <code>undefined</code> — confusing but not an error.",
             "let/const are in the TDZ — accessing them throws a ReferenceError.",
             "Function expressions follow their variable type — a let function expression is in TDZ."
-          ]
+          ],
+          "output": "> console.log(x);\nundefined (not an error)"
         }
       ],
       "practice": {
@@ -131,7 +142,8 @@
           "Call a function declaration before its definition line.",
           "Log a var before its declaration — gets undefined.",
           "Log a let before its declaration — throws ReferenceError."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Function declarations are fully hoisted — you can call them before they appear in the code.",
@@ -148,7 +160,9 @@
       "sections": [
         {
           "heading": "What is the TDZ?",
-          "paragraphs": ["When JavaScript creates a let or const variable during the creation phase, it reserves the name but doesn't initialize it. From that moment until the declaration line executes, the variable is in the <b>Temporal Dead Zone</b> — reading it throws a ReferenceError."],
+          "paragraphs": [
+            "When JavaScript creates a let or const variable during the creation phase, it reserves the name but doesn't initialize it. From that moment until the declaration line executes, the variable is in the <b>Temporal Dead Zone</b> — reading it throws a ReferenceError."
+          ],
           "list": [
             "TDZ starts when the scope is entered (creation phase)",
             "TDZ ends when the declaration line is executed",
@@ -169,7 +183,8 @@
             "Block-scoped let/const variables have their own TDZ within their block.",
             "typeof is safe for truly undeclared variables but still fails in the TDZ.",
             "var avoids the TDZ entirely by initializing as <code>undefined</code>."
-          ]
+          ],
+          "output": "> console.log(a);\n> console.log(b);\n> console.log(typeof c);\n> console.log(e);\nReferenceError!\nReferenceError!\nundefined (typeof is safe for undeclared vars)\nundefined (not an error)"
         }
       ],
       "practice": {
@@ -178,7 +193,8 @@
           "Try <code>console.log(x)</code> before <code>let x = 5</code>.",
           "Try <code>typeof x</code> before the declaration.",
           "Try accessing a block-scoped let inside its block before the declaration line."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The TDZ prevents accessing let/const variables before they're initialized.",

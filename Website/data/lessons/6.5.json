@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "What is ESLint?",
-          "paragraphs": ["ESLint analyzes your JavaScript code without running it. It catches common errors, enforces coding conventions and helps maintain consistent code across your team."],
+          "paragraphs": [
+            "ESLint analyzes your JavaScript code without running it. It catches common errors, enforces coding conventions and helps maintain consistent code across your team."
+          ],
           "list": [
             "Catches errors before they reach production",
             "Enforces consistent coding style across a team",
@@ -38,7 +40,8 @@
           "Install: <code>npm install -D eslint</code>.",
           "Init: <code>npx eslint --init</code>.",
           "Add a variable that's never used and test the rule."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "ESLint catches errors and enforces style without running your code.",
@@ -55,7 +58,9 @@
       "sections": [
         {
           "heading": "What is Prettier?",
-          "paragraphs": ["Prettier is an opinionated code formatter. It rewrites your code to follow a consistent style — regardless of how you originally wrote it."],
+          "paragraphs": [
+            "Prettier is an opinionated code formatter. It rewrites your code to follow a consistent style — regardless of how you originally wrote it."
+          ],
           "list": [
             "Formats code on save in VS Code",
             "Supports JavaScript, HTML, CSS, JSON, Markdown and more",
@@ -84,7 +89,8 @@
           "Install the Prettier VS Code extension.",
           "Add <code>\"editor.formatOnSave\": true</code> to settings.",
           "Write messy code and save — observe the formatting."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Prettier automatically formats code to a consistent style.",
@@ -101,7 +107,9 @@
       "sections": [
         {
           "heading": "Pre-commit hooks",
-          "paragraphs": ["Pre-commit hooks run automatically before each git commit. They can lint, format and test your code, preventing bad code from being committed."],
+          "paragraphs": [
+            "Pre-commit hooks run automatically before each git commit. They can lint, format and test your code, preventing bad code from being committed."
+          ],
           "list": [
             "<b>Husky</b> — sets up git hooks in your project",
             "<b>lint-staged</b> — runs linters only on staged files (faster)",
@@ -131,7 +139,8 @@
           "Run <code>npx husky init</code>.",
           "Add lint-staged config to package.json.",
           "Test by committing a file with lint errors."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Husky sets up git hooks that run automatically before commits.",

@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "Promise.all()",
-          "paragraphs": ["<code>Promise.all()</code> takes an array of Promises and returns a new Promise that resolves when all of them resolve. If any one rejects, the whole thing rejects."],
+          "paragraphs": [
+            "<code>Promise.all()</code> takes an array of Promises and returns a new Promise that resolves when all of them resolve. If any one rejects, the whole thing rejects."
+          ],
           "list": [
             "Takes an array of Promises",
             "Resolves with an array of results (same order as input)",
@@ -29,7 +31,8 @@
             "Sequential awaits wait for each to finish before starting the next.",
             "Promise.all is dramatically faster when requests are independent.",
             "If any request fails, Promise.all rejects immediately."
-          ]
+          ],
+          "output": "> User: { name: \"Alex\" }\n> Posts: [{ id: 1 }, { id: 2 }]"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Use <code>Promise.all([fetch(url1), fetch(url2), fetch(url3)])</code>.",
           "Wrap in <code>console.time()</code> / <code>console.timeEnd()</code>.",
           "Compare parallel vs sequential total time."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Promise.all runs multiple Promises in parallel.",
@@ -55,7 +59,9 @@
       "sections": [
         {
           "heading": "Promise.allSettled()",
-          "paragraphs": ["<code>Promise.allSettled()</code> waits for all Promises to complete (fulfilled or rejected) and returns the status of each. It never rejects."],
+          "paragraphs": [
+            "<code>Promise.allSettled()</code> waits for all Promises to complete (fulfilled or rejected) and returns the status of each. It never rejects."
+          ],
           "list": [
             "Returns an array of status objects: <code>{status: \"fulfilled\", value}</code> or <code>{status: \"rejected\", reason}</code>",
             "Never rejects — always resolves",
@@ -75,7 +81,8 @@
             "Each result has a status: \"fulfilled\" or \"rejected\".",
             "Fulfilled results have a <code>value</code>; rejected have a <code>reason</code>.",
             "No matter how many fail, the function resolves with all results."
-          ]
+          ],
+          "output": "> Fulfilled: { name: \"Alex\" }\n> Rejected: Error: Failed"
         }
       ],
       "practice": {
@@ -84,7 +91,8 @@
           "Include one intentionally invalid URL.",
           "Check <code>result.status === \"fulfilled\"</code> for successes.",
           "Check <code>result.status === \"rejected\"</code> for failures."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Promise.allSettled waits for all Promises to settle — it never rejects.",
@@ -128,7 +136,8 @@
             "The timeout pattern races fetch against a timer — if the timer wins, it rejects.",
             "Promise.any returns the first SUCCESS — rejections are ignored.",
             "Promise.any only rejects if ALL Promises reject."
-          ]
+          ],
+          "output": "> console.log(data);\nfirst successful response"
         }
       ],
       "practice": {
@@ -137,7 +146,8 @@
           "Create a timeout Promise: <code>new Promise((_, rej) => setTimeout(() => rej(new Error(\"Timeout\")), 3000))</code>.",
           "Race it against the fetch Promise.",
           "If the timeout wins, the error is thrown."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Promise.race returns the first to settle — success or failure.",

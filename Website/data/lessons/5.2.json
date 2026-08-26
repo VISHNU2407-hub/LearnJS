@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "How async callbacks work",
-          "paragraphs": ["A callback is a function you pass to another function to be called later. In async operations, the callback runs after the background work finishes — not when you pass it."],
+          "paragraphs": [
+            "A callback is a function you pass to another function to be called later. In async operations, the callback runs after the background work finishes — not when you pass it."
+          ],
           "list": [
             "The callback is registered immediately",
             "The async work happens in the background",
@@ -29,7 +31,8 @@
             "setTimeout schedules the callback on the event queue, not immediately.",
             "The main thread finishes all synchronous code first.",
             "This proves async callbacks always wait for the call stack to clear."
-          ]
+          ],
+          "output": "> Starting...\n> Middle\n> End\n> Async result (after 1s)"
         }
       ],
       "practice": {
@@ -38,7 +41,8 @@
           "Even 0ms doesn't mean immediate execution.",
           "The order depends on when each is queued and when the stack is free.",
           "Synchronous code always runs before any async callbacks."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Callbacks are functions passed to be called when async work completes.",
@@ -55,7 +59,9 @@
       "sections": [
         {
           "heading": "Error-first callbacks",
-          "paragraphs": ["In Node.js, the convention is to pass error-first callbacks: the first argument is always an error (or null on success), and subsequent arguments are the result."],
+          "paragraphs": [
+            "In Node.js, the convention is to pass error-first callbacks: the first argument is always an error (or null on success), and subsequent arguments are the result."
+          ],
           "list": [
             "Callback signature: <code>(error, result) => {}</code>",
             "If no error: <code>error</code> is null, <code>result</code> contains the data",
@@ -75,7 +81,8 @@
             "On success, error is null and result contains the data.",
             "On failure, error is an Error object and result is null.",
             "Always check for errors before using the result."
-          ]
+          ],
+          "output": "> File loaded: { data: \"hello\" }\n> Error: File not found"
         }
       ],
       "practice": {
@@ -84,7 +91,8 @@
           "Use setTimeout to simulate async work.",
           "If ID exists, call <code>callback(null, user)</code>.",
           "If ID doesn't exist, call <code>callback(new Error(\"Not found\"), null)</code>."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Error-first callbacks put the error as the first argument.",
@@ -101,7 +109,9 @@
       "sections": [
         {
           "heading": "Callback hell",
-          "paragraphs": ["When multiple async operations depend on each other, callbacks nest inside callbacks. The result is deeply indented, hard to read, and difficult to debug — the infamous \"callback hell\" or \"pyramid of doom.\""],
+          "paragraphs": [
+            "When multiple async operations depend on each other, callbacks nest inside callbacks. The result is deeply indented, hard to read, and difficult to debug — the infamous \"callback hell\" or \"pyramid of doom.\""
+          ],
           "list": [
             "Deep nesting makes code hard to follow",
             "Error handling must be repeated at every level",
@@ -121,7 +131,8 @@
             "Error handling is repeated at every level — verbose and error-prone.",
             "The Promise version is flat and readable — each step on its own line.",
             "Promises solve callback hell by chaining async operations."
-          ]
+          ],
+          "output": "> Step 1 done\n> Step 2 done\n> Step 3 done"
         }
       ],
       "practice": {
@@ -130,7 +141,8 @@
           "Replace each callback with a <code>.then()</code> chain.",
           "Move error handling to a single <code>.catch()</code> at the end.",
           "Notice how much easier the flat chain is to read."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Callback hell occurs when async operations nest deeply.",

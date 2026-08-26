@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "Why custom errors?",
-          "paragraphs": ["Native Error objects only carry a message. Custom error classes let you add properties, check error types, and handle different failure scenarios with specific logic."],
+          "paragraphs": [
+            "Native Error objects only carry a message. Custom error classes let you add properties, check error types, and handle different failure scenarios with specific logic."
+          ],
           "list": [
             "Extend Error with <code>class MyError extends Error</code>",
             "Set the message via <code>super(message)</code>",
@@ -38,7 +40,8 @@
           "Extend Error: <code>class NetworkError extends Error</code>.",
           "Add <code>this.status</code> and <code>this.url</code> in the constructor.",
           "Check <code>e instanceof NetworkError</code> in the catch block."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Custom errors extend Error with domain-specific properties.",
@@ -83,7 +86,8 @@
           "Properties: <code>this.field</code>, <code>this.value</code>, <code>this.rule</code>.",
           "Throw: <code>throw new ValidationError(\"email\", value, \"must contain @\")</code>.",
           "Handle: display field-specific error messages."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "Domain errors capture the specific context of each failure type.",
@@ -100,7 +104,9 @@
       "sections": [
         {
           "heading": "Error cause chaining",
-          "paragraphs": ["When you catch an error and throw a new one, the original context is lost. The <code>cause</code> property (ES2022) preserves the original error, creating a chain of causation."],
+          "paragraphs": [
+            "When you catch an error and throw a new one, the original context is lost. The <code>cause</code> property (ES2022) preserves the original error, creating a chain of causation."
+          ],
           "list": [
             "<code>new Error(msg, { cause: originalError })</code> — preserves the root cause",
             "<code>error.cause</code> — access the original error",
@@ -120,7 +126,8 @@
             "Access it with <code>error.cause</code> — it's a standard Error property.",
             "You can chain multiple levels for deep error propagation.",
             "This is invaluable for debugging production errors."
-          ]
+          ],
+          "output": "> console.log(e.message);\n> console.log(e.cause.message);\n> console.log(e.cause);\n\"Failed to load user\"\n\"HTTP 404\" (original error)\nfull original Error object"
         }
       ],
       "practice": {
@@ -129,7 +136,8 @@
           "Catch the original error and throw: <code>new AppError(msg, { cause: originalError })</code>.",
           "In the outer catch, log both <code>e.message</code> and <code>e.cause.message</code>.",
           "Verify the full chain is preserved."
-        ]
+        ],
+        "compiler": true
       },
       "keyTakeaways": [
         "The <code>cause</code> property preserves the original error when wrapping errors.",
