@@ -164,6 +164,7 @@ export const LESSON_CONTENT = {
     ],
 
     practice: {
+      compiler: true,
       task: "Create a button that displays an alert saying \u201cHello JavaScript!\u201d when clicked.",
       hints: [
         "Add a <code>&lt;button&gt;</code> element to your HTML file.",
@@ -307,6 +308,7 @@ export const LESSON_CONTENT = {
     ],
 
     practice: {
+      compiler: true,
       intro: "Run these three mini-tasks in your browser console:",
       tasks: [
         { text: 'Print <code>"Hello JavaScript!"</code> in the console.', expected: "Hello JavaScript!" },
@@ -472,6 +474,7 @@ export const LESSON_CONTENT = {
     ],
 
     practice: {
+      compiler: true,
       task: "Create an HTML page with an <code>&lt;h1&gt;</code> and a <code>&lt;button&gt;</code>. Add an external <code>app.js</code> that uses <code>defer</code> and turns the heading green when the button is clicked.",
       hints: [
         "Create two files: <code>index.html</code> and <code>app.js</code> in the same folder.",
@@ -628,6 +631,7 @@ export const LESSON_CONTENT = {
     ],
 
     practice: {
+      compiler: true,
       task: "Write code in the console that creates a variable <code>price</code> with the value <code>20</code>, then a variable <code>quantity</code> with the value <code>3</code>, then prints their product using <code>console.log(price * quantity)</code>.",
       hints: [
         "Start with <code>let price = 20;</code>.",
@@ -1051,6 +1055,7 @@ export const LESSON_CONTENT = {
     ],
 
     practice: {
+      compiler: true,
       task: "(1) Install Node.js and verify with <code>node --version</code>. (2) Create <code>greet.js</code> that prints your name. (3) Create a second file <code>math.js</code> that calculates <code>(10 + 5) * 2</code> and prints the result. (4) Run both from the terminal.",
       hints: [
         "For <code>greet.js</code>: <code>console.log(\"Hello, my name is YourName!\")</code>",

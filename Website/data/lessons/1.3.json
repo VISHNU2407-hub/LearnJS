@@ -9,23 +9,33 @@
       "sections": [
         {
           "heading": "What is a variable?",
-          "paragraphs": ["A variable is a <b>named container</b> that holds a value. Think of it like a labeled box: the label is the variable name, and the box stores whatever you put inside. Variables let your program remember data so you can use it later — without variables, every piece of information would vanish after one line of code."]
+          "paragraphs": [
+            "A variable is a <b>named container</b> that holds a value. Think of it like a labeled box: the label is the variable name, and the box stores whatever you put inside. Variables let your program remember data so you can use it later — without variables, every piece of information would vanish after one line of code."
+          ]
         },
         {
           "heading": "Why variables matter",
-          "paragraphs": ["Without variables, you could not do anything useful in programming. You need variables to: remember a user's name, keep score in a game, store a price for calculation, track whether a checkbox is checked. Every program, from a tiny script to a massive app, stores and retrieves data using variables."]
+          "paragraphs": [
+            "Without variables, you could not do anything useful in programming. You need variables to: remember a user's name, keep score in a game, store a price for calculation, track whether a checkbox is checked. Every program, from a tiny script to a massive app, stores and retrieves data using variables."
+          ]
         },
         {
           "heading": "The three keywords: let, const, and var",
-          "paragraphs": ["JavaScript gives you three keywords to create variables: <code>let</code>, <code>const</code>, and <code>var</code>. In modern JavaScript, you should use <b>let</b> and <b>const</b>. The old keyword <code>var</code> still works but has confusing behavior — we will cover why to avoid it in lesson 1.3.3."]
+          "paragraphs": [
+            "JavaScript gives you three keywords to create variables: <code>let</code>, <code>const</code>, and <code>var</code>. In modern JavaScript, you should use <b>let</b> and <b>const</b>. The old keyword <code>var</code> still works but has confusing behavior — we will cover why to avoid it in lesson 1.3.3."
+          ]
         },
         {
           "heading": "Declaring with let",
-          "paragraphs": ["<code>let</code> creates a variable whose value can be changed later. Use <code>let</code> when you know the value will be updated — like a score counter, a timer, or a user input that changes."]
+          "paragraphs": [
+            "<code>let</code> creates a variable whose value can be changed later. Use <code>let</code> when you know the value will be updated — like a score counter, a timer, or a user input that changes."
+          ]
         },
         {
           "heading": "Declaring with const",
-          "paragraphs": ["<code>const</code> creates a variable that <b>cannot be reassigned</b> after its initial value is set. Use <code>const</code> by default — it tells anyone reading your code that this value is not meant to change. Only switch to <code>let</code> when you genuinely need to update the value."]
+          "paragraphs": [
+            "<code>const</code> creates a variable that <b>cannot be reassigned</b> after its initial value is set. Use <code>const</code> by default — it tells anyone reading your code that this value is not meant to change. Only switch to <code>let</code> when you genuinely need to update the value."
+          ]
         }
       ],
       "codeExamples": [
@@ -34,6 +44,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let score = 0;\nconsole.log(score);  // 0\n\nscore = 10;\nconsole.log(score);  // 10\n\nconst playerName = \"Alex\";\nconsole.log(playerName);  // Alex",
+          "output": "> let score = 0;\n> console.log(score);\n0\n> score = 10;\n> console.log(score);\n10\n> const playerName = \"Alex\";\n> console.log(playerName);\nAlex",
           "explanation": [
             "<code>let score = 0;</code> creates a variable called <code>score</code> and puts the number <code>0</code> inside it.",
             "The second line <code>score = 10;</code> <b>replaces</b> the old value with 10. That is what <code>let</code> allows — changing the value later.",
@@ -45,6 +56,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let name = \"Vishnu\";          // string (text)\nlet age = 25;                   // number\nlet isStudent = true;           // boolean (true/false)\n\nconsole.log(name);\nconsole.log(age);\nconsole.log(isStudent);",
+          "output": "> let name = \"Vishnu\";\n> let age = 25;\n> let isStudent = true;\n> console.log(name);\nVishnu\n> console.log(age);\n25\n> console.log(isStudent);\ntrue",
           "explanation": [
             "Variables can hold different <b>types</b> of data. A <b>string</b> is text wrapped in quotes, a <b>number</b> is numeric, and a <b>boolean</b> is either <code>true</code> or <code>false</code>.",
             "You do not need to declare the type — JavaScript figures it out from the value you assign. This is called <b>dynamic typing</b>."
@@ -58,7 +70,8 @@
           "Reassign with <code>temperature = 35;</code> and print again.",
           "Create <code>const pi = 3.14;</code> and print it. Notice you cannot reassign a const."
         ],
-        "note": "Try reassigning the const variable to see the TypeError you get."
+        "note": "Try reassigning the const variable to see the TypeError you get.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>let</code> creates a variable that can be reassigned — use it when the value will change.",
@@ -75,15 +88,21 @@
       "sections": [
         {
           "heading": "Reassignment with let",
-          "paragraphs": ["When you use <code>let</code>, you can update the variable's value at any time by using the <code>=</code> operator again. The old value is replaced — the variable only holds one value at a time. This is called <b>reassignment</b>."]
+          "paragraphs": [
+            "When you use <code>let</code>, you can update the variable's value at any time by using the <code>=</code> operator again. The old value is replaced — the variable only holds one value at a time. This is called <b>reassignment</b>."
+          ]
         },
         {
           "heading": "Why const cannot be reassigned",
-          "paragraphs": ["The whole point of <code>const</code> is to signal that a value should stay the same. If you try to reassign a <code>const</code> variable, JavaScript throws a <code>TypeError</code>. This protects your code from accidental changes to values that should be fixed."]
+          "paragraphs": [
+            "The whole point of <code>const</code> is to signal that a value should stay the same. If you try to reassign a <code>const</code> variable, JavaScript throws a <code>TypeError</code>. This protects your code from accidental changes to values that should be fixed."
+          ]
         },
         {
           "heading": "Valid identifier rules",
-          "paragraphs": ["Variable names (identifiers) must follow these rules:"],
+          "paragraphs": [
+            "Variable names (identifiers) must follow these rules:"
+          ],
           "list": [
             "Can contain letters, digits, underscores (<code>_</code>), and dollar signs (<code>$</code>)",
             "<b>Must start</b> with a letter, underscore, or dollar sign (not a digit)",
@@ -93,7 +112,9 @@
         },
         {
           "heading": "The camelCase convention",
-          "paragraphs": ["In JavaScript, the standard naming style is <b>camelCase</b>: the first word is lowercase, and every following word starts with an uppercase letter. For example: <code>firstName</code>, <code>totalPrice</code>, <code>isStudent</code>. This makes multi-word names easy to read at a glance."]
+          "paragraphs": [
+            "In JavaScript, the standard naming style is <b>camelCase</b>: the first word is lowercase, and every following word starts with an uppercase letter. For example: <code>firstName</code>, <code>totalPrice</code>, <code>isStudent</code>. This makes multi-word names easy to read at a glance."
+          ]
         }
       ],
       "codeExamples": [
@@ -102,6 +123,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let temperature = 20;\nconsole.log(temperature);  // 20\n\ntemperature = 25;\nconsole.log(temperature);  // 25\n\ntemperature = temperature + 5;\nconsole.log(temperature);  // 30",
+          "output": "> let temperature = 20;\n> console.log(temperature);\n20\n> temperature = 25;\n> console.log(temperature);\n25\n> temperature = temperature + 5;\n> console.log(temperature);\n30",
           "explanation": [
             "<code>temperature</code> starts at 20. The second assignment replaces it with 25.",
             "The third line reads the current value (25), adds 5, and stores the result (30) back. This is a common pattern: <b>read the current value, compute something new, store it back</b>."
@@ -112,6 +134,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let firstName = \"Vishnu\";\nlet lastName = \"Kumar\";\nlet fullName = firstName + \" \" + lastName;\nlet isStudent = true;\nlet courseCount = 5;\n\nconsole.log(fullName);      // Vishnu Kumar\nconsole.log(courseCount);   // 5",
+          "output": "> let firstName = \"Vishnu\";\n> let lastName = \"Kumar\";\n> let fullName = firstName + \" \" + lastName;\n> console.log(fullName);\nVishnu Kumar\n> console.log(courseCount);\n5",
           "explanation": [
             "Notice how camelCase makes multi-word names readable: <code>firstName</code> clearly means \"the first name\".",
             "Boolean variables often start with <code>is</code>, <code>has</code>, or <code>can</code> to signal true/false — like <code>isStudent</code> and <code>hasPermission</code>.",
@@ -126,7 +149,8 @@
           "Use <code>balance = balance - 30;</code> then <code>balance = balance + 50;</code>",
           "For camelCase names: <code>let userEmail = \"...\";</code>, <code>let userAge = 25;</code>, <code>let isAdmin = false;</code>"
         ],
-        "note": "Try to create a variable called <code>2ndPlace</code>. What happens? Variables cannot start with a number."
+        "note": "Try to create a variable called <code>2ndPlace</code>. What happens? Variables cannot start with a number.",
+        "compiler": true
       },
       "keyTakeaways": [
         "Use <code>let</code> when you need to reassign a variable's value later.",
@@ -143,19 +167,27 @@
       "sections": [
         {
           "heading": "What is var?",
-          "paragraphs": ["<code>var</code> is the original way to declare variables in JavaScript, dating back to 1995. It still works today, but it has behavior that surprises even experienced developers. Modern JavaScript introduced <code>let</code> and <code>const</code> specifically to fix these problems."]
+          "paragraphs": [
+            "<code>var</code> is the original way to declare variables in JavaScript, dating back to 1995. It still works today, but it has behavior that surprises even experienced developers. Modern JavaScript introduced <code>let</code> and <code>const</code> specifically to fix these problems."
+          ]
         },
         {
           "heading": "Problem 1: var is function-scoped, not block-scoped",
-          "paragraphs": ["Variables declared with <code>var</code> ignore <code>if</code> blocks, <code>for</code> loops, and <code>{}</code> blocks entirely. They are scoped to the nearest <b>function</b>, or to the global scope if declared outside any function. This means a <code>var</code> variable declared inside an <code>if</code> block is accessible outside it — which is usually not what you want."]
+          "paragraphs": [
+            "Variables declared with <code>var</code> ignore <code>if</code> blocks, <code>for</code> loops, and <code>{}</code> blocks entirely. They are scoped to the nearest <b>function</b>, or to the global scope if declared outside any function. This means a <code>var</code> variable declared inside an <code>if</code> block is accessible outside it — which is usually not what you want."
+          ]
         },
         {
           "heading": "Problem 2: var allows redeclaration",
-          "paragraphs": ["With <code>var</code>, you can declare the same variable name twice in the same scope without any error. The second declaration silently overwrites the first. This is a common source of bugs — you might accidentally reuse a name and overwrite an important value without realizing it."]
+          "paragraphs": [
+            "With <code>var</code>, you can declare the same variable name twice in the same scope without any error. The second declaration silently overwrites the first. This is a common source of bugs — you might accidentally reuse a name and overwrite an important value without realizing it."
+          ]
         },
         {
           "heading": "Problem 3: var is hoisted to the top",
-          "paragraphs": ["JavaScript moves all <code>var</code> declarations to the top of their scope before running any code. This means you can <i>use</i> a <code>var</code> variable before the line that declares it — it will just be <code>undefined</code> instead of throwing an error. This makes bugs harder to track because the code runs without crashing, but with wrong values."]
+          "paragraphs": [
+            "JavaScript moves all <code>var</code> declarations to the top of their scope before running any code. This means you can <i>use</i> a <code>var</code> variable before the line that declares it — it will just be <code>undefined</code> instead of throwing an error. This makes bugs harder to track because the code runs without crashing, but with wrong values."
+          ]
         }
       ],
       "codeExamples": [
@@ -164,6 +196,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "if (true) {\n  var message = \"Hello\";\n}\n\nconsole.log(message);  // \"Hello\" (accessible outside the block!)",
+          "output": "> if (true) {\n>   var message = \"Hello\";\n> }\n> console.log(message);\nHello",
           "explanation": [
             "Even though <code>message</code> is declared inside the <code>if</code> block, it is accessible outside. That is because <code>var</code> ignores block boundaries.",
             "With <code>let</code>, this would throw an error — which is the safer behavior. <code>let</code> keeps variables confined to the block where they are declared."
@@ -174,6 +207,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "// With var — all callbacks see the same final value\nfor (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 100);\n}\n// Output: 3, 3, 3\n\n// With let — each callback sees its own value\nfor (let j = 0; j < 3; j++) {\n  setTimeout(() => console.log(j), 100);\n}\n// Output: 0, 1, 2",
+          "output": "> for (var i = 0; i < 3; i++) {\n>   setTimeout(() => console.log(i), 100);\n> }\n3\n3\n3\n> for (let j = 0; j < 3; j++) {\n>   setTimeout(() => console.log(j), 100);\n> }\n0\n1\n2",
           "explanation": [
             "With <code>var</code>, there is only one <code>i</code> shared across all iterations. By the time the <code>setTimeout</code> callbacks run, the loop has finished and <code>i</code> is 3.",
             "With <code>let</code>, each iteration gets its own <code>j</code> — so each callback captures a different value (0, 1, 2).",
@@ -185,6 +219,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "// var allows redeclaration (dangerous!)\nvar x = 10;\nvar x = 20;\nconsole.log(x);  // 20 — the first value is gone\n\n// var is hoisted — you can use it before the declaration\nconsole.log(name);  // undefined (no error!)\nvar name = \"Vishnu\";\nconsole.log(name);  // \"Vishnu\"",
+          "output": "> var x = 10;\n> var x = 20;\n> console.log(x);\n20\n> console.log(name);\nundefined\n> var name = \"Vishnu\";\n> console.log(name);\nVishnu",
           "explanation": [
             "The second <code>var x = 20</code> silently overwrites the first. No error is thrown — you might not even notice the overwrite.",
             "Because of hoisting, <code>console.log(name)</code> on line 1 does not crash. It prints <code>undefined</code> because the declaration was moved to the top but the assignment stays in place. This is confusing and error-prone."
@@ -198,7 +233,8 @@
           "For (2): Both declarations succeed. The second overwrites the first silently.",
           "For (3): <code>console.log(y); var y = \"hello\";</code> — you get <code>undefined</code>, not an error."
         ],
-        "note": "Now try the same experiments with <code>let</code> instead of <code>var</code>. The behavior is very different."
+        "note": "Now try the same experiments with <code>let</code> instead of <code>var</code>. The behavior is very different.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>var</code> is function-scoped — it ignores <code>if</code> blocks, loops, and other <code>{}</code> boundaries.",
@@ -215,19 +251,27 @@
       "sections": [
         {
           "heading": "Reassignment vs mutation",
-          "paragraphs": ["There is a crucial difference between <b>reassignment</b> (changing what a variable points to) and <b>mutation</b> (modifying the contents of what a variable points to). <code>const</code> prevents reassignment, but it does <b>not</b> prevent mutation. A <code>const</code> object can have its properties changed, added, or removed."]
+          "paragraphs": [
+            "There is a crucial difference between <b>reassignment</b> (changing what a variable points to) and <b>mutation</b> (modifying the contents of what a variable points to). <code>const</code> prevents reassignment, but it does <b>not</b> prevent mutation. A <code>const</code> object can have its properties changed, added, or removed."
+          ]
         },
         {
           "heading": "const with objects and arrays",
-          "paragraphs": ["When you create an object or array with <code>const</code>, the variable stores a <b>reference</b> (a pointer) to that object in memory. <code>const</code> prevents you from pointing the variable at something new, but you can still reach through the reference and change the object's properties or the array's contents."]
+          "paragraphs": [
+            "When you create an object or array with <code>const</code>, the variable stores a <b>reference</b> (a pointer) to that object in memory. <code>const</code> prevents you from pointing the variable at something new, but you can still reach through the reference and change the object's properties or the array's contents."
+          ]
         },
         {
           "heading": "Making objects truly immutable",
-          "paragraphs": ["If you need an object that cannot be changed at all, use <code>Object.freeze()</code>. This locks all existing properties so they cannot be modified, added, or deleted. Note that <code>Object.freeze()</code> is <b>shallow</b> — nested objects inside a frozen object can still be changed unless you freeze them too."]
+          "paragraphs": [
+            "If you need an object that cannot be changed at all, use <code>Object.freeze()</code>. This locks all existing properties so they cannot be modified, added, or deleted. Note that <code>Object.freeze()</code> is <b>shallow</b> — nested objects inside a frozen object can still be changed unless you freeze them too."
+          ]
         },
         {
           "heading": "Immutability as a best practice",
-          "paragraphs": ["Instead of changing existing data, create new objects with the updated values. This pattern (called immutability) makes your code easier to debug because the original data stays untouched. It is especially important when working with frameworks like React, where detecting changes relies on new references."]
+          "paragraphs": [
+            "Instead of changing existing data, create new objects with the updated values. This pattern (called immutability) makes your code easier to debug because the original data stays untouched. It is especially important when working with frameworks like React, where detecting changes relies on new references."
+          ]
         }
       ],
       "codeExamples": [
@@ -236,6 +280,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "const user = { name: \"Alex\", age: 25 };\n\n// Mutation — this works!\nuser.age = 26;\nuser.city = \"London\";\nconsole.log(user);  // { name: \"Alex\", age: 26, city: \"London\" }\n\n// Reassignment — this fails!\n// user = { name: \"Sam\" };\n// TypeError: Assignment to constant variable.",
+          "output": "> const user = { name: \"Alex\", age: 25 };\n> user.age = 26;\n> user.city = \"London\";\n> console.log(user);\n{ name: \"Alex\", age: 26, city: \"London\" }",
           "explanation": [
             "<code>user.age = 26</code> modifies the object through the reference — <code>const</code> allows this because the variable still points to the same object.",
             "<code>user = { name: \"Sam\" }</code> tries to point <code>user</code> at a completely new object — this is reassignment, which <code>const</code> blocks.",
@@ -247,6 +292,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "const colors = [\"red\", \"green\"];\n\ncolors.push(\"blue\");\nconsole.log(colors);  // [\"red\", \"green\", \"blue\"]\n\ncolors[0] = \"yellow\";\nconsole.log(colors);  // [\"yellow\", \"green\", \"blue\"]\n\n// colors = [\"a\", \"b\"];\n// TypeError: Assignment to constant variable.",
+          "output": "> const colors = [\"red\", \"green\"];\n> colors.push(\"blue\");\n> console.log(colors);\n[\"red\", \"green\", \"blue\"]\n> colors[0] = \"yellow\";\n> console.log(colors);\n[\"yellow\", \"green\", \"blue\"]",
           "explanation": [
             "<code>colors.push(\"blue\")</code> adds an element to the array — this is mutation, and it works even with <code>const</code>.",
             "<code>colors[0] = \"yellow\"</code> replaces the first element — also mutation, also allowed.",
@@ -258,6 +304,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "const settings = Object.freeze({\n  theme: \"dark\",\n  fontSize: 14\n});\n\nsettings.theme = \"light\";\nconsole.log(settings.theme);  // \"dark\" (change was ignored)\n\nsettings.newProp = \"hi\";\nconsole.log(settings.newProp);  // undefined (property not added)",
+          "output": "> const settings = Object.freeze({\n>   theme: \"dark\",\n>   fontSize: 14\n> });\n> settings.theme = \"light\";\n> console.log(settings.theme);\ndark\n> settings.newProp = \"hi\";\n> console.log(settings.newProp);\nundefined",
           "explanation": [
             "<code>Object.freeze()</code> returns the same object but locks all its properties. Any attempt to modify, add, or delete a property is silently ignored (in non-strict mode) or throws an error (in strict mode).",
             "This makes <code>settings</code> truly immutable — not even <code>const</code> alone provides this guarantee."
@@ -268,6 +315,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "const original = { name: \"Alex\", score: 100 };\n\n// Instead of mutating:\n// original.score = 150;\n\n// Create a new object with the updated value:\nconst updated = { ...original, score: 150 };\n\nconsole.log(original);  // { name: \"Alex\", score: 100 } — unchanged\nconsole.log(updated);   // { name: \"Alex\", score: 150 }",
+          "output": "> const original = { name: \"Alex\", score: 100 };\n> const updated = { ...original, score: 150 };\n> console.log(original);\n{ name: \"Alex\", score: 100 }\n> console.log(updated);\n{ name: \"Alex\", score: 150 }",
           "explanation": [
             "The spread operator (<code>...</code>) copies all properties from <code>original</code> into a new object, then overrides <code>score</code> with 150.",
             "The original stays untouched. This pattern is the foundation of immutable data in JavaScript."
@@ -281,7 +329,8 @@
           "<code>nums.push(40);</code> works (mutation). <code>nums[1] = 25;</code> works (mutation).",
           "<code>nums = [1, 2];</code> fails with TypeError (reassignment)."
         ],
-        "note": "Now create an object with Object.freeze() and try to modify a property. What happens?"
+        "note": "Now create an object with Object.freeze() and try to modify a property. What happens?",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>const</code> prevents reassignment but does <b>not</b> prevent mutation of objects or arrays.",

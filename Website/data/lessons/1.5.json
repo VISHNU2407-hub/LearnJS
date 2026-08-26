@@ -9,7 +9,9 @@
       "sections": [
         {
           "heading": "Arithmetic operators",
-          "paragraphs": ["JavaScript provides six basic math operators. They work on numbers and follow the standard rules of arithmetic you already know from math class."],
+          "paragraphs": [
+            "JavaScript provides six basic math operators. They work on numbers and follow the standard rules of arithmetic you already know from math class."
+          ],
           "list": [
             "<code>+</code> addition: <code>5 + 3</code> → <code>8</code>",
             "<code>-</code> subtraction: <code>10 - 4</code> → <code>6</code>",
@@ -21,11 +23,15 @@
         },
         {
           "heading": "Why remainder (%) is useful",
-          "paragraphs": ["The remainder operator gives you what is left over after dividing. It is surprisingly useful: check if a number is even (<code>n % 2 === 0</code>), cycle through array indices, or build repeating patterns."]
+          "paragraphs": [
+            "The remainder operator gives you what is left over after dividing. It is surprisingly useful: check if a number is even (<code>n % 2 === 0</code>), cycle through array indices, or build repeating patterns."
+          ]
         },
         {
           "heading": "Assignment operators",
-          "paragraphs": ["Assignment operators combine a math operation with storing the result. Instead of writing <code>x = x + 5</code>, you can write <code>x += 5</code>. They do the exact same thing but save you from repeating the variable name."],
+          "paragraphs": [
+            "Assignment operators combine a math operation with storing the result. Instead of writing <code>x = x + 5</code>, you can write <code>x += 5</code>. They do the exact same thing but save you from repeating the variable name."
+          ],
           "list": [
             "<code>+=</code> add and assign: <code>x += 3</code> means <code>x = x + 3</code>",
             "<code>-=</code> subtract and assign: <code>x -= 2</code> means <code>x = x - 2</code>",
@@ -41,6 +47,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let a = 10;\nlet b = 3;\n\nconsole.log(a + b);   // 13\nconsole.log(a - b);   // 7\nconsole.log(a * b);   // 30\nconsole.log(a / b);   // 3.3333...\nconsole.log(a % b);   // 1\nconsole.log(a ** b);  // 1000",
+          "output": "> let a = 10;\n> let b = 3;\n> console.log(a + b);\n13\n> console.log(a - b);\n7\n> console.log(a * b);\n30\n> console.log(a / b);\n3.3333333333333335\n> console.log(a % b);\n1\n> console.log(a ** b);\n1000",
           "explanation": [
             "The <code>%</code> (remainder) operator returns <code>1</code> because 10 divided by 3 is 3 with a remainder of 1.",
             "<code>**</code> is the exponentiation operator — <code>10 ** 3</code> means 10 to the power of 3, which is 1000.",
@@ -52,6 +59,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let score = 100;\nscore += 50;    // score is now 150\nconsole.log(score);\n\nscore -= 20;    // score is now 130\nconsole.log(score);\n\nscore *= 2;     // score is now 260\nconsole.log(score);\n\nscore /= 4;     // score is now 65\nconsole.log(score);\n\nscore %= 10;    // score is now 5 (remainder of 65 / 10)\nconsole.log(score);",
+          "output": "> let score = 100;\n> score += 50;\n> console.log(score);\n150\n> score -= 20;\n> console.log(score);\n130\n> score *= 2;\n> console.log(score);\n260\n> score /= 4;\n> console.log(score);\n65\n> score %= 10;\n> console.log(score);\n5",
           "explanation": [
             "Each assignment operator reads the current value, performs the math, and stores the result back in the same variable.",
             "Notice that <code>score %= 10</code> gives <code>5</code> — the remainder of 65 divided by 10.",
@@ -68,7 +76,8 @@
           "After <code>total *= 2;</code>, total should be 30.",
           "After <code>total %= 7;</code>, total should be 2."
         ],
-        "note": "Assignment operators always update the variable in place — no need to write <code>total = total + 25</code>."
+        "note": "Assignment operators always update the variable in place — no need to write <code>total = total + 25</code>.",
+        "compiler": true
       },
       "keyTakeaways": [
         "JavaScript has six arithmetic operators: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>, and <code>**</code>.",
@@ -85,7 +94,9 @@
       "sections": [
         {
           "heading": "Relational comparison operators",
-          "paragraphs": ["These operators compare two values and return <code>true</code> or <code>false</code>. They work as you would expect for numbers, and in a useful way for strings (alphabetical order)."],
+          "paragraphs": [
+            "These operators compare two values and return <code>true</code> or <code>false</code>. They work as you would expect for numbers, and in a useful way for strings (alphabetical order)."
+          ],
           "list": [
             "<code>&lt;</code> less than",
             "<code>&gt;</code> greater than",
@@ -95,15 +106,21 @@
         },
         {
           "heading": "Strict equality (=== and !==)",
-          "paragraphs": ["The triple-equal operator <code>===</code> checks if two values are <b>exactly the same</b> — same value AND same type. <code>\"5\" === 5</code> is <code>false</code> because one is a string and the other is a number. This is the operator you should use 99% of the time."]
+          "paragraphs": [
+            "The triple-equal operator <code>===</code> checks if two values are <b>exactly the same</b> — same value AND same type. <code>\"5\" === 5</code> is <code>false</code> because one is a string and the other is a number. This is the operator you should use 99% of the time."
+          ]
         },
         {
           "heading": "Loose equality (== and !=)",
-          "paragraphs": ["The double-equal operator <code>==</code> tries to convert values to the same type before comparing. <code>\"5\" == 5</code> is <code>true</code> because JavaScript converts the string to a number. This can cause surprising bugs — prefer <code>===</code> instead."]
+          "paragraphs": [
+            "The double-equal operator <code>==</code> tries to convert values to the same type before comparing. <code>\"5\" == 5</code> is <code>true</code> because JavaScript converts the string to a number. This can cause surprising bugs — prefer <code>===</code> instead."
+          ]
         },
         {
           "heading": "Why strict equality is better",
-          "paragraphs": ["Loose equality can produce unexpected results: <code>0 == false</code> is <code>true</code>, <code>\"\" == false</code> is <code>true</code>, and <code>null == undefined</code> is <code>true</code>. Strict equality avoids all of these surprises. Most linters and style guides recommend always using <code>===</code> and <code>!==</code>."]
+          "paragraphs": [
+            "Loose equality can produce unexpected results: <code>0 == false</code> is <code>true</code>, <code>\"\" == false</code> is <code>true</code>, and <code>null == undefined</code> is <code>true</code>. Strict equality avoids all of these surprises. Most linters and style guides recommend always using <code>===</code> and <code>!==</code>."
+          ]
         }
       ],
       "codeExamples": [
@@ -112,6 +129,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "console.log(5 > 3);     // true\nconsole.log(5 < 3);     // false\nconsole.log(5 >= 5);    // true\nconsole.log(5 <= 4);    // false\n\nconsole.log(10 > 10);   // false\nconsole.log(10 >= 10);  // true",
+          "output": "> console.log(5 > 3);\ntrue\n> console.log(5 < 3);\nfalse\n> console.log(5 >= 5);\ntrue\n> console.log(5 <= 4);\nfalse\n> console.log(10 > 10);\nfalse\n> console.log(10 >= 10);\ntrue",
           "explanation": [
             "These work exactly like you would expect from math. <code>&gt;=</code> means \"greater than OR equal to\".",
             "Use <code>&gt;=</code> or <code>&lt;=</code> when you want to include the boundary value."
@@ -122,6 +140,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "// Strict equality (recommended)\nconsole.log(5 === 5);           // true\nconsole.log(\"5\" === 5);         // false (different types)\nconsole.log(null === undefined); // false\n\n// Loose equality (avoid)\nconsole.log(5 == 5);            // true\nconsole.log(\"5\" == 5);          // true  (string converted to number!)\nconsole.log(null == undefined); // true  (surprising!)",
+          "output": "> console.log(5 === 5);\ntrue\n> console.log(\"5\" === 5);\nfalse\n> console.log(null === undefined);\nfalse\n> console.log(5 == 5);\ntrue\n> console.log(\"5\" == 5);\ntrue\n> console.log(null == undefined);\ntrue",
           "explanation": [
             "<code>===</code> checks both value AND type — <code>\"5\" === 5</code> is <code>false</code> because string ≠ number.",
             "<code>==</code> performs type coercion before comparing — <code>\"5\" == 5</code> converts the string to a number first, giving <code>true</code>.",
@@ -136,7 +155,8 @@
           "If you pass <code>\"18\"</code> as a string, <code>\"18\" >= 18</code> actually works because of type coercion.",
           "To be safe, check <code>typeof age === \"number\"</code> first."
         ],
-        "note": "Think about why <code>\"18\" >= 18</code> is true but <code>\"18\" === 18</code> is false."
+        "note": "Think about why <code>\"18\" >= 18</code> is true but <code>\"18\" === 18</code> is false.",
+        "compiler": true
       },
       "keyTakeaways": [
         "Use <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code> to compare values — they work on numbers and strings.",
@@ -153,7 +173,9 @@
       "sections": [
         {
           "heading": "The three logical operators",
-          "paragraphs": ["Logical operators combine or invert boolean values. They are the building blocks of conditional logic in every program."],
+          "paragraphs": [
+            "Logical operators combine or invert boolean values. They are the building blocks of conditional logic in every program."
+          ],
           "list": [
             "<code>&&</code> (AND) — returns true only if <b>both</b> sides are true",
             "<code>||</code> (OR) — returns true if <b>at least one</b> side is true",
@@ -162,7 +184,9 @@
         },
         {
           "heading": "Short-circuit evaluation",
-          "paragraphs": ["JavaScript does not always evaluate both sides of a logical operator. It stops as soon as the result is determined — this is called <b>short-circuiting</b>."],
+          "paragraphs": [
+            "JavaScript does not always evaluate both sides of a logical operator. It stops as soon as the result is determined — this is called <b>short-circuiting</b>."
+          ],
           "list": [
             "<code>&&</code> short-circuits on the <b>first falsy</b> value: if the left side is false, the right side is never evaluated",
             "<code>||</code> short-circuits on the <b>first truthy</b> value: if the left side is true, the right side is never evaluated"
@@ -170,7 +194,9 @@
         },
         {
           "heading": "Truthiness: what counts as true or false?",
-          "paragraphs": ["JavaScript treats some values as <b>falsy</b> (treated as false) and everything else as <b>truthy</b> (treated as true). Falsy values: <code>false</code>, <code>0</code>, <code>\"\"</code> (empty string), <code>null</code>, <code>undefined</code>, <code>NaN</code>. Everything else is truthy — including <code>\"0\"</code>, <code>[]</code>, and <code>{}</code>."]
+          "paragraphs": [
+            "JavaScript treats some values as <b>falsy</b> (treated as false) and everything else as <b>truthy</b> (treated as true). Falsy values: <code>false</code>, <code>0</code>, <code>\"\"</code> (empty string), <code>null</code>, <code>undefined</code>, <code>NaN</code>. Everything else is truthy — including <code>\"0\"</code>, <code>[]</code>, and <code>{}</code>."
+          ]
         }
       ],
       "codeExamples": [
@@ -179,6 +205,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let isLoggedIn = true;\nlet isAdmin = false;\n\nconsole.log(isLoggedIn && isAdmin);   // false (both must be true)\nconsole.log(isLoggedIn || isAdmin);   // true  (at least one is true)\nconsole.log(!isLoggedIn);             // false (flips true to false)\nconsole.log(!isAdmin);                // true  (flips false to true)",
+          "output": "> let isLoggedIn = true;\n> let isAdmin = false;\n> console.log(isLoggedIn && isAdmin);\nfalse\n> console.log(isLoggedIn || isAdmin);\ntrue\n> console.log(!isLoggedIn);\nfalse\n> console.log(!isAdmin);\ntrue",
           "explanation": [
             "<code>&&</code> (AND) returns <code>true</code> only when both sides are <code>true</code>.",
             "<code>||</code> (OR) returns <code>true</code> if either side is <code>true</code>.",
@@ -190,6 +217,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "// && returns the first falsy value, or the last value if all truthy\nconsole.log(\"hello\" && 42);        // 42 (both truthy, returns last)\nconsole.log(false && \"hello\");     // false (short-circuits here)\nconsole.log(null && \"hello\");      // null\n\n// || returns the first truthy value, or the last value if all falsy\nconsole.log(\"hello\" || 42);        // \"hello\" (short-circuits here)\nconsole.log(false || \"hello\");     // \"hello\"\nconsole.log(0 || null || \"yes\");   // \"yes\" (skips 0 and null)",
+          "output": "> console.log(\"hello\" && 42);\n42\n> console.log(false && \"hello\");\nfalse\n> console.log(null && \"hello\");\nnull\n> console.log(\"hello\" || 42);\nhello\n> console.log(false || \"hello\");\nhello\n> console.log(0 || null || \"yes\");\nyes",
           "explanation": [
             "Logical operators do not always return <code>true</code>/<code>false</code> — they return <b>one of the actual values</b>.",
             "<code>&&</code> returns the first falsy value it finds, or the last value if all are truthy.",
@@ -204,7 +232,8 @@
           "Try <code>let age = 0;</code> — zero is falsy, so <code>age || 18</code> gives <code>18</code>.",
           "Use <code>console.log(username && age);</code> to see what <code>&&</code> returns."
         ],
-        "note": "Understanding that <code>&&</code> and <code>||</code> return actual values (not just true/false) is a key insight."
+        "note": "Understanding that <code>&&</code> and <code>||</code> return actual values (not just true/false) is a key insight.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>&&</code> (AND) returns true only when both sides are truthy; <code>||</code> (OR) returns true when at least one side is truthy.",
@@ -221,15 +250,21 @@
       "sections": [
         {
           "heading": "Nullish coalescing (??)",
-          "paragraphs": ["The <code>??</code> operator is like <code>||</code> but smarter about defaults. It only falls back to the right side when the left side is <b>null or undefined</b> — it does NOT treat <code>0</code>, <code>\"\"</code>, or <code>false</code> as empty. This makes it perfect for default values where <code>0</code> or <code>\"\"</code> are valid."]
+          "paragraphs": [
+            "The <code>??</code> operator is like <code>||</code> but smarter about defaults. It only falls back to the right side when the left side is <b>null or undefined</b> — it does NOT treat <code>0</code>, <code>\"\"</code>, or <code>false</code> as empty. This makes it perfect for default values where <code>0</code> or <code>\"\"</code> are valid."
+          ]
         },
         {
           "heading": "Optional chaining (?.)",
-          "paragraphs": ["Optional chaining safely accesses nested properties without throwing an error. If any part of the chain is <code>null</code> or <code>undefined</code>, the whole expression returns <code>undefined</code> instead of crashing. You can use it with properties (<code>obj?.prop</code>), array access (<code>arr?.[0]</code>), and function calls (<code>func?.()</code>)."]
+          "paragraphs": [
+            "Optional chaining safely accesses nested properties without throwing an error. If any part of the chain is <code>null</code> or <code>undefined</code>, the whole expression returns <code>undefined</code> instead of crashing. You can use it with properties (<code>obj?.prop</code>), array access (<code>arr?.[0]</code>), and function calls (<code>func?.()</code>)."
+          ]
         },
         {
           "heading": "When to use ?? vs ||",
-          "paragraphs": ["Use <code>??</code> when <code>0</code>, <code>\"\"</code>, or <code>false</code> are valid values you want to keep. Use <code>||</code> when you want any falsy value to trigger the default. For example: <code>score ?? 100</code> keeps a score of <code>0</code>, but <code>score || 100</code> would replace it with <code>100</code>."]
+          "paragraphs": [
+            "Use <code>??</code> when <code>0</code>, <code>\"\"</code>, or <code>false</code> are valid values you want to keep. Use <code>||</code> when you want any falsy value to trigger the default. For example: <code>score ?? 100</code> keeps a score of <code>0</code>, but <code>score || 100</code> would replace it with <code>100</code>."
+          ]
         }
       ],
       "codeExamples": [
@@ -238,6 +273,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let score = 0;\nlet name = \"\";\nlet count = null;\n\n// || treats 0 and \"\" as falsy — not what we want\nconsole.log(score || 100);    // 100 (0 replaced!)\nconsole.log(name || \"Guest\"); // \"Guest\" (\"\" replaced!)\n\n// ?? only treats null and undefined as empty\nconsole.log(score ?? 100);    // 0   (keeps 0)\nconsole.log(name ?? \"Guest\"); // \"\"  (keeps empty string)\nconsole.log(count ?? 100);   // 100 (null triggers default)",
+          "output": "> let score = 0;\n> let name = \"\";\n> let count = null;\n> console.log(score || 100);\n100\n> console.log(name || \"Guest\");\nGuest\n> console.log(score ?? 100);\n0\n> console.log(name ?? \"Guest\");\n\n> console.log(count ?? 100);\n100",
           "explanation": [
             "<code>||</code> replaced <code>0</code> and <code>\"\"</code> with defaults because they are falsy.",
             "<code>??</code> only replaced <code>null</code> with the default — <code>0</code> and <code>\"\"</code> were kept because they are not null/undefined.",
@@ -249,6 +285,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let user = {\n  name: \"Alex\",\n  address: {\n    city: \"London\"\n  }\n};\n\nlet stranger = { name: \"Sam\" };\n\n// Without optional chaining — this would crash\n// console.log(stranger.address.city);  // TypeError!\n\n// With optional chaining — safe\nconsole.log(user.address?.city);     // \"London\"\nconsole.log(stranger.address?.city); // undefined (no error!)\nconsole.log(stranger.address?.zip?.code); // undefined (safe nested access)\n\n// Optional chaining with methods\nconsole.log(user.getName?.());       // undefined (method doesn't exist)\nconsole.log(user.name?.toUpperCase?.()); // \"ALEX\"",
+          "output": "> let user = {\n>   name: \"Alex\",\n>   address: {\n>     city: \"London\"\n>   }\n> };\n> let stranger = { name: \"Sam\" };\n> console.log(user.address?.city);\nLondon\n> console.log(stranger.address?.city);\nundefined\n> console.log(stranger.address?.zip?.code);\nundefined\n> console.log(user.getName?.());\nundefined\n> console.log(user.name?.toUpperCase?.());\nALEX",
           "explanation": [
             "<code>user.address?.city</code> checks if <code>address</code> exists before trying to access <code>city</code>.",
             "If <code>address</code> is <code>null</code> or <code>undefined</code>, the expression returns <code>undefined</code> instead of throwing a TypeError.",
@@ -263,7 +300,8 @@
           "If <code>settings</code> is missing, <code>?. </code> returns <code>undefined</code>, and <code>??</code> supplies <code>\"light\"</code>.",
           "Test with <code>let user2 = { name: \"Sam\" };</code> — no settings at all."
         ],
-        "note": "Optional chaining is one of the most practical features in modern JavaScript — you will use it constantly when working with API responses."
+        "note": "Optional chaining is one of the most practical features in modern JavaScript — you will use it constantly when working with API responses.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>??</code> (nullish coalescing) returns the right side only when the left is <code>null</code> or <code>undefined</code> — it keeps <code>0</code>, <code>\"\"</code>, and <code>false</code>.",
@@ -280,7 +318,9 @@
       "sections": [
         {
           "heading": "What are logical assignment operators?",
-          "paragraphs": ["Logical assignment operators combine a logical check with an assignment in one step. They were introduced in ES2021 and are now supported in all modern browsers. There are three: <code>&&=</code>, <code>||=</code>, and <code>??=</code>."]
+          "paragraphs": [
+            "Logical assignment operators combine a logical check with an assignment in one step. They were introduced in ES2021 and are now supported in all modern browsers. There are three: <code>&&=</code>, <code>||=</code>, and <code>??=</code>."
+          ]
         },
         {
           "heading": "The three operators",
@@ -305,6 +345,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "// ||= sets a default when the variable is falsy\nlet theme = \"\";\ntheme ||= \"dark\";\nconsole.log(theme);  // \"dark\" (empty string is falsy)\n\nlet count = 0;\ncount ||= 10;\nconsole.log(count);  // 10 (0 is falsy — maybe not what you want!)\n\n// ??= sets a default only for null/undefined\nlet fontSize = 0;\nfontSize ??= 16;\nconsole.log(fontSize);  // 0 (keeps 0 because it's not null/undefined)\n\nlet color;\ncolor ??= \"blue\";\nconsole.log(color);  // \"blue\" (undefined triggers default)",
+          "output": "> let theme = \"\";\n> theme ||= \"dark\";\n> console.log(theme);\ndark\n> let count = 0;\n> count ||= 10;\n> console.log(count);\n10\n> let fontSize = 0;\n> fontSize ??= 16;\n> console.log(fontSize);\n0\n> let color;\n> color ??= \"blue\";\n> console.log(color);\nblue",
           "explanation": [
             "<code>||=</code> replaced the empty string with <code>\"dark\"</code> because <code>\"\"</code> is falsy.",
             "<code>||=</code> also replaced <code>0</code> with <code>10</code> — this is a common gotcha. If <code>0</code> is a valid value, use <code>??=</code> instead.",
@@ -317,6 +358,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let username = \"Vishnu\";\nlet isAdmin = false;\n\n// &&= only assigns if the left side is truthy\nusername &&= username.toUpperCase();\nconsole.log(username);  // \"VISHNU\" (was truthy, so it updated)\n\nisAdmin &&= \"admin\";\nconsole.log(isAdmin);  // false (was falsy, so it kept the original)\n\n// Useful pattern: only modify if the value exists\nlet input = null;\ninput &&= input.trim();\nconsole.log(input);  // null (was null, so no update happened)",
+          "output": "> let username = \"Vishnu\";\n> let isAdmin = false;\n> username &&= username.toUpperCase();\n> console.log(username);\nVISHNU\n> isAdmin &&= \"admin\";\n> console.log(isAdmin);\nfalse\n> let input = null;\n> input &&= input.trim();\n> console.log(input);\nnull",
           "explanation": [
             "<code>&&=</code> only assigns the new value if the current value is truthy.",
             "This is useful when you want to transform a value but only if it exists — it acts as a guard.",
@@ -331,7 +373,8 @@
           "Wait — actually <code>??=</code> only triggers on null/undefined, not empty strings. So <code>\"\" ??= \"light\"</code> keeps the empty string.",
           "For the theme, you might want <code>||=</code> instead: <code>config.theme ||= \"light\";</code>."
         ],
-        "note": "This exercise shows the real-world decision between <code>||=</code> and <code>??=</code> — choose based on whether empty strings are valid values."
+        "note": "This exercise shows the real-world decision between <code>||=</code> and <code>??=</code> — choose based on whether empty strings are valid values.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>||=</code> assigns a new value only when the variable is falsy — great for defaults, but replaces <code>0</code> and <code>\"\"</code> too.",
@@ -348,7 +391,9 @@
       "sections": [
         {
           "heading": "Why convert types explicitly?",
-          "paragraphs": ["JavaScript often converts types automatically (called <b>type coercion</b>), but the rules are inconsistent and surprising. For example, <code>\"5\" - 3</code> works (gives 2) but <code>\"5\" + 3</code> gives <code>\"53\"</code>. Explicit conversion using <code>Number()</code>, <code>String()</code>, and <code>Boolean()</code> makes your intent clear and avoids these surprises."]
+          "paragraphs": [
+            "JavaScript often converts types automatically (called <b>type coercion</b>), but the rules are inconsistent and surprising. For example, <code>\"5\" - 3</code> works (gives 2) but <code>\"5\" + 3</code> gives <code>\"53\"</code>. Explicit conversion using <code>Number()</code>, <code>String()</code>, and <code>Boolean()</code> makes your intent clear and avoids these surprises."
+          ]
         },
         {
           "heading": "Number() — converting to numbers",
@@ -375,7 +420,9 @@
         },
         {
           "heading": "Boolean() — converting to booleans",
-          "paragraphs": ["Remember the falsy values from 1.5.3? <code>Boolean()</code> converts anything to a boolean using those same rules. Every falsy value becomes <code>false</code>; everything else becomes <code>true</code>."],
+          "paragraphs": [
+            "Remember the falsy values from 1.5.3? <code>Boolean()</code> converts anything to a boolean using those same rules. Every falsy value becomes <code>false</code>; everything else becomes <code>true</code>."
+          ],
           "list": [
             "<code>Boolean(0)</code> → <code>false</code>",
             "<code>Boolean(\"\")</code> → <code>false</code>",
@@ -394,6 +441,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "// Simulating user input (always comes as strings)\nlet input = \"42\";\n\n// Without conversion — string concatenation!\nconsole.log(input + 8);   // \"428\" (wrong!)\n\n// With explicit conversion — math works!\nlet num = Number(input);\nconsole.log(num + 8);     // 50 (correct!)\n\n// Invalid input gives NaN\nlet bad = Number(\"hello\");\nconsole.log(bad);         // NaN\nconsole.log(isNaN(bad));  // true",
+          "output": "> let input = \"42\";\n> console.log(input + 8);\n428\n> let num = Number(input);\n> console.log(num + 8);\n50\n> let bad = Number(\"hello\");\n> console.log(bad);\nNaN\n> console.log(isNaN(bad));\ntrue",
           "explanation": [
             "User input from forms, prompts, and URLs is always a string. You must convert it before doing math.",
             "<code>Number()</code> successfully converts valid numeric strings. Invalid strings produce <code>NaN</code>.",
@@ -405,6 +453,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "// Converting to strings\nlet price = 19.99;\nlet tag = String(price);\nconsole.log(tag);          // \"19.99\"\nconsole.log(typeof tag);   // \"string\"\n\n// Converting to booleans\nlet emptyName = \"\";\nlet hasName = Boolean(emptyName);\nconsole.log(hasName);      // false (empty string is falsy)\n\nlet score = 0;\nlet hasScore = Boolean(score);\nconsole.log(hasScore);     // false (0 is falsy)\n\nlet items = [1, 2, 3];\nlet hasItems = Boolean(items);\nconsole.log(hasItems);     // true (arrays are truthy!)",
+          "output": "> let price = 19.99;\n> let tag = String(price);\n> console.log(tag);\n19.99\n> console.log(typeof tag);\nstring\n> let emptyName = \"\";\n> let hasName = Boolean(emptyName);\n> console.log(hasName);\nfalse\n> let score = 0;\n> let hasScore = Boolean(score);\n> console.log(hasScore);\nfalse\n> let items = [1, 2, 3];\n> let hasItems = Boolean(items);\n> console.log(hasItems);\ntrue",
           "explanation": [
             "<code>String()</code> is the clearest way to convert any value to a string.",
             "<code>Boolean()</code> follows the same falsy rules from 1.5.3 — empty strings and zero become <code>false</code>.",
@@ -419,7 +468,8 @@
           "Check <code>isNaN()</code> on the results to detect bad input.",
           "Return a descriptive message like <code>\"Invalid input\"</code> if either is NaN."
         ],
-        "note": "Try using <code>parseInt()</code> and <code>parseFloat()</code> as alternatives — they parse strings differently than <code>Number()</code>."
+        "note": "Try using <code>parseInt()</code> and <code>parseFloat()</code> as alternatives — they parse strings differently than <code>Number()</code>.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>Number()</code> converts strings to numbers; invalid strings produce <code>NaN</code>. Always validate after converting.",

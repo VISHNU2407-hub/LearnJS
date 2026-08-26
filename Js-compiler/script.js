@@ -405,8 +405,23 @@
     $('btn-reset').addEventListener('click', handleReset);
     $('btn-console-clear').addEventListener('click', function() { clearConsole(false); });
     $('btn-console-clear-inline').addEventListener('click', function() { clearConsole(false); });
-    setCode('html', DEFAULT_HTML); setCode('css', DEFAULT_CSS); setCode('js', DEFAULT_JS);
-    switchToFile('html');
+
+    /* --- URL parameter support ---
+       ?js=...   pre-fills the JS editor (URL-encoded)
+       ?title=... sets the page title
+       Example: index.html?js=console.log(%22hello%22);
+    */
+    var params = new URLSearchParams(window.location.search);
+    var jsParam = params.get('js');
+    var titleParam = params.get('title');
+    if (titleParam) document.title = decodeURIComponent(titleParam) + ' — JS Playground';
+    if (jsParam) {
+      setCode('js', decodeURIComponent(jsParam));
+      switchToFile('js');
+    } else {
+      setCode('html', DEFAULT_HTML); setCode('css', DEFAULT_CSS); setCode('js', DEFAULT_JS);
+      switchToFile('html');
+    }
     Object.keys(files).forEach(function(key) { if (files[key].editor) files[key].editor.getWrapperElement().style.display = key === activeFile ? '' : 'none'; });
     initVerticalSplitter(); initHorizontalSplitter(); initStatusBar(); initShortcuts(); initThemeToggle(); initPreviewHeader();
     if (files[activeFile].editor) files[activeFile].editor.focus();

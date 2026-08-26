@@ -9,11 +9,15 @@
       "sections": [
         {
           "heading": "Why programs need to make decisions",
-          "paragraphs": ["Without branching, code always runs top-to-bottom with no variations. Branching lets you run specific code only when a condition is true — like showing an error message only when a form is empty, or granting access only when a user is logged in."]
+          "paragraphs": [
+            "Without branching, code always runs top-to-bottom with no variations. Branching lets you run specific code only when a condition is true — like showing an error message only when a form is empty, or granting access only when a user is logged in."
+          ]
         },
         {
           "heading": "The basic if statement",
-          "paragraphs": ["An <code>if</code> statement checks a condition. If the condition is truthy, the code inside the braces runs. If it is falsy, the entire block is skipped."],
+          "paragraphs": [
+            "An <code>if</code> statement checks a condition. If the condition is truthy, the code inside the braces runs. If it is falsy, the entire block is skipped."
+          ],
           "list": [
             "The condition goes inside parentheses: <code>if (age >= 18)</code>",
             "The code to run goes inside curly braces: <code>{ ... }</code>",
@@ -22,7 +26,9 @@
         },
         {
           "heading": "Adding else and else if",
-          "paragraphs": ["<code>else</code> provides a fallback path when the condition is false. <code>else if</code> lets you check additional conditions before reaching the final fallback. JavaScript evaluates them top-to-bottom and runs the <b>first</b> matching branch — then skips the rest."]
+          "paragraphs": [
+            "<code>else</code> provides a fallback path when the condition is false. <code>else if</code> lets you check additional conditions before reaching the final fallback. JavaScript evaluates them top-to-bottom and runs the <b>first</b> matching branch — then skips the rest."
+          ]
         }
       ],
       "codeExamples": [
@@ -31,6 +37,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let temperature = 28;\n\nif (temperature > 30) {\n  console.log(\"It's hot outside!\");\n} else if (temperature > 20) {\n  console.log(\"Nice weather!\");\n} else {\n  console.log(\"It's cold!\");\n}\n// Output: \"Nice weather!\"",
+          "output": "> let temperature = 28;\n> if (temperature > 30) {\n>   console.log(\"It's hot outside!\");\n> } else if (temperature > 20) {\n>   console.log(\"Nice weather!\");\n> } else {\n>   console.log(\"It's cold!\");\n> }\nNice weather!",
           "explanation": [
             "28 is not greater than 30, so the first condition is false.",
             "28 is greater than 20, so <code>else if</code> matches and prints \"Nice weather!\".",
@@ -42,6 +49,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let hasTicket = true;\nlet age = 15;\n\nif (hasTicket) {\n  if (age >= 18) {\n    console.log(\"Welcome to the concert!\");\n  } else {\n    console.log(\"You need a guardian.\");\n  }\n} else {\n  console.log(\"Please buy a ticket first.\");\n}\n// Output: \"You need a guardian.\"",
+          "output": "> let hasTicket = true;\n> let age = 15;\n> if (hasTicket) {\n>   if (age >= 18) {\n>     console.log(\"Welcome to the concert!\");\n>   } else {\n>     console.log(\"You need a guardian.\");\n>   }\n> } else {\n>   console.log(\"Please buy a ticket first.\");\n> }\nYou need a guardian.",
           "explanation": [
             "The outer <code>if</code> checks <code>hasTicket</code> — it is true, so we enter that block.",
             "Inside, a second <code>if</code> checks the age — 15 is under 18, so the inner <code>else</code> runs.",
@@ -56,7 +64,8 @@
           "Use <code>else if</code> for each grade band.",
           "The final <code>else</code> catches anything below 60."
         ],
-        "note": "Try passing negative numbers or values above 100 — what should your function do?"
+        "note": "Try passing negative numbers or values above 100 — what should your function do?",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>if</code> runs code only when its condition is truthy; <code>else</code> provides a fallback.",
@@ -73,11 +82,15 @@
       "sections": [
         {
           "heading": "Not everything is a boolean",
-          "paragraphs": ["JavaScript lets you use any value in an <code>if</code> condition, not just <code>true</code> or <code>false</code>. It automatically converts the value to a boolean behind the scenes using <b>truthiness</b> and <b>falsiness</b> rules."]
+          "paragraphs": [
+            "JavaScript lets you use any value in an <code>if</code> condition, not just <code>true</code> or <code>false</code>. It automatically converts the value to a boolean behind the scenes using <b>truthiness</b> and <b>falsiness</b> rules."
+          ]
         },
         {
           "heading": "The falsy values",
-          "paragraphs": ["There are exactly six values that JavaScript treats as false:"],
+          "paragraphs": [
+            "There are exactly six values that JavaScript treats as false:"
+          ],
           "list": [
             "<code>false</code> — the boolean itself",
             "<code>0</code> — the number zero",
@@ -89,11 +102,15 @@
         },
         {
           "heading": "Everything else is truthy",
-          "paragraphs": ["Any value not in the list above is truthy. This includes <code>\"0\"</code> (a non-empty string), <code>[]</code> (empty array), <code>{}</code> (empty object), and <code>-1</code> (negative numbers). Beginners often expect these to be falsy, but they are not."]
+          "paragraphs": [
+            "Any value not in the list above is truthy. This includes <code>\"0\"</code> (a non-empty string), <code>[]</code> (empty array), <code>{}</code> (empty object), and <code>-1</code> (negative numbers). Beginners often expect these to be falsy, but they are not."
+          ]
         },
         {
           "heading": "Practical uses of truthiness",
-          "paragraphs": ["You can write shorter code by relying on truthiness instead of explicit comparisons. For example, <code>if (name)</code> is equivalent to <code>if (name !== \"\")</code> for a string variable. This pattern is cleaner and less error-prone."]
+          "paragraphs": [
+            "You can write shorter code by relying on truthiness instead of explicit comparisons. For example, <code>if (name)</code> is equivalent to <code>if (name !== \"\")</code> for a string variable. This pattern is cleaner and less error-prone."
+          ]
         }
       ],
       "codeExamples": [
@@ -102,6 +119,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "// Falsy values\nif (0)   console.log(\"0 is truthy\");\nif (\"\")  console.log(\"Empty string is truthy\");\nif (null) console.log(\"null is truthy\");\n\n// None of these print — they are all falsy\n\n// Truthy values\nif (\"0\")     console.log(\"\\\"0\\\" is truthy\");      // prints!\nif (-1)      console.log(\"-1 is truthy\");           // prints!\nif ([1, 2])  console.log(\"Non-empty array is truthy\"); // prints!",
+          "output": "> if (0)   console.log(\"0 is truthy\");\n> if (\"\")  console.log(\"Empty string is truthy\");\n> if (null) console.log(\"null is truthy\");\n> if (\"0\")     console.log(\"\\\"0\\\" is truthy\");\n\"0\" is truthy\n> if (-1)      console.log(\"-1 is truthy\");\n-1 is truthy\n> if ([1, 2])  console.log(\"Non-empty array is truthy\");\nNon-empty array is truthy",
           "explanation": [
             "The number <code>0</code> is falsy, but the string <code>\"0\"</code> is truthy — because it is a non-empty string.",
             "Negative numbers like <code>-1</code> are truthy — only <code>0</code> is falsy among numbers.",
@@ -113,6 +131,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let username = \"\";\nlet displayName = username || \"Anonymous\";\nconsole.log(displayName);  // \"Anonymous\"\n\nusername = \"Vishnu\";\ndisplayName = username || \"Anonymous\";\nconsole.log(displayName);  // \"Vishnu\"\n\n// Using truthiness directly in if\nlet score = 42;\nif (score) {\n  console.log(\"Score exists!\");  // prints\n}\n\nscore = 0;\nif (score) {\n  console.log(\"This won't print\");  // 0 is falsy!\n}",
+          "output": "> let username = \"\";\n> let displayName = username || \"Anonymous\";\n> console.log(displayName);\nAnonymous\n> username = \"Vishnu\";\n> displayName = username || \"Anonymous\";\n> console.log(displayName);\nVishnu\n> let score = 42;\n> if (score) {\n>   console.log(\"Score exists!\");\n> }\nScore exists!\n> score = 0;\n> if (score) {\n>   console.log(\"This won't print\");\n> }",
           "explanation": [
             "The <code>||</code> operator uses truthiness — an empty string is falsy, so it falls back to \"Anonymous\".",
             "When <code>score</code> is 0, <code>if (score)</code> is false — be careful if 0 is a valid value you want to treat as present.",
@@ -121,7 +140,7 @@
         }
       ],
       "practice": {
-        "task": "Without running the code, predict whether each condition is truthy or falsy: <code>\"false\"</code>, <code>[]</code>, <code>{}\"</code>, <code>\"0\"</code>, <code>NaN</code>, <code>-0</code>. Then verify your answers in the console.",
+        "task": "Without running the code, predict whether each condition is truthy or falsy: <code>\"false\"</code>, <code>[]</code>, <code>{}</code>, <code>\"0\"</code>, <code>NaN</code>, <code>-0</code>. Then verify your answers in the console.",
         "hints": [
           "<code>\"false\"</code> is a string — non-empty strings are truthy.",
           "<code>[]</code> is an array — objects/arrays are always truthy.",
@@ -144,15 +163,21 @@
       "sections": [
         {
           "heading": "The ternary syntax",
-          "paragraphs": ["The ternary operator is a shorthand for <code>if/else</code>. It has three parts: a condition, a value to return if true, and a value to return if false. The syntax is: <code>condition ? valueIfTrue : valueIfFalse</code>."]
+          "paragraphs": [
+            "The ternary operator is a shorthand for <code>if/else</code>. It has three parts: a condition, a value to return if true, and a value to return if false. The syntax is: <code>condition ? valueIfTrue : valueIfFalse</code>."
+          ]
         },
         {
           "heading": "When to use it",
-          "paragraphs": ["The ternary is ideal for choosing between two values — like assigning a default, displaying different text, or selecting a CSS class. If your logic involves multiple statements or side effects, stick with a regular <code>if/else</code> block instead."]
+          "paragraphs": [
+            "The ternary is ideal for choosing between two values — like assigning a default, displaying different text, or selecting a CSS class. If your logic involves multiple statements or side effects, stick with a regular <code>if/else</code> block instead."
+          ]
         },
         {
           "heading": "Nesting ternaries",
-          "paragraphs": ["You can chain ternaries for multiple conditions, but this gets hard to read quickly. As a rule: if you have more than one ternary, use <code>if/else if</code> instead. Keep ternaries short and simple."]
+          "paragraphs": [
+            "You can chain ternaries for multiple conditions, but this gets hard to read quickly. As a rule: if you have more than one ternary, use <code>if/else if</code> instead. Keep ternaries short and simple."
+          ]
         }
       ],
       "codeExamples": [
@@ -161,6 +186,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let age = 20;\n\n// With if/else\nlet status;\nif (age >= 18) {\n  status = \"adult\";\n} else {\n  status = \"minor\";\n}\n\n// With ternary — same result, one line\nlet status2 = age >= 18 ? \"adult\" : \"minor\";\n\nconsole.log(status);   // \"adult\"\nconsole.log(status2);  // \"adult\"",
+          "output": "> let age = 20;\n> let status;\n> if (age >= 18) {\n>   status = \"adult\";\n> } else {\n>   status = \"minor\";\n> }\n> let status2 = age >= 18 ? \"adult\" : \"minor\";\n> console.log(status);\nadult\n> console.log(status2);\nadult",
           "explanation": [
             "The ternary does exactly the same thing as the if/else, but in one line.",
             "The part before <code>?</code> is the condition. The part between <code>?</code> and <code>:</code> runs if true. The part after <code>:</code> runs if false.",
@@ -172,6 +198,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let isLoggedIn = true;\nlet message = `Welcome, ${isLoggedIn ? \"user\" : \"guest\"}`;\nconsole.log(message);  // \"Welcome, user\"\n\nfunction calculateDiscount(isMember) {\n  return isMember ? 0.2 : 0;\n}\n\nconsole.log(calculateDiscount(true));   // 0.2 (20%)\nconsole.log(calculateDiscount(false));  // 0",
+          "output": "> let isLoggedIn = true;\n> let message = `Welcome, ${isLoggedIn ? \"user\" : \"guest\"}`;\n> console.log(message);\nWelcome, user\n> function calculateDiscount(isMember) {\n>   return isMember ? 0.2 : 0;\n> }\n> console.log(calculateDiscount(true));\n0.2\n> console.log(calculateDiscount(false));\n0",
           "explanation": [
             "Ternaries work perfectly inside template literals — they keep the expression clean.",
             "Returning a ternary from a function is a common pattern for simple two-outcome logic.",
@@ -186,7 +213,8 @@
           "For the function: <code>return isVIP ? price * 0.1 : 0;</code>",
           "Test with different price and VIP combinations."
         ],
-        "note": "If you find yourself writing <code>condition ? a : b ? c : d</code>, stop — use if/else instead."
+        "note": "If you find yourself writing <code>condition ? a : b ? c : d</code>, stop — use if/else instead.",
+        "compiler": true
       },
       "keyTakeaways": [
         "The ternary operator <code>condition ? a : b</code> is a compact replacement for simple if/else assignments.",
@@ -203,11 +231,15 @@
       "sections": [
         {
           "heading": "When switch beats if/else",
-          "paragraphs": ["When you are comparing one variable against many specific values, a <code>switch</code> statement is cleaner than multiple <code>else if</code> blocks. It is especially useful for menu selections, command parsing, and handling different data types or status codes."]
+          "paragraphs": [
+            "When you are comparing one variable against many specific values, a <code>switch</code> statement is cleaner than multiple <code>else if</code> blocks. It is especially useful for menu selections, command parsing, and handling different data types or status codes."
+          ]
         },
         {
           "heading": "How switch works",
-          "paragraphs": ["A <code>switch</code> evaluates an expression once and compares it against each <code>case</code> value using strict equality (<code>===</code>). When a match is found, the code under that case runs. The <code>break</code> statement exits the switch — without it, execution \"falls through\" to the next case."],
+          "paragraphs": [
+            "A <code>switch</code> evaluates an expression once and compares it against each <code>case</code> value using strict equality (<code>===</code>). When a match is found, the code under that case runs. The <code>break</code> statement exits the switch — without it, execution \"falls through\" to the next case."
+          ],
           "list": [
             "<code>switch(expression)</code> — evaluates the expression once",
             "<code>case value:</code> — runs if the expression equals this value",
@@ -217,7 +249,9 @@
         },
         {
           "heading": "Fall-through: a feature and a trap",
-          "paragraphs": ["Without <code>break</code>, a matching case will continue executing into the next case. This is usually a bug, but occasionally useful — like when multiple cases should run the same code. Always include <code>break</code> unless you intentionally want fall-through."]
+          "paragraphs": [
+            "Without <code>break</code>, a matching case will continue executing into the next case. This is usually a bug, but occasionally useful — like when multiple cases should run the same code. Always include <code>break</code> unless you intentionally want fall-through."
+          ]
         }
       ],
       "codeExamples": [
@@ -226,6 +260,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "let day = \"Monday\";\n\nswitch (day) {\n  case \"Monday\":\n    console.log(\"Start of the work week.\");\n    break;\n  case \"Friday\":\n    console.log(\"TGIF!\");\n    break;\n  case \"Saturday\":\n  case \"Sunday\":\n    console.log(\"Weekend!\");\n    break;\n  default:\n    console.log(\"Another day.\");\n    break;\n}\n// Output: \"Start of the work week.\"",
+          "output": "> let day = \"Monday\";\n> switch (day) {\n>   case \"Monday\":\n>     console.log(\"Start of the work week.\");\n>     break;\n>   case \"Friday\":\n>     console.log(\"TGIF!\");\n>     break;\n>   case \"Saturday\":\n>   case \"Sunday\":\n>     console.log(\"Weekend!\");\n>     break;\n>   default:\n>     console.log(\"Another day.\");\n>     break;\n> }\nStart of the work week.",
           "explanation": [
             "<code>day</code> is compared against each case using <code>===</code>.",
             "Saturday and Sunday share the same block — this is intentional fall-through (no break between them).",
@@ -237,6 +272,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "function handleStatus(code) {\n  switch (code) {\n    case 200:\n      return \"Success\";\n    case 301:\n      return \"Moved\";\n    case 404:\n      return \"Not Found\";\n    case 500:\n      return \"Server Error\";\n    default:\n      return \"Unknown status: \" + code;\n  }\n}\n\nconsole.log(handleStatus(200));  // \"Success\"\nconsole.log(handleStatus(404));  // \"Not Found\"\nconsole.log(handleStatus(418));  // \"Unknown status: 418\"",
+          "output": "> function handleStatus(code) {\n>   switch (code) {\n>     case 200:\n>       return \"Success\";\n>     case 301:\n>       return \"Moved\";\n>     case 404:\n>       return \"Not Found\";\n>     case 500:\n>       return \"Server Error\";\n>     default:\n>       return \"Unknown status: \" + code;\n>   }\n> }\n> console.log(handleStatus(200));\nSuccess\n> console.log(handleStatus(404));\nNot Found\n> console.log(handleStatus(418));\nUnknown status: 418",
           "explanation": [
             "The function returns a message based on the HTTP status code — a classic use case for switch.",
             "Using <code>return</code> instead of <code>break</code> exits both the switch and the function.",
@@ -251,7 +287,8 @@
           "Include <code>break</code> after each return (or use return directly).",
           "Don't forget the <code>default</code> case."
         ],
-        "note": "Try the same function with an object lookup — sometimes a simple object is better than switch."
+        "note": "Try the same function with an object lookup — sometimes a simple object is better than switch.",
+        "compiler": true
       },
       "keyTakeaways": [
         "Use <code>switch</code> when comparing one value against many specific cases — it is cleaner than long if/else chains.",
@@ -268,11 +305,15 @@
       "sections": [
         {
           "heading": "What is a runtime exception?",
-          "paragraphs": ["An exception is an error that happens while your code is running — like trying to access a property on <code>null</code>, dividing by zero, or parsing invalid JSON. Without handling, these errors stop your program and show a red message in the console. <code>try...catch</code> lets you catch these errors and respond gracefully."]
+          "paragraphs": [
+            "An exception is an error that happens while your code is running — like trying to access a property on <code>null</code>, dividing by zero, or parsing invalid JSON. Without handling, these errors stop your program and show a red message in the console. <code>try...catch</code> lets you catch these errors and respond gracefully."
+          ]
         },
         {
           "heading": "How try...catch works",
-          "paragraphs": ["Wrap risky code in a <code>try</code> block. If an error occurs, JavaScript jumps to the <code>catch</code> block instead of crashing. The caught error object contains information about what went wrong. You can also add a <code>finally</code> block that runs whether or not an error occurred — useful for cleanup."]
+          "paragraphs": [
+            "Wrap risky code in a <code>try</code> block. If an error occurs, JavaScript jumps to the <code>catch</code> block instead of crashing. The caught error object contains information about what went wrong. You can also add a <code>finally</code> block that runs whether or not an error occurred — useful for cleanup."
+          ]
         },
         {
           "heading": "When to use try...catch",
@@ -290,6 +331,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "try {\n  let data = JSON.parse(\"{invalid json}\");\n  console.log(data);\n} catch (error) {\n  console.log(\"Something went wrong:\", error.message);\n}\n// Output: \"Something went wrong: Unexpected token...\"",
+          "output": "> try {\n>   let data = JSON.parse(\"{invalid json}\");\n>   console.log(data);\n> } catch (error) {\n>   console.log(\"Something went wrong:\", error.message);\n> }\nSomething went wrong: Unexpected token i in JSON at position 1",
           "explanation": [
             "<code>JSON.parse(\"{invalid json}\")</code> throws a SyntaxError because the string is not valid JSON.",
             "Without try/catch, this would crash the program. With it, the error is caught and handled.",
@@ -301,6 +343,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "function divide(a, b) {\n  try {\n    if (b === 0) throw new Error(\"Cannot divide by zero\");\n    return a / b;\n  } catch (error) {\n    console.log(\"Error:\", error.message);\n    return null;\n  } finally {\n    console.log(\"Division attempt complete.\");\n  }\n}\n\nconsole.log(divide(10, 2));   // 5, then \"Division attempt complete.\"\nconsole.log(divide(10, 0));   // \"Error: Cannot divide by zero\", then null",
+          "output": "> function divide(a, b) {\n>   try {\n>     if (b === 0) throw new Error(\"Cannot divide by zero\");\n>     return a / b;\n>   } catch (error) {\n>     console.log(\"Error:\", error.message);\n>     return null;\n>   } finally {\n>     console.log(\"Division attempt complete.\");\n>   }\n> }\n> console.log(divide(10, 2));\nDivision attempt complete.\n5\n> console.log(divide(10, 0));\nError: Cannot divide by zero\nDivision attempt complete.\nnull",
           "explanation": [
             "<code>throw new Error(...)</code> creates an error manually — we will cover this in 1.6.6.",
             "The <code>finally</code> block runs no matter what — whether the try succeeds, an error is caught, or an error is uncaught.",
@@ -315,7 +358,8 @@
           "In the catch block, log <code>error.message</code> and return <code>null</code>.",
           "Don't forget: the try block should return the parsed result."
         ],
-        "note": "Always log or report errors in catch blocks — swallowing errors silently makes debugging very hard."
+        "note": "Always log or report errors in catch blocks — swallowing errors silently makes debugging very hard.",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>try</code> wraps code that might throw an error; <code>catch</code> handles the error gracefully.",
@@ -332,15 +376,21 @@
       "sections": [
         {
           "heading": "Why throw errors?",
-          "paragraphs": ["Sometimes a function receives invalid input or encounters an impossible state. Instead of returning a misleading result, you should <b>throw an error</b> immediately. This forces the caller to deal with the problem — either by handling it with try/catch or by passing valid input."]
+          "paragraphs": [
+            "Sometimes a function receives invalid input or encounters an impossible state. Instead of returning a misleading result, you should <b>throw an error</b> immediately. This forces the caller to deal with the problem — either by handling it with try/catch or by passing valid input."
+          ]
         },
         {
           "heading": "The throw statement",
-          "paragraphs": ["The <code>throw</code> statement stops the current function and creates an error. You can throw any value, but always throw <code>Error</code> objects — they include a stack trace that tells you where the error originated. The most common pattern is <code>throw new Error(\"message\")</code>."]
+          "paragraphs": [
+            "The <code>throw</code> statement stops the current function and creates an error. You can throw any value, but always throw <code>Error</code> objects — they include a stack trace that tells you where the error originated. The most common pattern is <code>throw new Error(\"message\")</code>."
+          ]
         },
         {
           "heading": "Precondition checks",
-          "paragraphs": ["A great use of throw is validating function inputs at the top. Check that arguments are the right type, within range, or not null. This technique is called <b>guarding</b> and catches bugs early — before they cause mysterious problems downstream."]
+          "paragraphs": [
+            "A great use of throw is validating function inputs at the top. Check that arguments are the right type, within range, or not null. This technique is called <b>guarding</b> and catches bugs early — before they cause mysterious problems downstream."
+          ]
         }
       ],
       "codeExamples": [
@@ -349,6 +399,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "function calculateArea(width, height) {\n  if (typeof width !== \"number\" || typeof height !== \"number\") {\n    throw new Error(\"Both width and height must be numbers\");\n  }\n  if (width <= 0 || height <= 0) {\n    throw new Error(\"Dimensions must be positive\");\n  }\n  return width * height;\n}\n\ntry {\n  console.log(calculateArea(5, 10));  // 50\n  console.log(calculateArea(-3, 4));  // throws Error!\n} catch (e) {\n  console.log(e.message);  // \"Dimensions must be positive\"\n}",
+          "output": "> function calculateArea(width, height) {\n>   if (typeof width !== \"number\" || typeof height !== \"number\") {\n>     throw new Error(\"Both width and height must be numbers\");\n>   }\n>   if (width <= 0 || height <= 0) {\n>     throw new Error(\"Dimensions must be positive\");\n>   }\n>   return width * height;\n> }\n> try {\n>   console.log(calculateArea(5, 10));\n50\n>   console.log(calculateArea(-3, 4));\n> } catch (e) {\n>   console.log(e.message);\nDimensions must be positive\n> }",
           "explanation": [
             "The function checks its inputs before doing any work — this is called a <b>precondition check</b>.",
             "If width or height is not a number, a clear error is thrown immediately.",
@@ -360,6 +411,7 @@
           "file": "script.js",
           "language": "JavaScript",
           "code": "function parseAge(input) {\n  try {\n    let age = Number(input);\n    if (isNaN(age)) throw new Error(\"Not a valid number\");\n    if (age < 0) throw new Error(\"Age cannot be negative\");\n    if (age > 150) throw new Error(\"Age seems unrealistic\");\n    return age;\n  } catch (e) {\n    console.log(\"Validation failed:\", e.message);\n    throw e;  // rethrow so the caller knows about the error\n  }\n}\n\ntry {\n  let age = parseAge(\"-5\");\n  console.log(\"Age:\", age);\n} catch (e) {\n  console.log(\"Caught in outer scope:\", e.message);\n}",
+          "output": "> function parseAge(input) {\n>   try {\n>     let age = Number(input);\n>     if (isNaN(age)) throw new Error(\"Not a valid number\");\n>     if (age < 0) throw new Error(\"Age cannot be negative\");\n>     if (age > 150) throw new Error(\"Age seems unrealistic\");\n>     return age;\n>   } catch (e) {\n>     console.log(\"Validation failed:\", e.message);\n>     throw e;\n>   }\n> }\n> try {\n>   let age = parseAge(\"-5\");\n>   console.log(\"Age:\", age);\n> } catch (e) {\n>   console.log(\"Caught in outer scope:\", e.message);\n> }\nValidation failed: Age cannot be negative\nCaught in outer scope: Age cannot be negative",
           "explanation": [
             "The function validates the input and throws specific, descriptive errors for each problem.",
             "The catch block logs the error for debugging, then <b>rethrows</b> it so the caller can handle it too.",
@@ -374,7 +426,8 @@
           "Check <code>name.length < 3</code> for short names.",
           "Check <code>name.includes(\" \")</code> for names with spaces."
         ],
-        "note": "Make your error messages specific — \"Invalid input\" is less helpful than \"Name must be at least 3 characters\"."
+        "note": "Make your error messages specific — \"Invalid input\" is less helpful than \"Name must be at least 3 characters\".",
+        "compiler": true
       },
       "keyTakeaways": [
         "<code>throw new Error(\"message\")</code> stops execution and creates an error with a descriptive message.",

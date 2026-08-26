@@ -1036,12 +1036,30 @@ function renderPractice(block) {
     }
   }
   if (block.note) body += '<p class="lp-note">' + block.note + '</p>';
+
+  /* Try in Compiler button — only when block.compiler is true */
+  let compilerBtn = "";
+  if (block.compiler) {
+    // Build a minimal starter comment from the task text (strip HTML tags)
+    const rawTask = (block.task || (block.tasks && block.tasks.length && block.tasks[0].text) || "").replace(/<[^>]+>/g, "").trim();
+    const starterComment = rawTask ? "// " + rawTask.substring(0, 120) + (rawTask.length > 120 ? "..." : "") + "\n// Your code here:\n" : "// Your code here:\n";
+    const encoded = encodeURIComponent(starterComment);
+    // Resolve playground URL relative to this module (same as playground-launcher.js)
+    const href = "../../../Js-compiler/index.html?js=" + encoded;
+    compilerBtn =
+      '<a class="lp-compiler-btn" href="' + href + '" target="_blank" rel="noopener">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/></svg>' +
+        '<span>Try in Compiler</span>' +
+      '</a>';
+  }
+
   return (
     '<section class="lesson-section">' +
       '<h2>Practice</h2>' +
       '<div class="lesson-practice-card">' +
         '<div class="lp-head">' + ICON.pencil + 'Your turn</div>' +
         body +
+        compilerBtn +
       '</div>' +
     '</section>'
   );
